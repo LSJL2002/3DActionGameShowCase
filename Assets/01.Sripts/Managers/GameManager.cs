@@ -2,127 +2,103 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-//씬관리, 일시정지, 로딩
-public enum GameScene
+// 게임의 상태를 나타내는 열거형
+public enum eGameState
 {
-    [SceneName("IntroScene")] IntroScene,
-    [SceneName("MainScene")] MainScene,
-    [SceneName("Level2")] Level2,
-    [SceneName("GameOver")] GameOver
+    Home,
+    //Intro,
+    Playing,
+    Pause,
+    GameOver,
+    GameClear
 }
-[AttributeUsage(AttributeTargets.Field)]
-public class SceneNameAttribute : Attribute
+
+// 제네릭 싱글톤 스크립트를 상속
+public class GameManager : Singleton<GameManager>
 {
-    public string Name { get; }
-    public SceneNameAttribute(string name) => Name = name;
-}
-public static class SceneUtility
-{
-    public static string GetSceneName(GameScene scene)
+    private eGameState previousState; // 이전 상태를 저장할 변수
+    private eGameState currentState; // 현재 게임 상태를 저장할 변수
+
+    // 스테이지 변경을 위한 Action 델리게이트
+    public event Action<eGameState> ChangeStage;
+
+    protected override void Awake()
     {
-        var type = typeof(GameScene);
-        var memInfo = type.GetMember(scene.ToString());
-        var attr = memInfo[0].GetCustomAttributes(typeof(SceneNameAttribute), false);
-        return (attr.Length > 0) ? ((SceneNameAttribute)attr[0]).Name : scene.ToString();
+        base.Awake();
     }
-}
 
-
-class GameState
-{
-
-}
-public partial class GameManager : Singleton<GameManager>
-{
-    private GameState _currentState;
-    bool IsPause = false;
-
-    // 현재 씬을 저장 할 변수 세팅
-    private Scene currentScene;
-
-
-
-    // Player 인스턴스에 접근하기 위한 Instance 함수
-
-    private void Awake()
+    protected override void Start()
     {
+        base.Start();
 
-        DontDestroyOnLoad(gameObject);
-
-        // 현재 씬을 가져와서 변수에 저장
-        currentScene = SceneManager.GetActiveScene();
-    }
-    private void Start()
-    {
+        // 게임의 목표 프레임 속도를 설정
         Application.targetFrameRate = 120;
     }
 
     // GameState 전환 함수
+    public void ChangeState(eGameState newState)
+    {
+        // 이전 상태를 변수에 저장
+        previousState = currentState;
 
+        // 현재 상태를 변수에 저장
+        currentState = newState;
+
+        // GameState 상태를 전환하는 이벤트 발생
+        ChangeStage?.Invoke(newState);
+    }
 
     // 게임 시작
     public void StartGame()
     {
-        // SceneManagement를 통해 1번 씬으로 전환
-        SceneManager.LoadScene(1);
+        // 게임 상태를 변경
+        ChangeState(eGameState.Playing);
+
+        // SceneLoadManager를 통해 게임 씬으로 전환
+        //SceneLoadManager.Instance.ChangeScene(0);
     }
 
     // 게임 일시정지
-    public void PauseGame()
+    public void PauseGame(bool check)
     {
-        // GameState 상태를 Paused로 전환
-        Debug.Log($"GameState : {_currentState}");
-
         // 게임 정지
-        if (IsPause == false)
+        if (check)
         {
             Time.timeScale = 0;
-            IsPause = true;
             return;
         }
-    }
 
-    // 게임 일시정지
-    public void ReturnGame()
-    {
-        // GameState 상태를 Playing으로 전환
-
-        // 게임 정지
-        if (IsPause == true)
+        // 게임 재개
+        else if (!check)
         {
             Time.timeScale = 1;
-            IsPause = false;
             return;
         }
+
+        // 게임 상태를 변경
+        ChangeState(eGameState.Pause);
+
+        Debug.Log($"IsPauseGame : {check}");
     }
 
     // 게임 오버
     public void GameOver()
     {
-        // GameState 상태를 GameOver로 전환
+        // 게임 상태를 변경
+        ChangeState(eGameState.GameOver);
+
+        // 게임오버씬으로 전환
+        //SceneLoadManager.Instance.ChangeScene(0);
     }
 
-    // SceneManager.sceneLoaded 라는 이벤트에 구독 할 함수
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    // 게임 클리어
+    public void GameClear()
     {
-        // 로드된 씬의 buildIndex에 따라 UI 상태를 다르게 설정
-        //switch (scene.buildIndex)
-        //{
-        //    case 0:
-        //        ChangeGameState(GameState.Intro);
-        //        break;
-        //    case 1:
-        //        ChangeGameState(GameState.Playing);
-        //        break;
-        //}
+        // 게임 상태를 변경
+        ChangeState(eGameState.GameClear);
 
-    }
-
-    private void OnDestroy()
-    {
-        // 오브젝트가 파괴될 때 이벤트 등록 해제
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        // 게임클리어씬으로 전환
+        //SceneLoadManager.Instance.ChangeScene(0);
     }
 }
