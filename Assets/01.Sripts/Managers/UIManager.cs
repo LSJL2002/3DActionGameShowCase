@@ -116,4 +116,66 @@ public class UIManager : Singleton<UIManager>
         //DestroyImmediate(uiBase.canvas.gameObject);
         //ui_List.Remove(uiName);
     }
+
+    // 씬전환시 이전 씬에서 사용한 딕셔너리 리스트 전부 파괴
+    protected override void OnDisable()
+    {
+        foreach (var uiBase in ui_List.Values)
+        {
+            if (uiBase != null && uiBase.canvas != null)
+            {
+                Destroy(uiBase.canvas.gameObject);
+            }
+        }
+
+        // 딕셔너리 목록 삭제
+        ui_List.Clear();
+    }
+
+    // 게임매니저의 상태전환 이벤트를 구독
+    //protected override void OnEnable()
+    //{
+    //    base.OnEnable();
+    //    GameManager.Instance.changeStage += ChangeMainUI;
+    //}
+
+    //// 게임매니저의 상태전환 이벤트를 구독해제
+    //protected override void OnDisable()
+    //{
+    //    base.OnDisable();
+    //    GameManager.Instance.changeStage += ChangeMainUI;
+    //}
+
+    // 게임매니저의 상태전환 이벤트에 추가할 함수
+    //public async void ChangeMainUI(eGameState newState)
+    //{
+    //    // 게임매니저의 상태에 맞는 메인UI를 셋업
+    //    switch (newState)
+    //    {
+    //        // Home UI 활성화
+    //        case eGameState.Home:
+    //            await Show<HomeUI>();
+    //            break;
+
+    //        // 게임 플레이 UI 활성화
+    //        case eGameState.GamePlaying:
+    //            //await Show<GamePlayingUI>();
+    //            break;
+
+    //        // 일시정지  UI 활성화
+    //        case eGameState.Pause:
+    //            //await Show<PauseUI>();
+    //            break;
+
+    //        // 게임오버 UI 활성화
+    //        case eGameState.GameOver:
+    //            //await Show<GameOverUI>();
+    //            break;
+
+    //        // 게임클리어  UI 활성화
+    //        case eGameState.GameClear:
+    //            //await Show<GameClearUI>();
+    //            break;
+    //    }
+    //}
 }

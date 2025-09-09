@@ -8,7 +8,7 @@ public enum eGameState
 {
     Home,
     //Intro,
-    Playing,
+    GamePlaying,
     Pause,
     GameOver,
     GameClear
@@ -21,7 +21,7 @@ public class GameManager : Singleton<GameManager>
     private eGameState currentState; // 현재 게임 상태를 저장할 변수
 
     // 스테이지 변경을 위한 Action 델리게이트
-    public event Action<eGameState> ChangeStage;
+    public event Action<eGameState> changeStage;
 
     protected override void Awake()
     {
@@ -39,6 +39,8 @@ public class GameManager : Singleton<GameManager>
     // GameState 전환 함수
     public void ChangeState(eGameState newState)
     {
+        Debug.Log($"ChangeState : {newState}");
+
         // 이전 상태를 변수에 저장
         previousState = currentState;
 
@@ -46,14 +48,14 @@ public class GameManager : Singleton<GameManager>
         currentState = newState;
 
         // GameState 상태를 전환하는 이벤트 발생
-        ChangeStage?.Invoke(newState);
+        changeStage?.Invoke(newState);
     }
 
     // 게임 시작
     public void StartGame()
     {
         // 게임 상태를 변경
-        ChangeState(eGameState.Playing);
+        ChangeState(eGameState.GamePlaying);
 
         // SceneLoadManager를 통해 게임 씬으로 전환
         //SceneLoadManager.Instance.ChangeScene(0);
