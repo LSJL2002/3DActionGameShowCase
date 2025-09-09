@@ -9,7 +9,7 @@ public interface IPlayer
     public void LockOnInput(int val);
 }
 
-public class PlayerManager : MonoBehaviour, IPlayer
+public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
     [field: SerializeField] public PlayerSO Data { get; private set; }
     public PlayerStats Stats { get; private set; }
@@ -29,6 +29,10 @@ public class PlayerManager : MonoBehaviour, IPlayer
 
     private void Awake()
     {
+        //임시함수
+        Cursor.lockState = CursorLockMode.Locked;
+
+
         AnimationData.Initialize();
         Animator ??= GetComponentInChildren<Animator>();
         Controller ??= GetComponent<CharacterController>();
