@@ -1,8 +1,8 @@
 ---
-name: "[fix]"
-about: 오류발생하여 수정하는 부분 적기
-title: "[fix]"
-labels: ''
+name: "[rename]"
+about: 파일 혹은 폴더명 수정하거나 옮기는 경우
+title: "[rename]"
+labels: Rename
 assignees: ''
 
 ---

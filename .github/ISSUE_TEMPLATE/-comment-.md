@@ -1,8 +1,8 @@
 ---
-name: "[fix]"
-about: 오류발생하여 수정하는 부분 적기
-title: "[fix]"
-labels: ''
+name: "[comment]"
+about: 필요한 주석 추가 및 변경
+title: "[comment]"
+labels: Comment
 assignees: ''
 
 ---

@@ -1,8 +1,8 @@
 ---
-name: "[fix]"
-about: 오류발생하여 수정하는 부분 적기
-title: "[fix]"
-labels: ''
+name: "[init]"
+about: 프로젝트 초기 생성
+title: "[init]"
+labels: Init
 assignees: ''
 
 ---

@@ -1,8 +1,8 @@
 ---
-name: "[fix]"
-about: 오류발생하여 수정하는 부분 적기
-title: "[fix]"
-labels: ''
+name: "[test]"
+about: 테스트(테스트 코드 추가, 수정, 삭제, 비즈니스 로직에 변경이 없는 경우)
+title: "[test]"
+labels: Test
 assignees: ''
 
 ---

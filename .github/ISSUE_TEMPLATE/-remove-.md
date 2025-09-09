@@ -1,8 +1,8 @@
 ---
-name: "[fix]"
-about: 오류발생하여 수정하는 부분 적기
-title: "[fix]"
-labels: ''
+name: "[remove]"
+about: 파일을 삭제하는 작업만 수행하는 경우
+title: "[remove]"
+labels: Remove
 assignees: ''
 
 ---

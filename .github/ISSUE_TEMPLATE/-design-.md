@@ -1,8 +1,8 @@
 ---
-name: "[fix]"
-about: 오류발생하여 수정하는 부분 적기
-title: "[fix]"
-labels: ''
+name: "[design]"
+about: CSS 등 사용자 UI 디자인 변경
+title: "[design]"
+labels: Design
 assignees: ''
 
 ---
