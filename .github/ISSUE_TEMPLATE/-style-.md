@@ -1,8 +1,8 @@
 ---
-name: "[fix]"
-about: 오류발생하여 수정하는 부분 적기
-title: "[fix]"
-labels: ''
+name: "[style]"
+about: 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
+title: "[style]"
+labels: Style
 assignees: ''
 
 ---

@@ -1,8 +1,8 @@
 ---
-name: "[fix]"
-about: 오류발생하여 수정하는 부분 적기
-title: "[fix]"
-labels: ''
+name: "[refactor]"
+about: 리팩토링
+title: "[refactor]"
+labels: Refeactor
 assignees: ''
 
 ---

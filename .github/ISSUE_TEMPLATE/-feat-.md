@@ -2,7 +2,7 @@
 name: "[feat]"
 about: 개발이 필요한 부분 적기
 title: "[feat]"
-labels: feat
+labels: ''
 assignees: ''
 
 ---
