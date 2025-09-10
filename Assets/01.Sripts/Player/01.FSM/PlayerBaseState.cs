@@ -54,7 +54,7 @@ public class PlayerBaseState : Istate
     {
     }
 
-    public virtual void Update()
+    public virtual void LogicUpdate()
     {
         Move();
     }
