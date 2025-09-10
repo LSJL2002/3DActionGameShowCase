@@ -17,7 +17,7 @@ public class GameUI : UIBase
     public TextMeshProUGUI enemyHPText; // 적 체력 텍스트
     public Slider enemyHPSlider; // 적 체력 슬라이더바
 
-    public bool isBattle; // 전투중인지 확인용
+    private bool isBattle; // 전투중인지 확인용
     public GameObject enemyInfoUI;
 
     public async void OnClickButton(string str)

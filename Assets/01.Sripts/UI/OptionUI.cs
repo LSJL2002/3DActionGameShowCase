@@ -4,12 +4,22 @@ using UnityEngine;
 
 public class OptionUI : UIBase
 {
-    public async void OnClickExit()
+    public void OnClickExit(string str)
     {
-        // ÆË¾÷¸ŞÀÎ ¿­±â
-        await UIManager.Instance.Show<HomeUI>();
+        switch (str)
+        {
+            // ì´ì „ UIë¡œ ëŒì•„ê°€ê¸°
+            case "Return":
+                UIManager.Instance.previousUI.canvas.gameObject.SetActive(true);
+                break;
 
-        // ÇöÀç ÆË¾÷Ã¢ ´İ±â
+            case "Quit":
+                // Homeì”¬ìœ¼ë¡œ ëŒì•„ê°€ê¸° (ê±°ê¸°ì„œ ì¢…ë£Œê°€ëŠ¥)
+                SceneLoadManager.Instance.ChangeScene(1);
+                break;
+        }
+
+        // í˜„ì¬ íŒì—…ì°½ ë‹«ê¸°
         Hide();
     }
 }
