@@ -8,7 +8,8 @@ public class PlayerAnimationHash
 {
     [SerializeField] private string groundParameterName = "@Ground";
     [SerializeField] private string idleParameterName = "Idle";
-    [SerializeField] private string movementSpeedParameterName = "MovementSpeed";
+    [SerializeField] private string moveSpeedParameterName = "MovementSpeed";
+    [SerializeField] private string shiftParameterName = "Shift";
 
     [SerializeField] private string airParameterName = "@Air";
     [SerializeField] private string jumpParameterName = "Jump";
@@ -22,7 +23,9 @@ public class PlayerAnimationHash
 
     public int GroundParameterHash { get; private set; }
     public int IdleParameterHash { get; private set; }
-    public int MovementSpeedParameterHash { get; private set; }
+    public int MoveSpeedParameterHash { get; private set; }
+    public int ShiftParameterHash { get; private set; }
+
 
     public int AirParameterHash { get; private set; }
     public int JumpParameterHash { get; private set; }
@@ -38,7 +41,8 @@ public class PlayerAnimationHash
     {
         GroundParameterHash = Animator.StringToHash(groundParameterName);
         IdleParameterHash = Animator.StringToHash(idleParameterName);
-        MovementSpeedParameterHash = Animator.StringToHash(movementSpeedParameterName);
+        MoveSpeedParameterHash = Animator.StringToHash(moveSpeedParameterName);
+        ShiftParameterHash = Animator.StringToHash(shiftParameterName);
 
         AirParameterHash = Animator.StringToHash(airParameterName);
         JumpParameterHash = Animator.StringToHash(jumpParameterName);
