@@ -1,112 +1,125 @@
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
 public class CSVtoSOConverter : EditorWindow
 {
-    private string csvPath = "Assets/01.Sripts/Monster/MonsterData/MonsterData.csv";
-    private string outputPath = "Assets/01.Sripts/Monster/MonsterData";
+    private string csvPath = "Assets/01.Sripts/Data/Data.csv";
+    private string outputPath = "Assets/01.Sripts/Data";
+    private string soTypeName = ""; // 원하는 ScriptableObject 클래스 이름
 
-    [MenuItem("Tools/CSV to SO")]
+    [MenuItem("Tools/Generic CSV to SO")]
     public static void ShowWindow()
     {
         GetWindow(typeof(CSVtoSOConverter));
     }
 
-    void OnGUI()
+    void OnGUI() //보기 편하게 GUI로 표시
     {
-        GUILayout.Label("CSV → ScriptableObjects", EditorStyles.boldLabel);
+        GUILayout.Label("CSV → ScriptableObjects (Generic)", EditorStyles.boldLabel);
 
         csvPath = EditorGUILayout.TextField("CSV File Path", csvPath);
         outputPath = EditorGUILayout.TextField("Output Folder", outputPath);
+        soTypeName = EditorGUILayout.TextField("SO Class Name", soTypeName);
 
         if (GUILayout.Button("Convert"))
         {
-            ConvertCSVtoSO(csvPath, outputPath);
+            ConvertCSVtoSO(csvPath, outputPath, soTypeName);
         }
     }
 
-    public static void ConvertCSVtoSO(string csvPath, string outputPath)
+    public static void ConvertCSVtoSO(string csvPath, string outputPath, string soTypeName)
     {
         if (!File.Exists(csvPath))
         {
-            Debug.LogError("CSV file not found at path: " + csvPath);
+            Debug.LogError("CSV file not found at path: " + csvPath); //없을시에는 에러 표시
+            return;
+        }
+
+        // SO 타입 가져오기
+        Type soType = Type.GetType(soTypeName);
+        if (soType == null || !typeof(ScriptableObject).IsAssignableFrom(soType))
+        {
+            Debug.LogError("SO Type not found or not a ScriptableObject: " + soTypeName);
             return;
         }
 
         if (!Directory.Exists(outputPath))
-        {
-            Directory.CreateDirectory(outputPath);
-        }
+            Directory.CreateDirectory(outputPath); //출력 파일이 없다면 생성
 
-        string[] lines = File.ReadAllLines(csvPath); // CSV 모든 줄 읽어오기
+        string[] lines = File.ReadAllLines(csvPath); //CSV 모든 줄 읽기
         if (lines.Length <= 1)
         {
             Debug.LogError("CSV has no data rows.");
             return;
         }
 
-        string[] headers = lines[0].Split(','); // 첫 줄은 헤더(컬럼 이름)
+        //첫줄은 해더
+        string[] headers = lines[0].Split(',');
 
-        for (int i = 1; i < lines.Length; i++) // 1번째 줄부터 데이터 시작
+        // 데이터 줄 반복
+        for (int i = 1; i < lines.Length; i++)
         {
-            if (string.IsNullOrWhiteSpace(lines[i]))
-                continue; // 빈 줄은 스킵
-
+            if (string.IsNullOrWhiteSpace(lines[i])) continue; // 빈 줄인 경우에는 건너뜀
             string[] values = lines[i].Split(',');
 
-            MonsterSO monster = ScriptableObject.CreateInstance<MonsterSO>(); // 새로운 MonsterSO 생성
+            // 새로운 SO 인스턴스 생성
+            ScriptableObject soInstance = ScriptableObject.CreateInstance(soType);
 
-            // CSV 데이터 → SO에 매핑
-            monster.id = int.Parse(values[0]);
-            monster.monsterName = values[1];
-            monster.maxHp = int.Parse(values[2]);
-            monster.maxMp = int.Parse(values[3]);
-            monster.attackPower = int.Parse(values[4]);
-            monster.defense = int.Parse(values[5]);
-            monster.attackSpeed = float.Parse(values[6]);
-
-            // 상태이상 효과 (여러 개일 경우 ';'로 구분)
-            monster.statusEffect = new List<string>();
-            if (!string.IsNullOrEmpty(values[7]))
-                monster.statusEffect.AddRange(values[7].Split(';'));
-
-            monster.moveSpeed = float.Parse(values[8].Replace("f", ""));
-
-            monster.equipWeaponId = int.Parse(values[9]);
-            monster.equipArmorId = int.Parse(values[10]);
-            monster.equipAccId = int.Parse(values[11]);
-
-            // dropItems (list)
-            monster.dropItem = new List<int>();
-            if (!string.IsNullOrEmpty(values[12]))
+            // CSV 열로 통해 SO 필드 매핑
+            for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
-                foreach (var item in values[12].Split(';'))
+                string header = headers[j];
+                string value = values[j];
+
+                // 필드 정보 가져오기
+                FieldInfo field = soType.GetField(header, BindingFlags.Public | BindingFlags.Instance);
+                if (field == null) continue;
+
+                try
                 {
-                    if (int.TryParse(item, out int id))
-                        monster.dropItem.Add(id);
+                    // 필드 타입별로 값 변환
+                    if (field.FieldType == typeof(int))
+                        field.SetValue(soInstance, int.Parse(value));
+                    else if (field.FieldType == typeof(float))
+                        field.SetValue(soInstance, float.Parse(value.Replace("f", "")));
+                    else if (field.FieldType == typeof(string))
+                        field.SetValue(soInstance, value);
+                    else if (field.FieldType == typeof(List<int>))
+                    {
+                        var list = new List<int>();
+                        if (!string.IsNullOrEmpty(value))
+                            list.AddRange(value.Split(';').Select(s => int.Parse(s)));
+                        field.SetValue(soInstance, list);
+                    }
+                    else if (field.FieldType == typeof(List<string>))
+                    {
+                        var list = new List<string>();
+                        if (!string.IsNullOrEmpty(value))
+                            list.AddRange(value.Split(';'));
+                        field.SetValue(soInstance, list);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error parsing field '{header}' with value '{value}': {e.Message}");
                 }
             }
 
-            monster.detectRange = int.Parse(values[13]);
-            monster.attackRange = int.Parse(values[14]);
+            //생성된 SO 이름 결졍
+            string assetName = soInstance.name;
+            if (string.IsNullOrEmpty(assetName))
+                assetName = $"SO_{i}";
 
-            // useSkills (list) 나중에 추가
-            // monster.useSkill = new List<int>();
-            // if (values.Length > 15 && !string.IsNullOrEmpty(values[15]))
-            // {
-            //     foreach (var skill in values[15].Split(';'))
-            //     {
-            //         if (int.TryParse(skill, out int id))
-            //             monster.useSkill.Add(id);
-            //     }
-            // }
-
-            string assetPath = $"{outputPath}/{monster.id}_{monster.monsterName}.asset";
-            AssetDatabase.CreateAsset(monster, assetPath);
+            string assetPath = $"{outputPath}/{assetName}.asset";
+            AssetDatabase.CreateAsset(soInstance, assetPath);
         }
 
+        // 저장 및 갱신
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
