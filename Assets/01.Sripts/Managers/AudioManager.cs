@@ -84,16 +84,19 @@ public class AudioManager : Singleton<AudioManager>
         SetSfxVolume(_sfxVolume);
     }
 
-    private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
-    private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (Enum.TryParse(scene.name, out GameScene gameScene))
-        {
-            string sceneName = SceneUtility.GetSceneName(gameScene);
-            PlayBGM(sceneName);
-        }
-    }
+    // 원래 씬로드시 씬네임을 매개변수로 받아와서 씬네임과 같은 이름의 BGM을 재생하는 방식이었으나,
+    // 현재 씬로드매니저를 따로 만들었기때문에 방식이 약간 변경돼서 일단 주석처리 추후 BGM 플레이 방식을 변경 필요
+    // 예정 : 각 씬에 존재하는 씬오브젝트 Start 함수에서 재생
+    //private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
+    //private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
+    //private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    //{
+    //    if (Enum.TryParse(scene.name, out GameScene gameScene))
+    //    {
+    //        string sceneName = SceneUtility.GetSceneName(gameScene);
+    //        PlayBGM(sceneName);
+    //    }
+    //}
 
     void Update()
     {

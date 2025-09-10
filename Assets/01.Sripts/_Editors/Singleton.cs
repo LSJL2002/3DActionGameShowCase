@@ -54,4 +54,21 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         _applicationIsQuitting = true;
     }
+
+    protected virtual void OnEnable() { }
+
+    protected virtual void Start() { }
+
+    protected virtual void Update() { }
+
+    protected virtual void FixedUpdate() { }
+
+    protected virtual void LateUpdate() { }
+
+    protected virtual void OnDisable() { }
+
+    protected virtual void OnDestroy()
+    {
+        _instance = null;
+    }
 }

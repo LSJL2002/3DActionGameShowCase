@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIBase : MonoBehaviour
@@ -11,4 +12,20 @@ public class UIBase : MonoBehaviour
     {
         UIManager.Instance.Hide(gameObject.name);
     }
+
+    protected virtual void Awake() { }
+
+    protected virtual void OnEnable() { }
+
+    protected virtual void Start() { }
+
+    protected virtual void Update() { }
+
+    protected virtual void FixedUpdate() { }
+
+    protected virtual void LateUpdate() { }
+
+    protected virtual void OnDisable() { }
+
+    protected virtual void OnDestroy() { }
 }
