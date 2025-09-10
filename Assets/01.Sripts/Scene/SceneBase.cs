@@ -20,7 +20,7 @@ public abstract class SceneBase : MonoBehaviour
             SceneLoadManager.Instance.ChangeScene
             (
                 0, // 매개변수1
-                () =>{SceneLoadManager.Instance.isManager = true; SceneLoadManager.Instance.UnLoadScene("00.ManagerScene");}, // 매개변수2
+                () =>{SceneLoadManager.Instance.isManager = true; SceneLoadManager.Instance.UnLoadScene(0);}, // 매개변수2
                 LoadSceneMode.Additive // 매개변수3
             );
         }

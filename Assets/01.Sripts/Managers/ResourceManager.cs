@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -41,14 +42,8 @@ public class ResourceManager : Singleton<ResourceManager>
             // 리소스폴더의 경로와 T타입을 지정하여 리소소를 비동기 로드시작 (오브젝트를 생성하는건 아니고 로드만)
             var op = Resources.LoadAsync(typeStr, typeof(T));
 
-            // 비동기 로드가 끝나지 않았다면 반복
-            while(!op.isDone)
-            {
-                Debug.Log(key + "로드중");
-
-                // 현재 실행 중인 코드를 일시 중단하고 다음 프레임에 다시 실행을 재개
-                await Task.Yield();
-            }
+            // 비동기 로드가 완료될때까지 대기
+            await op;
 
             // asset : 로드된 리소스 객체 자체를 뜻함
             var obj = op.asset;
