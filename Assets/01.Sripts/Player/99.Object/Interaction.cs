@@ -8,11 +8,6 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 
-public interface IInteractable //확장가능 문,상자,NPC 등
-{
-    public string GetInteractPrompt();
-    public void OnInteract();
-}
 
 public class Interaction : MonoBehaviour //itemobject랑 상호작용만 하는 클래스
 {
