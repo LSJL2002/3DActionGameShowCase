@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-// ¸®¼Ò½ºÆú´õ 1Â÷ °æ·Î
+// ë¦¬ì†ŒìŠ¤í´ë” 1ì°¨ ê²½ë¡œ
 public enum eAssetType
 {
     Prefab,
     UI,
 }
 
-// ¸®¼Ò½ºÆú´õ 2Â÷ °æ·Î
+// ë¦¬ì†ŒìŠ¤í´ë” 2ì°¨ ê²½ë¡œ
 public enum eCategoryType
 {
     none,
@@ -18,34 +18,32 @@ public enum eCategoryType
     stage,
 }
 
-// Á¦³×¸¯ ½Ì±ÛÅæ ½ºÅ©¸³Æ®¸¦ »ó¼Ó
+// ì œë„¤ë¦­ ì‹±ê¸€í†¤ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ìƒì†
 public class ResourceManager : Singleton<ResourceManager>
 {
-    // µñ¼Å³Ê¸® »ı¼º(string Çü½ÄÀÇ key, object Çü½ÄÀÇ value)
+    // ë”•ì…”ë„ˆë¦¬ ìƒì„±(string í˜•ì‹ì˜ key, object í˜•ì‹ì˜ value)
     private Dictionary<string, object> assetPool = new Dictionary<string, object>();
 
-    // ¹İÈ¯Å¸ÀÔ : Task<T> (ºñµ¿±â ¸Ş¼­µå)
-    // ¸Å°³º¯¼ö : key ÀÌ¸§, 1Â÷°æ·Î, 2Â÷°æ·Î
-    // 2Â÷°æ·Î´Â ¾øÀ»½Ã ±âº» none Àû¿ë
+    // ë°˜í™˜íƒ€ì… : Task<T> (ë¹„ë™ê¸° ë©”ì„œë“œ)
+    // ë§¤ê°œë³€ìˆ˜ : key ì´ë¦„, 1ì°¨ê²½ë¡œ, 2ì°¨ê²½ë¡œ
+    // 2ì°¨ê²½ë¡œëŠ” ì—†ì„ì‹œ ê¸°ë³¸ none ì ìš©
     public async Task<T> LoadAsset<T>(string key, eAssetType assetType, eCategoryType categoryType = eCategoryType.none)
     {
         T handle = default;
 
-        // ¸®¼Ò½ºÆú´õÀÇ °æ·Î¸¦ º¯¼ö·Î ¸¸µé¾î ÀúÀå
+        // ë¦¬ì†ŒìŠ¤í´ë”ì˜ ê²½ë¡œë¥¼ ë³€ìˆ˜ë¡œ ë§Œë“¤ì–´ ì €ì¥
         var typeStr = $"{assetType}{(categoryType == eCategoryType.none ? "" : $"/{categoryType}")}/{key}";
 
-        // µñ¼Å³Ê¸®¿¡ ¾ø´Ù¸é
+        // ë”•ì…”ë„ˆë¦¬ì— ì—†ë‹¤ë©´
         if (!assetPool.ContainsKey(key + "_" + typeStr))
-        {
-            Debug.Log(key + " »õ·Î »ı¼º");
-            
-            // ¸®¼Ò½ºÆú´õÀÇ °æ·Î¿Í TÅ¸ÀÔÀ» ÁöÁ¤ÇÏ¿© ¸®¼Ò¼Ò¸¦ ºñµ¿±â ·Îµå½ÃÀÛ (¿ÀºêÁ§Æ®¸¦ »ı¼ºÇÏ´Â°Ç ¾Æ´Ï°í ·Îµå¸¸)
+        {            
+            // ë¦¬ì†ŒìŠ¤í´ë”ì˜ ê²½ë¡œì™€ Tíƒ€ì…ì„ ì§€ì •í•˜ì—¬ ë¦¬ì†Œì†Œë¥¼ ë¹„ë™ê¸° ë¡œë“œì‹œì‘ (ì˜¤ë¸Œì íŠ¸ë¥¼ ìƒì„±í•˜ëŠ”ê±´ ì•„ë‹ˆê³  ë¡œë“œë§Œ)
             var op = Resources.LoadAsync(typeStr, typeof(T));
 
-            // ºñµ¿±â ·Îµå°¡ ¿Ï·áµÉ¶§±îÁö ´ë±â
+            // ë¹„ë™ê¸° ë¡œë“œê°€ ì™„ë£Œë ë•Œê¹Œì§€ ëŒ€ê¸°
             await op;
 
-            // asset : ·ÎµåµÈ ¸®¼Ò½º °´Ã¼ ÀÚÃ¼¸¦ ¶æÇÔ
+            // asset : ë¡œë“œëœ ë¦¬ì†ŒìŠ¤ ê°ì²´ ìì²´ë¥¼ ëœ»í•¨
             var obj = op.asset;
 
             if (obj == null)
@@ -53,15 +51,14 @@ public class ResourceManager : Singleton<ResourceManager>
                 return default;
             }
 
-            // µñ¼Å³Ê¸®¿¡ Ãß°¡ (key, value)
+            // ë”•ì…”ë„ˆë¦¬ì— ì¶”ê°€ (key, value)
             assetPool.Add(key + "_" + typeStr, obj);
         }
 
-        // Æ¯Á¤ keyÀÇ °ªÀ» handle º¯¼ö¿¡ ÀúÀå
-        Debug.Log(key + " ¹İÈ¯");
+        // íŠ¹ì • keyì˜ ê°’ì„ handle ë³€ìˆ˜ì— ì €ì¥
         handle = (T)assetPool[key + "_" + typeStr];
 
-        // handleÀ» ¹İÈ¯
+        // handleì„ ë°˜í™˜
         return handle;
     }
 }

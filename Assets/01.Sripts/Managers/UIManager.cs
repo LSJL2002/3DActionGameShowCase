@@ -48,10 +48,6 @@ public class UIManager : Singleton<UIManager>
 
         // 생성한 UI 활성화
         uiBase.canvas.gameObject.SetActive(true);
-        Debug.Log(uiName + " Show");
-
-        Debug.Log($"preUI : {previousUI}");
-        Debug.Log($"curUI : {currentUI}");
 
         return (T)uiBase;
     }

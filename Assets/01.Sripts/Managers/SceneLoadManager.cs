@@ -6,61 +6,61 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Á¦³×¸¯ ½Ì±ÛÅæ ½ºÅ©¸³Æ®¸¦ »ó¼Ó
+// ì œë„¤ë¦­ ì‹±ê¸€í†¤ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ìƒì†
 public class SceneLoadManager : Singleton<SceneLoadManager>
 {
-    // ÇöÀç ¸Å´ÏÀú°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎ¿ë
+    // í˜„ì¬ ë§¤ë‹ˆì €ê°€ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸ìš©
     public bool isManager;
 
-    // ÇöÀç¾ÀÀÇ ¹øÈ£¸¦ ÀúÀåÇÒ º¯¼ö
+    // í˜„ì¬ì”¬ì˜ ë²ˆí˜¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     public int NowSceneIndex;
 
     protected override void Awake()
     {
         base.Awake();
 
-        // º¯¼ö¿¡ ÇöÀç ¿­·ÁÀÖ´Â ¾ÀÀÇ ¹øÈ£¸¦ °¡Á®¿Í ÀúÀå
+        // ë³€ìˆ˜ì— í˜„ì¬ ì—´ë ¤ìˆëŠ” ì”¬ì˜ ë²ˆí˜¸ë¥¼ ê°€ì ¸ì™€ ì €ì¥
         NowSceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
-    // callback : ½ÇÇàÇÒ ÇÔ¼ö¸¦ ¸Å°³º¯¼ö·Î ¹ŞÀ½
-    // ·Îµù¿Ï·á ÈÄ ÇÒ Task°¡ ¾øÀ» ¼öµµ ÀÖÀ¸´Ï ±âº» null ¼³Á¤
-    // ±âº» ·Îµå¾À¸ğµå¸¦ ½Ì±Û·Î ¼³Á¤ (½Ì±ÛÀº ´ÜÀÏ ·Îµå, Additive´Â ºñµ¿±â ·Îµå)
+    // callback : ì‹¤í–‰í•  í•¨ìˆ˜ë¥¼ ë§¤ê°œë³€ìˆ˜ë¡œ ë°›ìŒ
+    // ë¡œë”©ì™„ë£Œ í›„ í•  Taskê°€ ì—†ì„ ìˆ˜ë„ ìˆìœ¼ë‹ˆ ê¸°ë³¸ null ì„¤ì •
+    // ê¸°ë³¸ ë¡œë“œì”¬ëª¨ë“œë¥¼ ì‹±ê¸€ë¡œ ì„¤ì • (ì‹±ê¸€ì€ ë‹¨ì¼ ë¡œë“œ, AdditiveëŠ” ë¹„ë™ê¸° ë¡œë“œ)
     public async void ChangeScene(int sceneIndex, Action callback = null, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
     {
-        // ºôµå¿¡ µî·ÏµÈ ¾À °³¼öº¸´Ù ÀÎµ¦½º°¡ Å©°Å³ª 0º¸´Ù ÀÛÀ¸¸é ¿À·ù ·Î±×¸¦ Ç¥½Ã
+        // ë¹Œë“œì— ë“±ë¡ëœ ì”¬ ê°œìˆ˜ë³´ë‹¤ ì¸ë±ìŠ¤ê°€ í¬ê±°ë‚˜ 0ë³´ë‹¤ ì‘ìœ¼ë©´ ì˜¤ë¥˜ ë¡œê·¸ë¥¼ í‘œì‹œ
         if (sceneIndex < 0 || sceneIndex >= SceneManager.sceneCountInBuildSettings)
         {
-            Debug.LogError($"{sceneIndex} ¾øÀ½");
-            return; // ÇÔ¼ö ½ÇÇà Á¾·á
+            Debug.LogError($"{sceneIndex} ì—†ìŒ");
+            return; // í•¨ìˆ˜ ì‹¤í–‰ ì¢…ë£Œ
         }
 
         var op = SceneManager.LoadSceneAsync(sceneIndex, loadSceneMode);
 
-        // ·Îµå ¿Ï·á±îÁö ´ë±â
+        // ë¡œë“œ ì™„ë£Œê¹Œì§€ ëŒ€ê¸°
         await op;
 
-        Debug.Log("·Îµù ¿Ï·á");
+        Debug.Log($"{sceneIndex}ë²ˆì”¬ ë¡œë”© ì™„ë£Œ");
 
-        // ½Ì±Û·Î ·ÎµåÇß´Ù¸é
+        // ì‹±ê¸€ë¡œ ë¡œë“œí–ˆë‹¤ë©´
         if (loadSceneMode == LoadSceneMode.Single)
         {
             NowSceneIndex = sceneIndex;
         }
 
-        // Äİ¹éÀÌ ÀÖ´Ù¸é ½ÇÇà
+        // ì½œë°±ì´ ìˆë‹¤ë©´ ì‹¤í–‰
         callback?.Invoke();
     }
     
-    // ¾À ¾ğ·Îµå ÇÔ¼ö
+    // ì”¬ ì–¸ë¡œë“œ í•¨ìˆ˜
     public async void UnLoadScene(int SceneIndex, Action callback = null)
     {
         var op = SceneManager.UnloadSceneAsync(SceneIndex);
 
-        // ·Îµå ¿Ï·á±îÁö ´ë±â
+        // ë¡œë“œ ì™„ë£Œê¹Œì§€ ëŒ€ê¸°
         await op;
 
-        Debug.Log("¾À ¾ğ·Îµå");
+        Debug.Log($"{SceneIndex}ë²ˆì”¬ ì–¸ë¡œë“œ");
 
         callback?.Invoke();
     }

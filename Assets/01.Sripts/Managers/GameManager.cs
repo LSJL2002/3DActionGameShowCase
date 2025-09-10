@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // 게임의 상태를 나타내는 열거형
 public enum eGameState
@@ -59,6 +60,9 @@ public class GameManager : Singleton<GameManager>
 
         // SceneLoadManager를 통해 해당 씬으로 전환 (2:TownScene)
         SceneLoadManager.Instance.ChangeScene(2);
+
+        // 씬매니저 이용해서 그냥 로드(차이 테스트용)
+        //SceneManager.LoadScene(2);
     }
 
     // 게임 일시정지
