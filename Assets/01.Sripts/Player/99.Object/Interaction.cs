@@ -21,7 +21,7 @@ public class Interaction : MonoBehaviour //itemobject랑 상호작용만 하는 클래스
     [SerializeField] private TMP_Text promptText;
 
     [Header("Interaction Settings")]
-    public float interactionRadius = 2f; // 상호작용 범위
+    public float interactionRadius = 1f; // 상호작용 범위
     private IInteractable nearestItem;
 
     private void Start()

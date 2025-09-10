@@ -20,9 +20,9 @@ public class PlayerFallState : PlayerAirState
         StopAnimation(stateMachine.Player.AnimationData.FallParameterHash);
     }
 
-    public override void Update()
+    public override void LogicUpdate()
     {
-        base.Update();
+        base.LogicUpdate();
 
         if (stateMachine.Player.Controller.isGrounded)
         {
