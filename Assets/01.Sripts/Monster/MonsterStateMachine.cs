@@ -40,7 +40,6 @@ public class MonsterStateMachine : StateMachine
         if (aiEvents == null) return;
 
         aiEvents.OnPlayerDetected += HandlePlayerDetected;
-        aiEvents.OnPlayerLost += HandlePlayerLost;
         aiEvents.OnInAttackRange += HandlePlayerInAttackRange;
     }
 
@@ -49,18 +48,12 @@ public class MonsterStateMachine : StateMachine
         if (aiEvents == null) return;
 
         aiEvents.OnPlayerDetected -= HandlePlayerDetected;
-        aiEvents.OnPlayerLost -= HandlePlayerLost;
         aiEvents.OnInAttackRange -= HandlePlayerInAttackRange;
     }
 
     private void HandlePlayerDetected()
     {
         ChangeState(MonsterChaseState);
-    }
-
-    private void HandlePlayerLost()
-    {
-        ChangeState(MonsterIdleState);
     }
 
     private void HandlePlayerInAttackRange()

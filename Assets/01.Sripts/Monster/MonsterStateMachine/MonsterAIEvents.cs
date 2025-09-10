@@ -38,14 +38,6 @@ public class MonsterAIEvents : MonoBehaviour
             Debug.Log("Detected");
         }
 
-        // 플레이어가 감지 범위 나갈시
-        else if (distance > detectRange && !stateMachine.isAttacking)
-        {
-            stateMachine.Monster.PlayerTarget = null;
-            OnPlayerLost?.Invoke();
-            Debug.Log("Lost");
-        }
-
         // 공격 사거리 입장시
         if (distance <= attackRange && !stateMachine.isAttacking)
         {
