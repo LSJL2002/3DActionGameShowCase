@@ -21,9 +21,9 @@ public class PlayerIdleState : PlayerGroundState
         StopAnimation(stateMachine.Player.AnimationData.IdleParameterHash);
     }
 
-    public override void Update()
+    public override void LogicUpdate()
     {
-        base.Update();
+        base.LogicUpdate();
 
         if(stateMachine.MovementInput != Vector2.zero)
         {
