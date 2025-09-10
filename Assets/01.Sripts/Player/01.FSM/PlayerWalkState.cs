@@ -13,18 +13,21 @@ public class PlayerWalkState : PlayerGroundState
     {
         stateMachine.MovementSpeedModifier = groundData.WalkSpeedModifier;
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
     }
 
-    protected override void OnRunStarted(InputAction.CallbackContext context)
+    public override void HandleInput()
     {
-        base.OnRunStarted(context);
-        stateMachine.ChangeState(stateMachine.RunState);
+        base.HandleInput();
+
+        // Shift 누르면 달리기 속도 적용
+        if (stateMachine.Player.Input.PlayerActions.Run.IsPressed())
+            stateMachine.MovementSpeedModifier = groundData.RunSpeedModifier;
+        else
+            stateMachine.MovementSpeedModifier = groundData.WalkSpeedModifier;
     }
 }
