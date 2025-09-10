@@ -1,0 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class MonsterIdleState : MonsterBaseState
+{
+    public MonsterIdleState(MonsterStateMachine ms) : base(ms) { }
+
+    public override void Enter()
+    {
+        StopMoving();
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
+    }
+}
