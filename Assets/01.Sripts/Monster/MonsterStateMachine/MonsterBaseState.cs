@@ -17,6 +17,7 @@ public class MonsterBaseState : Istate
 
     public virtual void Exit() { }
     public virtual void HandleInput() { }
+    public virtual void LogicUpdate() { }
     public virtual void PhysicsUpdate() { }
     public virtual void Update() { }
 
