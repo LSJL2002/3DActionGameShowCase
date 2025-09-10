@@ -22,9 +22,9 @@ public class PlayerJumpState : PlayerAirState
         StopAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }
 
-    public override void Update()
+    public override void LogicUpdate()
     {
-        base.Update();
+        base.LogicUpdate();
 
         if (stateMachine.Player.Controller.velocity.y <= 0)
         {

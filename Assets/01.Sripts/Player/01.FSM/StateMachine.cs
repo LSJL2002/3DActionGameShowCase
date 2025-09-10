@@ -5,7 +5,7 @@ public interface Istate
     public void Enter();
     public void Exit();
     public void HandleInput();
-    public void Update();
+    public void LogicUpdate();
     public void PhysicsUpdate();
 }
 
@@ -31,7 +31,7 @@ public abstract class StateMachine
     public void Update()
     {
 
-        currentState?.Update();
+        currentState?.LogicUpdate();
     }
 
     public void Physicsupdate()

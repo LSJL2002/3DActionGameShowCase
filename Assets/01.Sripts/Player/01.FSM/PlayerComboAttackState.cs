@@ -37,9 +37,9 @@ public class PlayerComboAttackState : PlayerAttackState
         }
     }
 
-    public override void Update()
+    public override void LogicUpdate()
     {
-        base.Update();
+        base.LogicUpdate();
         ForceMove();
 
         float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
