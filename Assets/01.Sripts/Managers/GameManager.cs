@@ -58,7 +58,7 @@ public class GameManager : Singleton<GameManager>
         ChangeState(eGameState.GamePlaying);
 
         // SceneLoadManager를 통해 게임 씬으로 전환
-        //SceneLoadManager.Instance.ChangeScene(0);
+        // SceneLoadManager.Instance.ChangeScene(0);
     }
 
     // 게임 일시정지
@@ -91,7 +91,7 @@ public class GameManager : Singleton<GameManager>
         ChangeState(eGameState.GameOver);
 
         // 게임오버씬으로 전환
-        //SceneLoadManager.Instance.ChangeScene(0);
+        // SceneLoadManager.Instance.ChangeScene(0);
     }
 
     // 게임 클리어
@@ -101,6 +101,6 @@ public class GameManager : Singleton<GameManager>
         ChangeState(eGameState.GameClear);
 
         // 게임클리어씬으로 전환
-        //SceneLoadManager.Instance.ChangeScene(0);
+        // SceneLoadManager.Instance.ChangeScene(0);
     }
 }
