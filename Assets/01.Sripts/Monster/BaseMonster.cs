@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
@@ -11,15 +11,16 @@ public class BaseMonster : MonoBehaviour, IDamageable
     
     public Animator Animator { get; private set; }
     public NavMeshAgent Agent { get; private set; }
-    //public StatHandler Stats {get; private set; }
+    public MonsterStatHandler Stats {get; private set; }
 
-    // Start is called before the first frame update
+    public Transform EnemeyTarget { get; set; }
+    //
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -27,6 +28,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public virtual void OnTakeDamage(int amount)
     {
-
+        Stats.CurrentHP -= 10;
+        if (Stats.CurrentHP <= 0)
+        {
+            Stats.Die();
+        }
     }
 }
