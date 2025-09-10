@@ -53,14 +53,14 @@ public class MonsterBaseState : Istate
         if (stateMachine.Monster.Agent.isActiveAndEnabled)
         {
             stateMachine.Monster.Agent.isStopped = true;
-            stateMachine.Monster.Agent.velocity = Vector3.zero;
+            stateMachine.Monster.Agent.speed = 0f;
         }
     }
     protected bool IsEnemyInDetectionRange()
     {
-        if (stateMachine.Monster.EnemeyTarget == null) return false;
+        if (stateMachine.Monster.PlayerTarget == null) return false;
 
-        float distSqr = (stateMachine.Monster.EnemeyTarget.position - stateMachine.Monster.transform.position).sqrMagnitude;
-        return true;
+        float distSqr = (stateMachine.Monster.PlayerTarget.position - stateMachine.Monster.transform.position).sqrMagnitude;
+        return distSqr <= stateMachine.Monster.Stats.DetectRange * stateMachine.Monster.Stats.DetectRange;
     }
 }

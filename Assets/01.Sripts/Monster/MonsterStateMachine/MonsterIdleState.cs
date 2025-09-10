@@ -12,4 +12,15 @@ public class MonsterIdleState : MonsterBaseState
         StopMoving();
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
     }
+
+    public override void Update()
+    {
+        
+    }
+
+    public override void Exit()
+    {
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
+    }
+    
 }
