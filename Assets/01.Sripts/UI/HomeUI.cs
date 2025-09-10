@@ -9,22 +9,22 @@ public class HomeUI : UIBase
         switch(str)
         {
             case "GameStart":
-                // °ÔÀÓ¸Å´ÏÀúÀÇ °ÔÀÓ½ÃÀÛ ¸Ş¼­µå¸¦ È£Ãâ
+                // ê²Œì„ë§¤ë‹ˆì €ì˜ ê²Œì„ì‹œì‘ ë©”ì„œë“œë¥¼ í˜¸ì¶œ
                 GameManager.Instance.StartGame();
                 break;
 
             case "OptionUI":
-                // IU¸Å´ÏÀúÀÇ Show ¸Ş¼­µå¸¦ È£ÃâÇÏ¿© OptionUI¸¦ È­¸é¿¡ Ç¥½Ã
+                // IUë§¤ë‹ˆì €ì˜ Show ë©”ì„œë“œë¥¼ í˜¸ì¶œí•˜ì—¬ OptionUIë¥¼ í™”ë©´ì— í‘œì‹œ
                 await UIManager.Instance.Show<OptionUI>();
                 break;
 
-            case "GameExit":
-                // ¾îÇÃ¸®ÄÉÀÌ¼Ç Á¾·á
+            case "Quit":
+                // ì–´í”Œë¦¬ì¼€ì´ì…˜ ì¢…ë£Œ
                 Application.Quit();
                 break;
         }
 
-        // ÇöÀç ÆË¾÷Ã¢ ´İ±â
+        // í˜„ì¬ íŒì—…ì°½ ë‹«ê¸°
         Hide();
     }
 }

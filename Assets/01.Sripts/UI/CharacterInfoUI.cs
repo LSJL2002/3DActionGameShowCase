@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OptionUI : UIBase
+public class CharacterInfoUI : UIBase
 {
     public void OnClickButton(string str)
     {
@@ -11,11 +11,6 @@ public class OptionUI : UIBase
             // 이전 UI로 돌아가기
             case "Return":
                 UIManager.Instance.previousUI.canvas.gameObject.SetActive(true);
-                break;
-
-            case "Quit":
-                // Home씬으로 돌아가기 (거기서 종료가능)
-                SceneLoadManager.Instance.ChangeScene(1);
                 break;
         }
 
