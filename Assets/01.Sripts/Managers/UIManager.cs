@@ -2,25 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// Á¦³×¸¯ ½Ì±ÛÅæ ½ºÅ©¸³Æ®¸¦ »ó¼Ó
+// ì œë„¤ë¦­ ì‹±ê¸€í†¤ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ìƒì†
 public class UIManager : Singleton<UIManager>
 {
     public static int ScreenWidth = 1920;
     public static int ScreenHeight = 1080;
 
-    public UIBase previousUI; // ÀÌÀü È°¼ºÈ­ µÈ UI¸¦ ÀúÀåÇÒ º¯¼ö
-    public UIBase currentUI; // ÇöÀç È°¼ºÈ­ µÈ UI¸¦ ÀúÀåÇÒ º¯¼ö
+    public UIBase previousUI; // ì´ì „ í™œì„±í™” ëœ UIë¥¼ ì €ì¥í•  ë³€ìˆ˜
+    public UIBase currentUI; // í˜„ì¬ í™œì„±í™” ëœ UIë¥¼ ì €ì¥í•  ë³€ìˆ˜
 
-    // ÇÑ¹ø »ı¼ºÇÑ UI¸¦ ´Ù½Ã »ı¼ºÇÏÁö ¾Êµµ·Ï Dictionary·Î °ü¸®
+    // í•œë²ˆ ìƒì„±í•œ UIë¥¼ ë‹¤ì‹œ ìƒì„±í•˜ì§€ ì•Šë„ë¡ Dictionaryë¡œ ê´€ë¦¬
     private Dictionary<string, UIBase> ui_List = new Dictionary<string, UIBase>();
 
-    // ´Ù¸¥ ½ºÅ©¸³Æ®¿¡¼­ UI¸¦ ½±°Ô ¶ç¿ï ¼ö ÀÖµµ·Ï Á¦³×¸¯ ¸Ş¼­µå Á¦°ø
-    // ¸®¼Ò½º¸Å´ÏÀúÀÇ LoadAsset ¸Ş¼­µå°¡ ºñµ¿±â ¸Ş¼­µåÀÌ¹Ç·Î Show ¸Ş¼­µåµµ ºñµ¿±â ¸Ş¼­µå·Î º¯°æ (¹İÈ¯Å¸ÀÔ async Task<T>)
+    // ë‹¤ë¥¸ ìŠ¤í¬ë¦½íŠ¸ì—ì„œ UIë¥¼ ì‰½ê²Œ ë„ìš¸ ìˆ˜ ìˆë„ë¡ ì œë„¤ë¦­ ë©”ì„œë“œ ì œê³µ
+    // ë¦¬ì†ŒìŠ¤ë§¤ë‹ˆì €ì˜ LoadAsset ë©”ì„œë“œê°€ ë¹„ë™ê¸° ë©”ì„œë“œì´ë¯€ë¡œ Show ë©”ì„œë“œë„ ë¹„ë™ê¸° ë©”ì„œë“œë¡œ ë³€ê²½ (ë°˜í™˜íƒ€ì… async Task<T>)
     public async Task<T> Show<T>() where T : UIBase
     {
-        // ÇöÀçUI»óÅÂ°¡ ÀÖ¾ú´Ù¸é, ÀÌÀüUI»óÅÂ º¯¼ö¿¡ ÀúÀå
+        // í˜„ì¬UIìƒíƒœê°€ ìˆì—ˆë‹¤ë©´, ì´ì „UIìƒíƒœ ë³€ìˆ˜ì— ì €ì¥
         if (currentUI != null)
         {
             previousUI = currentUI;
@@ -28,58 +29,61 @@ public class UIManager : Singleton<UIManager>
 
         string uiName = typeof(T).ToString();
 
-        // µñ¼Å³Ê¸®¿¡¼­ key : uiName¿¡ ÇØ´çÇÏ´Â UIBase¸¦ ²¨³»¼­ uiBase¿¡ ÀúÀå
+        // ë”•ì…”ë„ˆë¦¬ì—ì„œ key : uiNameì— í•´ë‹¹í•˜ëŠ” UIBaseë¥¼ êº¼ë‚´ì„œ uiBaseì— ì €ì¥
         ui_List.TryGetValue(uiName, out UIBase uiBase);
 
         if(uiBase == null)
         {
-            // ¾øÀ¸¸é ·Îµå ÇÔ¼ö¸¦ ÅëÇØ¼­ ¸®¼Ò½º¸Å´ÏÀúÀÇ ÇÔ¼ö¸¦ È£ÃâÇÏ¿© UI¿Í Äµ¹ö½º¸¦ ·Îµå
-            // await : ¹İÈ¯Å¸ÀÔÀÌ stringÀÌ µÇµµ·Ï ¸ØÃè´Ù°¡ ¹Ş°í º¯¼ö¿¡ ÀúÀåÇÑ´Ù´Â ÀÇ¹Ì
-            // (awaitÀÌ ¾øÀ¸¸é Task<T> Å¸ÀÔÀÌ µÇ¾î¹ö·Á¼­ Å¸ÀÔºÒÀÏÄ¡ ¿À·ù)
+            // ì—†ìœ¼ë©´ ë¡œë“œ í•¨ìˆ˜ë¥¼ í†µí•´ì„œ ë¦¬ì†ŒìŠ¤ë§¤ë‹ˆì €ì˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ UIì™€ ìº”ë²„ìŠ¤ë¥¼ ë¡œë“œ
+            // await : ë°˜í™˜íƒ€ì…ì´ stringì´ ë˜ë„ë¡ ë©ˆì·„ë‹¤ê°€ ë°›ê³  ë³€ìˆ˜ì— ì €ì¥í•œë‹¤ëŠ” ì˜ë¯¸
+            // (awaitì´ ì—†ìœ¼ë©´ Task<T> íƒ€ì…ì´ ë˜ì–´ë²„ë ¤ì„œ íƒ€ì…ë¶ˆì¼ì¹˜ ì˜¤ë¥˜)
             uiBase = await Load<T>(uiName);
 
-            // »ı¼ºÇÑ ¸®¼Ò½º¸¦ µñ¼Å³Ê¸®¿¡ Ãß°¡
+            // ìƒì„±í•œ ë¦¬ì†ŒìŠ¤ë¥¼ ë”•ì…”ë„ˆë¦¬ì— ì¶”ê°€
             ui_List.Add(uiName, uiBase);
         }
 
-        // ÇöÀç UI»óÅÂ¸¦ º¯¼ö¿¡ ÀúÀå
+        // í˜„ì¬ UIìƒíƒœë¥¼ ë³€ìˆ˜ì— ì €ì¥
         currentUI = uiBase;
 
-        // »ı¼ºÇÑ UI È°¼ºÈ­
+        // ìƒì„±í•œ UI í™œì„±í™”
         uiBase.canvas.gameObject.SetActive(true);
         Debug.Log(uiName + " Show");
+
+        Debug.Log($"preUI : {previousUI}");
+        Debug.Log($"curUI : {currentUI}");
 
         return (T)uiBase;
     }
 
-    // ¸®¼Ò½º¸Å´ÏÀú¸¦ ÅëÇÏ¿© UI ÇÁ¸®ÆÕÀ» ·ÎµåÇÏ°í Äµ¹ö½º¸¦ »ı¼ºÇÏ´Â ¸Ş¼­µå
-    // ¸®¼Ò½º¸Å´ÏÀúÀÇ LoadAsset ¸Ş¼­µå°¡ ºñµ¿±â ¸Ş¼­µåÀÌ¹Ç·Î Show ¸Ş¼­µåµµ ºñµ¿±â ¸Ş¼­µå·Î º¯°æ (¹İÈ¯Å¸ÀÔ async Task<T>)
+    // ë¦¬ì†ŒìŠ¤ë§¤ë‹ˆì €ë¥¼ í†µí•˜ì—¬ UI í”„ë¦¬íŒ¹ì„ ë¡œë“œí•˜ê³  ìº”ë²„ìŠ¤ë¥¼ ìƒì„±í•˜ëŠ” ë©”ì„œë“œ
+    // ë¦¬ì†ŒìŠ¤ë§¤ë‹ˆì €ì˜ LoadAsset ë©”ì„œë“œê°€ ë¹„ë™ê¸° ë©”ì„œë“œì´ë¯€ë¡œ Show ë©”ì„œë“œë„ ë¹„ë™ê¸° ë©”ì„œë“œë¡œ ë³€ê²½ (ë°˜í™˜íƒ€ì… async Task<T>)
     public async Task<T> Load<T>(string uiName) where T : UIBase
     {
-        // ""À¸·Î µÈ »õ·Î¿î °ÔÀÓ¿ÀºêÁ§Æ® »ı¼º
+        // ""ìœ¼ë¡œ ëœ ìƒˆë¡œìš´ ê²Œì„ì˜¤ë¸Œì íŠ¸ ìƒì„±
         var newCanvasObject = new GameObject(uiName + "Canvas");
 
-        // 'Canvas' ÄÄÆ÷³ÍÆ® Ãß°¡ ÈÄ º¯¼ö¿¡ ÀúÀå ¹× renderMode ¼³Á¤
+        // 'Canvas' ì»´í¬ë„ŒíŠ¸ ì¶”ê°€ í›„ ë³€ìˆ˜ì— ì €ì¥ ë° renderMode ì„¤ì •
         var canvas = newCanvasObject.gameObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
-        // 'CanvasScaler' ÄÄÆ÷³ÍÆ® Ãß°¡ ÈÄ º¯¼ö¿¡ ÀúÀå ¹× uiScaleMode, referenceResolution ¼³Á¤
+        // 'CanvasScaler' ì»´í¬ë„ŒíŠ¸ ì¶”ê°€ í›„ ë³€ìˆ˜ì— ì €ì¥ ë° uiScaleMode, referenceResolution ì„¤ì •
         var canvasScaler = newCanvasObject.gameObject.AddComponent<CanvasScaler>();
         canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         canvasScaler.referenceResolution = new Vector2(ScreenWidth, ScreenHeight);
 
-        // 'GraphicRaycaster' ÄÄÆ÷³ÍÆ® Ãß°¡
+        // 'GraphicRaycaster' ì»´í¬ë„ŒíŠ¸ ì¶”ê°€
         newCanvasObject.gameObject.AddComponent<GraphicRaycaster>();
 
-        // ¸®¼Ò½º¸Å´ÏÀúÀÇ LoadAsset ¸Ş¼­µå¸¦ È£ÃâÇÏ¿© UI ÇÁ¸®ÆÕÀ» ·Îµå ÈÄ º¯¼ö¿¡ ÀúÀå
-        // await : ¹İÈ¯Å¸ÀÔÀÌ GameObject°¡ µÇµµ·Ï ¸ØÃè´Ù°¡ ¹Ş°í º¯¼ö¿¡ ÀúÀåÇÑ´Ù´Â ÀÇ¹Ì
-        // (awaitÀÌ ¾øÀ¸¸é Task<T> Å¸ÀÔÀÌ µÇ¾î¹ö·Á¼­ Å¸ÀÔºÒÀÏÄ¡ ¿À·ù)
+        // ë¦¬ì†ŒìŠ¤ë§¤ë‹ˆì €ì˜ LoadAsset ë©”ì„œë“œë¥¼ í˜¸ì¶œí•˜ì—¬ UI í”„ë¦¬íŒ¹ì„ ë¡œë“œ í›„ ë³€ìˆ˜ì— ì €ì¥
+        // await : ë°˜í™˜íƒ€ì…ì´ GameObjectê°€ ë˜ë„ë¡ ë©ˆì·„ë‹¤ê°€ ë°›ê³  ë³€ìˆ˜ì— ì €ì¥í•œë‹¤ëŠ” ì˜ë¯¸
+        // (awaitì´ ì—†ìœ¼ë©´ Task<T> íƒ€ì…ì´ ë˜ì–´ë²„ë ¤ì„œ íƒ€ì…ë¶ˆì¼ì¹˜ ì˜¤ë¥˜)
         var prefab = await ResourceManager.Instance.LoadAsset<GameObject>(uiName, eAssetType.UI);
 
-        // ÇÁ¸®ÆÕÀ» Äµ¹ö½ºÀÇ ÀÚ½ÄÀ¸·Î »ı¼º ÈÄ º¯¼ö¿¡ ÀúÀå
+        // í”„ë¦¬íŒ¹ì„ ìº”ë²„ìŠ¤ì˜ ìì‹ìœ¼ë¡œ ìƒì„± í›„ ë³€ìˆ˜ì— ì €ì¥
         var obj = Instantiate(prefab, newCanvasObject.transform);
 
-        // Instantiate¸¦ ÅëÇØ »ı¼ºµÈ ¿ÀºêÁ§Æ®ÀÇ ÀÌ¸§¿¡¼­ (Clone) Á¦°Å
+        // Instantiateë¥¼ í†µí•´ ìƒì„±ëœ ì˜¤ë¸Œì íŠ¸ì˜ ì´ë¦„ì—ì„œ (Clone) ì œê±°
         obj.name = obj.name.Replace("(Clone)", "");
 
         var result = obj.GetComponent<T>();
@@ -89,7 +93,7 @@ public class UIManager : Singleton<UIManager>
         return result;
     }
 
-    // ´Ù¸¥ ½ºÅ©¸³Æ®¿¡¼­ UI¸¦ ½±°Ô °¡Á®¿Ã ¼ö ÀÖµµ·Ï Á¦³×¸¯ ¸Ş¼­µå Á¦°ø
+    // ë‹¤ë¥¸ ìŠ¤í¬ë¦½íŠ¸ì—ì„œ UIë¥¼ ì‰½ê²Œ ê°€ì ¸ì˜¬ ìˆ˜ ìˆë„ë¡ ì œë„¤ë¦­ ë©”ì„œë“œ ì œê³µ
     public T Get<T>() where T : UIBase
     {
         string uiName = typeof(T).ToString();
@@ -104,7 +108,7 @@ public class UIManager : Singleton<UIManager>
         return (T)uiBase;
     }
 
-    // UI¸¦ ¼û±æ ¶§ È£Ãâ
+    // UIë¥¼ ìˆ¨ê¸¸ ë•Œ í˜¸ì¶œ
     public void Hide<T>() where T : UIBase
     {
         string uiName = typeof(T).ToString();
@@ -121,16 +125,30 @@ public class UIManager : Singleton<UIManager>
             return;
         }
 
-        // »ı¼ºÇÑ UI ºñÈ°¼ºÈ­
+        // ìƒì„±í•œ UI ë¹„í™œì„±í™”
         uiBase.canvas.gameObject.SetActive(false);
 
-        // UI Á¦°Å (µñ¼Å³Ê¸®¿¡¼­ »èÁ¦ÇÏ°í Äµ¹ö½º ¿ÀºêÁ§Æ® ÆÄ±«)
+        // UI ì œê±° (ë”•ì…”ë„ˆë¦¬ì—ì„œ ì‚­ì œí•˜ê³  ìº”ë²„ìŠ¤ ì˜¤ë¸Œì íŠ¸ íŒŒê´´)
         //DestroyImmediate(uiBase.canvas.gameObject);
         //ui_List.Remove(uiName);
     }
 
-    // ¾ÀÀüÈ¯½Ã ÀÌÀü ¾À¿¡¼­ »ç¿ëÇÑ µñ¼Å³Ê¸® ¸®½ºÆ® ÀüºÎ ÆÄ±«
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        // ì”¬ ë¡œë“œ ì´ë²¤íŠ¸ êµ¬ë…
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
     protected override void OnDisable()
+    {
+        base.OnDisable();
+        // ì”¬ ë¡œë“œ ì´ë²¤íŠ¸ êµ¬ë… í•´ì œ
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // ì´ì „ ì”¬ì—ì„œ ì‚¬ìš©í•œ ë”•ì…”ë„ˆë¦¬ ë¦¬ìŠ¤íŠ¸ ì •ë¦¬ (ì”¬ì „í™˜ì‹œ í˜¸ì¶œí• ê²ƒ)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         foreach (var uiBase in ui_List.Values)
         {
@@ -140,54 +158,7 @@ public class UIManager : Singleton<UIManager>
             }
         }
 
-        // µñ¼Å³Ê¸® ¸ñ·Ï »èÁ¦
+        // ë”•ì…”ë„ˆë¦¬ ëª©ë¡ ì‚­ì œ
         ui_List.Clear();
     }
-
-    // °ÔÀÓ¸Å´ÏÀúÀÇ »óÅÂÀüÈ¯ ÀÌº¥Æ®¸¦ ±¸µ¶
-    //protected override void OnEnable()
-    //{
-    //    base.OnEnable();
-    //    GameManager.Instance.changeStage += ChangeMainUI;
-    //}
-
-    //// °ÔÀÓ¸Å´ÏÀúÀÇ »óÅÂÀüÈ¯ ÀÌº¥Æ®¸¦ ±¸µ¶ÇØÁ¦
-    //protected override void OnDisable()
-    //{
-    //    base.OnDisable();
-    //    GameManager.Instance.changeStage += ChangeMainUI;
-    //}
-
-    // °ÔÀÓ¸Å´ÏÀúÀÇ »óÅÂÀüÈ¯ ÀÌº¥Æ®¿¡ Ãß°¡ÇÒ ÇÔ¼ö
-    //public async void ChangeMainUI(eGameState newState)
-    //{
-    //    // °ÔÀÓ¸Å´ÏÀúÀÇ »óÅÂ¿¡ ¸Â´Â ¸ŞÀÎUI¸¦ ¼Â¾÷
-    //    switch (newState)
-    //    {
-    //        // Home UI È°¼ºÈ­
-    //        case eGameState.Home:
-    //            await Show<HomeUI>();
-    //            break;
-
-    //        // °ÔÀÓ ÇÃ·¹ÀÌ UI È°¼ºÈ­
-    //        case eGameState.GamePlaying:
-    //            //await Show<GamePlayingUI>();
-    //            break;
-
-    //        // ÀÏ½ÃÁ¤Áö  UI È°¼ºÈ­
-    //        case eGameState.Pause:
-    //            //await Show<PauseUI>();
-    //            break;
-
-    //        // °ÔÀÓ¿À¹ö UI È°¼ºÈ­
-    //        case eGameState.GameOver:
-    //            //await Show<GameOverUI>();
-    //            break;
-
-    //        // °ÔÀÓÅ¬¸®¾î  UI È°¼ºÈ­
-    //        case eGameState.GameClear:
-    //            //await Show<GameClearUI>();
-    //            break;
-    //    }
-    //}
 }

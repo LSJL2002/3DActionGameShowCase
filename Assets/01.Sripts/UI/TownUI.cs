@@ -10,26 +10,26 @@ public class TownUI : UIBase
         {
             // 캐릭터 정보UI 활성화
             case "CharacterInfo":
-                // await UIManager.Instance.Show<CharacterInfoUI>();
+                await UIManager.Instance.Show<CharacterInfoUI>();
                 break;
 
             // 인벤토리UI 활성화
             case "Inventory":
-                // await UIManager.Instance.Show<InventoryUI>();
+                await UIManager.Instance.Show<InventoryUI>();
                 break;
 
             // 상점UI 활성화
             case "Shop":
-                // await UIManager.Instance.Show<ShopUI>();
+                await UIManager.Instance.Show<ShopUI>();
                 break;
 
             // 퀘스트UI 활성화
             case "Quest":
-                // await UIManager.Instance.Show<QuestUI>();
+                await UIManager.Instance.Show<QuestUI>();
                 break;
 
             // 설정UI 활성화
-            case "OptionUI":
+            case "Option":
                 await UIManager.Instance.Show<OptionUI>();
                 break;
         }

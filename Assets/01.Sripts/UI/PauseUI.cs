@@ -8,28 +8,31 @@ public class PauseUI : UIBase
     {
         switch (str)
         {
-            // ÀÌÀü UI·Î µ¹¾Æ°¡±â
+            // ì´ì „ UIë¡œ ëŒì•„ê°€ê¸°
             case "Return":
+                // UIë§¤ë‹ˆì €ì˜ 'ì´ì „UI' ë³€ìˆ˜ë¥¼ ì°¾ì•„ í™œì„±í™”
                 UIManager.Instance.previousUI.canvas.gameObject.SetActive(true);
+                // UIë§¤ë‹ˆì €ì˜ 'í˜„ì¬UI' ë³€ìˆ˜ì— ì´ì „ ë³€ìˆ˜ë¥¼ ì €ì¥
+                UIManager.Instance.currentUI = UIManager.Instance.previousUI;
                 break;
 
-            // ÇöÀç °ÔÀÓ¾À ´Ù½Ã ½ÃÀÛ
+            // í˜„ì¬ ê²Œì„ì”¬ ë‹¤ì‹œ ì‹œì‘
             case "ReStart":
                 SceneLoadManager.Instance.ChangeScene(SceneLoadManager.Instance.NowSceneIndex);
                 break;
 
-            // IU¸Å´ÏÀúÀÇ Show ¸Ş¼­µå¸¦ È£ÃâÇÏ¿© OptionUI¸¦ È­¸é¿¡ Ç¥½Ã
+            // IUë§¤ë‹ˆì €ì˜ Show ë©”ì„œë“œë¥¼ í˜¸ì¶œí•˜ì—¬ OptionUIë¥¼ í™”ë©´ì— í‘œì‹œ
             case "Option":
                 await UIManager.Instance.Show<OptionUI>();
                 break;
 
-            // È¨¾ÀÀ¸·Î µ¹¾Æ°¡±â
+            // í™ˆì”¬ìœ¼ë¡œ ëŒì•„ê°€ê¸°
             case "BackHome":
                 SceneLoadManager.Instance.ChangeScene(1);
                 break;
         }
 
-        // ÇöÀç ÆË¾÷Ã¢ ´İ±â
+        // í˜„ì¬ íŒì—…ì°½ ë‹«ê¸°
         Hide();
     }
 }

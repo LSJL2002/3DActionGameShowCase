@@ -63,29 +63,29 @@ public class GameUI : UIBase
     {
         base.Update();
        
-        // 플레이어 최대체력
-        int playerMaxHP = 0;
+        //// 플레이어 최대체력
+        //int playerMaxHP = 0;
 
-        // 플레이어 현재체력
-        int playerCurrentHP = 0;
+        //// 플레이어 현재체력
+        //int playerCurrentHP = 0;
 
-        // 플레이어 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
-        playerHPText.text = Mathf.FloorToInt( playerCurrentHP / playerMaxHP * 100 ).ToString() + "%";
+        //// 플레이어 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
+        //playerHPText.text = Mathf.FloorToInt( playerCurrentHP / playerMaxHP * 100 ).ToString() + "%";
 
-        // 플레이어 체력 슬라이더 업데이트
-        playerHPSlider.value = playerCurrentHP / playerMaxHP;
+        //// 플레이어 체력 슬라이더 업데이트
+        //playerHPSlider.value = playerCurrentHP / playerMaxHP;
 
-        // 플레이어 최대마력
-        int playerMaxMP = 0;
+        //// 플레이어 최대마력
+        //int playerMaxMP = 0;
 
-        // 플레이어 현재마력
-        int playerCurrentMP = 0;
+        //// 플레이어 현재마력
+        //int playerCurrentMP = 0;
 
-        // 플레이어 현재 마력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
-        playerMPText.text = Mathf.FloorToInt( playerCurrentMP / playerMaxMP * 100 ).ToString() + "%";
+        //// 플레이어 현재 마력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
+        //playerMPText.text = Mathf.FloorToInt( playerCurrentMP / playerMaxMP * 100 ).ToString() + "%";
 
-        // 플레이어 마력 슬라이더 업데이트
-        playerMPSlider.value = playerCurrentMP / playerMaxMP;
+        //// 플레이어 마력 슬라이더 업데이트
+        //playerMPSlider.value = playerCurrentMP / playerMaxMP;
 
         // 적과 조우했을 경우에만 업데이트
         if (isBattle)

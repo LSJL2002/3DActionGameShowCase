@@ -57,8 +57,8 @@ public class GameManager : Singleton<GameManager>
         // 게임 상태를 변경
         ChangeState(eGameState.GamePlaying);
 
-        // SceneLoadManager를 통해 게임 씬으로 전환
-        // SceneLoadManager.Instance.ChangeScene(0);
+        // SceneLoadManager를 통해 해당 씬으로 전환 (2:TownScene)
+        SceneLoadManager.Instance.ChangeScene(2);
     }
 
     // 게임 일시정지

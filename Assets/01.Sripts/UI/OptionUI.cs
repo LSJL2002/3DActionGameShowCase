@@ -10,7 +10,10 @@ public class OptionUI : UIBase
         {
             // 이전 UI로 돌아가기
             case "Return":
+                // UI매니저의 '이전UI' 변수를 찾아 활성화
                 UIManager.Instance.previousUI.canvas.gameObject.SetActive(true);
+                // UI매니저의 '현재UI' 변수에 이전 변수를 저장
+                UIManager.Instance.currentUI = UIManager.Instance.previousUI;
                 break;
 
             case "Quit":
