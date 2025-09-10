@@ -28,7 +28,8 @@ public class PlayerBaseState : Istate
     protected virtual void AddInputActionCallbacks()
     {
         PlayerController input = stateMachine.Player.Input;
-        input.PlayerActions.Move.canceled += OnMovementCanceled;
+        input.PlayerActions.Move.canceled += OnMoveCanceled;
+        input.PlayerActions.Shift.started += OnShiftStarted;
         input.PlayerActions.Attack.performed += OnAttackPerformed;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
         input.PlayerActions.Jump.started += OnJumpStarted;
@@ -38,7 +39,8 @@ public class PlayerBaseState : Istate
     protected virtual void RemoveInputActionCallbacks()
     {
         PlayerController input = stateMachine.Player.Input;
-        input.PlayerActions.Move.canceled -= OnMovementCanceled;
+        input.PlayerActions.Move.canceled -= OnMoveCanceled;
+        input.PlayerActions.Shift.started -= OnShiftStarted;
         input.PlayerActions.Attack.performed -= OnAttackPerformed;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
         input.PlayerActions.Jump.started -= OnJumpStarted;
@@ -51,15 +53,17 @@ public class PlayerBaseState : Istate
     {    }
 
 
-    protected virtual void OnMovementCanceled(InputAction.CallbackContext context) { }
+    protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
 
-    protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
+    protected virtual void OnShiftStarted(InputAction.CallbackContext context) { }
 
     protected virtual void OnAttackPerformed(InputAction.CallbackContext context)
          => stateMachine.IsAttacking = true;
 
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
         => stateMachine.IsAttacking = false;
+    protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
+
 
 
     protected void StartAnimation(int animatorHash)
@@ -75,7 +79,7 @@ public class PlayerBaseState : Istate
     {
         float speed = stateMachine.MovementInput.magnitude * stateMachine.MovementSpeedModifier;
         stateMachine.Player.Animator.SetFloat(
-            stateMachine.Player.AnimationData.MovementSpeedParameterHash,
+            stateMachine.Player.AnimationData.MoveSpeedParameterHash,
             speed
         );
     }
