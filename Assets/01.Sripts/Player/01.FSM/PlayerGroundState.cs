@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerGroundState : PlayerBaseState
 {
+
     public PlayerGroundState(PlayerStateMachine stateMachine) : base(stateMachine)
     {
     }
@@ -30,6 +31,9 @@ public class PlayerGroundState : PlayerBaseState
             OnAttack();
             return;
         }
+
+        Vector3 inputDir = GetMovementDir();
+        bool hasInput = inputDir.sqrMagnitude > 0.0001f;
     }
 
     public override void PhysicsUpdate()
@@ -43,13 +47,13 @@ public class PlayerGroundState : PlayerBaseState
         }
     }
 
-    protected override void OnMovementCancled(InputAction.CallbackContext context)
+    protected override void OnMovementCanceled(InputAction.CallbackContext context)
     {
         if (stateMachine.MovementInput == Vector2.zero) return;
 
         stateMachine.ChangeState(stateMachine.IdleState);
 
-        base.OnMovementCancled(context);
+        base.OnMovementCanceled(context);
     }
 
     protected override void OnJumpStarted(InputAction.CallbackContext context)

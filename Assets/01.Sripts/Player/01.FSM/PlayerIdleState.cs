@@ -10,9 +10,13 @@ public class PlayerIdleState : PlayerGroundState
 
     public override void Enter()
     {
-        stateMachine.MovementSpeedModifier = 0f;
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.IdleParameterHash);
+
+
+
+        // IdleState 진입 시 currentSpeedModifier 리셋
+        stateMachine.MovementSpeedModifier = 0f;
     }
 
     public override void Exit()
@@ -28,7 +32,6 @@ public class PlayerIdleState : PlayerGroundState
         if(stateMachine.MovementInput != Vector2.zero)
         {
             stateMachine.ChangeState(stateMachine.WalkState);
-            return;
         }
     }
 }

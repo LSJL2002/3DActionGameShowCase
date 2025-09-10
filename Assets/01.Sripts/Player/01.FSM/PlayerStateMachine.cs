@@ -6,14 +6,26 @@ public class PlayerStateMachine : StateMachine
 {
     public PlayerManager Player { get; }
 
-    public Vector2 MovementInput { get; set; }
-    public float MovementSpeed { get; private set; }
-    public float RotationDamping { get; private set; }
-    public float MovementSpeedModifier { get; set; } = 1f;
+    public Vector2 MovementInput { get; set; } // 입력 방향 (WASD, 스틱)
+    public float MovementSpeed { get; private set; } // 현재 이동 속도
+    public float RotationDamping { get; private set; } // 회전할 때 부드럽게 보정하는 값
+    public float MovementSpeedModifier // 속도 보정 계수
+    { 
+        get => _movementSpeedModifier; 
+        set 
+        {
+            _movementSpeedModifier = value;
+            Player.Animator.SetFloat(
+            Player.AnimationData.MovementSpeedParameterHash,
+            MovementSpeedModifier);
+        }
+    }   
+    private float _movementSpeedModifier = 1f;
 
-    public float JumpForce { get; set; }
-    public bool IsAttacking {  get; set; }
-    public int ComboIndex {  get; set; }
+
+    public float JumpForce { get; set; } //점프력
+    public bool IsAttacking {  get; set; } //공격중인지
+    public int ComboIndex {  get; set; } //콤보인덱스
 
     public Transform MainCamTransform { get; set; }
 

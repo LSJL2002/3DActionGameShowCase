@@ -19,7 +19,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     [field: SerializeField] public PlayerAnimationHash AnimationData { get; private set; }
     //런타임 계산이 필요한 데이터는 이렇게 초기화
 
-    public Animator Animator { get; private set; }
+    public Animator Animator { get; private set; } //루트모션은 본체에
     public CharacterController Controller { get; private set; }
     public PlayerController Input { get; private set; }
     public ForceReceiver ForceReceiver { get; private set; }
@@ -31,10 +31,11 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     {
         //임시함수
         Cursor.lockState = CursorLockMode.Locked;
+        Application.targetFrameRate = 120;
 
 
         AnimationData.Initialize();
-        Animator ??= GetComponentInChildren<Animator>();
+        Animator ??= GetComponent<Animator>();
         Controller ??= GetComponent<CharacterController>();
         Input ??= GetComponent<PlayerController>();
         ForceReceiver ??= GetComponent<ForceReceiver>();
@@ -54,7 +55,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     private void Update()
     {
         stateMachine.HandleInput();
-        stateMachine.Update();
+        stateMachine.LogicUpdate();
     }
 
     private void FixedUpdate()

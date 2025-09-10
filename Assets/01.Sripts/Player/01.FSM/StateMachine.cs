@@ -1,12 +1,14 @@
 
 
+using System;
+
 public interface Istate
 {
     public void Enter();
     public void Exit();
-    public void HandleInput();
-    public void LogicUpdate();
-    public void PhysicsUpdate();
+    public void HandleInput(); //키입력확인
+    public void LogicUpdate(); //체력회복 등 논리
+    public void PhysicsUpdate(); //물리계산
 }
 
 
@@ -23,19 +25,7 @@ public abstract class StateMachine
         currentState?.Enter();
     }
 
-    public void HandleInput()
-    {
-        currentState?.HandleInput();
-    }
-
-    public void Update()
-    {
-
-        currentState?.LogicUpdate();
-    }
-
-    public void Physicsupdate()
-    {
-        currentState?.PhysicsUpdate();
-    }
+    public void HandleInput() => currentState?.HandleInput();
+    public void LogicUpdate() => currentState?.LogicUpdate();
+    public void Physicsupdate() => currentState?.PhysicsUpdate();
 }
