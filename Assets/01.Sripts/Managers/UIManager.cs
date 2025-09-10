@@ -10,6 +10,9 @@ public class UIManager : Singleton<UIManager>
     public static int ScreenWidth = 1920;
     public static int ScreenHeight = 1080;
 
+    public UIBase previousUI; // 이전 활성화 된 UI를 저장할 변수
+    public UIBase currentUI; // 현재 활성화 된 UI를 저장할 변수
+
     // 한번 생성한 UI를 다시 생성하지 않도록 Dictionary로 관리
     private Dictionary<string, UIBase> ui_List = new Dictionary<string, UIBase>();
 
@@ -17,6 +20,12 @@ public class UIManager : Singleton<UIManager>
     // 리소스매니저의 LoadAsset 메서드가 비동기 메서드이므로 Show 메서드도 비동기 메서드로 변경 (반환타입 async Task<T>)
     public async Task<T> Show<T>() where T : UIBase
     {
+        // 현재UI상태가 있었다면, 이전UI상태 변수에 저장
+        if (currentUI != null)
+        {
+            previousUI = currentUI;
+        }
+
         string uiName = typeof(T).ToString();
 
         // 딕셔너리에서 key : uiName에 해당하는 UIBase를 꺼내서 uiBase에 저장
@@ -32,6 +41,9 @@ public class UIManager : Singleton<UIManager>
             // 생성한 리소스를 딕셔너리에 추가
             ui_List.Add(uiName, uiBase);
         }
+
+        // 현재 UI상태를 변수에 저장
+        currentUI = uiBase;
 
         // 생성한 UI 활성화
         uiBase.canvas.gameObject.SetActive(true);
