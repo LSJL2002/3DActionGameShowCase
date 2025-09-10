@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class MonsterIdleState : MonoBehaviour
+public class MonsterIdleState : MonsterBaseState
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public MonsterIdleState(MonsterStateMachine ms) : base(ms) { }
 
-    // Update is called once per frame
-    void Update()
+    public override void Enter()
     {
-        
+        StopMoving();
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
     }
 }

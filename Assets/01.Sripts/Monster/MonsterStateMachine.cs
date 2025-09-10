@@ -8,15 +8,13 @@ public class MonsterStateMachine : StateMachine
     public float MovementSpeedModifier { get; set; }
 
     public GameObject Target { get; private set; }
-    void Start()
+    public MonsterIdleState MonsterIdleState { get; }
+
+    public MonsterStateMachine(BaseMonster monster)
     {
+        Monster = monster;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        MonsterIdleState = new MonsterIdleState(this);
     }
     public float MovementSpeed => Monster.Stats.MoveSpeed * MovementSpeedModifier;
 }

@@ -55,4 +55,11 @@ public class MonsterBaseState : Istate
             stateMachine.Monster.Agent.velocity = Vector3.zero;
         }
     }
+    protected bool IsEnemyInDetectionRange()
+    {
+        if (stateMachine.Monster.EnemeyTarget == null) return false;
+
+        float distSqr = (stateMachine.Monster.EnemeyTarget.position - stateMachine.Monster.transform.position).sqrMagnitude;
+        return true;
+    }
 }
