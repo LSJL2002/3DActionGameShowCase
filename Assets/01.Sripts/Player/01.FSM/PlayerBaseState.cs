@@ -9,6 +9,7 @@ public class PlayerBaseState : Istate
     protected PlayerStateMachine stateMachine;
     protected readonly PlayerGroundData groundData;
 
+
     public PlayerBaseState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
@@ -28,11 +29,9 @@ public class PlayerBaseState : Istate
     {
         PlayerController input = stateMachine.Player.Input;
         input.PlayerActions.Move.canceled += OnMovementCanceled;
-        input.PlayerActions.Run.started += OnRunStarted;
-        input.PlayerActions.Run.canceled += OnRunCanceled;
         input.PlayerActions.Attack.performed += OnAttackPerformed;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
-        //input.PlayerActions.Jump.started += OnJumpStarted;
+        input.PlayerActions.Jump.started += OnJumpStarted;
 
     }
 
@@ -40,24 +39,19 @@ public class PlayerBaseState : Istate
     {
         PlayerController input = stateMachine.Player.Input;
         input.PlayerActions.Move.canceled -= OnMovementCanceled;
-        input.PlayerActions.Run.started -= OnRunStarted;
-        input.PlayerActions.Run.canceled -= OnRunCanceled;
         input.PlayerActions.Attack.performed -= OnAttackPerformed;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
-        //input.PlayerActions.Jump.started -= OnJumpStarted;
+        input.PlayerActions.Jump.started -= OnJumpStarted;
 
     }
 
     public virtual void HandleInput() => ReadMovementInput();
     public virtual void PhysicsUpdate() => MoveCharacter();
-    public virtual void LogicUpdate() => UpdateAnimatorMovementSpeed();
+    public virtual void LogicUpdate()
+    {    }
 
 
     protected virtual void OnMovementCanceled(InputAction.CallbackContext context) { }
-
-    protected virtual void OnRunStarted(InputAction.CallbackContext context) { }
-
-    protected virtual void OnRunCanceled(InputAction.CallbackContext context) { }
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
 
@@ -96,7 +90,7 @@ public class PlayerBaseState : Istate
     {
         Vector3 moveDir = GetMovementDir();
 
-        //Ä³¸¯ÅÍ È¸Àü
+        //ìºë¦­í„° íšŒì „
         if (moveDir.sqrMagnitude > 0.01f)
         {
             Quaternion targetRot = Quaternion.LookRotation(moveDir);
@@ -107,17 +101,17 @@ public class PlayerBaseState : Istate
             );
         }
 
-        // ÀÌµ¿ Ã³¸®
+        // ì´ë™ ì²˜ë¦¬
         if (stateMachine.Player.Animator.applyRootMotion)
         {
-            // ·çÆ®¸ğ¼Ç »ç¿ë ½Ã Animator.deltaPosition Àû¿ë
+            // ë£¨íŠ¸ëª¨ì…˜ ì‚¬ìš© ì‹œ Animator.deltaPosition ì ìš©
             Vector3 rootMove = stateMachine.Player.Animator.deltaPosition;
             rootMove += stateMachine.Player.ForceReceiver.Movement * Time.deltaTime;
             stateMachine.Player.Controller.Move(rootMove);
         }
         else
         {
-            // ·çÆ®¸ğ¼Ç ²¨Á®ÀÖÀ¸¸é ±âÁ¸ ¹æ½Ä
+            // ë£¨íŠ¸ëª¨ì…˜ êº¼ì ¸ìˆìœ¼ë©´ ê¸°ì¡´ ë°©ì‹
             float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
             Vector3 move = moveDir * moveSpeed + stateMachine.Player.ForceReceiver.Movement;
             stateMachine.Player.Controller.Move(move * Time.deltaTime);
@@ -143,7 +137,7 @@ public class PlayerBaseState : Istate
         stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime);
     }
 
-    protected float GetNormalizeTime(Animator animator, string tag) //¿¡´Ï¸ŞÀÌ¼Ç Æ¯Á¤ ÅÂ±×
+    protected float GetNormalizeTime(Animator animator, string tag) //ì—ë‹ˆë©”ì´ì…˜ íŠ¹ì • íƒœê·¸
     {
         AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
         AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);

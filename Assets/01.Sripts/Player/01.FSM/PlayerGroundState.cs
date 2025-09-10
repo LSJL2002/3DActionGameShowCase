@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerGroundState : PlayerBaseState
 {
-    private bool isWalking;
 
     public PlayerGroundState(PlayerStateMachine stateMachine) : base(stateMachine)
     {
@@ -15,8 +14,6 @@ public class PlayerGroundState : PlayerBaseState
     {
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
-
-        isWalking = false;
     }
 
     public override void Exit()
@@ -37,9 +34,6 @@ public class PlayerGroundState : PlayerBaseState
 
         Vector3 inputDir = GetMovementDir();
         bool hasInput = inputDir.sqrMagnitude > 0.0001f;
-
-
-        Rotate(inputDir);
     }
 
     public override void PhysicsUpdate()
@@ -71,18 +65,5 @@ public class PlayerGroundState : PlayerBaseState
     protected virtual void OnAttack()
     {
         stateMachine.ChangeState(stateMachine.ComboAttackState);
-    }
-
-    private void Rotate(Vector3 dir)
-    {
-        if (dir.sqrMagnitude > 0.0001f)
-        {
-            Quaternion targetRot = Quaternion.LookRotation(dir);
-            stateMachine.Player.transform.rotation = Quaternion.Slerp(
-                stateMachine.Player.transform.rotation,
-                targetRot,
-                Time.deltaTime * stateMachine.RotationDamping
-            );
-        }
     }
 }

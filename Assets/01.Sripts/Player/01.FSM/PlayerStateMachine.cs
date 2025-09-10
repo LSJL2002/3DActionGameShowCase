@@ -6,13 +6,26 @@ public class PlayerStateMachine : StateMachine
 {
     public PlayerManager Player { get; }
 
-    public Vector2 MovementInput { get; set; } // ÀÔ·Â ¹æÇâ (WASD, ½ºÆ½)
-    public float MovementSpeed { get; private set; } // ÇöÀç ÀÌµ¿ ¼Óµµ
-    public float RotationDamping { get; private set; } // È¸ÀüÇÒ ¶§ ºÎµå·´°Ô º¸Á¤ÇÏ´Â °ª
-    public float MovementSpeedModifier { get; set; } = 1f; // ¼Óµµ º¸Á¤ °è¼ö
-    public float JumpForce { get; set; } //Á¡ÇÁ·Â
-    public bool IsAttacking {  get; set; } //°ø°İÁßÀÎÁö
-    public int ComboIndex {  get; set; } //ÄŞº¸ÀÎµ¦½º
+    public Vector2 MovementInput { get; set; } // ì…ë ¥ ë°©í–¥ (WASD, ìŠ¤í‹±)
+    public float MovementSpeed { get; private set; } // í˜„ì¬ ì´ë™ ì†ë„
+    public float RotationDamping { get; private set; } // íšŒì „í•  ë•Œ ë¶€ë“œëŸ½ê²Œ ë³´ì •í•˜ëŠ” ê°’
+    public float MovementSpeedModifier // ì†ë„ ë³´ì • ê³„ìˆ˜
+    { 
+        get => _movementSpeedModifier; 
+        set 
+        {
+            _movementSpeedModifier = value;
+            Player.Animator.SetFloat(
+            Player.AnimationData.MovementSpeedParameterHash,
+            MovementSpeedModifier);
+        }
+    }   
+    private float _movementSpeedModifier = 1f;
+
+
+    public float JumpForce { get; set; } //ì í”„ë ¥
+    public bool IsAttacking {  get; set; } //ê³µê²©ì¤‘ì¸ì§€
+    public int ComboIndex {  get; set; } //ì½¤ë³´ì¸ë±ìŠ¤
 
     public Transform MainCamTransform { get; set; }
 

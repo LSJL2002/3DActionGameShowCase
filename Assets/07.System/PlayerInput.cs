@@ -57,6 +57,15 @@ namespace UnityEngine.InputSystem
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""6c2ab1b8-8984-453a-af3d-a3c78ae1679a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""7eae478f-d95d-49fe-a55b-fa3efcf9a752"",
@@ -114,15 +123,6 @@ namespace UnityEngine.InputSystem
                     ""name"": ""Menu"",
                     ""type"": ""Button"",
                     ""id"": ""13088985-771f-4df9-b9ae-c0b474e1846e"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Attack"",
-                    ""type"": ""Button"",
-                    ""id"": ""6c2ab1b8-8984-453a-af3d-a3c78ae1679a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -370,23 +370,45 @@ namespace UnityEngine.InputSystem
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8369e4f1-3eb1-47d3-ad76-79d59ce1772d"",
-                    ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Run"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""e6d7e9b4-4f06-4181-ad82-d7f2a14a6152"",
                     ""path"": ""<Keyboard>/z"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8d4b7f94-17ff-47d4-8a57-2689090373db"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseR"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f0815b3d-74d9-4b84-adb9-1a278ab42ac7"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""617ca304-64e7-4bea-8cbf-95f427590061"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PotalGun"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -447,34 +469,12 @@ namespace UnityEngine.InputSystem
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8d4b7f94-17ff-47d4-8a57-2689090373db"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""id"": ""8369e4f1-3eb1-47d3-ad76-79d59ce1772d"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""MouseR"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f0815b3d-74d9-4b84-adb9-1a278ab42ac7"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Inventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""617ca304-64e7-4bea-8cbf-95f427590061"",
-                    ""path"": ""<Keyboard>/leftCtrl"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""PotalGun"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1065,6 +1065,7 @@ namespace UnityEngine.InputSystem
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
+            m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Flash = m_Player.FindAction("Flash", throwIfNotFound: true);
             m_Player_CameraToggle = m_Player.FindAction("CameraToggle", throwIfNotFound: true);
@@ -1072,7 +1073,6 @@ namespace UnityEngine.InputSystem
             m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
             m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
             m_Player_Menu = m_Player.FindAction("Menu", throwIfNotFound: true);
-            m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
             m_Player_MouseR = m_Player.FindAction("MouseR", throwIfNotFound: true);
             m_Player_PotalGun = m_Player.FindAction("PotalGun", throwIfNotFound: true);
             // UI
@@ -1151,6 +1151,7 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Run;
         private readonly InputAction m_Player_Look;
+        private readonly InputAction m_Player_Attack;
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Flash;
         private readonly InputAction m_Player_CameraToggle;
@@ -1158,7 +1159,6 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Interaction;
         private readonly InputAction m_Player_Inventory;
         private readonly InputAction m_Player_Menu;
-        private readonly InputAction m_Player_Attack;
         private readonly InputAction m_Player_MouseR;
         private readonly InputAction m_Player_PotalGun;
         public struct PlayerActions
@@ -1168,6 +1168,7 @@ namespace UnityEngine.InputSystem
             public InputAction @Move => m_Wrapper.m_Player_Move;
             public InputAction @Run => m_Wrapper.m_Player_Run;
             public InputAction @Look => m_Wrapper.m_Player_Look;
+            public InputAction @Attack => m_Wrapper.m_Player_Attack;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Flash => m_Wrapper.m_Player_Flash;
             public InputAction @CameraToggle => m_Wrapper.m_Player_CameraToggle;
@@ -1175,7 +1176,6 @@ namespace UnityEngine.InputSystem
             public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
             public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
             public InputAction @Menu => m_Wrapper.m_Player_Menu;
-            public InputAction @Attack => m_Wrapper.m_Player_Attack;
             public InputAction @MouseR => m_Wrapper.m_Player_MouseR;
             public InputAction @PotalGun => m_Wrapper.m_Player_PotalGun;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -1196,6 +1196,9 @@ namespace UnityEngine.InputSystem
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -1217,9 +1220,6 @@ namespace UnityEngine.InputSystem
                 @Menu.started += instance.OnMenu;
                 @Menu.performed += instance.OnMenu;
                 @Menu.canceled += instance.OnMenu;
-                @Attack.started += instance.OnAttack;
-                @Attack.performed += instance.OnAttack;
-                @Attack.canceled += instance.OnAttack;
                 @MouseR.started += instance.OnMouseR;
                 @MouseR.performed += instance.OnMouseR;
                 @MouseR.canceled += instance.OnMouseR;
@@ -1239,6 +1239,9 @@ namespace UnityEngine.InputSystem
                 @Look.started -= instance.OnLook;
                 @Look.performed -= instance.OnLook;
                 @Look.canceled -= instance.OnLook;
+                @Attack.started -= instance.OnAttack;
+                @Attack.performed -= instance.OnAttack;
+                @Attack.canceled -= instance.OnAttack;
                 @Jump.started -= instance.OnJump;
                 @Jump.performed -= instance.OnJump;
                 @Jump.canceled -= instance.OnJump;
@@ -1260,9 +1263,6 @@ namespace UnityEngine.InputSystem
                 @Menu.started -= instance.OnMenu;
                 @Menu.performed -= instance.OnMenu;
                 @Menu.canceled -= instance.OnMenu;
-                @Attack.started -= instance.OnAttack;
-                @Attack.performed -= instance.OnAttack;
-                @Attack.canceled -= instance.OnAttack;
                 @MouseR.started -= instance.OnMouseR;
                 @MouseR.performed -= instance.OnMouseR;
                 @MouseR.canceled -= instance.OnMouseR;
@@ -1454,6 +1454,7 @@ namespace UnityEngine.InputSystem
             void OnMove(InputAction.CallbackContext context);
             void OnRun(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
+            void OnAttack(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnFlash(InputAction.CallbackContext context);
             void OnCameraToggle(InputAction.CallbackContext context);
@@ -1461,7 +1462,6 @@ namespace UnityEngine.InputSystem
             void OnInteraction(InputAction.CallbackContext context);
             void OnInventory(InputAction.CallbackContext context);
             void OnMenu(InputAction.CallbackContext context);
-            void OnAttack(InputAction.CallbackContext context);
             void OnMouseR(InputAction.CallbackContext context);
             void OnPotalGun(InputAction.CallbackContext context);
         }
