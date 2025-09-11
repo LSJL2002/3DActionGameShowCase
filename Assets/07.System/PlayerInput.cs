@@ -48,7 +48,7 @@ namespace UnityEngine.InputSystem
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Shift"",
+                    ""name"": ""Dodge"",
                     ""type"": ""Button"",
                     ""id"": ""52d8e051-1f36-422a-b57b-d44205c16662"",
                     ""expectedControlType"": ""Button"",
@@ -273,17 +273,6 @@ namespace UnityEngine.InputSystem
                 },
                 {
                     ""name"": """",
-                    ""id"": ""53c84b10-7a7d-47a1-ba46-ff03031a77db"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""7f072a80-c3e3-4b74-b2f3-e508f688a1f3"",
                     ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
@@ -417,11 +406,11 @@ namespace UnityEngine.InputSystem
                 {
                     ""name"": """",
                     ""id"": ""8369e4f1-3eb1-47d3-ad76-79d59ce1772d"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Shift"",
+                    ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -432,7 +421,7 @@ namespace UnityEngine.InputSystem
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Shift"",
+                    ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1055,7 +1044,7 @@ namespace UnityEngine.InputSystem
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-            m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
+            m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
             m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Flash = m_Player.FindAction("Flash", throwIfNotFound: true);
@@ -1140,7 +1129,7 @@ namespace UnityEngine.InputSystem
         private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Look;
-        private readonly InputAction m_Player_Shift;
+        private readonly InputAction m_Player_Dodge;
         private readonly InputAction m_Player_Attack;
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Flash;
@@ -1156,7 +1145,7 @@ namespace UnityEngine.InputSystem
             public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
             public InputAction @Move => m_Wrapper.m_Player_Move;
             public InputAction @Look => m_Wrapper.m_Player_Look;
-            public InputAction @Shift => m_Wrapper.m_Player_Shift;
+            public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
             public InputAction @Attack => m_Wrapper.m_Player_Attack;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Flash => m_Wrapper.m_Player_Flash;
@@ -1181,9 +1170,9 @@ namespace UnityEngine.InputSystem
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
-                @Shift.started += instance.OnShift;
-                @Shift.performed += instance.OnShift;
-                @Shift.canceled += instance.OnShift;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
@@ -1221,9 +1210,9 @@ namespace UnityEngine.InputSystem
                 @Look.started -= instance.OnLook;
                 @Look.performed -= instance.OnLook;
                 @Look.canceled -= instance.OnLook;
-                @Shift.started -= instance.OnShift;
-                @Shift.performed -= instance.OnShift;
-                @Shift.canceled -= instance.OnShift;
+                @Dodge.started -= instance.OnDodge;
+                @Dodge.performed -= instance.OnDodge;
+                @Dodge.canceled -= instance.OnDodge;
                 @Attack.started -= instance.OnAttack;
                 @Attack.performed -= instance.OnAttack;
                 @Attack.canceled -= instance.OnAttack;
@@ -1435,7 +1424,7 @@ namespace UnityEngine.InputSystem
         {
             void OnMove(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
-            void OnShift(InputAction.CallbackContext context);
+            void OnDodge(InputAction.CallbackContext context);
             void OnAttack(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnFlash(InputAction.CallbackContext context);

@@ -22,6 +22,7 @@ public class PlayerStateMachine : StateMachine
     }   
     private float _movementSpeedModifier = 1f;
 
+    public bool IsInvincible { get; set; } //무적상태
 
     public float JumpForce { get; set; } //점프력
     public bool IsAttacking {  get; set; } //공격중인지
@@ -29,12 +30,18 @@ public class PlayerStateMachine : StateMachine
 
     public Transform MainCamTransform { get; set; }
 
+    //Ground 로직
     public PlayerIdleState IdleState { get;}
     public PlayerWalkState WalkState { get;}
     public PlayerRunState RunState { get;}
+    //Air 로직
     public PlayerJumpState JumpState { get;}
     public PlayerFallState FallState { get;}
+    //Attack 로직
     public PlayerComboAttackState ComboAttackState { get; set; }
+    // 독립적인 Sub-State Dodge 로직
+    public PlayerDodgeState DodgeState { get; }
+
 
 
     public PlayerStateMachine(PlayerManager player)
@@ -46,6 +53,7 @@ public class PlayerStateMachine : StateMachine
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
         RunState = new PlayerRunState(this);
+        DodgeState = new PlayerDodgeState(this);
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);
         ComboAttackState = new PlayerComboAttackState(this);

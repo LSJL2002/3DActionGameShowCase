@@ -29,18 +29,17 @@ public class PlayerBaseState : Istate
     {
         PlayerController input = stateMachine.Player.Input;
         input.PlayerActions.Move.canceled += OnMoveCanceled;
-        input.PlayerActions.Shift.started += OnShiftStarted;
+        input.PlayerActions.Dodge.started += OnDodgeStarted;
         input.PlayerActions.Attack.performed += OnAttackPerformed;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
         input.PlayerActions.Jump.started += OnJumpStarted;
-
     }
 
     protected virtual void RemoveInputActionCallbacks()
     {
         PlayerController input = stateMachine.Player.Input;
         input.PlayerActions.Move.canceled -= OnMoveCanceled;
-        input.PlayerActions.Shift.started -= OnShiftStarted;
+        input.PlayerActions.Dodge.started -= OnDodgeStarted;
         input.PlayerActions.Attack.performed -= OnAttackPerformed;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
         input.PlayerActions.Jump.started -= OnJumpStarted;
@@ -55,7 +54,7 @@ public class PlayerBaseState : Istate
 
     protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
 
-    protected virtual void OnShiftStarted(InputAction.CallbackContext context) { }
+    protected virtual void OnDodgeStarted(InputAction.CallbackContext context) { }
 
     protected virtual void OnAttackPerformed(InputAction.CallbackContext context)
          => stateMachine.IsAttacking = true;
