@@ -31,7 +31,6 @@ public class MonsterStatHandler : MonoBehaviour
             DetectRange = monsterData.detectRange;
             AttackRange = monsterData.attackRange;
             StatusEffect = new List<string>(monsterData.statusEffect);
-            DropItem = new List<int>(monsterData.dropItem);
         }
     }
 

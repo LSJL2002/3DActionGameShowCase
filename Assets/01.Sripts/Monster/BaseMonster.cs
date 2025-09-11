@@ -70,9 +70,12 @@ public class BaseMonster : MonoBehaviour, IDamageable
         stateMachine?.DisableAIEvents();
     }
 
-    public void OnAttackAnimationComplete()
+    public void OnAttackAnimationComplete() //나중에 삭제
     {
-        stateMachine.MonsterSkillOneState.OnAttackAnimationComplete();
+        if (stateMachine?.MonsterSkillOneState != null)
+        {
+            stateMachine.MonsterSkillOneState.OnAttackAnimationComplete();
+        }
     }
 
     public void OnAttackHit()
