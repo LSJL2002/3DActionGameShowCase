@@ -1,47 +1,83 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.WSA;
 
-public class MapManager : Singleton<MapManager>
+public class MapManager : MonoBehaviour
 {
-    public GameObject[] MonsterPrefab;
-    public Transform[] spawnPoint;
 
-    public int index = 0;
+    [Header("Stage Flow")]
+    public int startingStageID;
 
-    // Start is called before the first frame update
+    private Dictionary<int, BattleZone> stageDict = new();
+    private BattleZone currentZone;
+
+    void OnEnable()
+    {
+        BattleZone.OnBattle += HandleZoneEnter;
+        BattleZone.OnBattleClear += HandleZoneClear;
+    }
+
+    void OnDisable()
+    {
+        BattleZone.OnBattle -= HandleZoneEnter;
+        BattleZone.OnBattleClear -= HandleZoneClear;
+    }
+
     void Start()
     {
-        
+        // ì”¬ì— ìˆëŠ” ëª¨ë“  BattleZone ë“±ë¡
+        foreach (var zone in FindObjectsOfType<BattleZone>(true))
+        {
+            RegisterStage(zone);
+        }
+
+        // ì‹œì‘ ìŠ¤í…Œì´ì§€ë§Œ ì¼œê¸°
+        if (stageDict.TryGetValue(startingStageID, out var startZone))
+        {
+            startZone.Activate();
+        }
     }
 
-    private void OnEnable()
+    public void RegisterStage(BattleZone zone)
     {
-        BattleZone.OnBattle += SpawnMonster;
-        BattleZone.OnBattleClear += NextStage;
+        if (!stageDict.ContainsKey(zone.stageID))
+            stageDict.Add(zone.stageID, zone);
     }
 
-    private void OnDisable()
+    private void HandleZoneEnter(BattleZone zone)
     {
-        BattleZone.OnBattle -= SpawnMonster;
-        BattleZone.OnBattleClear -= NextStage;
+        currentZone = zone;
+        zone.StartBattle();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void HandleZoneClear(BattleZone zone)
     {
-        
+        if (!stageDict.ContainsKey(zone.stageID)) return;
+
+        // ë‹¤ìŒ ìŠ¤í…Œì´ì§€ ì—´ê¸°
+        foreach (var id in zone.nextStages)
+        {
+            var next = GetStage(id);
+            if (next != null) next.Activate();
+        }
+
+        if (zone.isEndingStage)
+        {
+            Debug.Log("ëª¨ë“  ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´! ì—”ë”©ì”¬ìœ¼ë¡œ ì´ë™!");
+            // SceneManager.LoadScene("EndingScene");
+        }
+
+        currentZone = null;
     }
 
-    private void SpawnMonster(BattleZone battleZone)
+    public BattleZone GetStage(int id)
     {
-        int random = Random.Range(0, MonsterPrefab.Length);
-        GameObject monster = Instantiate(MonsterPrefab[random], battleZone.spawnPoint.position, Quaternion.identity);
-        //Àû¿¡ ´ëÇÑ ÄÆ½Å
+        stageDict.TryGetValue(id, out var zone);
+        return zone;
     }
 
-    private void NextStage(BattleZone battleZone)
+    public void Activate()
     {
-        Debug.Log("´ÙÀ½½ºÅ×ÀÌÁö ¿ÀÇÂ");
+
     }
 }
