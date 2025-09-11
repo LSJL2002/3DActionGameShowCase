@@ -6,8 +6,8 @@ public class MonsterSO : ScriptableObject
 {
     public int id;
     public string monsterName;
-    public int maxHp;
-    public int maxMp;
+    public float maxHp;
+    public float maxMp;
     public int attackPower;
     public int defense;
     public float attackSpeed;

@@ -8,11 +8,15 @@ using UnityEngine;
 public class MonsterAIEvents : MonoBehaviour
 {
     public event Action OnPlayerDetected;
-    public event Action OnPlayerLost;
     public event Action OnInAttackRange;
+    public event Action RestingPhase;
 
     private MonsterStateMachine stateMachine;
     private Transform player;
+
+    [Header("Attack Cooldown")]
+    public float attackCooldown = 10f; // seconds between attacks
+    private float lastAttackTime;
 
     private void Awake()
     {
@@ -39,10 +43,19 @@ public class MonsterAIEvents : MonoBehaviour
         }
 
         // 공격 사거리 입장시
-        if (distance <= attackRange && !stateMachine.isAttacking)
+        if (distance <= attackRange && !stateMachine.isAttacking) //공격 범위를 스킬의 공격 범위로 변경
         {
-            OnInAttackRange?.Invoke();
-            Debug.Log("Attack");
+            if (Time.time >= lastAttackTime + attackCooldown)
+            {
+                OnInAttackRange?.Invoke();
+                Debug.Log("Attack");
+                lastAttackTime = Time.time;
+            }
+            else
+            {
+                RestingPhase?.Invoke();
+                Debug.Log("Idle");
+            }
         }
     }
 

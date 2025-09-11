@@ -11,7 +11,7 @@ public class MonsterStateMachine : StateMachine
 
     // 모든 State 
     public MonsterIdleState MonsterIdleState { get; }
-    public MonsterAttackState MonsterAttackState { get; }
+    public MonsterSkillOneState MonsterSkillOneState { get; set; }
     public MonsterChaseState MonsterChaseState { get; }
 
     private MonsterAIEvents aiEvents;
@@ -26,7 +26,7 @@ public class MonsterStateMachine : StateMachine
 
         MonsterIdleState = new MonsterIdleState(this);
         MonsterChaseState = new MonsterChaseState(this);
-        MonsterAttackState = new MonsterAttackState(this);
+        MonsterSkillOneState = new MonsterSkillOneState(this);
 
 
         aiEvents = monster.GetComponent<MonsterAIEvents>();
@@ -41,6 +41,7 @@ public class MonsterStateMachine : StateMachine
 
         aiEvents.OnPlayerDetected += HandlePlayerDetected;
         aiEvents.OnInAttackRange += HandlePlayerInAttackRange;
+        aiEvents.RestingPhase += HandleRestingPhase;
     }
 
     public void DisableAIEvents()
@@ -49,6 +50,7 @@ public class MonsterStateMachine : StateMachine
 
         aiEvents.OnPlayerDetected -= HandlePlayerDetected;
         aiEvents.OnInAttackRange -= HandlePlayerInAttackRange;
+        aiEvents.RestingPhase -= HandleRestingPhase;
     }
 
     private void HandlePlayerDetected()
@@ -61,8 +63,13 @@ public class MonsterStateMachine : StateMachine
         if (!isAttacking)
         {
             isAttacking = true;
-            ChangeState(MonsterAttackState);
+            ChangeState(MonsterSkillOneState);
         }
+    }
+
+    private void HandleRestingPhase()
+    {
+        ChangeState(MonsterIdleState);
     }
     public float MovementSpeed => Monster.Stats.MoveSpeed * MovementSpeedModifier;
 }

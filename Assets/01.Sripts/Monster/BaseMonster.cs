@@ -72,7 +72,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnAttackAnimationComplete()
     {
-        stateMachine.isAttacking = false;
+        stateMachine.MonsterSkillOneState.OnAttackAnimationComplete();
     }
 
     public void OnAttackHit()
