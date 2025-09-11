@@ -23,9 +23,9 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
         NowSceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
-    // callback : 실행할 함수를 매개변수로 받음
-    // 로딩완료 후 할 Task가 없을 수도 있으니 기본 null 설정
-    // 기본 로드씬모드를 싱글로 설정 (싱글은 단일 로드, Additive는 비동기 로드)
+    // 매개변수1(씬번호) : 로드할 씬번호
+    // 매개변수2(함수) : 함수 마지막에 실행할 함수를 매개변수로 받음
+    // 매개변수3(씬로드방식) : Single은 동기 로드, Additive는 비동기 로드
     public async void ChangeScene(int sceneIndex, Action callback = null, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
     {
         // 빌드에 등록된 씬 개수보다 인덱스가 크거나 0보다 작으면 오류 로그를 표시
