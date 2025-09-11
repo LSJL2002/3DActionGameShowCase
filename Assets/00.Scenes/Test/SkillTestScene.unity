@@ -378,6 +378,9 @@ GameObject:
   - component: {fileID: 1017486258}
   - component: {fileID: 1017486260}
   - component: {fileID: 1017486259}
+  - component: {fileID: 1017486262}
+  - component: {fileID: 1017486261}
+  - component: {fileID: 1017486263}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -452,6 +455,62 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &1017486261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017486257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe8530f1cc6c668478eabf0005bdf09b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doubleSlashSkill: {fileID: 11400000, guid: 454aac094791bf340b1a69cea1a6184b, type: 2}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  animator: {fileID: 0}
+  doubleSlashTriggerName: DoubleSlash
+  drawGizmos: 1
+  gizmoColor: {r: 1, g: 0.2, b: 0.2, a: 0.25}
+--- !u!114 &1017486262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017486257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36c91f0ba99b824cb397dc4bde98c9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackPower: 10
+  maxMP: 100
+  currentMP: 100
+--- !u!95 &1017486263
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017486257}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 4a1e9354583cb0845b113e2cfd293ebb, type: 3}
+  m_Controller: {fileID: 9100000, guid: 2229846cfbd788c43b5fdd2c43e65312, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1145776153
 GameObject:
   m_ObjectHideFlags: 0
@@ -949,6 +1008,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1817044012}
+  - component: {fileID: 1817044013}
   m_Layer: 6
   m_Name: EnemyDummy
   m_TagString: Untagged
@@ -972,6 +1032,20 @@ Transform:
   - {fileID: 1145776154}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1817044013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817044011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49ee2e85b1e94142973e17404380554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 100
+  currentHP: 100
 --- !u!1 &1940443924
 GameObject:
   m_ObjectHideFlags: 0
