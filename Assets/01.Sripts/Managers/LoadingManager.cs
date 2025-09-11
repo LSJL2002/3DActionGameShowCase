@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+// 로딩씬에만 존재할 매니저 (DontDestroyOnLoad 아님)
 public class LoadingManager : Singleton<LoadingManager>
 {
     public TextMeshProUGUI loadingText; // 씬로딩 텍스트

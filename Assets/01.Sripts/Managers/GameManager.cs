@@ -21,8 +21,8 @@ public class GameManager : Singleton<GameManager>
     private eGameState previousState; // 이전 상태를 저장할 변수
     private eGameState currentState; // 현재 게임 상태를 저장할 변수
 
-    // 스테이지 변경을 위한 Action 델리게이트
-    public event Action<eGameState> changeStage;
+    // 상태 변경을 위한 Action 델리게이트
+    public event Action<eGameState> changeState;
 
     protected override void Awake()
     {
@@ -49,7 +49,7 @@ public class GameManager : Singleton<GameManager>
         currentState = newState;
 
         // GameState 상태를 전환하는 이벤트 발생
-        changeStage?.Invoke(newState);
+        changeState?.Invoke(newState);
     }
 
     // 게임 시작

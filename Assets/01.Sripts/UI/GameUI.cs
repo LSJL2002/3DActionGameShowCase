@@ -4,21 +4,50 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum eState
+{
+    Idle,
+    Battle,
+}
+
 public class GameUI : UIBase
 {
-    public TextMeshProUGUI playerHPText; // 플레이어 체력 텍스트
-    public Slider playerHPSlider; // 플레이어 체력 슬라이더바
+    private eState currentState;
 
-    public TextMeshProUGUI playerMPText; // 플레이어 마력 텍스트
-    public Slider playerMPSlider; // 플레이어 마력 슬라이더바
+    public GameObject enemyInfoUI;         // 적 오브젝트 UI (활성화 컨트롤용 변수)
 
-    public TextMeshProUGUI enemyNameText; // 적 이름 텍스트
+    public TextMeshProUGUI playerHPText;   // UI : 플레이어 체력 텍스트
+    public Slider playerHPSlider;          // UI : 플레이어 체력 슬라이더바
+    public TextMeshProUGUI playerMPText;   // UI : 플레이어 마력 텍스트
+    public Slider playerMPSlider;          // UI : 플레이어 마력 슬라이더바
+    public TextMeshProUGUI enemyNameText;  // UI : 적 이름 텍스트
+    public TextMeshProUGUI enemyMaxHPText; // UI : 적 체력 텍스트
+    public Slider enemyHPSlider;           // UI : 적 체력 슬라이더바
 
-    public TextMeshProUGUI enemyHPText; // 적 체력 텍스트
-    public Slider enemyHPSlider; // 적 체력 슬라이더바
+    private float playerMaxHP;             // 플레이어 최대 체력
+    private float playerMaxMP;             // 플레이어 최대 마력
+    private float enemyMaxHP;              // 적 최대 체력
 
-    private bool isBattle; // 전투중인지 확인용
-    public GameObject enemyInfoUI;
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        // 기본상태를 'Idle'로 설정
+        ChangeState(eState.Idle);
+
+        // 플레이어 변수 초기화
+        // playerMaxHP = PlayerManager.Instance.
+        // playerMaxMP = PlayerManager.Instance.
+
+        // 플레이어 슬라이더를 초기화
+        playerHPSlider.maxValue = 1f;
+        playerMPSlider.maxValue = 1f;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
 
     public async void OnClickButton(string str)
     {
@@ -31,43 +60,24 @@ public class GameUI : UIBase
                 await UIManager.Instance.Show<PauseUI>();
                 break;
 
+            // Enemy 소환
             case "Spawn":
-                // Enemy 소환
+                // 배틀매니저의 스테이트를 변경과 동시에 적의 정보를 넘김
+                ChangeState(eState.Battle);
+                // 몬스터 소환
                 break;
         }
 
-        // 현재 팝업창 닫기
-        Hide();
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        isBattle = false;
-
-        // 플레이어 최대체력을 가져와서 체력 변수 초기화
-        // playerHPText = 
-
-        // 플레이어 체력 슬라이더를 초기화
-        playerHPSlider.maxValue = 1f;
-
-        // 플레이어 최대마력을 가져와서 체력 변수 초기화
-        // playerMPText = 
-
-        // 플레이어 마력 슬라이더를 초기화
-        playerMPSlider.maxValue = 1f;
+        // 현재 팝업창 닫기 (게임상태에서는 UI를 끌 필요 없으므로 보류)
+        //Hide();
     }
 
     protected override void Update()
     {
         base.Update();
-       
-        //// 플레이어 최대체력
-        //int playerMaxHP = 0;
 
         //// 플레이어 현재체력
-        //int playerCurrentHP = 0;
+        //float playerCurrentHP = 0;
 
         //// 플레이어 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
         //playerHPText.text = Mathf.FloorToInt( playerCurrentHP / playerMaxHP * 100 ).ToString() + "%";
@@ -76,10 +86,10 @@ public class GameUI : UIBase
         //playerHPSlider.value = playerCurrentHP / playerMaxHP;
 
         //// 플레이어 최대마력
-        //int playerMaxMP = 0;
+        //float playerMaxMP = 0;
 
         //// 플레이어 현재마력
-        //int playerCurrentMP = 0;
+        //float playerCurrentMP = 0;
 
         //// 플레이어 현재 마력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
         //playerMPText.text = Mathf.FloorToInt( playerCurrentMP / playerMaxMP * 100 ).ToString() + "%";
@@ -87,8 +97,8 @@ public class GameUI : UIBase
         //// 플레이어 마력 슬라이더 업데이트
         //playerMPSlider.value = playerCurrentMP / playerMaxMP;
 
-        // 적과 조우했을 경우에만 업데이트
-        if (isBattle)
+        // 전투 상태일 때만 업데이트
+        if (currentState == eState.Battle)
         {
             // 적 최대체력
             int enemyMaxHP = 0;
@@ -97,29 +107,53 @@ public class GameUI : UIBase
             int enemyCurrentHP = 0;
 
             // 적 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
-            enemyHPText.text = Mathf.FloorToInt( enemyCurrentHP / enemyMaxHP * 100 ).ToString() + "%";
+            enemyMaxHPText.text = Mathf.FloorToInt(enemyCurrentHP / enemyMaxHP * 100).ToString() + "%";
 
             // 적 체력 슬라이더 업데이트
             enemyHPSlider.value = enemyCurrentHP / enemyMaxHP;
         }
     }
 
-    // 적과 조우시 호출할 함수
-    public void StartBattle(bool check)
+    // 전투 돌입 / 종료시 호출할 함수
+    // 돌입시에는 몬스터이름과 최대체력을 매개변수로 받음
+    public void ChangeState(eState state, string enemyName = null, float maxHP = default)
     {
-        // 전투중여부를 true로 변경
-        isBattle = check;
+        // 매개변수를 받아서 상태를 변경 (Idle <-> Battle)
+        currentState = state;
 
-        // 적 정보UI 오브젝트를 활성화
-        enemyInfoUI.SetActive(true);
+        switch (state)
+        {
+            case eState.Idle:
 
-        // 적 이름을 가져와서 변수 초기화
-        //enemyNameText =
+                // 적 정보UI 오브젝트를 비활성화 (동적생성으로 변경 예정)
+                enemyInfoUI.SetActive(false);
 
-        // 적 최대체력을 가져와서 체력 변수 초기화
-        // enemyHPText = 
+                // 적 이름 변수 초기화
+                enemyNameText.text = null;
 
-        // 적 체력 슬라이더를 초기화
-        enemyHPSlider.maxValue = 1f;
+                // 적 최대체력 변수 초기화
+                enemyMaxHPText.text = default;
+
+                // 적 체력 슬라이더를 초기화
+                enemyHPSlider.maxValue = 1f;
+
+                break;
+
+            case eState.Battle:
+
+                // 적 정보UI 오브젝트를 활성화 (동적생성으로 변경 예정)
+                enemyInfoUI.SetActive(true);
+
+                // 적 이름 변수 초기화
+                enemyNameText.text = enemyName;
+
+                // 적 최대체력 변수 초기화
+                enemyMaxHPText.text = maxHP.ToString();
+
+                // 적 체력 슬라이더를 초기화
+                enemyHPSlider.maxValue = 1f;
+
+                break;
+        }
     }
 }
