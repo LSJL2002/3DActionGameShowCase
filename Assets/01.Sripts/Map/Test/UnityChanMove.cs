@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider))]
 public class UnityChanMove : MonoBehaviour
 {
+    [Header("Movement")]
     public float speed = 2f;
     public float sprint = 10f;
     public float jumpForce = 5f;
@@ -14,78 +15,53 @@ public class UnityChanMove : MonoBehaviour
 
     Animator _animator;
     Rigidbody _rb;
-    Camera _cam;
 
     void Awake()
     {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
-        _cam = Camera.main;
 
-        // Rigidbody ±âº» ¼¼ÆÃ
-        _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Y´Â ÀÚÀ¯
+        // Rigidbody ê¸°ë³¸ ì„¸íŒ…
+        _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
         _rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
     }
 
     void Update()
     {
-        // ÀÔ·Â¸¸ Update¿¡¼­
+        // ì…ë ¥ ì²˜ë¦¬
         run = Input.GetKey(KeyCode.LeftShift);
         input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç (ÀÔ·Â Å©±â ±â¹İ)
+        // ì• ë‹ˆë©”ì´ì…˜ ë¸”ë Œë”©
         float percent = (run ? 1f : 0.5f) * Mathf.Clamp01(input.magnitude);
         _animator.SetFloat("Blend", percent, 0.1f, Time.deltaTime);
     }
 
     void FixedUpdate()
     {
-        if (_rb == null) return; // ¾ÈÀü¸Á
+        if (_rb == null) return; // ì•ˆì „ë§
 
         finalSpeed = run ? sprint : speed;
 
-        // Ä«¸Ş¶ó ±âÁØ ÀÌµ¿ º¤ÅÍ
-        Vector3 camF = _cam ? Vector3.Scale(_cam.transform.forward, new Vector3(1, 0, 1)).normalized : Vector3.forward;
-        Vector3 camR = _cam ? _cam.transform.right : Vector3.right;
-        Vector3 worldMove = (camF * input.y + camR * input.x);
-        if (worldMove.sqrMagnitude > 1e-4f) worldMove.Normalize();
+        // ì›”ë“œ ê¸°ì¤€ ì´ë™
+        Vector3 worldMove = new Vector3(input.x, 0f, input.y);
+        if (worldMove.sqrMagnitude > 1e-4f)
+            worldMove.Normalize();
 
-        // ¼öÆò ¼Óµµ Àû¿ë, y´Â À¯Áö
+        // ì†ë„ ì ìš© (yëŠ” ìœ ì§€)
         Vector3 vel = _rb.velocity;
         vel.x = worldMove.x * finalSpeed;
         vel.z = worldMove.z * finalSpeed;
         _rb.velocity = vel;
 
-        // È¸Àü (ÀÔ·Â ÀÖÀ» ¶§¸¸)
+        // íšŒì „ (ì…ë ¥ ìˆì„ ë•Œë§Œ)
         if (worldMove.sqrMagnitude > 1e-4f)
         {
             Quaternion target = Quaternion.LookRotation(worldMove);
             _rb.MoveRotation(Quaternion.Slerp(_rb.rotation, target, 10f * Time.fixedDeltaTime));
         }
 
-        // Á¡ÇÁ ÀÔ·ÂÀº Update¿¡¼­ ´­·¯µµ ¿©±â¼­ Ã³¸®ÇÏ°í ½Í´Ù¸é ÇÃ·¡±×·Î Àü´ŞÇØµµ µÊ
-        if (_pendingJump && IsGrounded())
-        {
-            vel = _rb.velocity;
-            vel.y = 0f; // ÀÏ°üµÈ Á¡ÇÁ
-            _rb.velocity = vel;
-            _rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
-        _pendingJump = false;
-    }
-
-    bool _pendingJump;
-    void HandleJump()
-    {
-        if (Input.GetButtonDown("Jump"))
-            _pendingJump = true; // FixedUpdate¿¡¼­ Ã³¸®
-    }
-
-    bool IsGrounded()
-    {
-        // Ä¸½¶ ¹Ù´Ú ±âÁØ °£´Ü ·¹ÀÌÄ³½ºÆ®
-        float dist = GetComponent<CapsuleCollider>().bounds.extents.y + 0.05f;
-        return Physics.Raycast(transform.position, Vector3.down, dist);
+        // TODO: ì í”„ëŠ” ë³„ë„ í”Œë˜ê·¸ ì „ë‹¬í•´ì„œ ì—¬ê¸°ì„œ ì²˜ë¦¬
     }
 }

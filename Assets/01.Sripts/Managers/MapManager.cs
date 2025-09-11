@@ -5,7 +5,9 @@ using UnityEngine;
 public class MapManager : Singleton<MapManager>
 {
     public GameObject[] MonsterPrefab;
-    public Transform spawnPoint;
+    public Transform[] spawnPoint;
+
+    public int index = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -34,12 +36,12 @@ public class MapManager : Singleton<MapManager>
     private void SpawnMonster(BattleZone battleZone)
     {
         int random = Random.Range(0, MonsterPrefab.Length);
-        GameObject monster = Instantiate(MonsterPrefab[random], spawnPoint.position, Quaternion.identity);
-        Debug.Log($"{random}번째인 {MonsterPrefab[random].name}이 {spawnPoint.position.x},{spawnPoint.position.y},{spawnPoint.position.z}에 소환됨");
+        GameObject monster = Instantiate(MonsterPrefab[random], battleZone.spawnPoint.position, Quaternion.identity);
+        //적에 대한 컷신
     }
 
     private void NextStage(BattleZone battleZone)
     {
-        Debug.Log("다음스테이지가 열렸습니다");
+        Debug.Log("다음스테이지 오픈");
     }
 }
