@@ -58,13 +58,7 @@ public class GameManager : Singleton<GameManager>
         // 게임 상태를 변경
         ChangeState(eGameState.GamePlaying);
 
-        // SceneLoadManager를 통해 해당 씬으로 전환 (3:TownScene)
-        //SceneLoadManager.Instance.ChangeScene(3);
-
-        // 씬매니저 이용해서 그냥 로드(차이 테스트용)
-        //SceneManager.LoadScene(3);
-
-        // 로딩씬 방식 테스트용
+        // 게임씬을 로드
         SceneLoadManager.Instance.LoadScene(3);
     }
 
