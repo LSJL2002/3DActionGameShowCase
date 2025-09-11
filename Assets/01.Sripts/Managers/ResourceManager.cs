@@ -1,15 +1,18 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-// ¸®¼Ò½ºÆú´õ 1Â÷ °æ·Î
+// ë¦¬ì†ŒìŠ¤í´ë” 1ì°¨ ê²½ë¡œ
 public enum eAssetType
 {
     Prefab,
     UI,
 }
 
-// ¸®¼Ò½ºÆú´õ 2Â÷ °æ·Î
+// ë¦¬ì†ŒìŠ¤í´ë” 2ì°¨ ê²½ë¡œ
 public enum eCategoryType
 {
     none,
@@ -17,40 +20,32 @@ public enum eCategoryType
     stage,
 }
 
-// Á¦³×¸¯ ½Ì±ÛÅæ ½ºÅ©¸³Æ®¸¦ »ó¼Ó
+// ì œë„¤ë¦­ ì‹±ê¸€í†¤ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ìƒì†
 public class ResourceManager : Singleton<ResourceManager>
 {
-    // µñ¼Å³Ê¸® »ı¼º(string Çü½ÄÀÇ key, object Çü½ÄÀÇ value)
+    // ë”•ì…”ë„ˆë¦¬ ìƒì„±(string í˜•ì‹ì˜ key, object í˜•ì‹ì˜ value)
     private Dictionary<string, object> assetPool = new Dictionary<string, object>();
 
-    // ¹İÈ¯Å¸ÀÔ : Task<T> (ºñµ¿±â ¸Ş¼­µå)
-    // ¸Å°³º¯¼ö : key ÀÌ¸§, 1Â÷°æ·Î, 2Â÷°æ·Î
-    // 2Â÷°æ·Î´Â ¾øÀ»½Ã ±âº» none Àû¿ë
+    // ë°˜í™˜íƒ€ì… : Task<T> (ë¹„ë™ê¸° ë©”ì„œë“œ)
+    // ë§¤ê°œë³€ìˆ˜ : key ì´ë¦„, 1ì°¨ê²½ë¡œ, 2ì°¨ê²½ë¡œ
+    // 2ì°¨ê²½ë¡œëŠ” ì—†ì„ì‹œ ê¸°ë³¸ none ì ìš©
     public async Task<T> LoadAsset<T>(string key, eAssetType assetType, eCategoryType categoryType = eCategoryType.none)
     {
         T handle = default;
 
-        // ¸®¼Ò½ºÆú´õÀÇ °æ·Î¸¦ º¯¼ö·Î ¸¸µé¾î ÀúÀå
+        // ë¦¬ì†ŒìŠ¤í´ë”ì˜ ê²½ë¡œë¥¼ ë³€ìˆ˜ë¡œ ë§Œë“¤ì–´ ì €ì¥
         var typeStr = $"{assetType}{(categoryType == eCategoryType.none ? "" : $"/{categoryType}")}/{key}";
 
-        // µñ¼Å³Ê¸®¿¡ ¾ø´Ù¸é
-        if (!assetPool.ContainsKey(key + "_" + typeStr))
-        {
-            Debug.Log(key + " »õ·Î »ı¼º");
-            
-            // ¸®¼Ò½ºÆú´õÀÇ °æ·Î¿Í TÅ¸ÀÔÀ» ÁöÁ¤ÇÏ¿© ¸®¼Ò¼Ò¸¦ ºñµ¿±â ·Îµå½ÃÀÛ (¿ÀºêÁ§Æ®¸¦ »ı¼ºÇÏ´Â°Ç ¾Æ´Ï°í ·Îµå¸¸)
+        // ë”•ì…”ë„ˆë¦¬ì— ì—†ë‹¤ë©´
+        if (!assetPool.ContainsKey(key))
+        {            
+            // ë¦¬ì†ŒìŠ¤í´ë”ì˜ ê²½ë¡œì™€ Tíƒ€ì…ì„ ì§€ì •í•˜ì—¬ ë¦¬ì†Œì†Œë¥¼ ë¹„ë™ê¸° ë¡œë“œì‹œì‘ (ì˜¤ë¸Œì íŠ¸ë¥¼ ìƒì„±í•˜ëŠ”ê±´ ì•„ë‹ˆê³  ë¡œë“œë§Œ)
             var op = Resources.LoadAsync(typeStr, typeof(T));
 
-            // ºñµ¿±â ·Îµå°¡ ³¡³ªÁö ¾Ê¾Ò´Ù¸é ¹İº¹
-            while(!op.isDone)
-            {
-                Debug.Log(key + "·ÎµåÁß");
+            // ë¹„ë™ê¸° ë¡œë“œê°€ ì™„ë£Œë ë•Œê¹Œì§€ ëŒ€ê¸°
+            await op;
 
-                // ÇöÀç ½ÇÇà ÁßÀÎ ÄÚµå¸¦ ÀÏ½Ã Áß´ÜÇÏ°í ´ÙÀ½ ÇÁ·¹ÀÓ¿¡ ´Ù½Ã ½ÇÇàÀ» Àç°³
-                await Task.Yield();
-            }
-
-            // asset : ·ÎµåµÈ ¸®¼Ò½º °´Ã¼ ÀÚÃ¼¸¦ ¶æÇÔ
+            // asset : ë¡œë“œëœ ë¦¬ì†ŒìŠ¤ ê°ì²´ ìì²´ë¥¼ ëœ»í•¨
             var obj = op.asset;
 
             if (obj == null)
@@ -58,16 +53,51 @@ public class ResourceManager : Singleton<ResourceManager>
                 return default;
             }
 
-            // µñ¼Å³Ê¸®¿¡ Ãß°¡ (key, value)
-            assetPool.Add(key + "_" + typeStr, obj);
+            // ë”•ì…”ë„ˆë¦¬ì— ì¶”ê°€ (key, value)
+            assetPool.Add(key, obj);
         }
 
-        // Æ¯Á¤ keyÀÇ °ªÀ» handle º¯¼ö¿¡ ÀúÀå
-        Debug.Log(key + " ¹İÈ¯");
-        handle = (T)assetPool[key + "_" + typeStr];
+        // íŠ¹ì • keyì˜ ê°’ì„ handle ë³€ìˆ˜ì— ì €ì¥
+        handle = (T)assetPool[key];
 
-        // handleÀ» ¹İÈ¯
+        // handleì„ ë°˜í™˜
         return handle;
+    }
+
+    // ë‹¤ë¥¸ ìŠ¤í¬ë¦½íŠ¸ì—ì„œ ìƒì„±í•œ ë¦¬ì†ŒìŠ¤ë¥¼ ì‰½ê²Œ ê°€ì ¸ì˜¬ ìˆ˜ ìˆë„ë¡ ì œë„¤ë¦­ ë©”ì„œë“œ ì œê³µ
+    public T Get<T>(string key) where T : Object
+    {
+        if (assetPool.TryGetValue(key, out object obj))
+        {
+            return (T)obj;
+        }
+
+        Debug.LogError($"ì—ì…‹ '{key}'ì´ ì—†ìŒ");
+        return default;
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        // ì”¬ ë¡œë“œ ì´ë²¤íŠ¸ êµ¬ë…
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        // ì”¬ ë¡œë“œ ì´ë²¤íŠ¸ êµ¬ë… í•´ì œ
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // ì´ì „ ì”¬ì—ì„œ ì‚¬ìš©í•œ ë”•ì…”ë„ˆë¦¬ ë¦¬ìŠ¤íŠ¸ ì •ë¦¬ (ì”¬ì „í™˜ì‹œ í˜¸ì¶œí• ê²ƒ)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // ë”•ì…”ë„ˆë¦¬ 'ì°¸ì¡°'ë§Œ ì‚­ì œ
+        assetPool.Clear();
+
+        // ì–´ë””ì—ë„ ì°¸ì¡°ë˜ì§€ ì•Šì€ ì—ì…‹ë“¤ì„ ì°¾ì•„ ë©”ëª¨ë¦¬ì—ì„œ ì™„ì „íˆ ì–¸ë¡œë“œí•˜ëŠ” í•¨ìˆ˜ í˜¸ì¶œ
+        Resources.UnloadUnusedAssets();
     }
 }
 

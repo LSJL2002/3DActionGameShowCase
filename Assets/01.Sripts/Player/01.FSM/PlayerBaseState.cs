@@ -9,6 +9,7 @@ public class PlayerBaseState : Istate
     protected PlayerStateMachine stateMachine;
     protected readonly PlayerGroundData groundData;
 
+
     public PlayerBaseState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
@@ -19,7 +20,6 @@ public class PlayerBaseState : Istate
     {
         AddInputActionCallbacks();
     }
-
     public virtual void Exit()
     {
         RemoveInputActionCallbacks();
@@ -28,60 +28,42 @@ public class PlayerBaseState : Istate
     protected virtual void AddInputActionCallbacks()
     {
         PlayerController input = stateMachine.Player.Input;
-        input.PlayerActions.Move.canceled += OnMovementCancled;
-        input.PlayerActions.Run.started += OnRunStarted;
-        input.PlayerActions.Jump.started += OnJumpStarted;
+        input.PlayerActions.Move.canceled += OnMoveCanceled;
+        input.PlayerActions.Dodge.started += OnDodgeStarted;
         input.PlayerActions.Attack.performed += OnAttackPerformed;
-        input.PlayerActions.Attack.canceled += OnAttackCancled;
+        input.PlayerActions.Attack.canceled += OnAttackCanceled;
+        input.PlayerActions.Jump.started += OnJumpStarted;
     }
 
     protected virtual void RemoveInputActionCallbacks()
     {
         PlayerController input = stateMachine.Player.Input;
-        input.PlayerActions.Move.canceled -= OnMovementCancled;
-        input.PlayerActions.Run.started -= OnRunStarted;
-        input.PlayerActions.Jump.started -= OnJumpStarted;
+        input.PlayerActions.Move.canceled -= OnMoveCanceled;
+        input.PlayerActions.Dodge.started -= OnDodgeStarted;
         input.PlayerActions.Attack.performed -= OnAttackPerformed;
-        input.PlayerActions.Attack.canceled -= OnAttackCancled;
+        input.PlayerActions.Attack.canceled -= OnAttackCanceled;
+        input.PlayerActions.Jump.started -= OnJumpStarted;
+
     }
 
-    public virtual void HandleInput()
-    {
-        ReadMovementInput();
-    }
-
-    public virtual void PhysicsUpdate()
-    {
-    }
-
+    public virtual void HandleInput() => ReadMovementInput();
+    public virtual void PhysicsUpdate() => MoveCharacter();
     public virtual void LogicUpdate()
-    {
-        Move();
-    }
+    {    }
 
-    protected virtual void OnMovementCancled(InputAction.CallbackContext context)
-    {
 
-    }
+    protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
 
-    protected virtual void OnRunStarted(InputAction.CallbackContext context)
-    {
-
-    }
-
-    protected virtual void OnJumpStarted(InputAction.CallbackContext context)
-    {
-
-    }
+    protected virtual void OnDodgeStarted(InputAction.CallbackContext context) { }
 
     protected virtual void OnAttackPerformed(InputAction.CallbackContext context)
-    {
-        stateMachine.IsAttacking = true;
-    }
-    protected virtual void OnAttackCancled(InputAction.CallbackContext context)
-    {
-        stateMachine.IsAttacking = false;
-    }
+         => stateMachine.IsAttacking = true;
+
+    protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
+        => stateMachine.IsAttacking = false;
+    protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
+
+
 
     protected void StartAnimation(int animatorHash)
     {
@@ -92,64 +74,73 @@ public class PlayerBaseState : Istate
         stateMachine.Player.Animator.SetBool(animatorHash, false);
     }
 
+    private void UpdateAnimatorMovementSpeed()
+    {
+        float speed = stateMachine.MovementInput.magnitude * stateMachine.MovementSpeedModifier;
+        stateMachine.Player.Animator.SetFloat(
+            stateMachine.Player.AnimationData.MoveSpeedParameterHash,
+            speed
+        );
+    }
+
+
     private void ReadMovementInput()
     {
         stateMachine.MovementInput = stateMachine.Player.Input.PlayerActions.Move.ReadValue<Vector2>();
     }
 
-    private void Move()
+    private void MoveCharacter()
     {
-        Vector3 movementDir = GetMovementDir();
+        Vector3 moveDir = GetMovementDir();
 
-        Move(movementDir);
+        //캐릭터 회전
+        if (moveDir.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(moveDir);
+            stateMachine.Player.transform.rotation = Quaternion.Slerp(
+                stateMachine.Player.transform.rotation,
+                targetRot,
+                Time.deltaTime * stateMachine.RotationDamping
+            );
+        }
 
-        Rotate(movementDir);
+        // 이동 처리
+        if (stateMachine.Player.Animator.applyRootMotion)
+        {
+            // 루트모션 사용 시 Animator.deltaPosition 적용
+            Vector3 rootMove = stateMachine.Player.Animator.deltaPosition;
+            rootMove += stateMachine.Player.ForceReceiver.Movement * Time.deltaTime;
+            stateMachine.Player.Controller.Move(rootMove);
+        }
+        else
+        {
+            // 루트모션 꺼져있으면 기존 방식
+            float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
+            Vector3 move = moveDir * moveSpeed + stateMachine.Player.ForceReceiver.Movement;
+            stateMachine.Player.Controller.Move(move * Time.deltaTime);
+        }
     }
 
-    private Vector3 GetMovementDir()
+    protected Vector3 GetMovementDir()
     {
         Vector3 forward = stateMachine.MainCamTransform.forward;
         Vector3 right = stateMachine.MainCamTransform.right;
 
         forward.y = 0;
         right.y = 0;
-
         forward.Normalize();
         right.Normalize();
 
         return forward * stateMachine.MovementInput.y + right * stateMachine.MovementInput.x;
     }
 
-    private void Move(Vector3 dir)
-    {
-        float movementSpeed = GetMovementSpeed();
-        stateMachine.Player.Controller.Move(
-            ((dir * movementSpeed) + stateMachine.Player.ForceReceiver.Movement) * Time.deltaTime);
-    }
-
-    private float GetMovementSpeed()
-    {
-        float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
-        return moveSpeed;
-    }
-
-    private void Rotate(Vector3 dir)
-    {
-        if(dir != Vector3.zero)
-        {
-            Transform playerTransform = stateMachine.Player.transform;
-            Quaternion targetRotation = Quaternion.LookRotation(dir);
-            playerTransform.rotation = Quaternion.Slerp(
-                playerTransform.rotation, targetRotation, stateMachine.RotationDamping * Time.deltaTime);
-        }
-    }
 
     protected void ForceMove()
     {
         stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime);
     }
 
-    protected float GetNormalizeTime(Animator animator, string tag)
+    protected float GetNormalizeTime(Animator animator, string tag) //에니메이션 특정 태그
     {
         AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
         AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);

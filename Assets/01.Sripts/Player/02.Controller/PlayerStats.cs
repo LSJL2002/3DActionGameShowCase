@@ -3,12 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStats
+
+public interface IStats
+{
+    int CurrentHealth { get; }
+    int MaxHealth { get; }
+    int Attack { get; }
+    int Defense { get; }
+    bool IsDead { get; }
+
+    void TakeDamage(int amount);
+    void Heal(int amount);
+    event Action OnDie;
+}
+
+public class PlayerStats : IStats
 {
     [SerializeField] private int maxHealth = 100;
     private int health;
 
-    public bool IsDie => CurrentHealth == 0;
+    public bool IsDead => CurrentHealth == 0;
 
     public int MaxHealth { get; private set; }
     public int CurrentHealth { get; private set; }

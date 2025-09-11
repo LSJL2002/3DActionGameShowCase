@@ -4,125 +4,104 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//¾À°ü¸®, ÀÏ½ÃÁ¤Áö, ·Îµù
-public enum GameScene
+// ê²Œì„ì˜ ìƒíƒœë¥¼ ë‚˜íƒ€ë‚´ëŠ” ì—´ê±°í˜•
+public enum eGameState
 {
-    [SceneName("IntroScene")] IntroScene,
-    [SceneName("MainScene")] MainScene,
-    [SceneName("Level2")] Level2,
-    [SceneName("GameOver")] GameOver
+    Home,
+    //Intro,
+    GamePlaying,
+    Pause,
+    GameOver,
+    GameClear
 }
-[AttributeUsage(AttributeTargets.Field)]
-public class SceneNameAttribute : Attribute
+
+// ì œë„¤ë¦­ ì‹±ê¸€í†¤ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ìƒì†
+public class GameManager : Singleton<GameManager>
 {
-    public string Name { get; }
-    public SceneNameAttribute(string name) => Name = name;
-}
-public static class SceneUtility
-{
-    public static string GetSceneName(GameScene scene)
+    private eGameState previousState; // ì´ì „ ìƒíƒœë¥¼ ì €ì¥í•  ë³€ìˆ˜
+    private eGameState currentState; // í˜„ì¬ ê²Œì„ ìƒíƒœë¥¼ ì €ì¥í•  ë³€ìˆ˜
+
+    // ìŠ¤í…Œì´ì§€ ë³€ê²½ì„ ìœ„í•œ Action ë¸ë¦¬ê²Œì´íŠ¸
+    public event Action<eGameState> changeStage;
+
+    protected override void Awake()
     {
-        var type = typeof(GameScene);
-        var memInfo = type.GetMember(scene.ToString());
-        var attr = memInfo[0].GetCustomAttributes(typeof(SceneNameAttribute), false);
-        return (attr.Length > 0) ? ((SceneNameAttribute)attr[0]).Name : scene.ToString();
+        base.Awake();
     }
-}
 
-
-class GameState
-{
-
-}
-public partial class GameManager : Singleton<GameManager>
-{
-    private GameState _currentState;
-    bool IsPause = false;
-
-    // ÇöÀç ¾ÀÀ» ÀúÀå ÇÒ º¯¼ö ¼¼ÆÃ
-    private Scene currentScene;
-
-
-
-    // Player ÀÎ½ºÅÏ½º¿¡ Á¢±ÙÇÏ±â À§ÇÑ Instance ÇÔ¼ö
-
-    private void Awake()
+    protected override void Start()
     {
+        base.Start();
 
-        DontDestroyOnLoad(gameObject);
-
-        // ÇöÀç ¾ÀÀ» °¡Á®¿Í¼­ º¯¼ö¿¡ ÀúÀå
-        currentScene = SceneManager.GetActiveScene();
-    }
-    private void Start()
-    {
+        // ê²Œì„ì˜ ëª©í‘œ í”„ë ˆì„ ì†ë„ë¥¼ ì„¤ì •
         Application.targetFrameRate = 120;
     }
 
-    // GameState ÀüÈ¯ ÇÔ¼ö
+    // GameState ì „í™˜ í•¨ìˆ˜
+    public void ChangeState(eGameState newState)
+    {
+        Debug.Log($"ChangeState : {newState}");
 
+        // ì´ì „ ìƒíƒœë¥¼ ë³€ìˆ˜ì— ì €ì¥
+        previousState = currentState;
 
-    // °ÔÀÓ ½ÃÀÛ
+        // í˜„ì¬ ìƒíƒœë¥¼ ë³€ìˆ˜ì— ì €ì¥
+        currentState = newState;
+
+        // GameState ìƒíƒœë¥¼ ì „í™˜í•˜ëŠ” ì´ë²¤íŠ¸ ë°œìƒ
+        changeStage?.Invoke(newState);
+    }
+
+    // ê²Œì„ ì‹œì‘
     public void StartGame()
     {
-        // SceneManagement¸¦ ÅëÇØ 1¹ø ¾ÀÀ¸·Î ÀüÈ¯
-        SceneManager.LoadScene(1);
+        // ê²Œì„ ìƒíƒœë¥¼ ë³€ê²½
+        ChangeState(eGameState.GamePlaying);
+
+        // ê²Œì„ì”¬ì„ ë¡œë“œ
+        SceneLoadManager.Instance.LoadScene(3);
     }
 
-    // °ÔÀÓ ÀÏ½ÃÁ¤Áö
-    public void PauseGame()
+    // ê²Œì„ ì¼ì‹œì •ì§€
+    public void PauseGame(bool check)
     {
-        // GameState »óÅÂ¸¦ Paused·Î ÀüÈ¯
-        Debug.Log($"GameState : {_currentState}");
-
-        // °ÔÀÓ Á¤Áö
-        if (IsPause == false)
+        // ê²Œì„ ì •ì§€
+        if (check)
         {
             Time.timeScale = 0;
-            IsPause = true;
             return;
         }
-    }
 
-    // °ÔÀÓ ÀÏ½ÃÁ¤Áö
-    public void ReturnGame()
-    {
-        // GameState »óÅÂ¸¦ PlayingÀ¸·Î ÀüÈ¯
-
-        // °ÔÀÓ Á¤Áö
-        if (IsPause == true)
+        // ê²Œì„ ì¬ê°œ
+        else if (!check)
         {
             Time.timeScale = 1;
-            IsPause = false;
             return;
         }
+
+        // ê²Œì„ ìƒíƒœë¥¼ ë³€ê²½
+        ChangeState(eGameState.Pause);
+
+        Debug.Log($"IsPauseGame : {check}");
     }
 
-    // °ÔÀÓ ¿À¹ö
+    // ê²Œì„ ì˜¤ë²„
     public void GameOver()
     {
-        // GameState »óÅÂ¸¦ GameOver·Î ÀüÈ¯
+        // ê²Œì„ ìƒíƒœë¥¼ ë³€ê²½
+        ChangeState(eGameState.GameOver);
+
+        // ê²Œì„ì˜¤ë²„ì”¬ìœ¼ë¡œ ì „í™˜
+        // SceneLoadManager.Instance.ChangeScene(0);
     }
 
-    // SceneManager.sceneLoaded ¶ó´Â ÀÌº¥Æ®¿¡ ±¸µ¶ ÇÒ ÇÔ¼ö
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    // ê²Œì„ í´ë¦¬ì–´
+    public void GameClear()
     {
-        // ·ÎµåµÈ ¾ÀÀÇ buildIndex¿¡ µû¶ó UI »óÅÂ¸¦ ´Ù¸£°Ô ¼³Á¤
-        //switch (scene.buildIndex)
-        //{
-        //    case 0:
-        //        ChangeGameState(GameState.Intro);
-        //        break;
-        //    case 1:
-        //        ChangeGameState(GameState.Playing);
-        //        break;
-        //}
+        // ê²Œì„ ìƒíƒœë¥¼ ë³€ê²½
+        ChangeState(eGameState.GameClear);
 
-    }
-
-    private void OnDestroy()
-    {
-        // ¿ÀºêÁ§Æ®°¡ ÆÄ±«µÉ ¶§ ÀÌº¥Æ® µî·Ï ÇØÁ¦
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        // ê²Œì„í´ë¦¬ì–´ì”¬ìœ¼ë¡œ ì „í™˜
+        // SceneLoadManager.Instance.ChangeScene(0);
     }
 }

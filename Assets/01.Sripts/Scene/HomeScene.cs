@@ -12,11 +12,11 @@ public class HomeScene : SceneBase
     protected override void Start()
     {
         base.Start();
-        ShowPopupMain();
+        ShowUI();
     }
 
-    private async void ShowPopupMain()
+    private async void ShowUI()
     {
-        await UIManager.Instance.Show<PopupMain>();
+        await UIManager.Instance.Show<HomeUI>();
     }
 }

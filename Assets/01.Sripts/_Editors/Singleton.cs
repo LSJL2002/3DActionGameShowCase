@@ -14,7 +14,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             if (_applicationIsQuitting)
             {
-                Debug.LogWarning($"[Singleton] {typeof(T)} ÀÌ¹Ì Á¾·áµÊ. »õ ÀÎ½ºÅÏ½º ¹İÈ¯ÇÏÁö ¾ÊÀ½.");
+                Debug.LogWarning($"[Singleton] {typeof(T)} ì´ë¯¸ ì¢…ë£Œë¨. ìƒˆ ì¸ìŠ¤í„´ìŠ¤ ë°˜í™˜í•˜ì§€ ì•ŠìŒ.");
                 return null;
             }
 
@@ -46,12 +46,29 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
         else if (_instance != this)
         {
-            Destroy(gameObject); // Áßº¹ ¹æÁö
+            Destroy(gameObject); // ì¤‘ë³µ ë°©ì§€
         }
     }
 
     private void OnApplicationQuit()
     {
         _applicationIsQuitting = true;
+    }
+
+    protected virtual void OnEnable() { }
+
+    protected virtual void Start() { }
+
+    protected virtual void Update() { }
+
+    protected virtual void FixedUpdate() { }
+
+    protected virtual void LateUpdate() { }
+
+    protected virtual void OnDisable() { }
+
+    protected virtual void OnDestroy()
+    {
+        _instance = null;
     }
 }
