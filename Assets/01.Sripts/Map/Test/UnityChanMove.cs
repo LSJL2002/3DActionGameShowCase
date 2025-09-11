@@ -55,12 +55,16 @@ public class UnityChanMove : MonoBehaviour
         vel.z = worldMove.z * finalSpeed;
         _rb.velocity = vel;
 
-        // 회전 (입력 있을 때만)
-        if (worldMove.sqrMagnitude > 1e-4f)
+        // 입력 벡터가 0이 아닐 때만 회전
+        if (worldMove != Vector3.zero)
         {
-            Quaternion target = Quaternion.LookRotation(worldMove);
-            _rb.MoveRotation(Quaternion.Slerp(_rb.rotation, target, 10f * Time.fixedDeltaTime));
+            Quaternion targetRotation = Quaternion.LookRotation(worldMove, Vector3.up);
+            _rb.MoveRotation(
+                Quaternion.RotateTowards(_rb.rotation, targetRotation, 720f * Time.fixedDeltaTime)
+            // 720f = 초당 도는 속도(도 단위), 필요에 맞게 조절
+            );
         }
+
 
         // TODO: 점프는 별도 플래그 전달해서 여기서 처리
     }
