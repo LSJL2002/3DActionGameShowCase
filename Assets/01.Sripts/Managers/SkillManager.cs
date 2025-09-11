@@ -82,17 +82,45 @@ public class SkillManager : MonoBehaviour
     private void DoHitScan(SkillSO skill, int slashIndex)
     {
         Vector3 center = GetHitCenter(skill);
-        Collider[] hits = Physics.OverlapSphere(center, skill.effectRadius, enemyLayerMask);
+        float radius = skill.effectRadius;
+
+        // 1) 레이어마스크가 비어 있으면(=Nothing) 모든 레이어로 임시 확장해서 디버그
+        LayerMask maskToUse = enemyLayerMask.value == 0 ? Physics.AllLayers : enemyLayerMask;
+
+        // 2) Trigger 콜라이더도 맞도록 Collide로 명시
+        Collider[] hits = Physics.OverlapSphere(center, radius, maskToUse, QueryTriggerInteraction.Collide);
+
+        // 디버깅 로그: 중심/반경/탐지수
+        Debug.Log($"[HitScan] center={center} radius={radius} hits={hits.Length} mask={maskToUse.value}");
+
+        if (hits.Length == 0)
+        {
+            Debug.Log($"[SkillManager] {slashIndex}차 베기: 타격 대상 없음");
+            return;
+        }
 
         float damage = skill.basePower + _stats.attackPower;
 
         foreach (var col in hits)
         {
-            IDamageableSkill dmg = col.GetComponent<IDamageableSkill>();
+            // 3) 자식 콜라이더 ↔ 부모 스크립트 구조 대응
+            IDamageableSkill dmg =
+                col.GetComponent<IDamageableSkill>() ??
+                col.GetComponentInParent<IDamageableSkill>() ??
+                col.GetComponentInChildren<IDamageableSkill>();
+
+            // 추가 디버그: 무슨 오브젝트를 때렸는지, 레이어/트리거 정보
+            Debug.Log($"[HitScan] hit={col.name} layer={LayerMask.LayerToName(col.gameObject.layer)} isTrigger={col.isTrigger}");
+
             if (dmg != null)
             {
-                dmg.TakeDamage(damage, col.bounds.center, _transform);
+                Vector3 hitPoint = col.bounds.center;
+                dmg.TakeDamage(damage, hitPoint, _transform);
                 Debug.Log($"{slashIndex}차 베기: {col.name}에게 {damage} 피해");
+            }
+            else
+            {
+                Debug.LogWarning($"[HitScan] {col.name}에서 IDamageable을 찾지 못했습니다. (부모/자식 확인)");
             }
         }
     }
