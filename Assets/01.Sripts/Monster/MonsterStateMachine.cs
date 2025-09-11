@@ -26,9 +26,16 @@ public class MonsterStateMachine : StateMachine
 
         MonsterIdleState = new MonsterIdleState(this);
         MonsterChaseState = new MonsterChaseState(this);
-        MonsterSkillOneState = new MonsterSkillOneState(this);
 
+        if (monster is ToiletMonster)
+        {
 
+        }
+        else if (monster is TestMonster)
+        {
+            MonsterSkillOneState = new MonsterSkillOneState(this);
+        }
+        
         aiEvents = monster.GetComponent<MonsterAIEvents>();
         if (aiEvents == null)
         {
