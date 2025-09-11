@@ -9,18 +9,31 @@ using UnityEngine.SceneManagement;
 // 제네릭 싱글톤 스크립트를 상속
 public class SceneLoadManager : Singleton<SceneLoadManager>
 {
-    // 현재 매니저가 존재하는지 확인용
+    // 매니저들이 이미 초기화 됐는지 확인하는 변수
     public bool isManager;
 
     // 현재씬의 번호를 저장할 변수
-    public int NowSceneIndex;
+    public int nowSceneIndex;
+
+    // ChangeScene으로 받은 씬번호를 저장할 변수
+    public int targetSceneIndex;
 
     protected override void Awake()
     {
         base.Awake();
 
         // 변수에 현재 열려있는 씬의 번호를 가져와 저장
-        NowSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        nowSceneIndex = SceneManager.GetActiveScene().buildIndex;
+    }
+
+    // 다른 스크립트에서 호출할 함수
+    public void LoadScene(int sceneIndex)
+    {
+        // 매개변수로 받은 sceneIndex를 selectSceneIndex 변수에 저장
+        targetSceneIndex = sceneIndex;
+
+        // 로딩씬 로드
+        ChangeScene(1);
     }
 
     // 매개변수1(씬번호) : 로드할 씬번호
@@ -45,7 +58,7 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
         // 싱글로 로드했다면
         if (loadSceneMode == LoadSceneMode.Single)
         {
-            NowSceneIndex = sceneIndex;
+            nowSceneIndex = sceneIndex;
         }
 
         // 콜백이 있다면 실행

@@ -12,10 +12,10 @@ public class TownScene : SceneBase
     protected override void Start()
     {
         base.Start();
-        ShowTownUI();
+        ShowUI();
     }
 
-    private async void ShowTownUI()
+    private async void ShowUI()
     {
         await UIManager.Instance.Show<TownUI>();
     }
