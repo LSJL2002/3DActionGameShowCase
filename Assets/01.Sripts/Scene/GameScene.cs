@@ -12,10 +12,10 @@ public class GameScene : SceneBase
     protected override void Start()
     {
         base.Start();
-        ShowGameUI();
+        ShowUI();
     }
 
-    private async void ShowGameUI()
+    private async void ShowUI()
     {
         await UIManager.Instance.Show<GameUI>();
     }

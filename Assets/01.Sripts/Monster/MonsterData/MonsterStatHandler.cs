@@ -7,8 +7,8 @@ public class MonsterStatHandler : MonoBehaviour
     public MonsterSO monsterData;
 
     [Header("Runtime Stats (Inspector창 변경)")]
-    public int CurrentHP;
-    public int CurrentMP;
+    public float CurrentHP;
+    public float CurrentMP;
     public int AttackPower;
     public int Defense;
     public float AttackSpeed;

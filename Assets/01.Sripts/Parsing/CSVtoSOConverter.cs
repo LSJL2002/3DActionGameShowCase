@@ -8,9 +8,9 @@ using UnityEngine;
 
 public class CSVtoSOConverter : EditorWindow
 {
-    private string csvPath = "Assets/01.Sripts/Data/Data.csv";
-    private string outputPath = "Assets/01.Sripts/Data";
-    private string soTypeName = ""; // 원하는 ScriptableObject 클래스 이름
+    private string csvPath = "Assets/01.Sripts/Monster/MonsterData/MonsterData.csv";
+    private string outputPath = "Assets/01.Sripts/Monster/MonsterData";
+    private string soTypeName = "MonsterSO"; // 원하는 ScriptableObject 클래스 이름
 
     [MenuItem("Tools/Generic CSV to SO")]
     public static void ShowWindow()
