@@ -1,6 +1,7 @@
-using Cysharp.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 // 리소스폴더 1차 경로
@@ -35,7 +36,7 @@ public class ResourceManager : Singleton<ResourceManager>
         var typeStr = $"{assetType}{(categoryType == eCategoryType.none ? "" : $"/{categoryType}")}/{key}";
 
         // 딕셔너리에 없다면
-        if (!assetPool.ContainsKey(key + "_" + typeStr))
+        if (!assetPool.ContainsKey(key))
         {            
             // 리소스폴더의 경로와 T타입을 지정하여 리소소를 비동기 로드시작 (오브젝트를 생성하는건 아니고 로드만)
             var op = Resources.LoadAsync(typeStr, typeof(T));
@@ -52,14 +53,26 @@ public class ResourceManager : Singleton<ResourceManager>
             }
 
             // 딕셔너리에 추가 (key, value)
-            assetPool.Add(key + "_" + typeStr, obj);
+            assetPool.Add(key, obj);
         }
 
         // 특정 key의 값을 handle 변수에 저장
-        handle = (T)assetPool[key + "_" + typeStr];
+        handle = (T)assetPool[key];
 
         // handle을 반환
         return handle;
+    }
+
+    // 다른 스크립트에서 생성한 리소스를 쉽게 가져올 수 있도록 제네릭 메서드 제공
+    public T Get<T>(string key) where T : Object
+    {
+        if (assetPool.TryGetValue(key, out object obj))
+        {
+            return (T)obj;
+        }
+
+        Debug.LogError($"에셋 '{key}'이 없음");
+        return default;
     }
 }
 

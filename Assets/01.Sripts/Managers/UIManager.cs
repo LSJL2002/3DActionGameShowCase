@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -93,15 +94,15 @@ public class UIManager : Singleton<UIManager>
     public T Get<T>() where T : UIBase
     {
         string uiName = typeof(T).ToString();
-        ui_List.TryGetValue(uiName, out UIBase uiBase);
+        
 
-        if(uiBase == null)
+        if(ui_List.TryGetValue(uiName, out UIBase uiBase))
         {
-            Debug.LogError($"{uiName} don't exist");
-            return default;
+            return (T)uiBase;
         }
 
-        return (T)uiBase;
+        Debug.LogError($"에셋 '{uiName}'이 없음");
+        return default;
     }
 
     // UI를 숨길 때 호출
