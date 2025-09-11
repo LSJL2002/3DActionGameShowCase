@@ -17,19 +17,19 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
 
     [field: Header("Animations")]
     [field: SerializeField] public PlayerAnimationHash AnimationData { get; private set; }
-    //·±Å¸ÀÓ °è»êÀÌ ÇÊ¿äÇÑ µ¥ÀÌÅÍ´Â ÀÌ·¸°Ô ÃÊ±âÈ­
+    //ëŸ°íƒ€ì„ ê³„ì‚°ì´ í•„ìš”í•œ ë°ì´í„°ëŠ” ì´ë ‡ê²Œ ì´ˆê¸°í™”
 
-    public Animator Animator { get; private set; } //·çÆ®¸ğ¼ÇÀº º»Ã¼¿¡
+    public Animator Animator { get; private set; } //ë£¨íŠ¸ëª¨ì…˜ì€ ë³¸ì²´ì—
     public CharacterController Controller { get; private set; }
     public PlayerController Input { get; private set; }
     public ForceReceiver ForceReceiver { get; private set; }
     public Interaction Interaction { get; private set; }
 
-    private PlayerStateMachine stateMachine; //¼ø¼ö C# Å¬·¡½º
+    private PlayerStateMachine stateMachine; //ìˆœìˆ˜ C# í´ë˜ìŠ¤
 
     private void Awake()
     {
-        //ÀÓ½ÃÇÔ¼ö
+        //ì„ì‹œí•¨ìˆ˜
         Cursor.lockState = CursorLockMode.Locked;
         Application.targetFrameRate = 120;
 
@@ -69,7 +69,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         enabled = false;
     }
 
-    // ¿ÜºÎ¿¡¼­ ÀÌ ¸Ş¼­µå·Î¸¸ Á¢±Ù
+    // ì™¸ë¶€ì—ì„œ ì´ ë©”ì„œë“œë¡œë§Œ ì ‘ê·¼
     public void LockOnInput(int val)
     {
         //Controller.LockOnInput(val);

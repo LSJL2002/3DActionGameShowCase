@@ -1,7 +1,9 @@
-using Cysharp.Threading.Tasks;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // 리소스폴더 1차 경로
 public enum eAssetType
@@ -35,7 +37,7 @@ public class ResourceManager : Singleton<ResourceManager>
         var typeStr = $"{assetType}{(categoryType == eCategoryType.none ? "" : $"/{categoryType}")}/{key}";
 
         // 딕셔너리에 없다면
-        if (!assetPool.ContainsKey(key + "_" + typeStr))
+        if (!assetPool.ContainsKey(key))
         {            
             // 리소스폴더의 경로와 T타입을 지정하여 리소소를 비동기 로드시작 (오브젝트를 생성하는건 아니고 로드만)
             var op = Resources.LoadAsync(typeStr, typeof(T));
@@ -52,14 +54,50 @@ public class ResourceManager : Singleton<ResourceManager>
             }
 
             // 딕셔너리에 추가 (key, value)
-            assetPool.Add(key + "_" + typeStr, obj);
+            assetPool.Add(key, obj);
         }
 
         // 특정 key의 값을 handle 변수에 저장
-        handle = (T)assetPool[key + "_" + typeStr];
+        handle = (T)assetPool[key];
 
         // handle을 반환
         return handle;
+    }
+
+    // 다른 스크립트에서 생성한 리소스를 쉽게 가져올 수 있도록 제네릭 메서드 제공
+    public T Get<T>(string key) where T : Object
+    {
+        if (assetPool.TryGetValue(key, out object obj))
+        {
+            return (T)obj;
+        }
+
+        Debug.LogError($"에셋 '{key}'이 없음");
+        return default;
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        // 씬 로드 이벤트 구독
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        // 씬 로드 이벤트 구독 해제
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬전환시 호출할것)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 딕셔너리 '참조'만 삭제
+        assetPool.Clear();
+
+        // 어디에도 참조되지 않은 에셋들을 찾아 메모리에서 완전히 언로드하는 함수 호출
+        Resources.UnloadUnusedAssets();
     }
 }
 

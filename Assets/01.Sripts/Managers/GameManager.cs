@@ -21,8 +21,8 @@ public class GameManager : Singleton<GameManager>
     private eGameState previousState; // 이전 상태를 저장할 변수
     private eGameState currentState; // 현재 게임 상태를 저장할 변수
 
-    // 스테이지 변경을 위한 Action 델리게이트
-    public event Action<eGameState> changeStage;
+    // 상태 변경을 위한 Action 델리게이트
+    public event Action<eGameState> changeState;
 
     protected override void Awake()
     {
@@ -49,7 +49,7 @@ public class GameManager : Singleton<GameManager>
         currentState = newState;
 
         // GameState 상태를 전환하는 이벤트 발생
-        changeStage?.Invoke(newState);
+        changeState?.Invoke(newState);
     }
 
     // 게임 시작
@@ -58,11 +58,8 @@ public class GameManager : Singleton<GameManager>
         // 게임 상태를 변경
         ChangeState(eGameState.GamePlaying);
 
-        // SceneLoadManager를 통해 해당 씬으로 전환 (2:TownScene)
-        SceneLoadManager.Instance.ChangeScene(2);
-
-        // 씬매니저 이용해서 그냥 로드(차이 테스트용)
-        //SceneManager.LoadScene(2);
+        // 게임씬을 로드
+        SceneLoadManager.Instance.LoadScene(3);
     }
 
     // 게임 일시정지
