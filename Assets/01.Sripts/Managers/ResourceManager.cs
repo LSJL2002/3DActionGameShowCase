@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // 리소스폴더 1차 경로
 public enum eAssetType
@@ -73,6 +74,30 @@ public class ResourceManager : Singleton<ResourceManager>
 
         Debug.LogError($"에셋 '{key}'이 없음");
         return default;
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        // 씬 로드 이벤트 구독
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        // 씬 로드 이벤트 구독 해제
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬전환시 호출할것)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 딕셔너리 '참조'만 삭제
+        assetPool.Clear();
+
+        // 어디에도 참조되지 않은 에셋들을 찾아 메모리에서 완전히 언로드하는 함수 호출
+        Resources.UnloadUnusedAssets();
     }
 }
 

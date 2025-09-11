@@ -155,7 +155,10 @@ public class UIManager : Singleton<UIManager>
             }
         }
 
-        // 딕셔너리 목록 삭제
+        // 딕셔너리 '참조'만 삭제
         ui_List.Clear();
+
+        // 어디에도 참조되지 않은 에셋들을 찾아 메모리에서 완전히 언로드하는 함수 호출
+        Resources.UnloadUnusedAssets();
     }
 }
