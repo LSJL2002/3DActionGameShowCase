@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -93,15 +94,15 @@ public class UIManager : Singleton<UIManager>
     public T Get<T>() where T : UIBase
     {
         string uiName = typeof(T).ToString();
-        ui_List.TryGetValue(uiName, out UIBase uiBase);
+        
 
-        if(uiBase == null)
+        if(ui_List.TryGetValue(uiName, out UIBase uiBase))
         {
-            Debug.LogError($"{uiName} don't exist");
-            return default;
+            return (T)uiBase;
         }
 
-        return (T)uiBase;
+        Debug.LogError($"에셋 '{uiName}'이 없음");
+        return default;
     }
 
     // UI를 숨길 때 호출
@@ -154,7 +155,10 @@ public class UIManager : Singleton<UIManager>
             }
         }
 
-        // 딕셔너리 목록 삭제
+        // 딕셔너리 '참조'만 삭제
         ui_List.Clear();
+
+        // 어디에도 참조되지 않은 에셋들을 찾아 메모리에서 완전히 언로드하는 함수 호출
+        Resources.UnloadUnusedAssets();
     }
 }

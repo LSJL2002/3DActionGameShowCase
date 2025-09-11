@@ -18,7 +18,7 @@ public class OptionUI : UIBase
 
             case "Quit":
                 // Home씬으로 돌아가기 (거기서 종료가능)
-                SceneLoadManager.Instance.ChangeScene(1);
+                SceneLoadManager.Instance.LoadScene(2);
                 break;
         }
 

@@ -18,7 +18,7 @@ public class PauseUI : UIBase
 
             // 현재 게임씬 다시 시작
             case "ReStart":
-                SceneLoadManager.Instance.ChangeScene(SceneLoadManager.Instance.NowSceneIndex);
+                SceneLoadManager.Instance.LoadScene(SceneLoadManager.Instance.nowSceneIndex);
                 break;
 
             // IU매니저의 Show 메서드를 호출하여 OptionUI를 화면에 표시
@@ -28,7 +28,7 @@ public class PauseUI : UIBase
 
             // 홈씬으로 돌아가기
             case "BackHome":
-                SceneLoadManager.Instance.ChangeScene(1);
+                SceneLoadManager.Instance.LoadScene(2);
                 break;
         }
 
