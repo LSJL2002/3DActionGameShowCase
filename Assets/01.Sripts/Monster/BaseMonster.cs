@@ -52,7 +52,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     protected virtual void Update()
     {
         stateMachine.HandleInput();
-        stateMachine.Update();
+        stateMachine.LogicUpdate();
     }
 
     protected virtual void FixedUpdate()
