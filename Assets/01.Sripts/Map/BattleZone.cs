@@ -69,7 +69,7 @@ public class BattleZone : MonoBehaviour
     {
         if (other.CompareTag("Player")&&!isClear)
         {
-          StartBattle();           
+          OnBattle?.Invoke(this);         
         } 
     }
 
@@ -80,7 +80,6 @@ public class BattleZone : MonoBehaviour
         foreach (GameObject wall in walls)
         {
             wall.SetActive(true);
-            Debug.Log($"{wall.name}이 켜졌습니다.");
         }
         SpawnMonster();
     }
@@ -88,9 +87,11 @@ public class BattleZone : MonoBehaviour
     private void SpawnMonster()
     {
         GameObject monster = Instantiate(_monster, spawnPoint.position, Quaternion.identity);
+        _monster = monster;
         monster.SetActive(true);
         //적에 대한 컷신
     }
+
 
     public void Activate()
     {

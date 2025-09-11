@@ -10,6 +10,7 @@ public class MapManager : MonoBehaviour
 
     private Dictionary<int, BattleZone> stageDict = new();
     private BattleZone currentZone;
+    private BattleZone lastClearedZone;
 
     void OnEnable()
     {
@@ -48,12 +49,22 @@ public class MapManager : MonoBehaviour
     {
         currentZone = zone;
         zone.StartBattle();
+
+        foreach (var kvp in stageDict)
+        {
+            if (kvp.Value != currentZone)
+            {
+                kvp.Value.Deactivate();
+                Debug.Log($"{kvp.Value.stageID} 번 Zone 비활성화");
+            }
+        }
+
     }
 
     private void HandleZoneClear(BattleZone zone)
     {
         if (!stageDict.ContainsKey(zone.stageID)) return;
-
+        zone._monster.SetActive(false);
         // 다음 스테이지 열기
         foreach (var id in zone.nextStages)
         {
@@ -67,6 +78,7 @@ public class MapManager : MonoBehaviour
             // SceneManager.LoadScene("EndingScene");
         }
 
+        lastClearedZone = zone;
         currentZone = null;
     }
 
@@ -76,8 +88,4 @@ public class MapManager : MonoBehaviour
         return zone;
     }
 
-    public void Activate()
-    {
-
-    }
 }
