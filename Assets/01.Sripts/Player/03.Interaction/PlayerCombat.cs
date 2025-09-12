@@ -6,53 +6,62 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour, IDamageable
 {
     private PlayerManager player;
+    public Transform effectSpawnPoint;
 
-    [Header("Hitbox & Effects")]
-    public Hitbox hitbox;
-    public GameObject hitEffectPrefab;
-    public Transform effectSpawnPoint; // 이펙트 생성 위치 지정
 
     private void Awake()
     {
         player ??= GetComponent<PlayerManager>();
-        if (player == null)
-        {
-            Debug.LogError("PlayerManager가 없습니다!");
-            return;
-        }
+
         if (effectSpawnPoint == null)
-        {
-            Debug.LogWarning("EffectSpawnPoint가 지정되지 않았습니다. 기본값은 Player 위치 사용.");
-            effectSpawnPoint = transform; // 안전장치
-        }
-    }
-
-    public void OnTakeDamage(int damage)
-    {
-        player.Stats.TakeDamage(damage);
-
-        Debug.Log($"플레이어 체력: {player.Stats.CurrentHealth}");
-        if (hitEffectPrefab)
-            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+            effectSpawnPoint = transform;
     }
 
     // 공격 입력 시 호출 예시
-    public void PerformAttack(int damage)
+    // 공격 입력 시 호출
+    public void PerformAttack(string skillName)
     {
-        // Hitbox 활성화
-        hitbox.Enable(damage);
+        // 풀에서 스킬 꺼내기 (소환 위치 = effectSpawnPoint)
+        var skillObj = SkillManagers.Instance.SpawnSkill(skillName, effectSpawnPoint);
 
-        // 공격 시 이펙트 생성
-        if (hitEffectPrefab != null)
-            Instantiate(hitEffectPrefab, effectSpawnPoint.position, Quaternion.identity);
+        // Hitbox 이벤트 연결
+        var skillHitbox = skillObj.GetComponent<Hitbox>();
+        if (skillHitbox != null)
+            skillHitbox.OnHit += HandleHit;
 
-        // 공격 모션 끝나면 Disable 호출
-        // 애니메이션 이벤트에서 weaponHitbox.Disable() 호출 가능
+        // 파티클 지속시간 가져오기
+        var ps = skillObj.GetComponent<ParticleSystem>();
+        float duration = ps != null ? ps.main.duration : 1.0f;
+
+        // 일정 시간 후 반환
+        StartCoroutine(ReturnAfterTime(skillName, skillObj, duration));
     }
 
-    // 공격 종료 시 호출
-    public void EndAttack()
+
+    private IEnumerator ReturnAfterTime(string skillName, GameObject obj, float delay)
     {
-        hitbox.Disable();
+        yield return new WaitForSeconds(delay);
+
+        var skillHitbox = obj.GetComponent<Hitbox>();
+        if (skillHitbox != null)
+            skillHitbox.OnHit -= HandleHit; // 구독 해제 (중복 방지)
+    }
+
+    private void HandleHit(IDamageable target)
+    {
+        Debug.Log(target);
+
+        int damage = player?.Stats.Attack ?? 0;
+        target.OnTakeDamage(damage);
+    }
+
+    // Hitbox 충돌 이벤트 처리
+
+
+    // IDamageable 구현 예시 (플레이어가 맞았을 때)
+    public void OnTakeDamage(int amount)
+    {
+        player?.Stats.TakeDamage(amount); // HP 변경은 Stats에서만
+        // 피격 애니메이션, 넉백 등도 여기서 처리 가능
     }
 }

@@ -10,7 +10,7 @@ public interface IPlayer
 
 public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
-    [field: SerializeField] public PlayerSO Data { get; private set; }
+    [field: SerializeField] public PlayerSO InfoData { get; private set; }
     [field: SerializeField] public PlayerStatsData StatsData { get; private set; }
 
     public PlayerStats Stats { get; private set; }
@@ -45,8 +45,8 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         ForceReceiver ??= GetComponent<ForceReceiver>();
         Interaction ??= GetComponent<Interaction>();
         Combat ??= GetComponent<PlayerCombat>();
-        Stats = new PlayerStats(StatsData);
 
+        Stats = new PlayerStats(StatsData);
         stateMachine = new PlayerStateMachine(this);
 
         Stats.OnDie += OnDie;

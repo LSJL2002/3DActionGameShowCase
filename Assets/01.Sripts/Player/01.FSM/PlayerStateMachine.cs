@@ -70,9 +70,9 @@ public class PlayerStateMachine : StateMachine
         AttackState = new PlayerAttackState(this);
         ComboAttackState = new PlayerComboAttackState(this);
 
-        MovementSpeed = player.Data.GroundData.BaseSpeed;
-        RotationDamping = player.Data.GroundData.BaseRotationDamping;
-        GroundData = player.Data.GroundData;
+        MovementSpeed = player.InfoData.GroundData.BaseSpeed;
+        RotationDamping = player.InfoData.GroundData.BaseRotationDamping;
+        GroundData = player.InfoData.GroundData;
 
         // AttackInfo 초기화
         ComboIndex = 0;
@@ -82,6 +82,6 @@ public class PlayerStateMachine : StateMachine
     public void SetAttackInfo(int comboIndex)
     {
         ComboIndex = comboIndex;
-        AttackInfo = Player.Data.AttackData.GetAttackInfoData(comboIndex);
+        AttackInfo = Player.InfoData.AttackData.GetAttackInfoData(comboIndex);
     }
 }

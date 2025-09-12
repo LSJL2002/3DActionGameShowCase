@@ -31,9 +31,6 @@ public class PlayerAttackState : PlayerBaseState
 
         StopAnimation(stateMachine.Player.AnimationData.AttackParameterHash);
         StopAnimation(stateMachine.Player.AnimationData.ComboAttackParameterHash);
-
-        // Hitbox 확실히 비활성화
-        stateMachine.Player.Combat.EndAttack();
     }
 
     public override void LogicUpdate()
@@ -56,36 +53,25 @@ public class PlayerAttackState : PlayerBaseState
         if (!alreadyAppliedDamage && normalizedTime >= attackData.Dealing_Start_TransitionTime)
         {
             alreadyAppliedDamage = true;
-            stateMachine.Player.Combat.PerformAttack(stateMachine.Player.Stats.Attack);
+            stateMachine.Player.Combat.PerformAttack(attackData.AttackName);
         }
 
 
-        // 콤보 입력 가능 구간
-        if (!alreadyAppliedCombo)
+        // 콤보 처리
+        if (!alreadyAppliedCombo && normalizedTime >= attackData.ComboTransitionTime)
         {
-            if (normalizedTime >= attackData.ComboTransitionTime)
+            if (stateMachine.IsAttacking && attackData.ComboStateIndex != -1)
             {
-                if (stateMachine.IsAttacking && attackData.ComboStateIndex != -1)
-                {
-                    alreadyAppliedCombo = true;
-                    stateMachine.ComboIndex = attackData.ComboStateIndex;
-
-                    Debug.Log($"[콤보 이어짐] ComboIndex: {stateMachine.ComboIndex}");
-
-                    // 같은 AttackState 안에서 다음 콤보 공격 실행
-                    SetAttack(stateMachine.ComboIndex);
-                    return; // Idle 체크 방지
-                }
-                else
-                {
-                    // 콤보 입력이 없으면 -> 그대로 끝까지 감
-                }
+                alreadyAppliedCombo = true;
+                stateMachine.ComboIndex = attackData.ComboStateIndex;
+                SetAttack(stateMachine.ComboIndex);
+                return;
             }
         }
 
 
-            // 애니메이션 끝났는데 콤보 입력 없으면 Idle
-            if (normalizedTime >= 1f && !alreadyAppliedCombo)
+        // 애니메이션 끝났는데 콤보 입력 없으면 Idle
+        if (normalizedTime >= 1f && !alreadyAppliedCombo)
         {
             stateMachine.ComboIndex = 0;
             stateMachine.ChangeState(stateMachine.IdleState);
