@@ -108,7 +108,7 @@ public class GameUI : UIBase
         if (currentState == eState.Battle && monsterStats.isAlive())
         {
             // 적 최대체력
-            float enemyMaxHP = monsterStats.CurrentHP;
+            float enemyMaxHP = monsterStats.monsterData.maxHp;
 
             // 적 현재체력
             float enemyCurrentHP = monsterStats.CurrentHP;
