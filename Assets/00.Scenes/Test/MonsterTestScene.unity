@@ -2460,7 +2460,7 @@ Transform:
   m_GameObject: {fileID: 1942309643569029999}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.34, y: 0, z: 0.26}
+  m_LocalPosition: {x: 2.41, y: 0, z: 0.26}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3284,6 +3284,7 @@ GameObject:
   - component: {fileID: 7259902254773787322}
   - component: {fileID: 7259902254773787326}
   - component: {fileID: 7259902254773787327}
+  - component: {fileID: 7259902254773787328}
   m_Layer: 0
   m_Name: Sci-Fi ToiletMech Skin 1
   m_TagString: Untagged
@@ -9111,7 +9112,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!95 &7259902254773787327
@@ -9127,7 +9128,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: ae5ba634965cae14ba1aa648dfcf4c25, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -9135,6 +9136,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!136 &7259902254773787328
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942309643569029999}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.114957
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.0750118, z: 0}
 --- !u!1 &7262095004988859423
 GameObject:
   m_ObjectHideFlags: 0
