@@ -6,7 +6,6 @@ using Zenject.SpaceFighter;
 
 public interface IPlayer
 {
-    public void LockOnInput(int val);
 }
 
 public class PlayerManager : Singleton<PlayerManager>, IPlayer
@@ -73,11 +72,5 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     {
         Animator.SetTrigger("Die");
         enabled = false;
-    }
-
-    // 외부에서 이 메서드로만 접근
-    public void LockOnInput(int val)
-    {
-        //Controller.LockOnInput(val);
     }
 }
