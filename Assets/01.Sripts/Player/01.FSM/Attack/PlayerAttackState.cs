@@ -59,21 +59,33 @@ public class PlayerAttackState : PlayerBaseState
             stateMachine.Player.Combat.PerformAttack(stateMachine.Player.Stats.Attack);
         }
 
-        // 콤보 입력 가능 구간
-        if (!alreadyAppliedCombo && normalizedTime >= attackData.ComboTransitionTime)
-        {
-            if (stateMachine.IsAttacking && attackData.ComboStateIndex != -1)
-            {
-                alreadyAppliedCombo = true;
-                stateMachine.ComboIndex = attackData.ComboStateIndex;
 
-                // 같은 AttackState 안에서 다음 콤보 공격 실행
-                SetAttack(stateMachine.ComboIndex);
+        // 콤보 입력 가능 구간
+        if (!alreadyAppliedCombo)
+        {
+            if (normalizedTime >= attackData.ComboTransitionTime)
+            {
+                if (stateMachine.IsAttacking && attackData.ComboStateIndex != -1)
+                {
+                    alreadyAppliedCombo = true;
+                    stateMachine.ComboIndex = attackData.ComboStateIndex;
+
+                    Debug.Log($"[콤보 이어짐] ComboIndex: {stateMachine.ComboIndex}");
+
+                    // 같은 AttackState 안에서 다음 콤보 공격 실행
+                    SetAttack(stateMachine.ComboIndex);
+                    return; // Idle 체크 방지
+                }
+                else
+                {
+                    // 콤보 입력이 없으면 -> 그대로 끝까지 감
+                }
             }
         }
 
-        // 애니메이션 끝났는데 콤보 입력 없으면 Idle
-        if (normalizedTime >= 1f && !alreadyAppliedCombo)
+
+            // 애니메이션 끝났는데 콤보 입력 없으면 Idle
+            if (normalizedTime >= 1f && !alreadyAppliedCombo)
         {
             stateMachine.ComboIndex = 0;
             stateMachine.ChangeState(stateMachine.IdleState);
