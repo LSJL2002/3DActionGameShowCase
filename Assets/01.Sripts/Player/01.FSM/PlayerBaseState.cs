@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
+
 
 public class PlayerBaseState : Istate
 {
@@ -30,6 +33,8 @@ public class PlayerBaseState : Istate
         input.PlayerActions.Attack.started += OnAttackStarted;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
         input.PlayerActions.HeavyAttack.started += OnHeavyAttackStarted;
+
+        input.PlayerActions.Menu.performed += OnMenuToggle;
     }
 
     protected virtual void RemoveInputActionCallbacks()
@@ -40,12 +45,13 @@ public class PlayerBaseState : Istate
         input.PlayerActions.Attack.started -= OnAttackStarted;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
         input.PlayerActions.HeavyAttack.started -= OnHeavyAttackStarted;
+
+        input.PlayerActions.Menu.performed -= OnMenuToggle;
     }
 
     public virtual void HandleInput() => ReadMovementInput();
     public virtual void PhysicsUpdate() => MoveCharacter();
-    public virtual void LogicUpdate()
-    {    }
+    public virtual void LogicUpdate() { }
 
 
     protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
@@ -57,6 +63,28 @@ public class PlayerBaseState : Istate
     protected virtual void OnHeavyAttackStarted(InputAction.CallbackContext context) { }
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
+
+    private bool isPaused = false;
+    protected virtual void OnMenuToggle(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        isPaused = !isPaused; // 토글
+        GameManager.Instance.PauseGame(isPaused);
+
+        // UI, 커서 처리도 같이
+        if (isPaused)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            stateMachine.volume.enabled = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            stateMachine.volume.enabled = false;
+        }
+    }
 
 
 
