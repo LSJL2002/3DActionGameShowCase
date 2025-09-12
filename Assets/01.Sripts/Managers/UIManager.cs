@@ -34,7 +34,7 @@ public class UIManager : Singleton<UIManager>
         // 딕셔너리에서 key : uiName에 해당하는 UIBase를 꺼내서 uiBase에 저장
         ui_List.TryGetValue(uiName, out UIBase uiBase);
 
-        if(uiBase == null)
+        if (uiBase == null)
         {
             // 없으면 로드 함수를 통해서 리소스매니저의 함수를 호출하여 UI와 캔버스를 로드
             // await : 반환타입이 string이 되도록 멈췄다가 받고 변수에 저장한다는 의미
@@ -43,14 +43,18 @@ public class UIManager : Singleton<UIManager>
 
             // 생성한 리소스를 딕셔너리에 추가
             ui_List.Add(uiName, uiBase);
+
+            // 해당 UI 활성화
+            uiBase.canvas.gameObject.SetActive(true);
+        }
+        else
+        {
+            // 해당 UI 활성화 <-> 비활성화
+            uiBase.canvas.gameObject.SetActive(!uiBase.canvas.gameObject.activeSelf);
         }
 
         // 현재 UI상태를 변수에 저장
         currentUI = uiBase;
-
-        // 해당 UI 활성화 <-> 비활성화
-        //uiBase.canvas.gameObject.SetActive(true);
-        uiBase.canvas.gameObject.SetActive(!uiBase.canvas.gameObject.activeSelf);
 
         return (T)uiBase;
     }

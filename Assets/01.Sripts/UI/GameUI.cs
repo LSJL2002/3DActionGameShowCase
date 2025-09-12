@@ -39,10 +39,6 @@ public class GameUI : UIBase
         // 기본상태를 'Idle'로 설정
         ChangeState(eState.Idle);
 
-        // 몬스터 소환
-        try { LoadMonster("Test_Monster"); }
-        catch { Debug.Log($"{"Test_Monster"} 소환 실패"); }
-
         playerStats = PlayerManager.Instance.Stats;
 
         // 플레이어 변수 초기화
