@@ -84,9 +84,24 @@ public class CSVtoSOConverter : EditorWindow
                 {
                     // 필드 타입별로 값 변환
                     if (field.FieldType == typeof(int))
-                        field.SetValue(soInstance, int.Parse(value));
+                    {
+                        int parsed = 0;
+                        if (!string.IsNullOrWhiteSpace(value))
+                        {
+                            parsed = int.Parse(value);
+                        }
+                        field.SetValue(soInstance, parsed);
+                    }
                     else if (field.FieldType == typeof(float))
+                    {
+                        float parsed = 0f;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            parsed = float.Parse(value.Replace("f", ""));
+                        }
                         field.SetValue(soInstance, float.Parse(value.Replace("f", "")));
+                    }
+
                     else if (field.FieldType == typeof(string))
                         field.SetValue(soInstance, value);
                     else if (field.FieldType == typeof(List<int>))
@@ -103,6 +118,11 @@ public class CSVtoSOConverter : EditorWindow
                             list.AddRange(value.Split(';'));
                         field.SetValue(soInstance, list);
                     }
+                    else if (field.FieldType.IsEnum)
+                    {
+                        object enumValue = Enum.Parse(field.FieldType, value, true);
+                        field.SetValue(soInstance, enumValue);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -111,9 +131,14 @@ public class CSVtoSOConverter : EditorWindow
             }
 
             //생성된 SO 이름 결졍
-            string assetName = soInstance.name;
+            string assetName = null;
+            FieldInfo nameField = soType.GetField("skillName") ?? soType.GetField("monsterName");
+            if (nameField != null)
+            {
+                assetName = nameField.GetValue(soInstance)?.ToString();
+            }
             if (string.IsNullOrEmpty(assetName))
-                assetName = $"SO_{i}";
+                    assetName = $"SO_{i}";
 
             string assetPath = $"{outputPath}/{assetName}.asset";
             AssetDatabase.CreateAsset(soInstance, assetPath);

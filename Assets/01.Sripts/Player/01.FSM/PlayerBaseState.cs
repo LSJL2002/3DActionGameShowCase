@@ -27,11 +27,9 @@ public class PlayerBaseState : Istate
         PlayerController input = stateMachine.Player.Input;
         input.PlayerActions.Move.canceled += OnMoveCanceled;
         input.PlayerActions.Dodge.started += OnDodgeStarted;
-        input.PlayerActions.Attack.performed += OnAttackPerformed;
+        input.PlayerActions.Attack.started += OnAttackStarted;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
-        input.PlayerActions.HeavyAttack.started += OnHeavyAttackCanceled;
-
-        input.PlayerActions.Jump.started += OnJumpStarted;
+        input.PlayerActions.HeavyAttack.started += OnHeavyAttackStarted;
     }
 
     protected virtual void RemoveInputActionCallbacks()
@@ -39,11 +37,9 @@ public class PlayerBaseState : Istate
         PlayerController input = stateMachine.Player.Input;
         input.PlayerActions.Move.canceled -= OnMoveCanceled;
         input.PlayerActions.Dodge.started -= OnDodgeStarted;
-        input.PlayerActions.Attack.performed -= OnAttackPerformed;
+        input.PlayerActions.Attack.started -= OnAttackStarted;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
-        input.PlayerActions.HeavyAttack.started -= OnHeavyAttackCanceled;
-
-        input.PlayerActions.Jump.started -= OnJumpStarted;
+        input.PlayerActions.HeavyAttack.started -= OnHeavyAttackStarted;
     }
 
     public virtual void HandleInput() => ReadMovementInput();
@@ -54,11 +50,11 @@ public class PlayerBaseState : Istate
 
     protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
     protected virtual void OnDodgeStarted(InputAction.CallbackContext context) { }
-    protected virtual void OnAttackPerformed(InputAction.CallbackContext context)
-         => stateMachine.IsAttacking = true;
+    protected virtual void OnAttackStarted(InputAction.CallbackContext context)
+        => stateMachine.IsAttacking = true;
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
         => stateMachine.IsAttacking = false;
-    protected virtual void OnHeavyAttackCanceled(InputAction.CallbackContext context) { }
+    protected virtual void OnHeavyAttackStarted(InputAction.CallbackContext context) { }
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
 
@@ -135,16 +131,10 @@ public class PlayerBaseState : Istate
         AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
 
         if (animator.IsInTransition(0) && nextInfo.IsTag(tag))
-        {
             return nextInfo.normalizedTime;
-        }
         else if(!animator.IsInTransition(0) && currentInfo.IsTag(tag))
-        {
             return currentInfo.normalizedTime;
-        }
         else
-        {
             return 0f;
-        }
     }
 }

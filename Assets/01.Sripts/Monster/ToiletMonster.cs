@@ -8,5 +8,7 @@ public class ToiletMonster : BaseMonster
     {
         Debug.Log("Testing if animation event works");
         stateMachine.isAttacking = false;
+
+        //stateMachine.Monster.Stats.MonsterSkills.
     }
 }

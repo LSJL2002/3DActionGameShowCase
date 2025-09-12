@@ -53,7 +53,7 @@ public class MonsterBaseState : Istate
         if (stateMachine.Monster.Agent.isActiveAndEnabled)
         {
             stateMachine.Monster.Agent.isStopped = true;
-            stateMachine.Monster.Agent.speed = 0f;
+            stateMachine.Monster.Agent.ResetPath();
         }
     }
     protected bool IsEnemyInDetectionRange()
