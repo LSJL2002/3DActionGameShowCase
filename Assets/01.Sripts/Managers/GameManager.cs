@@ -70,14 +70,12 @@ public class GameManager : Singleton<GameManager>
         if (check)
         {
             Time.timeScale = 0;
-            return;
         }
 
         // 게임 재개
         else if (!check)
         {
             Time.timeScale = 1;
-            return;
         }
 
         // 게임 상태를 변경
