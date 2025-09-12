@@ -12,6 +12,7 @@ public class MonsterAnimationData
         Walk,
         Run,
         Attack,
+        BaseAttack,
         Death
     }
 
