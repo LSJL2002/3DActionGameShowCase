@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MonsterStateMachine : StateMachine
 {
@@ -14,6 +15,9 @@ public class MonsterStateMachine : StateMachine
     public MonsterSkillOneState MonsterSkillOneState { get; set; }
     public MonsterChaseState MonsterChaseState { get; }
 
+    // Toilet Monster
+    public MonsterSkillToiletWideSwing MonsterSkillToiletWideSwing { get; set; }
+
     private MonsterAIEvents aiEvents;
 
     public bool isAttacking = false;
@@ -26,9 +30,16 @@ public class MonsterStateMachine : StateMachine
 
         MonsterIdleState = new MonsterIdleState(this);
         MonsterChaseState = new MonsterChaseState(this);
-        MonsterSkillOneState = new MonsterSkillOneState(this);
-
-
+        
+        if (monster is ToiletMonster)
+        {
+            MonsterSkillToiletWideSwing = new MonsterSkillToiletWideSwing(this);
+        }
+        else if (monster is TestMonster)
+        {
+            MonsterSkillOneState = new MonsterSkillOneState(this);
+        }
+        
         aiEvents = monster.GetComponent<MonsterAIEvents>();
         if (aiEvents == null)
         {
@@ -63,7 +74,15 @@ public class MonsterStateMachine : StateMachine
         if (!isAttacking)
         {
             isAttacking = true;
-            ChangeState(MonsterSkillOneState);
+            if (Monster is ToiletMonster)
+            {
+                ChangeState(MonsterSkillToiletWideSwing);
+            }
+            else
+            {
+                ChangeState(MonsterSkillOneState);
+            }
+            
         }
     }
 
