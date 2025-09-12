@@ -58,7 +58,7 @@ public class BattleZone : MonoBehaviour
 
         }
 
-        if (Input.GetMouseButtonDown(0)) //몬스터가 사망했을때로 수정
+        if (Input.GetMouseButtonDown(1)) //몬스터가 사망했을때로 수정
         {
             isClear = !isClear;
             OnBattleClear?.Invoke(this);
