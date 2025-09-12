@@ -18,6 +18,8 @@ public class MonsterStatHandler : MonoBehaviour
     public List<string> StatusEffect;
     public List<int> DropItem;
 
+    public bool isAlive;
+
     void Awake()
     {
         if (monsterData != null)
@@ -42,6 +44,7 @@ public class MonsterStatHandler : MonoBehaviour
     public void Die()
     {
         Debug.Log($"{monsterData.monsterName} 사망!");
-        Destroy(gameObject);
+        isAlive = false;
+        //Destroy(gameObject);
     }
 }

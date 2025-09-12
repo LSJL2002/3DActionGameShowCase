@@ -3282,8 +3282,8 @@ GameObject:
   - component: {fileID: 7259902254773787324}
   - component: {fileID: 7259902254773787323}
   - component: {fileID: 7259902254773787322}
-  - component: {fileID: 7259902254773787325}
   - component: {fileID: 7259902254773787326}
+  - component: {fileID: 7259902254773787327}
   m_Layer: 0
   m_Name: Sci-Fi ToiletMech Skin 1
   m_TagString: Untagged
@@ -9092,33 +9092,6 @@ MonoBehaviour:
       parameterName: Run
     - type: 3
       parameterName: Attack
---- !u!95 &7259902254773787325
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1942309643569029999}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: b56a8cb2f2f2c1943b57bffc2b83a62f, type: 3}
-  m_Controller: {fileID: 9100000, guid: ae5ba634965cae14ba1aa648dfcf4c25, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'neck_01'\n\tTransform 'pelvis'\n\tTransform
-    'clavicle_r'\n\tTransform 'pinky_01_l'\n\tTransform 'lowerarm_r'\n\tTransform
-    'ring_02_l'\n\tTransform 'spine_04'\n\tTransform 'hand_l'\n\tTransform 'ball_l'\n\tTransform
-    'index_01_l'\n\tand more ...\n\tFrom animation clip 'Idle2'\n\tFrom animation
-    clip 'Walk_F'"
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!195 &7259902254773787326
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -9141,6 +9114,27 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &7259902254773787327
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942309643569029999}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 16687b8613baf904096510207a4a91f1, type: 3}
+  m_Controller: {fileID: 9100000, guid: ae5ba634965cae14ba1aa648dfcf4c25, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7262095004988859423
 GameObject:
   m_ObjectHideFlags: 0
