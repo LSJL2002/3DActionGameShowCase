@@ -10,7 +10,7 @@ public class PlayerStateMachine : StateMachine
     public readonly PlayerGroundData GroundData;
     public readonly PlayerAirData AirData;
     // 현재 공격 데이터 (SO에서 가져온 참조본)
-    public AttackInfoData CurrentAttackInfo { get; private set; }
+    public AttackInfoData AttackInfo { get; private set; }
 
     public Vector2 MovementInput { get; set; } // 입력 방향 (WASD, 스틱)
     public float MovementSpeed { get; private set; } // 현재 이동 속도
@@ -27,10 +27,11 @@ public class PlayerStateMachine : StateMachine
             Player.AnimationData.MoveSpeedParameterHash,
             MovementSpeedModifier);
         }
-    }   
+    }
 
-    public bool IsInvincible { get; set; } //무적상태
     public float JumpForce { get; set; } //점프력
+    public bool IsInvincible { get; set; } //무적상태
+    public bool IsDodge { get; set; } //회피상태
     public bool IsAttacking {  get; set; } //공격중인지
     public int ComboIndex {  get; set; } //콤보인덱스
 
@@ -63,16 +64,21 @@ public class PlayerStateMachine : StateMachine
         DodgeState = new PlayerDodgeState(this);
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);
+        AttackState = new PlayerAttackState(this);
         ComboAttackState = new PlayerComboAttackState(this);
 
         MovementSpeed = player.Data.GroundData.BaseSpeed;
         RotationDamping = player.Data.GroundData.BaseRotationDamping;
         GroundData = player.Data.GroundData;
+
+        // AttackInfo 초기화
+        ComboIndex = 0;
+        SetAttackInfo(ComboIndex);
     }
 
     public void SetAttackInfo(int comboIndex)
     {
         ComboIndex = comboIndex;
-        CurrentAttackInfo = Player.Data.AttackData.GetAttackInfoData(comboIndex);
+        AttackInfo = Player.Data.AttackData.GetAttackInfoData(comboIndex);
     }
 }

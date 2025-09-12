@@ -41,11 +41,9 @@ public class AttackInfoData
     [field: SerializeField][field: Range(0f, 1f)] public float ComboTransitionTime { get; private set; } = 0.8f;
     //다음공격 실행시점
     [field: SerializeField][field: Range(0f, 3f)] public float ForceTransitionTime { get; private set; }
-    //앞으로 밀리는 시간?
+    //앞으로 밀리는 시간
     [field: SerializeField][field: Range(-10f, 10f)] public float Force { get; private set; }
     //캐릭터에 적용되는 힘
-    [field: SerializeField][field: Range(0f, 5f)] public float HitTime { get; private set; }
-    //공격판정 시작시간
     [field: SerializeField][field: Range(0f, 1f)] public float Dealing_Start_TransitionTime { get; private set; }
     //공격판정 시작시간
     [field: SerializeField][field: Range(0f, 1f)] public float Dealing_End_TransitionTime { get; private set; }
