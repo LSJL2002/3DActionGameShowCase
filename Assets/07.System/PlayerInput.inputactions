@@ -60,6 +60,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "13088985-771f-4df9-b9ae-c0b474e1846e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Flash",
                     "type": "Button",
                     "id": "0d1f1195-9395-42d8-b2fa-56be90195d2c",
@@ -99,15 +108,6 @@
                     "name": "Inventory",
                     "type": "Button",
                     "id": "4eadf7cd-77da-459b-821f-72ea6f5d280c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Menu",
-                    "type": "Button",
-                    "id": "13088985-771f-4df9-b9ae-c0b474e1846e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -275,17 +275,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "CameraToggle",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e1d1c7cf-0b71-400e-ac0c-458ce88d9a6d",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -484,6 +473,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "HeavyAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1d1c7cf-0b71-400e-ac0c-458ce88d9a6d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

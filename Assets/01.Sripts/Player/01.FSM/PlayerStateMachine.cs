@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class PlayerStateMachine : StateMachine
 {
@@ -36,6 +37,7 @@ public class PlayerStateMachine : StateMachine
     public int ComboIndex {  get; set; } //콤보인덱스
 
     public Transform MainCamTransform { get; set; }
+    public PostProcessVolume volume { get; set; }
 
     //Ground 로직
     public PlayerIdleState IdleState { get;}
@@ -57,6 +59,7 @@ public class PlayerStateMachine : StateMachine
         this.Player = player;
 
         MainCamTransform = Camera.main.transform;
+        volume = MainCamTransform.gameObject.GetComponent<PostProcessVolume>();
 
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
