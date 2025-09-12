@@ -105,7 +105,7 @@ public class GameUI : UIBase
         //playerMPSlider.value = playerCurrentMP / playerMaxMP;
 
         //전투 상태일 때만 업데이트
-        if (currentState == eState.Battle && monsterStats.isAlive == true)
+        if (currentState == eState.Battle && monsterStats.isAlive())
         {
             // 적 최대체력
             float enemyMaxHP = monsterStats.CurrentHP;
@@ -119,8 +119,7 @@ public class GameUI : UIBase
             // 적 체력 슬라이더 업데이트
             enemyHPSlider.value = enemyCurrentHP / enemyMaxHP;
         }
-        
-        if (monsterStats.isAlive == false)
+        else
         {
             ChangeState(eState.Idle);
         }
