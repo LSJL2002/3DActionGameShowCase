@@ -12,8 +12,9 @@ public class MonsterStateMachine : StateMachine
 
     // 모든 State 
     public MonsterIdleState MonsterIdleState { get; }
-    public MonsterSkillOneState MonsterSkillOneState { get; set; }
+    public MonsterSkillOneState MonsterSkillOneState { get; set; } //delete later
     public MonsterChaseState MonsterChaseState { get; }
+    public MonsterBaseAttack MonsterBaseAttack { get; }
 
     // Toilet Monster
     public MonsterSkillToiletWideSwing MonsterSkillToiletWideSwing { get; set; }
@@ -30,10 +31,12 @@ public class MonsterStateMachine : StateMachine
 
         MonsterIdleState = new MonsterIdleState(this);
         MonsterChaseState = new MonsterChaseState(this);
-        
+
         if (monster is ToiletMonster)
         {
             MonsterSkillToiletWideSwing = new MonsterSkillToiletWideSwing(this);
+            MonsterBaseAttack = new MonsterBaseAttack(this);
+            
         }
         else if (monster is TestMonster)
         {
