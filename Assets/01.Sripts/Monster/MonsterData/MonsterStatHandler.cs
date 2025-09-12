@@ -7,8 +7,8 @@ public class MonsterStatHandler : MonoBehaviour
     public MonsterSO monsterData;
 
     [Header("Runtime Stats (Inspector창 변경)")]
-    public int CurrentHP;
-    public int CurrentMP;
+    public float CurrentHP;
+    public float CurrentMP;
     public int AttackPower;
     public int Defense;
     public float AttackSpeed;
@@ -31,7 +31,6 @@ public class MonsterStatHandler : MonoBehaviour
             DetectRange = monsterData.detectRange;
             AttackRange = monsterData.attackRange;
             StatusEffect = new List<string>(monsterData.statusEffect);
-            DropItem = new List<int>(monsterData.dropItem);
         }
     }
 
@@ -40,9 +39,19 @@ public class MonsterStatHandler : MonoBehaviour
         CurrentHP = Mathf.Min(CurrentHP + amount, monsterData.maxHp);
     }
 
+    public bool isAlive()
+    {
+        if (CurrentHP > 0)
+        {
+            Debug.Log("isalive");
+            return true;
+        }
+        return false;
+    }
+
     public void Die()
     {
         Debug.Log($"{monsterData.monsterName} 사망!");
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }

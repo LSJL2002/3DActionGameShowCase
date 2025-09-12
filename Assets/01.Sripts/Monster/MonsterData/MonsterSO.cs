@@ -6,8 +6,8 @@ public class MonsterSO : ScriptableObject
 {
     public int id;
     public string monsterName;
-    public int maxHp;
-    public int maxMp;
+    public float maxHp;
+    public float maxMp;
     public int attackPower;
     public int defense;
     public float attackSpeed;
@@ -18,6 +18,7 @@ public class MonsterSO : ScriptableObject
     public int equipAccId;
     public List<int> dropItem;
     public int detectRange;
-    public int attackRange;
-    //public List<int> useSkill; //나중에 추가
+    public int attackRange; //나중에 삭제
+    public List<int> useSkill; //나중에 추가
+    public string test;
 }
