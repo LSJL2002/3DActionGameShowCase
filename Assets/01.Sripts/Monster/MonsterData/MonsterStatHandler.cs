@@ -18,7 +18,7 @@ public class MonsterStatHandler : MonoBehaviour
     public List<string> StatusEffect;
     public List<int> DropItem;
 
-    public bool isAlive;
+    public bool isAlive = true;
 
     void Awake()
     {
