@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using Zenject;
 
@@ -172,8 +174,7 @@ public class GameUI : UIBase
     // 몬스터 리소스로드 함수(프로토타입 테스트용2)
     public async void LoadMonster(string str)
     {
-        GameObject Monster = await ResourceManager.Instance.LoadAsset<GameObject>(str, eAssetType.Monster);
-        GameObject monsterInstance = Instantiate(Monster, new Vector3(0, 0, 0), Quaternion.identity);
+        var monsterInstance = await Addressables.InstantiateAsync(str, new Vector3(0, 0, 0), Quaternion.identity);
         monsterInstance.name = str;
 
         BaseMonster baseMonsterComponent = monsterInstance.GetComponent<BaseMonster>();
