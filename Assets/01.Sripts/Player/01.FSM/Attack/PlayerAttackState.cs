@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    protected AttackInfoData attackData; // 필드로 선언
+    protected AttackInfoData attackData; // 현재 공격 정보 캐싱
 
     private bool alreadyAppliedCombo;
     private bool alreadyAppliedDamage;
@@ -17,6 +18,10 @@ public class PlayerAttackState : PlayerBaseState
     {
         base.Enter();
 
+        // ComboIndex 기준 AttackInfo 세팅
+        if (stateMachine.AttackInfo == null)
+            stateMachine.SetAttackInfo(stateMachine.ComboIndex);
+
         SetAttack(stateMachine.ComboIndex);
     }
 
@@ -25,9 +30,7 @@ public class PlayerAttackState : PlayerBaseState
         base.Exit();
 
         StopAnimation(stateMachine.Player.AnimationData.AttackParameterHash);
-
-        // 공격 종료 후 이동 속도 원복
-        stateMachine.MovementSpeedModifier = 1f;
+        StopAnimation(stateMachine.Player.AnimationData.ComboAttackParameterHash);
 
         // Hitbox 확실히 비활성화
         stateMachine.Player.Combat.EndAttack();
@@ -50,7 +53,7 @@ public class PlayerAttackState : PlayerBaseState
         }
 
         // 데미지 판정
-        if (!alreadyAppliedDamage && normalizedTime >= attackData.HitTime)
+        if (!alreadyAppliedDamage && normalizedTime >= attackData.Dealing_Start_TransitionTime)
         {
             alreadyAppliedDamage = true;
             stateMachine.Player.Combat.PerformAttack(stateMachine.Player.Stats.Attack);
@@ -80,7 +83,7 @@ public class PlayerAttackState : PlayerBaseState
     private void SetAttack(int comboIndex)
     {
         stateMachine.SetAttackInfo(comboIndex);
-        attackData = stateMachine.CurrentAttackInfo;
+        attackData = stateMachine.AttackInfo;
 
         alreadyAppliedCombo = false;
         alreadyAppliedDamage = false;
@@ -88,18 +91,18 @@ public class PlayerAttackState : PlayerBaseState
 
         // 공격 애니메이션 파라미터 세팅
         stateMachine.Player.Animator.SetInteger("Combo", comboIndex);
-        StartAnimation(stateMachine.Player.AnimationData.AttackParameterHash);
 
-        // 이동 속도 제한 (루트모션이 있으면 필요없음)
-        stateMachine.MovementSpeedModifier = 0f;
+        StartAnimation(stateMachine.Player.AnimationData.AttackParameterHash);
+        StartAnimation(stateMachine.Player.AnimationData.ComboAttackParameterHash);
     }
+
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
     {
         float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
 
         // 공격 애니메이션 일정 시간 이후 캔슬 가능
-        if (normalizedTime >= 0.3f)
+        if (normalizedTime >= 0.1f)
         {
             stateMachine.ChangeState(stateMachine.DodgeState);
         }
