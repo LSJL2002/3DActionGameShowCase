@@ -20,7 +20,6 @@ public class BattleZone : MonoBehaviour
 
     private void Start()
     {
-        gameObject.SetActive(false);
         foreach (GameObject wall in walls)
         {
             wall.SetActive(false);
@@ -82,10 +81,12 @@ public class BattleZone : MonoBehaviour
             wall.SetActive(true);
         }
         SpawnMonster();
+
     }
 
     private void SpawnMonster()
     {
+
         GameObject monster = Instantiate(_monster, spawnPoint.position, Quaternion.identity);
         _monster = monster;
         monster.SetActive(true);
@@ -101,14 +102,4 @@ public class BattleZone : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-
-
-    //public void Clear()
-    //{
-    //    isClear = true;
-    //    foreach (var next in nextStages)
-    //    {
-    //        if (next != null) next.Activate();
-    //    }
-    //}
 }
