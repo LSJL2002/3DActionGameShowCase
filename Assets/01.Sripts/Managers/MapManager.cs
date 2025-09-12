@@ -75,7 +75,7 @@ public class MapManager : MonoBehaviour
         if (zone.isEndingStage)
         {
             Debug.Log("모든 스테이지 클리어! 엔딩씬으로 이동!");
-            SceneLoadManager.Instance.LoadScene(04);
+            //SceneLoadManager.Instance.LoadScene(04);
         }
 
         lastClearedZone = zone;
