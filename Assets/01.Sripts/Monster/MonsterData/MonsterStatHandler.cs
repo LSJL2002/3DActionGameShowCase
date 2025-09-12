@@ -18,8 +18,6 @@ public class MonsterStatHandler : MonoBehaviour
     public List<string> StatusEffect;
     public List<int> DropItem;
 
-    public bool isAlive = true;
-
     void Awake()
     {
         if (monsterData != null)
@@ -41,10 +39,19 @@ public class MonsterStatHandler : MonoBehaviour
         CurrentHP = Mathf.Min(CurrentHP + amount, monsterData.maxHp);
     }
 
+    public bool isAlive()
+    {
+        if (CurrentHP > 0)
+        {
+            Debug.Log("isalive");
+            return true;
+        }
+        return false;
+    }
+
     public void Die()
     {
         Debug.Log($"{monsterData.monsterName} 사망!");
-        isAlive = false;
         //Destroy(gameObject);
     }
 }
