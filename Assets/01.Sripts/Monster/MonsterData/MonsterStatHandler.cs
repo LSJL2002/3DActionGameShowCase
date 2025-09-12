@@ -43,7 +43,6 @@ public class MonsterStatHandler : MonoBehaviour
     {
         if (CurrentHP > 0)
         {
-            Debug.Log("isalive");
             return true;
         }
         return false;

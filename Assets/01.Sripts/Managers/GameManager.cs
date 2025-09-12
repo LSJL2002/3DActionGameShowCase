@@ -11,7 +11,7 @@ public enum eGameState
     //Intro,
     GamePlaying,
     Pause,
-    GameOver,
+    GameEnd,
     GameClear
 }
 
@@ -86,22 +86,12 @@ public class GameManager : Singleton<GameManager>
     }
 
     // 게임 오버
-    public void GameOver()
+    public void GameEnd()
     {
         // 게임 상태를 변경
-        ChangeState(eGameState.GameOver);
+        ChangeState(eGameState.GameEnd);
 
         // 게임오버씬으로 전환
-        // SceneLoadManager.Instance.ChangeScene(0);
-    }
-
-    // 게임 클리어
-    public void GameClear()
-    {
-        // 게임 상태를 변경
-        ChangeState(eGameState.GameClear);
-
-        // 게임클리어씬으로 전환
         // SceneLoadManager.Instance.ChangeScene(0);
     }
 }

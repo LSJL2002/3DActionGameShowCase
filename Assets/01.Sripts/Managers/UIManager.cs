@@ -126,8 +126,8 @@ public class UIManager : Singleton<UIManager>
         uiBase.canvas.gameObject.SetActive(false);
 
         // UI 제거 (딕셔너리에서 삭제하고 캔버스 오브젝트 파괴)
-        //DestroyImmediate(uiBase.canvas.gameObject);
-        //ui_List.Remove(uiName);
+        // DestroyImmediate(uiBase.canvas.gameObject);
+        // ui_List.Remove(uiName);
     }
 
     protected override void OnEnable()
