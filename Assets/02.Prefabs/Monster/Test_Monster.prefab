@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3334594695523750990}
   - component: {fileID: 998990059291434306}
   - component: {fileID: 1912233536257627006}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 2527781974571010884}
   - component: {fileID: 1168054905879606591}
   - component: {fileID: 1111595744527543858}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 4646008643334725495}
   - component: {fileID: 6376116954362621362}
   - component: {fileID: 8094897523875546354}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Test_Monster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1351193972453586055}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: QuadEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,7 +411,7 @@ GameObject:
   - component: {fileID: 459881101833498295}
   - component: {fileID: 4239825928054905161}
   - component: {fileID: 5135873171218125305}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,6 +572,10 @@ PrefabInstance:
       value: Border
       objectReference: {fileID: 0}
     - target: {fileID: 8245100324379655167, guid: 8e93a353ef77bf44ebc510c437383c03, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245100324379655167, guid: 8e93a353ef77bf44ebc510c437383c03, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -641,6 +645,10 @@ PrefabInstance:
     - target: {fileID: 8215158784708020014, guid: ae44a681618f6534e9a45b96d6d43384, type: 3}
       propertyPath: m_Name
       value: Fill
+      objectReference: {fileID: 0}
+    - target: {fileID: 8215158784708020014, guid: ae44a681618f6534e9a45b96d6d43384, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8215158784708020014, guid: ae44a681618f6534e9a45b96d6d43384, type: 3}
       propertyPath: m_IsActive

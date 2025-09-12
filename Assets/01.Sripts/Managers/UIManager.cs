@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -47,8 +48,9 @@ public class UIManager : Singleton<UIManager>
         // 현재 UI상태를 변수에 저장
         currentUI = uiBase;
 
-        // 생성한 UI 활성화
-        uiBase.canvas.gameObject.SetActive(true);
+        // 해당 UI 활성화 <-> 비활성화
+        //uiBase.canvas.gameObject.SetActive(true);
+        uiBase.canvas.gameObject.SetActive(!uiBase.canvas.gameObject.activeSelf);
 
         return (T)uiBase;
     }
