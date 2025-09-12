@@ -68,7 +68,7 @@ public class GameUI : UIBase
 
                 break;
 
-            // Enemy 소환
+            // Enemy 소환 (프로토타입 테스트용1)
             case "Test_Monster":
 
                 // 몬스터 소환
@@ -169,6 +169,7 @@ public class GameUI : UIBase
         }
     }
 
+    // 몬스터 리소스로드 함수(프로토타입 테스트용2)
     public async void LoadMonster(string str)
     {
         GameObject Monster = await ResourceManager.Instance.LoadAsset<GameObject>(str, eAssetType.Monster);
