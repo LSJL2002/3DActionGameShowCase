@@ -30,6 +30,7 @@ public class GameUI : UIBase
     private float playerMaxMP;             // 플레이어 최대 마력
     private float enemyMaxHP;              // 적 최대 체력
 
+    PlayerStats playerStats;               // 플레이어의 stats에 접근가능한 변수
     MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
 
     protected override void OnEnable()
@@ -39,9 +40,11 @@ public class GameUI : UIBase
         // 기본상태를 'Idle'로 설정
         ChangeState(eState.Idle);
 
+        playerStats = PlayerManager.Instance.Stats;
+
         // 플레이어 변수 초기화
-        // playerMaxHP = PlayerManager.Instance.
-        // playerMaxMP = PlayerManager.Instance.
+        playerMaxHP = playerStats.MaxHealth;
+        playerMaxHP = playerStats.MaxEnergy;
 
         // 플레이어 슬라이더를 초기화
         playerHPSlider.maxValue = 1f;
@@ -83,26 +86,23 @@ public class GameUI : UIBase
     {
         base.Update();
 
-        //// 플레이어 현재체력
-        //float playerCurrentHP = 0;
+        // 플레이어 현재체력
+        float playerCurrentHP = playerStats.CurrentHealth;
 
-        //// 플레이어 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
-        //playerHPText.text = Mathf.FloorToInt( playerCurrentHP / playerMaxHP * 100 ).ToString() + "%";
+        // 플레이어 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
+        playerHPText.text = Mathf.FloorToInt(playerCurrentHP / playerMaxHP * 100).ToString() + "%";
 
-        //// 플레이어 체력 슬라이더 업데이트
-        //playerHPSlider.value = playerCurrentHP / playerMaxHP;
+        // 플레이어 체력 슬라이더 업데이트
+        playerHPSlider.value = playerCurrentHP / playerMaxHP;
 
-        //// 플레이어 최대마력
-        //float playerMaxMP = 0;
+        // 플레이어 현재마력
+        float playerCurrentMP = playerStats.CurrentEnergy;
 
-        //// 플레이어 현재마력
-        //float playerCurrentMP = 0;
+        // 플레이어 현재 마력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
+        playerMPText.text = Mathf.FloorToInt(playerCurrentMP / playerMaxMP * 100).ToString() + "%";
 
-        //// 플레이어 현재 마력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
-        //playerMPText.text = Mathf.FloorToInt( playerCurrentMP / playerMaxMP * 100 ).ToString() + "%";
-
-        //// 플레이어 마력 슬라이더 업데이트
-        //playerMPSlider.value = playerCurrentMP / playerMaxMP;
+        // 플레이어 마력 슬라이더 업데이트
+        playerMPSlider.value = playerCurrentMP / playerMaxMP;
 
         //전투 상태일 때만 업데이트
         if (currentState == eState.Battle && monsterStats.isAlive())
