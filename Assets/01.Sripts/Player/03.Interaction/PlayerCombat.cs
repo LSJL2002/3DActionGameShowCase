@@ -5,31 +5,54 @@ using UnityEngine;
 //전투관련 로직만
 public class PlayerCombat : MonoBehaviour, IDamageable
 {
-    private IStats stats;
+    private PlayerManager player;
+
+    [Header("Hitbox & Effects")]
+    public Hitbox hitbox;
+    public GameObject hitEffectPrefab;
+    public Transform effectSpawnPoint; // 이펙트 생성 위치 지정
 
     private void Awake()
     {
-        // PlayerSO는 ScriptableObject 데이터
-        stats = new PlayerStats(Resources.Load<PlayerSO>("PlayerData"));
-        stats.OnDie += HandleDie;
+        player ??= GetComponent<PlayerManager>();
+        if (player == null)
+        {
+            Debug.LogError("PlayerManager가 없습니다!");
+            return;
+        }
+        if (effectSpawnPoint == null)
+        {
+            Debug.LogWarning("EffectSpawnPoint가 지정되지 않았습니다. 기본값은 Player 위치 사용.");
+            effectSpawnPoint = transform; // 안전장치
+        }
     }
 
     public void OnTakeDamage(int damage)
     {
-        stats.TakeDamage(damage); //순수계산
-        // 피격 애니메이션, 넉백 등 Unity 관련 처리 가능
-        Debug.Log($"플레이어 체력: {stats.CurrentHealth}");
+        player.Stats.TakeDamage(damage);
+
+        Debug.Log($"플레이어 체력: {player.Stats.CurrentHealth}");
+        if (hitEffectPrefab)
+            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
     }
 
-    private void HandleDie()
+    // 공격 입력 시 호출 예시
+    public void PerformAttack(int damage)
     {
-        // 유니티에서 처리할 죽음 이벤트
-        Debug.Log("플레이어 사망!");
-        // ex: 애니메이션, 게임오버 UI, 상태머신 전환
+        // Hitbox 활성화
+        hitbox.Enable(damage);
+
+        // 공격 시 이펙트 생성
+        if (hitEffectPrefab != null)
+            Instantiate(hitEffectPrefab, effectSpawnPoint.position, Quaternion.identity);
+
+        // 공격 모션 끝나면 Disable 호출
+        // 애니메이션 이벤트에서 weaponHitbox.Disable() 호출 가능
     }
 
-    private void OnDestroy()
+    // 공격 종료 시 호출
+    public void EndAttack()
     {
-        stats.OnDie -= HandleDie;
+        hitbox.Disable();
     }
 }

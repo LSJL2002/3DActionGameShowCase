@@ -10,6 +10,7 @@ public enum eAssetType
 {
     Prefab,
     UI,
+    Monster,
 }
 
 // 리소스폴더 2차 경로

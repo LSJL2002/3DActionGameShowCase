@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   <GroundData>k__BackingField:
-    <BaseSpeed>k__BackingField: 20
     <BaseRotationDamping>k__BackingField: 25
+    <BaseSpeed>k__BackingField: 20
     <WalkSpeedModifier>k__BackingField: 0.225
+    <RunAccelerationTime>k__BackingField: 2
     <RunSpeedModifier>k__BackingField: 1
   <AirData>k__BackingField:
     <JumpForce>k__BackingField: 5
@@ -24,28 +25,29 @@ MonoBehaviour:
     - <AttackName>k__BackingField: Attack
       <ComboStateIndex>k__BackingField: 1
       <ComboTransitionTime>k__BackingField: 0.8
-      <ForceTransitionTime>k__BackingField: 0.1
-      <Force>k__BackingField: 1
-      Damage: 5
+      <ForceTransitionTime>k__BackingField: 0
+      <Force>k__BackingField: 0
+      <HitTime>k__BackingField: 2
       <Dealing_Start_TransitionTime>k__BackingField: 0
       <Dealing_End_TransitionTime>k__BackingField: 0
     - <AttackName>k__BackingField: DoubleAttack
       <ComboStateIndex>k__BackingField: 2
       <ComboTransitionTime>k__BackingField: 0.8
-      <ForceTransitionTime>k__BackingField: 0.2
-      <Force>k__BackingField: 2
-      Damage: 7
+      <ForceTransitionTime>k__BackingField: 0
+      <Force>k__BackingField: 0
+      <HitTime>k__BackingField: 2
       <Dealing_Start_TransitionTime>k__BackingField: 0
       <Dealing_End_TransitionTime>k__BackingField: 0
     - <AttackName>k__BackingField: TripleAttack
       <ComboStateIndex>k__BackingField: -1
       <ComboTransitionTime>k__BackingField: 0.8
-      <ForceTransitionTime>k__BackingField: 0.1
-      <Force>k__BackingField: 3
-      Damage: 10
+      <ForceTransitionTime>k__BackingField: 0
+      <Force>k__BackingField: 0
+      <HitTime>k__BackingField: 2
       <Dealing_Start_TransitionTime>k__BackingField: 0
       <Dealing_End_TransitionTime>k__BackingField: 0
   <BaseHealth>k__BackingField: 100
   <MaxHealth>k__BackingField: 100
   <BaseAttack>k__BackingField: 5
   <BaseDefense>k__BackingField: 0
+  Damage: 0

@@ -64,7 +64,7 @@ public class PlayerGroundState : PlayerBaseState
 
     protected virtual void OnAttack()
     {
-        stateMachine.ChangeState(stateMachine.ComboAttackState);
+        stateMachine.ChangeState(stateMachine.AttackState);
     }
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)

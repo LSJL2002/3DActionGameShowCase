@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public enum eState
 {
@@ -27,6 +29,8 @@ public class GameUI : UIBase
     private float playerMaxHP;             // 플레이어 최대 체력
     private float playerMaxMP;             // 플레이어 최대 마력
     private float enemyMaxHP;              // 적 최대 체력
+
+    MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
 
     protected override void OnEnable()
     {
@@ -54,21 +58,24 @@ public class GameUI : UIBase
         switch (str)
         {
             case "Pause":
+
                 // 게임매니저의 게임 일시정지 메서드를 호출
                 GameManager.Instance.PauseGame(true);
                 // 일시정지 UI 팝업
                 await UIManager.Instance.Show<PauseUI>();
+
                 break;
 
             // Enemy 소환
-            case "Spawn":
-                // 배틀매니저의 스테이트를 변경과 동시에 적의 정보를 넘김
-                ChangeState(eState.Battle);
+            case "Test_Monster":
+
                 // 몬스터 소환
+                try { LoadMonster(str); }
+                catch { Debug.Log($"{str} 소환 실패"); }
                 break;
         }
 
-        // 현재 팝업창 닫기 (게임상태에서는 UI를 끌 필요 없으므로 보류)
+        // 현재 팝업창 닫기 (게임상태에서는 UI를 끌 필요 없으므로 일단 주석처리)
         //Hide();
     }
 
@@ -97,20 +104,24 @@ public class GameUI : UIBase
         //// 플레이어 마력 슬라이더 업데이트
         //playerMPSlider.value = playerCurrentMP / playerMaxMP;
 
-        // 전투 상태일 때만 업데이트
-        if (currentState == eState.Battle)
+        //전투 상태일 때만 업데이트
+        if (currentState == eState.Battle && monsterStats.isAlive())
         {
             // 적 최대체력
-            int enemyMaxHP = 0;
+            float enemyMaxHP = monsterStats.monsterData.maxHp;
 
             // 적 현재체력
-            int enemyCurrentHP = 0;
+            float enemyCurrentHP = monsterStats.CurrentHP;
 
             // 적 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
             enemyMaxHPText.text = Mathf.FloorToInt(enemyCurrentHP / enemyMaxHP * 100).ToString() + "%";
 
             // 적 체력 슬라이더 업데이트
             enemyHPSlider.value = enemyCurrentHP / enemyMaxHP;
+        }
+        else
+        {
+            ChangeState(eState.Idle);
         }
     }
 
@@ -125,9 +136,6 @@ public class GameUI : UIBase
         {
             case eState.Idle:
 
-                // 적 정보UI 오브젝트를 비활성화 (동적생성으로 변경 예정)
-                enemyInfoUI.SetActive(false);
-
                 // 적 이름 변수 초기화
                 enemyNameText.text = null;
 
@@ -136,6 +144,11 @@ public class GameUI : UIBase
 
                 // 적 체력 슬라이더를 초기화
                 enemyHPSlider.maxValue = 1f;
+
+                // 적 정보UI 오브젝트를 비활성화 (동적생성으로 변경 예정)
+                enemyInfoUI.SetActive(false);
+
+                monsterStats = null;
 
                 break;
 
@@ -155,5 +168,21 @@ public class GameUI : UIBase
 
                 break;
         }
+    }
+
+    public async void LoadMonster(string str)
+    {
+        GameObject Monster = await ResourceManager.Instance.LoadAsset<GameObject>(str, eAssetType.Monster);
+        GameObject monsterInstance = Instantiate(Monster, new Vector3(0, 0, 0), Quaternion.identity);
+        monsterInstance.name = str;
+
+        BaseMonster baseMonsterComponent = monsterInstance.GetComponent<BaseMonster>();
+        monsterStats = baseMonsterComponent.Stats;
+
+        string enemyName = monsterStats.monsterData.monsterName;
+        float enemyMaxHP = monsterStats.monsterData.maxHp;
+
+        // 배틀매니저의 스테이트를 변경과 동시에 적의 정보를 넘김
+        ChangeState(eState.Battle, enemyName, enemyMaxHP);
     }
 }
