@@ -6,13 +6,13 @@ using UnityEngine;
 [Serializable]
 public class PlayerGroundData
 {
-    [field: SerializeField][field: Range(0f, 50f)] public float BaseSpeed { get; private set; } = 20f;
-    [field: SerializeField][field: Range(0f, 50f)] public float BaseRotationDamping { get; private set; } = 30f;
-
     [field: Header("IdleData")]
+    [field: SerializeField][field: Range(0f, 50f)] public float BaseRotationDamping { get; private set; } = 25f;
 
     [field: Header("WalkData")]
+    [field: SerializeField][field: Range(0f, 50f)] public float BaseSpeed { get; private set; } = 20f;
     [field: SerializeField][field: Range(0f, 2f)] public float WalkSpeedModifier { get; private set; } = 0.225f;
+    [field: SerializeField][field: Range(0f, 5f)] public float RunAccelerationTime { get; private set; } = 2f;
 
     [field: Header("RunData")]
     [field: SerializeField][field: Range(0f, 2f)] public float RunSpeedModifier { get; private set; } = 1f;
@@ -26,7 +26,7 @@ public class PlayerAirData
 }
 
 [Serializable]
-public class PlayerAttackData
+public class PlayerAttackssData
 {
     [field: SerializeField] public List<AttackInfoData> AttackInfoDatas { get; private set; }
     public int GetAttackInfoCount() { return AttackInfoDatas.Count; }
@@ -38,12 +38,18 @@ public class AttackInfoData
 {
     [field: SerializeField] public string AttackName { get; private set; }
     [field: SerializeField] public int ComboStateIndex { get; private set; }
-    [field: SerializeField][field: Range(0f, 1f)] public float ComboTransitionTime { get; private set; }
+    [field: SerializeField][field: Range(0f, 1f)] public float ComboTransitionTime { get; private set; } = 0.8f;
+    //다음공격 실행시점
     [field: SerializeField][field: Range(0f, 3f)] public float ForceTransitionTime { get; private set; }
+    //앞으로 밀리는 시간?
     [field: SerializeField][field: Range(-10f, 10f)] public float Force { get; private set; }
-    [field: SerializeField] public int Damage;
+    //캐릭터에 적용되는 힘
+    [field: SerializeField][field: Range(0f, 5f)] public float HitTime { get; private set; }
+    //공격판정 시작시간
     [field: SerializeField][field: Range(0f, 1f)] public float Dealing_Start_TransitionTime { get; private set; }
+    //공격판정 시작시간
     [field: SerializeField][field: Range(0f, 1f)] public float Dealing_End_TransitionTime { get; private set; }
+    //공격판정 종료시점
 }
 
 
@@ -54,10 +60,13 @@ public class PlayerSO : ScriptableObject
 {
     [field: SerializeField] public PlayerGroundData GroundData { get; private set; }
     [field: SerializeField] public PlayerAirData AirData { get; private set; }
-    [field: SerializeField] public PlayerAttackData AttackData { get; private set; }
+    [field: SerializeField] public PlayerAttackssData AttackData { get; private set; }
 
     [field: SerializeField] public int BaseHealth { get; private set; }
     [field: SerializeField] public int MaxHealth { get; private set; }
     [field: SerializeField] public int BaseAttack { get; private set; }
     [field: SerializeField] public int BaseDefense { get; private set; }
+
+    [field: SerializeField] public int Damage;
+
 }

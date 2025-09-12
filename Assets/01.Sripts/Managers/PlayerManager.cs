@@ -12,6 +12,8 @@ public interface IPlayer
 public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
     [field: SerializeField] public PlayerSO Data { get; private set; }
+    [field: SerializeField] public PlayerStatsData StatsData { get; private set; }
+
     public PlayerStats Stats { get; private set; }
 
 
@@ -19,11 +21,14 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     [field: SerializeField] public PlayerAnimationHash AnimationData { get; private set; }
     //런타임 계산이 필요한 데이터는 이렇게 초기화
 
+
     public Animator Animator { get; private set; } //루트모션은 본체에
     public CharacterController Controller { get; private set; }
     public PlayerController Input { get; private set; }
     public ForceReceiver ForceReceiver { get; private set; }
     public Interaction Interaction { get; private set; }
+    public PlayerCombat Combat { get; private set; }
+
 
     private PlayerStateMachine stateMachine; //순수 C# 클래스
 
@@ -40,7 +45,8 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         Input ??= GetComponent<PlayerController>();
         ForceReceiver ??= GetComponent<ForceReceiver>();
         Interaction ??= GetComponent<Interaction>();
-        Stats = new PlayerStats(Data);
+        Combat ??= GetComponent<PlayerCombat>();
+        Stats = new PlayerStats(StatsData);
 
         stateMachine = new PlayerStateMachine(this);
 
