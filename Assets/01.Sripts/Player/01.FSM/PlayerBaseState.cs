@@ -7,13 +7,10 @@ using UnityEngine.UIElements;
 public class PlayerBaseState : Istate
 {
     protected PlayerStateMachine stateMachine;
-    protected readonly PlayerGroundData groundData;
-
 
     public PlayerBaseState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
-        groundData = stateMachine.Player.Data.GroundData;
     }
 
     public virtual void Enter()
@@ -32,6 +29,8 @@ public class PlayerBaseState : Istate
         input.PlayerActions.Dodge.started += OnDodgeStarted;
         input.PlayerActions.Attack.performed += OnAttackPerformed;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
+        input.PlayerActions.HeavyAttack.started += OnHeavyAttackCanceled;
+
         input.PlayerActions.Jump.started += OnJumpStarted;
     }
 
@@ -42,8 +41,9 @@ public class PlayerBaseState : Istate
         input.PlayerActions.Dodge.started -= OnDodgeStarted;
         input.PlayerActions.Attack.performed -= OnAttackPerformed;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
-        input.PlayerActions.Jump.started -= OnJumpStarted;
+        input.PlayerActions.HeavyAttack.started -= OnHeavyAttackCanceled;
 
+        input.PlayerActions.Jump.started -= OnJumpStarted;
     }
 
     public virtual void HandleInput() => ReadMovementInput();
@@ -53,14 +53,13 @@ public class PlayerBaseState : Istate
 
 
     protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
-
     protected virtual void OnDodgeStarted(InputAction.CallbackContext context) { }
-
     protected virtual void OnAttackPerformed(InputAction.CallbackContext context)
          => stateMachine.IsAttacking = true;
-
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
         => stateMachine.IsAttacking = false;
+    protected virtual void OnHeavyAttackCanceled(InputAction.CallbackContext context) { }
+
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
 
 
@@ -73,16 +72,6 @@ public class PlayerBaseState : Istate
     {
         stateMachine.Player.Animator.SetBool(animatorHash, false);
     }
-
-    private void UpdateAnimatorMovementSpeed()
-    {
-        float speed = stateMachine.MovementInput.magnitude * stateMachine.MovementSpeedModifier;
-        stateMachine.Player.Animator.SetFloat(
-            stateMachine.Player.AnimationData.MoveSpeedParameterHash,
-            speed
-        );
-    }
-
 
     private void ReadMovementInput()
     {
@@ -145,7 +134,7 @@ public class PlayerBaseState : Istate
         AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
         AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
 
-        if(animator.IsInTransition(0) && nextInfo.IsTag(tag))
+        if (animator.IsInTransition(0) && nextInfo.IsTag(tag))
         {
             return nextInfo.normalizedTime;
         }

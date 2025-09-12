@@ -6,8 +6,11 @@ using UnityEngine;
 
 public interface IStats
 {
-    int CurrentHealth { get; }
-    int MaxHealth { get; }
+    float MaxHealth { get; }
+    float CurrentHealth { get; }
+    float MaxEnergy { get; }
+    float CurrentEnergy { get; }
+
     int Attack { get; }
     int Defense { get; }
     bool IsDead { get; }
@@ -24,19 +27,24 @@ public class PlayerStats : IStats
 
     public bool IsDead => CurrentHealth == 0;
 
-    public int MaxHealth { get; private set; }
-    public int CurrentHealth { get; private set; }
+    public float MaxHealth { get; private set; }
+    public float CurrentHealth { get; private set; }
+    public float MaxEnergy { get; private set; }
+    public float CurrentEnergy { get; private set; }
+
     public int Attack { get; private set; }
     public int Defense { get; private set; }
 
     public event Action OnDie;
 
-    public PlayerStats(PlayerSO data)
+    public PlayerStats(PlayerStatsData data)
     {
-        MaxHealth = data.BaseHealth;
+        MaxHealth = data.maxHp;
         CurrentHealth = MaxHealth;
-        Attack = data.BaseAttack;
-        Defense = data.BaseDefense;
+        MaxEnergy = data.maxHp;
+        CurrentEnergy = MaxEnergy;
+        Attack = data.attackPower;
+        Defense = data.defense;
     }
 
     public void TakeDamage(int damage)
