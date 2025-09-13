@@ -1,21 +1,19 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.UI;
 
 // SkillIconUI.cs
 public class SkillIconUI : MonoBehaviour
 {
     // 쿨타임 오버레이 이미지 (Filled 타입)
     public Image cooltimeOverlay;
+    // 스킬 아이콘 이미지
+    public Image skillIcon;
     // 이 스킬 아이콘이 나타내는 스킬의 ID
     public string skillID;
-
-    // 초기화 메서드
-    public void Initialize(string id)
-    {
-        skillID = id;
-        // 필요하다면 여기서 아이콘 이미지와 텍스트도 설정할 수 있습니다.
-    }
 
     private void OnEnable()
     {
@@ -28,6 +26,14 @@ public class SkillIconUI : MonoBehaviour
     {
         // 스크립트가 비활성화되면 구독을 해제합니다.
         SkillManagerEX.OnSkillUsed -= CooltimeEffect;
+    }
+
+    // 초기화 메서드
+    public async Task InitializeAsync(string skillId, string skillIconPaht)
+    {
+        skillID = skillId;
+
+        skillIcon.sprite = await Addressables.LoadAssetAsync<Sprite>(skillIconPaht).Task;
     }
 
     // 이벤트를 통해 호출될 메서드

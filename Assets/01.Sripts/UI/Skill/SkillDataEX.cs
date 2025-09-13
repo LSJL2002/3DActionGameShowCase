@@ -6,4 +6,5 @@ public class SkillDataEX : ScriptableObject
     public string skillID; // 딕셔너리의 키로 사용될 고유 ID
     public float cooltime;
     public string skillName;
+    public string skillIconPath; // 스킬아이콘의 어드레서블 경로
 }

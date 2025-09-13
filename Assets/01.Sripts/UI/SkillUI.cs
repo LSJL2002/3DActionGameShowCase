@@ -34,7 +34,7 @@ public class SkillUI : UIBase
             if (skillUI != null)
             {
                 // SkillDataEX의 skillID를 SkillIconUI에 전달하여 초기화합니다.
-                skillUI.Initialize(skillData.skillID);
+                await skillUI.InitializeAsync(skillData.skillID, skillData.skillIconPath);
             }
         }
     }
