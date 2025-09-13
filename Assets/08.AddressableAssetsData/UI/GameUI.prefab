@@ -538,19 +538,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7388990488482532986}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8110046670183606299}
-        m_TargetAssemblyTypeName: GameUI, Assembly-CSharp
-        m_MethodName: OnClickButton
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Test_Monster
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &2777235486047306078
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,19 +824,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4334803116031307177}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8110046670183606299}
-        m_TargetAssemblyTypeName: GameUI, Assembly-CSharp
-        m_MethodName: OnClickButton
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Pause
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &3343307742560847109
 GameObject:
   m_ObjectHideFlags: 0
@@ -1145,7 +1121,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3696209608783360834
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2538,7 +2514,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7686744485702597052}
-  - component: {fileID: 8110046670183606299}
+  - component: {fileID: 7531623373873293932}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -2559,10 +2535,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2058933156016999846}
+  - {fileID: 2033116106642155150}
   - {fileID: 5372472428247834392}
   - {fileID: 3729231441627268076}
   - {fileID: 3696209608783360834}
-  - {fileID: 2033116106642155150}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2570,7 +2546,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8110046670183606299
+--- !u!114 &7531623373873293932
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2579,18 +2555,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 9031700828551998716}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 585e124a4dfe7b940abef06fb3642d7c, type: 3}
+  m_Script: {fileID: 11500000, guid: cc69e40a7efc33b4585a2c756be5b5df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
   enemyInfoUI: {fileID: 4433610464917814431}
+  enemyNameText: {fileID: 444501337418386364}
+  enemyHPText: {fileID: 6069904944627685463}
+  enemyHPSlider: {fileID: 1947325231201200562}
   playerHPText: {fileID: 8343065896522206254}
   playerHPSlider: {fileID: 4698057314022855880}
   playerMPText: {fileID: 3856301038128266475}
   playerMPSlider: {fileID: 43600792712058749}
-  enemyNameText: {fileID: 444501337418386364}
-  enemyMaxHPText: {fileID: 6069904944627685463}
-  enemyHPSlider: {fileID: 1947325231201200562}
+  skillInfoUI: {fileID: 6782494286755002997}
 --- !u!1 &9058139686728784174
 GameObject:
   m_ObjectHideFlags: 0
@@ -2660,7 +2637,7 @@ RectTransform:
   m_Father: {fileID: 5302761890655879238}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
