@@ -6,10 +6,10 @@ using UnityEngine.AddressableAssets;
 // 전투 돌입시 어딘가에서 생성해 줘야함
 public class SkillUI : UIBase
 {
-    // Addressables를 사용하여 UI 프리팹을 참조합니다.
+    // Addressables를 사용하여 UI 프리팹을 참조 (인스펙터 할당)
     public AssetReference skillIconPrefabReference;
 
-    // 스킬 아이콘이 생성될 부모 Transform (UI Canvas 등)
+    // 스킬 아이콘이 생성될 부모
     public Transform skillIconParent;
 
     protected override void OnEnable()
@@ -21,20 +21,19 @@ public class SkillUI : UIBase
 
     public async void OnEnableSkill()
     {
-        // 스킬 매니저로부터 스킬 목록을 가져옵니다.
+        // 스킬 매니저의 스킬목록(딕셔너리)을 가져와서 딕셔너리 생성
         Dictionary<string, SkillDataEX> skillDictionary = SkillManagerEX.Instance.GetSkillDictionary();
 
-        foreach (var skillData in skillDictionary.Values)
+        // 딕셔너리 목록만큼 스킬아이콘UI 생성
+        foreach (var skillDataEX in skillDictionary.Values)
         {
-            // Addressables를 사용해 UI 프리팹을 동적으로 인스턴스화합니다.
             GameObject skillIconInstance = await Addressables.InstantiateAsync(skillIconPrefabReference, skillIconParent);
 
-            // 생성된 스킬 아이콘에 데이터를 할당합니다.
             SkillIconUI skillUI = skillIconInstance.GetComponent<SkillIconUI>();
+
             if (skillUI != null)
             {
-                // SkillDataEX의 skillID를 SkillIconUI에 전달하여 초기화합니다.
-                await skillUI.InitializeAsync(skillData.skillID, skillData.skillIconPath);
+                await skillUI.InitializeAsync(skillDataEX.skillID, skillDataEX.skillIconPath);
             }
         }
     }
