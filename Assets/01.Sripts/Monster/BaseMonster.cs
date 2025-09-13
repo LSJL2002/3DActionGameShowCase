@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -85,7 +85,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public virtual void OnTakeDamage(int amount)
     {
-        Stats.CurrentHP -= 10;
+        Stats.CurrentHP -= 100;
         if (Stats.CurrentHP <= 0)
         {
             Stats.Die();
