@@ -6,11 +6,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    protected AttackInfoData attackData; // 현재 공격 정보 캐싱
-
-    private bool alreadyAppliedCombo;
-    private bool alreadyAppliedDamage;
-    private bool forceApplied;
+    private AttackInfoData currentAttack;
+    private int bufferedComboIndex = -1;
+    private bool attackButtonHeld = false;
+    private bool forceApplied = false;
 
     public PlayerAttackState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
@@ -22,15 +21,29 @@ public class PlayerAttackState : PlayerBaseState
         if (stateMachine.AttackInfo == null)
             stateMachine.SetAttackInfo(stateMachine.ComboIndex);
 
-        SetAttack(stateMachine.ComboIndex);
+        // 공격 시작 시 Trigger + Bool 세팅
+        var anim = stateMachine.Player.Animator;
+        anim.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
+        StartAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
+        StartAnimation(stateMachine.Player.AnimationData.ComboBoolHash);
+
+        SetAttack(stateMachine.ComboIndex); // ComboIndex만 적용
+
+        bufferedComboIndex = -1;
+        stateMachine.IsAttacking = true;
     }
 
     public override void Exit()
     {
         base.Exit();
 
-        StopAnimation(stateMachine.Player.AnimationData.AttackParameterHash);
-        StopAnimation(stateMachine.Player.AnimationData.ComboAttackParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
+        StopAnimation(stateMachine.Player.AnimationData.ComboBoolHash);
+
+        attackButtonHeld = false;
+        bufferedComboIndex = -1;
+        forceApplied = false;
+        stateMachine.IsAttacking = false;
     }
 
     public override void LogicUpdate()
@@ -39,40 +52,52 @@ public class PlayerAttackState : PlayerBaseState
 
         float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
 
-        // Force 적용 + 공격처리
-        if (!forceApplied && normalizedTime >= attackData.ForceTransitionTime)
+        HandleForce(normalizedTime);
+        HandleComboBuffer(normalizedTime);
+        HandleAttackEnd(normalizedTime);
+    }
+
+    private void HandleForce(float normalizedTime)
+    {
+        if (!forceApplied && normalizedTime >= currentAttack.ForceTransitionTime)
         {
             forceApplied = true;
             stateMachine.Player.ForceReceiver.Reset();
             stateMachine.Player.ForceReceiver.AddForce(
-                stateMachine.Player.transform.forward * attackData.Force
+                stateMachine.Player.transform.forward * currentAttack.Force
             );
         }
+    }
 
-        // 데미지 판정
-        if (!alreadyAppliedDamage && normalizedTime >= attackData.Dealing_Start_TransitionTime)
+    private void HandleComboBuffer(float normalizedTime)
+    {
+        if (attackButtonHeld && bufferedComboIndex < 0)
         {
-            alreadyAppliedDamage = true;
-            stateMachine.Player.Combat.PerformAttack(attackData.AttackName);
-        }
-
-
-        // 콤보 처리
-        if (!alreadyAppliedCombo && normalizedTime >= attackData.ComboTransitionTime)
-        {
-            if (stateMachine.IsAttacking && attackData.ComboStateIndex != -1)
+            int nextIndex = currentAttack.ComboStateIndex;
+            if (nextIndex >= 0 && nextIndex < stateMachine.Player.InfoData.AttackData.GetAttackInfoCount())
             {
-                alreadyAppliedCombo = true;
-                stateMachine.ComboIndex = attackData.ComboStateIndex;
-                SetAttack(stateMachine.ComboIndex);
-                return;
+                bufferedComboIndex = nextIndex;
             }
         }
 
-
-        // 애니메이션 끝났는데 콤보 입력 없으면 Idle
-        if (normalizedTime >= 1f && !alreadyAppliedCombo)
+        if (bufferedComboIndex >= 0 && normalizedTime >= currentAttack.ComboTransitionTime)
         {
+            SetAttack(bufferedComboIndex);
+            bufferedComboIndex = -1;
+        }
+    }
+
+    private void HandleAttackEnd(float normalizedTime)
+    {
+        if (normalizedTime >= 1f)
+        {
+            if (bufferedComboIndex >= 0)
+            {
+                SetAttack(bufferedComboIndex);
+                bufferedComboIndex = -1;
+                return;
+            }
+
             stateMachine.ComboIndex = 0;
             stateMachine.ChangeState(stateMachine.IdleState);
         }
@@ -80,20 +105,28 @@ public class PlayerAttackState : PlayerBaseState
 
     private void SetAttack(int comboIndex)
     {
+        stateMachine.ComboIndex = comboIndex;
         stateMachine.SetAttackInfo(comboIndex);
-        attackData = stateMachine.AttackInfo;
+        currentAttack = stateMachine.AttackInfo;
 
-        alreadyAppliedCombo = false;
-        alreadyAppliedDamage = false;
         forceApplied = false;
 
-        // 공격 애니메이션 파라미터 세팅
-        stateMachine.Player.Animator.SetInteger("Combo", comboIndex);
-
-        StartAnimation(stateMachine.Player.AnimationData.AttackParameterHash);
-        StartAnimation(stateMachine.Player.AnimationData.ComboAttackParameterHash);
+        // 애니메이션 재시작 없이 ComboInt만 갱신
+        stateMachine.Player.Animator.SetInteger(stateMachine.Player.AnimationData.ComboIntHash, comboIndex);
     }
 
+
+    protected override void OnAttackStarted(InputAction.CallbackContext context)
+    {
+        attackButtonHeld = true;
+        if (!stateMachine.IsAttacking)
+            stateMachine.IsAttacking = true;
+    }
+
+    protected override void OnAttackCanceled(InputAction.CallbackContext context)
+    {
+        attackButtonHeld = false;
+    }
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
     {

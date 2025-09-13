@@ -33,7 +33,7 @@ public class AudioManager : Singleton<AudioManager>
 
     [Header("SFX Clips")]
     [SerializeField] private List<NamedSFX> sfxList;
-    public int sfxPoolSize = 5; //µ¿½ÃÀç»ı°¡´ÉÇÑ¼ö
+    public int sfxPoolSize = 5; //ë™ì‹œì¬ìƒê°€ëŠ¥í•œìˆ˜
 
     private List<AudioSource> sfxSources = new List<AudioSource>();
     private int currentSfxIndex = 0;
@@ -43,7 +43,7 @@ public class AudioManager : Singleton<AudioManager>
     private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
 
     [Range(0f, 1f)]
-    [SerializeField] private float _bgmVolume = 0.25f;
+    [SerializeField] private float _bgmVolume = 0.5f;
     public float bgmVolume => _bgmVolume;
     [Range(0f, 1f)]
     [SerializeField] private float _sfxVolume = 0.5f;
@@ -52,13 +52,13 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Awake()
     {
-        // BGM ¿Àµğ¿À ¼Ò½º »ı¼º
+        // BGM ì˜¤ë””ì˜¤ ì†ŒìŠ¤ ìƒì„±
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.outputAudioMixerGroup = bgmGroup;
         bgmSource.loop = true;
         bgmSource.playOnAwake = false;
 
-        // SFX Ç® ÃÊ±âÈ­
+        // SFX í’€ ì´ˆê¸°í™”
         for (int i = 0; i < sfxPoolSize; i++)
         {
             AudioSource sfx = gameObject.AddComponent<AudioSource>();
@@ -67,7 +67,7 @@ public class AudioManager : Singleton<AudioManager>
             sfxSources.Add(sfx);
         }
 
-        // µñ¼Å³Ê¸® ÃÊ±âÈ­
+        // ë”•ì…”ë„ˆë¦¬ ì´ˆê¸°í™”
         foreach (var bgm in bgmList)
         {
             if (!bgmDict.ContainsKey(bgm.name))
@@ -82,11 +82,13 @@ public class AudioManager : Singleton<AudioManager>
 
         SetBgmVolume(_bgmVolume);
         SetSfxVolume(_sfxVolume);
+
+        PlayBGM("1");
     }
 
-    // ¿ø·¡ ¾À·Îµå½Ã ¾À³×ÀÓÀ» ¸Å°³º¯¼ö·Î ¹Ş¾Æ¿Í¼­ ¾À³×ÀÓ°ú °°Àº ÀÌ¸§ÀÇ BGMÀ» Àç»ıÇÏ´Â ¹æ½ÄÀÌ¾úÀ¸³ª,
-    // ÇöÀç ¾À·Îµå¸Å´ÏÀú¸¦ µû·Î ¸¸µé¾ú±â¶§¹®¿¡ ¹æ½ÄÀÌ ¾à°£ º¯°æµÅ¼­ ÀÏ´Ü ÁÖ¼®Ã³¸® ÃßÈÄ BGM ÇÃ·¹ÀÌ ¹æ½ÄÀ» º¯°æ ÇÊ¿ä
-    // ¿¹Á¤ : °¢ ¾À¿¡ Á¸ÀçÇÏ´Â ¾À¿ÀºêÁ§Æ® Start ÇÔ¼ö¿¡¼­ Àç»ı
+    // ì›ë˜ ì”¬ë¡œë“œì‹œ ì”¬ë„¤ì„ì„ ë§¤ê°œë³€ìˆ˜ë¡œ ë°›ì•„ì™€ì„œ ì”¬ë„¤ì„ê³¼ ê°™ì€ ì´ë¦„ì˜ BGMì„ ì¬ìƒí•˜ëŠ” ë°©ì‹ì´ì—ˆìœ¼ë‚˜,
+    // í˜„ì¬ ì”¬ë¡œë“œë§¤ë‹ˆì €ë¥¼ ë”°ë¡œ ë§Œë“¤ì—ˆê¸°ë•Œë¬¸ì— ë°©ì‹ì´ ì•½ê°„ ë³€ê²½ë¼ì„œ ì¼ë‹¨ ì£¼ì„ì²˜ë¦¬ ì¶”í›„ BGM í”Œë ˆì´ ë°©ì‹ì„ ë³€ê²½ í•„ìš”
+    // ì˜ˆì • : ê° ì”¬ì— ì¡´ì¬í•˜ëŠ” ì”¬ì˜¤ë¸Œì íŠ¸ Start í•¨ìˆ˜ì—ì„œ ì¬ìƒ
     //private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
     //private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
     //private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -100,11 +102,11 @@ public class AudioManager : Singleton<AudioManager>
 
     void Update()
     {
-        // Ç×»ó º¼·ı ÃÖ½ÅÈ­ (¿É¼Ç¿¡¼­ ½½¶óÀÌ´õ·Î Á¶Àı ½Ã ¹İ¿µµÇ°Ô)
+        // í•­ìƒ ë³¼ë¥¨ ìµœì‹ í™” (ì˜µì…˜ì—ì„œ ìŠ¬ë¼ì´ë”ë¡œ ì¡°ì ˆ ì‹œ ë°˜ì˜ë˜ê²Œ)
         bgmSource.volume = bgmVolume;
         foreach (var sfx in sfxSources) sfx.volume = _sfxVolume;
 
-        // ¹öÆ° Å¬¸¯ SFX
+        // ë²„íŠ¼ í´ë¦­ SFX
         if (Input.GetMouseButtonDown(0))
         {
             GameObject clicked = EventSystem.current.currentSelectedGameObject;
@@ -146,7 +148,7 @@ public class AudioManager : Singleton<AudioManager>
         float startVolume = _bgmVolume;
         float time = 0f;
 
-        // ÆäÀÌµå ¾Æ¿ô
+        // í˜ì´ë“œ ì•„ì›ƒ
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -154,11 +156,11 @@ public class AudioManager : Singleton<AudioManager>
             await UniTask.Yield();
         }
 
-        // »õ Å¬¸³ Àç»ı
+        // ìƒˆ í´ë¦½ ì¬ìƒ
         bgmSource.clip = newClip;
         bgmSource.Play();
 
-        // ÆäÀÌµå ÀÎ
+        // í˜ì´ë“œ ì¸
         time = 0f;
         while (time < duration)
         {

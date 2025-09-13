@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SkillManagers : Singleton<SkillManagers>
 {
-    [System.Serializable]
+    [Serializable]
     public class SkillPrefab
     {
         public string skillName;
@@ -36,14 +37,26 @@ public class SkillManagers : Singleton<SkillManagers>
         }
     }
 
+    private GameObject CreateSkillObject(GameObject prefab)
+    {
+        var obj = Instantiate(prefab, transform);
+        obj.SetActive(false);
+        return obj;
+    }
+
     public GameObject SpawnSkill(string skillName, Transform owner)
     {
-        if (!poolDictionary.ContainsKey(skillName)) return null;
+        if (!poolDictionary.ContainsKey(skillName))
+        {
+            Debug.LogWarning($"Skill '{skillName}' not found in pool!");
+            return null;
+        }
 
         var queue = poolDictionary[skillName];
-        GameObject obj = queue.Count > 0 ? queue.Dequeue() : Instantiate(skillPrefabs[0].prefab);
+        GameObject obj = queue.Count > 0 ? queue.Dequeue() : CreateSkillPrefab(skillName);
+        if (obj == null) return null;
 
-        // 스킬 위치/회전 → 소환자(owner) 기준
+        // 위치/회전 적용
         obj.transform.position = owner.position;
         obj.transform.rotation = owner.rotation;
         obj.SetActive(true);
@@ -52,29 +65,41 @@ public class SkillManagers : Singleton<SkillManagers>
         var hitbox = obj.GetComponent<Hitbox>();
         hitbox?.OnEnable();
 
-        // 파티클 실행
+        // ParticleSystem 재생
         var ps = obj.GetComponent<ParticleSystem>();
         if (ps != null) ps.Play(true);
 
-        // 일정 시간 후 반환
-        float duration = ps != null ? ps.main.duration : 1.0f;
-        StartCoroutine(ReturnAfterTime(skillName, obj, duration));
+        // Coroutine으로 반환 처리
+        StartCoroutine(ReturnAfterParticle(ps, skillName, obj));
 
         return obj;
     }
 
-
-    private IEnumerator ReturnAfterTime(string skillName, GameObject obj, float delay)
+    private GameObject CreateSkillPrefab(string skillName)
     {
-        yield return new WaitForSeconds(delay);
+        var skillPrefab = Array.Find(skillPrefabs, s => s.skillName == skillName);
+        if (skillPrefab == null) return null;
+        return CreateSkillObject(skillPrefab.prefab);
+    }
 
+    private IEnumerator ReturnAfterParticle(ParticleSystem ps, string skillName, GameObject obj)
+    {
+        if (ps != null)
+        {
+            // Particle이 완전히 끝날 때까지 기다림
+            while (ps.IsAlive(true))
+                yield return null;
+
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        // Hitbox 끄기
         var hitbox = obj.GetComponent<Hitbox>();
         hitbox?.OnDisable();
 
-        var ps = obj.GetComponent<ParticleSystem>();
-        if (ps != null) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
         obj.SetActive(false);
+
+        // Pool에 다시 넣기
         if (poolDictionary.ContainsKey(skillName))
             poolDictionary[skillName].Enqueue(obj);
     }

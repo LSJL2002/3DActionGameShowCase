@@ -17,23 +17,18 @@ public class PlayerCombat : MonoBehaviour, IDamageable
             effectSpawnPoint = transform;
     }
 
-    // 공격 입력 시 호출 예시
-    // 공격 입력 시 호출
-    public void PerformAttack(string skillName)
+    // 공격 입력 시 호출 에니메이션 이벤트로 조작
+    public void OnAttack(string skillName)
     {
-        // 풀에서 스킬 꺼내기 (소환 위치 = effectSpawnPoint)
+        // 애니메이션 이벤트에서 호출
         var skillObj = SkillManagers.Instance.SpawnSkill(skillName, effectSpawnPoint);
 
-        // Hitbox 이벤트 연결
-        var skillHitbox = skillObj.GetComponent<Hitbox>();
+        var skillHitbox = skillObj.GetComponentInChildren<Hitbox>();
         if (skillHitbox != null)
             skillHitbox.OnHit += HandleHit;
 
-        // 파티클 지속시간 가져오기
         var ps = skillObj.GetComponent<ParticleSystem>();
         float duration = ps != null ? ps.main.duration : 1.0f;
-
-        // 일정 시간 후 반환
         StartCoroutine(ReturnAfterTime(skillName, skillObj, duration));
     }
 
@@ -49,8 +44,6 @@ public class PlayerCombat : MonoBehaviour, IDamageable
 
     private void HandleHit(IDamageable target)
     {
-        Debug.Log(target);
-
         int damage = player?.Stats.Attack ?? 0;
         target.OnTakeDamage(damage);
     }

@@ -25,7 +25,7 @@ public class PlayerStateMachine : StateMachine
         {
             _movementSpeedModifier = value;
             Player.Animator.SetFloat(
-            Player.AnimationData.MoveSpeedParameterHash,
+            Player.AnimationData.MoveSpeedHash,
             MovementSpeedModifier);
         }
     }

@@ -10,7 +10,7 @@ public interface IPlayer
 
 public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
-    [field: SerializeField] public PlayerSO InfoData { get; private set; }
+    [field: SerializeField] public PlayerInfo InfoData { get; private set; }
     [field: SerializeField] public PlayerStatsData StatsData { get; private set; }
 
     public PlayerStats Stats { get; private set; }
