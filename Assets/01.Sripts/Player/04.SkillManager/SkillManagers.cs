@@ -69,6 +69,9 @@ public class SkillManagers : Singleton<SkillManagers>
         var ps = obj.GetComponent<ParticleSystem>();
         if (ps != null) ps.Play(true);
 
+        // 오디오 재생 (AudioManager 사용)
+        AudioManager.Instance.PlaySFX(skillName);
+
         // Coroutine으로 반환 처리
         StartCoroutine(ReturnAfterParticle(ps, skillName, obj));
 

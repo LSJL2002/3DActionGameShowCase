@@ -42,6 +42,8 @@ public class AudioManager : Singleton<AudioManager>
     private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
 
+    [SerializeField, Range(0f, 1f)] private float _masterVolume = 1f;
+
     [Range(0f, 1f)]
     [SerializeField] private float _bgmVolume = 0.5f;
     public float bgmVolume => _bgmVolume;
@@ -80,10 +82,17 @@ public class AudioManager : Singleton<AudioManager>
                 sfxDict.Add(sfx.name, sfx.clip);
         }
 
+        SetMasterVolume(_masterVolume);
         SetBgmVolume(_bgmVolume);
         SetSfxVolume(_sfxVolume);
 
         PlayBGM("1");
+
+        float masterDB;
+        if (audioMixer.GetFloat("Master_Volume", out masterDB))
+            Debug.Log("Master dB after Awake: " + masterDB);
+        else
+            Debug.LogWarning("Master_Volume parameter not found in AudioMixer!");
     }
 
     // 원래 씬로드시 씬네임을 매개변수로 받아와서 씬네임과 같은 이름의 BGM을 재생하는 방식이었으나,
@@ -118,6 +127,11 @@ public class AudioManager : Singleton<AudioManager>
     #region Mixer Volume Control
     private float LinearToDecibel(float linear) => linear <= 0f ? -80f : Mathf.Log10(linear) * 20f;
 
+    public void SetMasterVolume(float volume)
+    {
+        _masterVolume = Mathf.Clamp01(volume);
+        audioMixer.SetFloat("Master_Volume", LinearToDecibel(_masterVolume));
+    }
     public void SetBgmVolume(float volume)
     {
         _bgmVolume = Mathf.Clamp01(volume);
