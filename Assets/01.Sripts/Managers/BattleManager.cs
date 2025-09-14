@@ -53,6 +53,7 @@ public class BattleManager : Singleton<BattleManager>
         if (currentMonster != null)
         {
             currentMonster.gameObject.SetActive(false);
+            //Addressables.ReleaseInstance(currentMonster.gameObject);
             currentMonster = null;
             monsterStats = null;
         }
@@ -60,20 +61,12 @@ public class BattleManager : Singleton<BattleManager>
 
 
 
-    //public async void LoadMonster(string str)
+
+    //    public void LoadMonsterStat(BattleZone zone)
     //{
-    //    GameObject Monster = await ResourceManager.Instance.LoadAsset<GameObject>(str, eAssetType.Monster);
-    //    GameObject monsterInstance = Instantiate(Monster, MapManager.Instance.currentZone.transform.position, Quaternion.identity);
-    //    monsterInstance.name = str;
-
-    //    BaseMonster baseMonsterComponent = monsterInstance.GetComponent<BaseMonster>();
-    //    monsterStats = baseMonsterComponent.Stats;
-
-    //    string enemyName = monsterStats.monsterData.monsterName;
-    //    float enemyMaxHP = monsterStats.monsterData.maxHp;
-
-    //    // 배틀매니저의 스테이트를 변경과 동시에 적의 정보를 넘김
-
-    //    ChangeState(eState.Battle, enemyName, enemyMaxHP);
+    //    monsterStats = BattleManager.Instance.monsterStats;
+    //    ChangeState(eState.Battle, BattleManager.Instance.monsterStats.monsterData.monsterName, BattleManager.Instance.monsterStats.monsterData.maxHp);
     //}
+
+    //BattleManager.OnBattleStart += LoadMonsterStat; //이벤트에 등록하면 해당배틀존에 들어가면 발동함
 }
