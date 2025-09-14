@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.5] - 2024-12-20
+### Changed
+- Reverted the unaffected parts of the 1.8.4 changes to verify bugs
+
+## [1.8.4] - 2024-12-12
+### Added
+- Shader optimization can now be skipped in NDMF's `Apply on Play`
+
+### Changed
+- Apply rim shade on fur
+
+### Fixed
+- Fur rim light calculations may be incorrect after optimization
+- UV Tile Discard not working properly
+- Attenuation of LTCGI
+- LTCGI does not work under certain conditions
+- Some modes of AudioLink do not work properly
+
+## [1.8.3] - 2024-10-16
+### Fixed
+- Error in some custom shaders
+
 ## [1.8.2] - 2024-10-12
 ### Fixed
 - Build fails only when used with VRChat World SDK

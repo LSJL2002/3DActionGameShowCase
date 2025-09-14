@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.5] - 2024-12-20
+### 変更
+- 不具合検証のため1.8.4の変更箇所のうち影響のない部分を差し戻し
+
+## [1.8.4] - 2024-12-12
+### 追加
+- NDMFの`Apply on Play`でシェーダー最適化をスキップできるように
+
+### 変更
+- ファーにRimShadeが適用されるように
+
+### 修正
+- 最適化後のファーのリムライトの計算が正しくない場合がある
+- UV Tile Discardが正しく動作していない
+- LTCGIの距離減衰の調整
+- 特定条件下でLTCGIが動作しない
+- AudioLinkの一部モードが正しく動作しない
+
+## [1.8.3] - 2024-10-16
+### 修正
+- 一部カスタムシェーダーでのエラー
+
 ## [1.8.2] - 2024-10-12
 ### 修正
 - VRChatのワールドSDKで使用した場合のみビルドに失敗する

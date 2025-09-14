@@ -134,6 +134,7 @@ public class lilToonSetting : ScriptableObject
     public bool isLocked = false;
     public bool isDebugOptimize = false;
     public bool isOptimizeInTestBuild = false;
+    public bool isOptimizeInNDMF = false;
     public bool isMigrateInStartUp = true;
 
     public float defaultAsUnlit = 0.0f;
@@ -510,7 +511,8 @@ public class lilToonSetting : ScriptableObject
             if(shaderPath.Contains(".lilcontainer")) continue;
 
             string baseShaderPath = baseShaderFolderPath + Path.AltDirectorySeparatorChar + Path.GetFileNameWithoutExtension(shaderPath) + ".lilinternal";
-            if(File.Exists(baseShaderPath)) File.WriteAllText(shaderPath, lilShaderContainer.UnpackContainer(baseShaderPath, null, doOptimize));
+            if(!File.Exists(baseShaderPath)) continue;
+            File.WriteAllText(shaderPath, lilShaderContainer.UnpackContainer(baseShaderPath, null, doOptimize));
         }
         foreach(var shaderPath in shaderPathes)
         {
