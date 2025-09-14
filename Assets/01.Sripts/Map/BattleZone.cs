@@ -3,103 +3,142 @@ using UnityEngine;
 
 public class BattleZone : MonoBehaviour
 {
+    [Header("스테이지 정보")]
+    [SerializeField]
+    private int stageID;
+    [SerializeField]
+    private int MonsterID;
+    [SerializeField]
+    private int[] nextStageID;
+
+    [Header("못나가게막는벽")]
+    private GameObject Wall;
 
     [SerializeField]
-    private bool isClear;
+    private BattleZoneSO ZoneData;
 
-    [Header("Zone Objects")]
-    public GameObject[] walls;
-    public GameObject _monster;
+    public static event Action<BattleZone> OnBattleZoneEnter;
 
 
-    [Header("Zone Data")]
-    public Transform spawnPoint;
-    public int stageID;
-    public int[] nextStages;
-    public bool isEndingStage;
 
     private void Start()
     {
-        foreach (GameObject wall in walls)
+        if(ZoneData != null)
         {
-            wall.SetActive(false);
+            stageID = ZoneData.id;
+            MonsterID = ZoneData.MonsterId;
+            nextStageID = ZoneData.nextZoneId;
         }
-
-        if(_monster != null)
-        {
-            _monster.SetActive(false);
-        }
+                       
     }
 
-    public static event Action<BattleZone> OnBattle;
-    public static event Action<BattleZone> OnBattleClear;
-
-
-    private void Update()
-    {
-        if (isClear) // 이벤트 호출형식으로 수정
-        {
-            //foreach (GameObject wall in walls)
-            //{
-            //    wall.SetActive(false);
-            //}
-            //_monster.SetActive(false);
-
-            //if(nextStages != null)
-            //{
-            //    foreach (int stage in nextStages)
-            //    {
-            //        gameObject.SetActive(true);
-            //    }
-            //}
-            Deactivate();
-
-
-        }
-
-        if (Input.GetMouseButtonDown(1)) //몬스터가 사망했을때로 수정
-        {
-            isClear = !isClear;
-            OnBattleClear?.Invoke(this);
-        }
-    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")&&!isClear)
+        if (other.CompareTag("Player"))
         {
-          OnBattle?.Invoke(this);         
-        } 
-    }
-
-    public void StartBattle()
-    {
-        Debug.Log("전투가 시작됩니다.");
-
-        foreach (GameObject wall in walls)
-        {
-            wall.SetActive(true);
+            OnBattleZoneEnter?.Invoke(this);
         }
-        SpawnMonster();
-
     }
 
-    private void SpawnMonster()
-    {
-
-        GameObject monster = Instantiate(_monster, spawnPoint.position, Quaternion.identity);
-        _monster = monster;
-        monster.SetActive(true);
-        //적에 대한 컷신
-    }
-
-
-    public void Activate()
-    {
-        gameObject.SetActive(true);
-    }
-    public void Deactivate()
-    {
-        gameObject.SetActive(false);
-    }
 }
+
+
+//[SerializeField]
+//private bool isClear;
+
+//[Header("Zone Objects")]
+//public GameObject[] walls;
+//public GameObject _monster;
+
+
+//[Header("Zone Data")]
+//public Transform spawnPoint;
+//public int stageID;
+//public int[] nextStages;
+//public bool isEndingStage;
+
+//private void Start()
+//{
+//    foreach (GameObject wall in walls)
+//    {
+//        wall.SetActive(false);
+//    }
+
+//    if (_monster != null)
+//    {
+//        _monster.SetActive(false);
+//    }
+//}
+
+//public static event Action<BattleZone> OnBattle;
+//public static event Action<BattleZone> OnBattleClear;
+
+
+//private void Update()
+//{
+//    if (isClear) // 이벤트 호출형식으로 수정
+//    {
+//        //foreach (GameObject wall in walls)
+//        //{
+//        //    wall.SetActive(false);
+//        //}
+//        //_monster.SetActive(false);
+
+//        //if(nextStages != null)
+//        //{
+//        //    foreach (int stage in nextStages)
+//        //    {
+//        //        gameObject.SetActive(true);
+//        //    }
+//        //}
+//        Deactivate();
+
+
+//    }
+
+//    if (Input.GetMouseButtonDown(1)) //몬스터가 사망했을때로 수정
+//    {
+//        isClear = !isClear;
+//        OnBattleClear?.Invoke(this);
+//    }
+//}
+
+//private void OnTriggerEnter(Collider other)
+//{
+//    if (other.CompareTag("Player") && !isClear)
+//    {
+//        OnBattle?.Invoke(this);
+//    }
+//}
+
+//public void StartBattle()
+//{
+//    Debug.Log("전투가 시작됩니다.");
+
+//    foreach (GameObject wall in walls)
+//    {
+//        wall.SetActive(true);
+//    }
+//    SpawnMonster();
+
+//}
+
+//private void SpawnMonster()
+//{
+
+//    GameObject monster = Instantiate(_monster, spawnPoint.position, Quaternion.identity);
+//    _monster = monster;
+//    monster.SetActive(true);
+//    //적에 대한 컷신
+//}
+
+
+//public void Activate()
+//{
+//    gameObject.SetActive(true);
+//}
+//public void Deactivate()
+//{
+//    gameObject.SetActive(false);
+//}
