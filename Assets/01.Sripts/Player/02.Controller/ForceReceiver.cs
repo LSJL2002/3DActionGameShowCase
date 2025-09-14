@@ -39,8 +39,12 @@ public class ForceReceiver : MonoBehaviour
         impact = Vector3.zero;
     }
 
-    public void AddForce(Vector3 force)
+    // 공격/점프 구분 가능
+    public void AddForce(Vector3 force, bool horizontalOnly = false)
     {
+        if (horizontalOnly)
+            force.y = 0;
+
         impact += force;
     }
 

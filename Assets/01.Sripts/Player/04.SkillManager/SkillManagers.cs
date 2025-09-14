@@ -29,8 +29,8 @@ public class SkillManagers : Singleton<SkillManagers>
             for (int i = 0; i < skill.poolSize; i++)
             {
                 var obj = Instantiate(skill.prefab);
+                obj.transform.SetParent(transform, false); // 로컬 좌표 유지
                 obj.SetActive(false);
-                obj.transform.parent = transform;
                 queue.Enqueue(obj);
             }
             poolDictionary.Add(skill.skillName, queue);
@@ -44,7 +44,7 @@ public class SkillManagers : Singleton<SkillManagers>
         return obj;
     }
 
-    public GameObject SpawnSkill(string skillName, Transform owner)
+    public GameObject SpawnSkill(string skillName)
     {
         if (!poolDictionary.ContainsKey(skillName))
         {
@@ -56,9 +56,9 @@ public class SkillManagers : Singleton<SkillManagers>
         GameObject obj = queue.Count > 0 ? queue.Dequeue() : CreateSkillPrefab(skillName);
         if (obj == null) return null;
 
-        // 위치/회전 적용
-        obj.transform.position = owner.position;
-        obj.transform.rotation = owner.rotation;
+        // owner를 부모로 설정, prefab에서 세팅한 local 위치/회전 유지
+        obj.transform.SetParent(transform, false);
+
         obj.SetActive(true);
 
         // Hitbox 켜기

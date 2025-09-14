@@ -11,15 +11,27 @@ public class PlayerAttackState : PlayerBaseState
     private bool attackButtonHeld = false;
     private bool forceApplied = false;
 
-    public PlayerAttackState(PlayerStateMachine stateMachine) : base(stateMachine) { }
+    private Transform attackTarget;
+
+    // Dash 관련
+    private float dashSpeed = 10f;
+    private float stopDistance = 1.5f;
+
+    public override PlayerStateID StateID => PlayerStateID.Attack;
+    public override bool AllowRotation => false;
+
+    public PlayerAttackState(PlayerStateMachine sm) : base(sm) { }
 
     public override void Enter()
     {
         base.Enter();
 
-        // ComboIndex 기준 AttackInfo 세팅
-        if (stateMachine.AttackInfo == null)
-            stateMachine.SetAttackInfo(stateMachine.ComboIndex);
+        // PlayerInfo SO에서 공격 데이터 가져오기
+        currentAttack = stateMachine.Player.InfoData.AttackData.GetAttackInfoData(stateMachine.ComboIndex);
+
+        // 근처 타겟 탐지
+        attackTarget = FindNearestMonster(currentAttack.AttackRange);
+        stateMachine.Player.Combat.SetAttackTarget(attackTarget);
 
         // 공격 시작 시 Trigger + Bool 세팅
         var anim = stateMachine.Player.Animator;
@@ -31,6 +43,7 @@ public class PlayerAttackState : PlayerBaseState
 
         bufferedComboIndex = -1;
         stateMachine.IsAttacking = true;
+        forceApplied = false;
     }
 
     public override void Exit()
@@ -44,6 +57,7 @@ public class PlayerAttackState : PlayerBaseState
         bufferedComboIndex = -1;
         forceApplied = false;
         stateMachine.IsAttacking = false;
+        attackTarget = null;
     }
 
     public override void LogicUpdate()
@@ -52,22 +66,56 @@ public class PlayerAttackState : PlayerBaseState
 
         float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
 
-        HandleForce(normalizedTime);
+        HandleDashAndForce(normalizedTime);
         HandleComboBuffer(normalizedTime);
         HandleAttackEnd(normalizedTime);
     }
 
-    private void HandleForce(float normalizedTime)
+
+    private void HandleDashAndForce(float normalizedTime)
     {
+        CharacterController cc = stateMachine.Player.GetComponent<CharacterController>();
+
+        float dashSpeedValue = currentAttack.DashSpeed;
+        float stopDistanceValue = currentAttack.StopDistance;
+
+        if (attackTarget != null)
+        {
+            Vector3 dir = (attackTarget.position - stateMachine.Player.transform.position).normalized;
+            float distance = Vector3.Distance(stateMachine.Player.transform.position, attackTarget.position);
+
+            // 타겟 가까이 오면 멈춤
+            if (distance > stopDistanceValue)
+            {
+                cc.Move(dir * dashSpeedValue * Time.deltaTime);
+                stateMachine.Player.transform.forward = dir;
+            }
+        }
+
         if (!forceApplied && normalizedTime >= currentAttack.ForceTransitionTime)
         {
             forceApplied = true;
             stateMachine.Player.ForceReceiver.Reset();
-            stateMachine.Player.ForceReceiver.AddForce(
-                stateMachine.Player.transform.forward * currentAttack.Force
-            );
+
+            // 타겟 방향 (수평만 적용)
+            Vector3 dir = attackTarget != null
+                ? (attackTarget.position - stateMachine.Player.transform.position)
+                : stateMachine.Player.transform.forward;
+
+            dir.y = 0; // 여기서 y 제거
+            dir.Normalize();
+
+            // 공격 돌진은 수평으로만
+            stateMachine.Player.ForceReceiver.AddForce(dir * currentAttack.Force, true);
+
+            // 바라보는 방향 회전
+            stateMachine.Player.transform.forward = dir;
+
+            // 스킬/이펙트 호출
+            stateMachine.Player.Combat.OnAttack(currentAttack.AttackName);
         }
     }
+
 
     private void HandleComboBuffer(float normalizedTime)
     {
@@ -137,5 +185,26 @@ public class PlayerAttackState : PlayerBaseState
         {
             stateMachine.ChangeState(stateMachine.DodgeState);
         }
+    }
+
+    // -------------------
+    // 몬스터 탐지 함수
+    private Transform FindNearestMonster(float radius)
+    {
+        Collider[] hits = Physics.OverlapSphere(stateMachine.Player.transform.position, radius, LayerMask.GetMask("Enemy"));
+        if (hits.Length == 0) return null;
+
+        Transform nearest = null;
+        float minDist = float.MaxValue;
+        foreach (var hit in hits)
+        {
+            float dist = Vector3.Distance(stateMachine.Player.transform.position, hit.transform.position);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = hit.transform;
+            }
+        }
+        return nearest;
     }
 }

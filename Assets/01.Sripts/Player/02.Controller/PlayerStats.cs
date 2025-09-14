@@ -35,7 +35,7 @@ public class PlayerStats : IStats
 
     public event Action OnDie;
 
-    public PlayerStats(PlayerStatsData data)
+    public PlayerStats(PlayerStatData data)
     {
         MaxHealth = data.maxHp;
         CurrentHealth = MaxHealth;

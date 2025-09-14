@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
+
 public class PlayerStateMachine : StateMachine
 {
     public PlayerManager Player { get; }
+
 
     // 원본 데이터
     public readonly PlayerGroundData GroundData;
@@ -15,7 +17,7 @@ public class PlayerStateMachine : StateMachine
 
     public Vector2 MovementInput { get; set; } // 입력 방향 (WASD, 스틱)
     public float MovementSpeed { get; private set; } // 현재 이동 속도
-    public float RotationDamping { get; private set; } // 회전할 때 부드럽게 보정하는 값
+    public float RotationDamping { get; set; } // 회전할 때 부드럽게 보정하는 값
 
     private float _movementSpeedModifier = 1f;
     public float MovementSpeedModifier // 속도 보정 계수
@@ -36,8 +38,6 @@ public class PlayerStateMachine : StateMachine
     public bool IsAttacking {  get; set; } //공격중인지
     public int ComboIndex {  get; set; } //콤보인덱스
 
-    public Transform MainCamTransform { get; set; }
-    public PostProcessVolume volume { get; set; }
 
     //Ground 로직
     public PlayerIdleState IdleState { get;}
@@ -57,9 +57,6 @@ public class PlayerStateMachine : StateMachine
     public PlayerStateMachine(PlayerManager player)
     {
         this.Player = player;
-
-        MainCamTransform = Camera.main.transform;
-        volume = MainCamTransform.gameObject.GetComponent<PostProcessVolume>();
 
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);

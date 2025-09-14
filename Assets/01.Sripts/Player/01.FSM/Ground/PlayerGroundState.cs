@@ -5,8 +5,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerGroundState : PlayerBaseState
 {
+    public PlayerGroundState(PlayerStateMachine sm) : base(sm) { }
 
-    public PlayerGroundState(PlayerStateMachine stateMachine) : base(stateMachine) { }
+    public override PlayerStateID StateID => PlayerStateID.Idle;
+
+
 
     public override void Enter()
     {

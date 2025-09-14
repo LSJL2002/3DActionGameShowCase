@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerAirState : PlayerBaseState
 {
-    public PlayerAirState(PlayerStateMachine stateMachine) : base(stateMachine)
-    {
-    }
+    public PlayerAirState(PlayerStateMachine sm) : base(sm) { }
+
+    public override PlayerStateID StateID => PlayerStateID.Idle;
 
     public override void Enter()
     {
