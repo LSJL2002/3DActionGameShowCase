@@ -5,7 +5,31 @@ using UnityEngine.WSA;
 public class MapManager : MonoBehaviour
 {
 
-    
+    private Dictionary<int, BattleZone> zoneDict = new Dictionary<int, BattleZone>();
+    private BattleZone currentZone;
+    private BattleZone lastBattleZone;
+
+    private void OnEnable()
+    {
+        //BattleZone.OnBattleZoneEnter += 배틀이 시작됐을 때 호출할 함수
+    }
+
+    private void OnDisable()
+    {
+        //BattleZone.OnBattleZoneEnter -+ 배틀이 끝났을 때 호출할 함수
+    }
+
+    private void Start()
+    {
+        //생성
+        //AddressableManager.Instance.MakeGameObject("Map");
+        //AddressableManager.Instance.MakeGameObject("BattleZone");
+
+        //딕셔너리에 저장
+
+
+    }
+
 }
 
 //[Header("Stage Flow")]
