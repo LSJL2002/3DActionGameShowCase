@@ -12,12 +12,11 @@ public class MonsterStateMachine : StateMachine
 
     // 모든 State 
     public MonsterIdleState MonsterIdleState { get; }
-    public MonsterSkillOneState MonsterSkillOneState { get; set; } //delete later
     public MonsterChaseState MonsterChaseState { get; }
-    public MonsterBaseAttack MonsterBaseAttack { get; }
+    public MonsterBaseAttack MonsterBaseAttack { get; private set; }
+    public MonsterCenterSkillAttack MonsterCenterSkillAttack { get; private set; }
 
-    // Toilet Monster
-    public MonsterSkillToiletWideSwing MonsterSkillToiletWideSwing { get; set; }
+    // Toilet Monster Skill Sets
 
     private MonsterAIEvents aiEvents;
 
@@ -31,16 +30,11 @@ public class MonsterStateMachine : StateMachine
 
         MonsterIdleState = new MonsterIdleState(this);
         MonsterChaseState = new MonsterChaseState(this);
+        MonsterBaseAttack = new MonsterBaseAttack(this);
 
         if (monster is ToiletMonster)
         {
-            MonsterSkillToiletWideSwing = new MonsterSkillToiletWideSwing(this);
-            MonsterBaseAttack = new MonsterBaseAttack(this);
-            
-        }
-        else if (monster is TestMonster)
-        {
-            MonsterSkillOneState = new MonsterSkillOneState(this);
+            MonsterCenterSkillAttack = new MonsterCenterSkillAttack(this, monster.Stats.GetSkill("SmileMachine_Slam"));
         }
         
         aiEvents = monster.GetComponent<MonsterAIEvents>();
@@ -79,11 +73,7 @@ public class MonsterStateMachine : StateMachine
             isAttacking = true;
             if (Monster is ToiletMonster)
             {
-                ChangeState(MonsterSkillToiletWideSwing);
-            }
-            else
-            {
-                ChangeState(MonsterSkillOneState);
+                ChangeState(MonsterCenterSkillAttack);
             }
             
         }

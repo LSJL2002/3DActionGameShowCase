@@ -72,10 +72,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnAttackAnimationComplete() //나중에 삭제
     {
-        if (stateMachine?.MonsterSkillOneState != null)
-        {
-            stateMachine.MonsterSkillOneState.OnAttackAnimationComplete();
-        }
+        
     }
 
     public void OnAttackHit()

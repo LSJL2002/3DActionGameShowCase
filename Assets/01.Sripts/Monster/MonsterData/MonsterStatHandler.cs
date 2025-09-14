@@ -36,16 +36,20 @@ public class MonsterStatHandler : MonoBehaviour
             AttackRange = monsterData.attackRange;
             StatusEffect = new List<string>(monsterData.statusEffect);
 
+            // ✅ Copy skills from SO into runtime list
+            MonsterSkills = new List<MonsterSkillSO>(monsterData.useSkill);
+
             skillDict = new Dictionary<string, MonsterSkillSO>();
             foreach (var skill in MonsterSkills)
             {
-                if (!skillDict.ContainsKey(skill.skillName))
+                if (skill != null && !skillDict.ContainsKey(skill.skillName))
                 {
                     skillDict.Add(skill.skillName, skill);
                 }
             }
         }
     }
+
 
     public MonsterSkillSO GetSkill(string skillName)
     {

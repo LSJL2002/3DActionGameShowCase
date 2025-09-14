@@ -13,6 +13,7 @@ public class MonsterAnimationData
         Run,
         Attack,
         BaseAttack,
+        Skill1,
         Death
     }
 
