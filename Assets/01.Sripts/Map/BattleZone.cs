@@ -4,32 +4,27 @@ using UnityEngine;
 public class BattleZone : MonoBehaviour
 {
     [Header("스테이지 정보")]
-    [SerializeField]
-    private int stageID;
-    [SerializeField]
-    private int MonsterID;
-    [SerializeField]
-    private int[] nextStageID;
+    public int zoneID;
+    public int MonsterID;
+    public int[] nextZoneID;
 
     [Header("못나가게막는벽")]
-    private GameObject Wall;
+    [SerializeField]private GameObject walls;
 
     [SerializeField]
     private BattleZoneSO ZoneData;
 
     public static event Action<BattleZone> OnBattleZoneEnter;
+    public static event Action<BattleZone> OnBattleZoneClear;
 
-
-
-    private void Start()
+    private void Awake()
     {
-        if(ZoneData != null)
+        if (ZoneData != null)
         {
-            stageID = ZoneData.id;
+            zoneID = ZoneData.id;
             MonsterID = ZoneData.MonsterId;
-            nextStageID = ZoneData.nextZoneId;
+            nextZoneID = ZoneData.nextZoneId;
         }
-                       
     }
 
 
@@ -40,6 +35,8 @@ public class BattleZone : MonoBehaviour
             OnBattleZoneEnter?.Invoke(this);
         }
     }
+
+    public void SetWallsActive(bool active) => walls?.SetActive(active);
 
 }
 
