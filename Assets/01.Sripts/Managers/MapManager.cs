@@ -1,26 +1,28 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.WSA;
+using System.Collections;
 
 public class MapManager : Singleton<MapManager>
 {
-
     private Dictionary<int, BattleZone> zoneDict = new Dictionary<int, BattleZone>();
-    public BattleZone currentZone = null;
+    public BattleZone currentZone;
 
-    [SerializeField]private int startingZoneId;
+    [SerializeField] private int startingZoneId;
     [SerializeField] private int BossZoneId;
+
+    [SerializeField] private int round; // 게임매니저로..
 
     private void OnEnable()
     {
-        BattleZone.OnBattleZoneEnter += HandleZoneEnter;//배틀이 시작됐을 때 호출할 함수
-        BattleZone.OnBattleZoneClear += HandleZoneClear;
+        BattleManager.OnBattleStart += HandleZoneEnter;
+        BattleManager.OnBattleClear += HandleZoneClear;
     }
 
     private void OnDisable()
     {
-        BattleZone.OnBattleZoneEnter -= HandleZoneEnter; //배틀이 끝났을 때 호출할 함수
-        BattleZone.OnBattleZoneClear -= HandleZoneClear;
+        BattleManager.OnBattleStart -= HandleZoneEnter;
+        BattleManager.OnBattleClear -= HandleZoneClear;
     }
 
     private void Start()
@@ -40,7 +42,7 @@ public class MapManager : Singleton<MapManager>
 
         if (zoneDict.TryGetValue(startingZoneId, out var startZone)) //startingZoneId를 가진 배틀존을 찾아서
         {
-         startZone.gameObject.SetActive(true);   //시작스테이지만 켜줌
+            startZone.gameObject.SetActive(true);   //시작스테이지만 켜줌
         }
     }
 
@@ -49,21 +51,20 @@ public class MapManager : Singleton<MapManager>
         if (Input.GetMouseButtonDown(1))
         {
             if (currentZone == null) return;
-            HandleZoneClear(currentZone);
+            BattleManager.Instance.ClearBattle();
         }
     }
 
 
     public void RegisterStage(BattleZone zone)
     {
-        if(!zoneDict.ContainsKey(zone.zoneID)) //아이디가없으면 추가
+        if (!zoneDict.ContainsKey(zone.zoneID)) //아이디가없으면 추가
             zoneDict.Add(zone.zoneID, zone);
     }
 
     private void HandleZoneEnter(BattleZone zone) //입장시
     {
         currentZone = zone;
-        zone.SetWallsActive(true); //벽켜줌
 
         foreach (var otherZone in zoneDict)  //나머지 스테이지 꺼줌
         {
@@ -79,8 +80,12 @@ public class MapManager : Singleton<MapManager>
         if (zone.nextZoneID == null || zone.nextZoneID.Length == 0)
         {
             Debug.Log("마지막 스테이지 클리어!");
-            
+            round++;
+            Debug.Log("현재 회차 : " + round);
+            //if (round == 0)
             // SceneManager.LoadScene("Stage2");
+            //if (round == 1)
+            //진엔딩
             return;
         }
 

@@ -14,8 +14,6 @@ public class BattleZone : MonoBehaviour
     [SerializeField]
     private BattleZoneSO ZoneData;
 
-    public static event Action<BattleZone> OnBattleZoneEnter;
-    public static event Action<BattleZone> OnBattleZoneClear;
 
     private void Awake()
     {
@@ -27,12 +25,11 @@ public class BattleZone : MonoBehaviour
         }
     }
 
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            OnBattleZoneEnter?.Invoke(this);
+            BattleManager.Instance.StartBattle(this);
         }
     }
 
