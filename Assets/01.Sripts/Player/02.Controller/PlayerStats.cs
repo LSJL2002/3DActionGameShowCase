@@ -10,34 +10,32 @@ public interface IStats
     float CurrentHealth { get; }
     float MaxEnergy { get; }
     float CurrentEnergy { get; }
-
     int Attack { get; }
     int Defense { get; }
+
     bool IsDead { get; }
 
     void TakeDamage(int amount);
     void Heal(int amount);
+
     event Action OnDie;
 }
 
 public class PlayerStats : IStats
 {
-    [SerializeField] private int maxHealth = 100;
-    private int health;
-
-    public bool IsDead => CurrentHealth == 0;
-
     public float MaxHealth { get; private set; }
     public float CurrentHealth { get; private set; }
     public float MaxEnergy { get; private set; }
     public float CurrentEnergy { get; private set; }
-
     public int Attack { get; private set; }
     public int Defense { get; private set; }
 
+    public bool IsDead => CurrentHealth <= 0;
+
+
     public event Action OnDie;
 
-    public PlayerStats(PlayerStatsData data)
+    public PlayerStats(PlayerStatData data)
     {
         MaxHealth = data.maxHp;
         CurrentHealth = MaxHealth;
@@ -47,11 +45,11 @@ public class PlayerStats : IStats
         Defense = data.defense;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int amount)
     {
-        CurrentHealth = Mathf.Max(CurrentHealth - damage, 0);
+        CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
         if (CurrentHealth == 0) OnDie?.Invoke();
-        Debug.Log(health);
+        Debug.Log(CurrentHealth);
     }
 
     public void Heal(int amount)

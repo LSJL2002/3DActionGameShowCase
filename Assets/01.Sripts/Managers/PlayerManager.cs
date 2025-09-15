@@ -10,8 +10,7 @@ public interface IPlayer
 
 public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
-    [field: SerializeField] public PlayerSO Data { get; private set; }
-    [field: SerializeField] public PlayerStatsData StatsData { get; private set; }
+    [field: SerializeField] public PlayerInfo InfoData { get; private set; }
 
     public PlayerStats Stats { get; private set; }
 
@@ -30,6 +29,9 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
 
 
     private PlayerStateMachine stateMachine; //순수 C# 클래스
+    public SkillManagers skillManagers;
+    public CameraManager cameraManager;
+
 
     private void Awake()
     {
@@ -45,9 +47,11 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         ForceReceiver ??= GetComponent<ForceReceiver>();
         Interaction ??= GetComponent<Interaction>();
         Combat ??= GetComponent<PlayerCombat>();
-        Stats = new PlayerStats(StatsData);
 
+        Stats = new PlayerStats(InfoData.StatData);
         stateMachine = new PlayerStateMachine(this);
+        skillManagers ??= GetComponentInChildren<SkillManagers>();
+        cameraManager ??= GetComponentInChildren<CameraManager>();
 
         Stats.OnDie += OnDie;
     }

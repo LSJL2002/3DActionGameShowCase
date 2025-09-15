@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class PlayerAirState : PlayerBaseState
 {
-    public PlayerAirState(PlayerStateMachine stateMachine) : base(stateMachine)
-    {
-    }
+    public PlayerAirState(PlayerStateMachine sm) : base(sm) { }
+
+    public override PlayerStateID StateID => PlayerStateID.Idle;
 
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.AirParameterHash);
+        StartAnimation(stateMachine.Player.AnimationData.AirBoolHash);
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.AirParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.AirBoolHash);
     }
 }

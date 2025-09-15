@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,20 +9,28 @@ using UnityEngine;
 // 장점: Hitbox는 범용으로 여러 공격 모션에 재사용 가능
 public class Hitbox : MonoBehaviour
 {
-    private int damage;
+    [SerializeField] private LayerMask targetLayer;
     private bool active = false;
-    [SerializeField] private LayerMask targetLayer; // 몬스터 레이어만 맞도록
 
-    public void Enable(int dmg)
+    // 이미 맞은 대상 관리 (멀티히트 방지)
+    private HashSet<IDamageable> alreadyHit = new HashSet<IDamageable>();
+
+    // Hitbox가 맞으면 호출되는 이벤트
+    public event Action<IDamageable> OnHit;
+
+    public void OnEnable()
     {
-        damage = dmg;
         active = true;
+        alreadyHit.Clear();
     }
 
-    public void Disable()
+    public void OnDisable()
     {
         active = false;
     }
+
+    // Hitbox는 충돌 감지만
+    // OnHit 이벤트로 데미지 처리 위임
 
     private void OnTriggerEnter(Collider other)
     {
@@ -31,8 +40,10 @@ public class Hitbox : MonoBehaviour
 
         if (other.TryGetComponent<IDamageable>(out var dmgable))
         {
-            dmgable.OnTakeDamage(damage);
-            Disable(); // 한 번 맞으면 비활성화
+            if (alreadyHit.Contains(dmgable)) return;
+
+            alreadyHit.Add(dmgable);
+            OnHit?.Invoke(dmgable);
         }
     }
 }

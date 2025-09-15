@@ -1,0 +1,43 @@
+{
+    "name": "Petanoco.PPPen.editor",
+    "rootNamespace": "Petanoco.PPPenMA",
+    "references": [
+        "Petanoco.PPPen.runtime",
+        "nadena.dev.modular-avatar.core",
+        "nadena.dev.ndmf",
+        "Unity.Mathematics",
+        "System.Collections",
+        "nadena.dev.ndmf.vrchat"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "VRCSDKBase.dll",
+        "VRCSDK3A.dll",
+        "System.Collections.Immutable.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "nadena.dev.ndmf",
+            "expression": "1.3.0-rc.0",
+            "define": "NDMF_1_3_0_OR_NEWER"
+        },
+        {
+            "name": "nadena.dev.ndmf",
+            "expression": "1.4.0-rc.0",
+            "define": "NDMF_1_4_0_OR_NEWER"
+        },
+        {
+            "name": "nadena.dev.modular-avatar",
+            "expression": "1.9.9",
+            "define": "MODULAR_AVATAR_1_9_9_OR_NEWER"
+        }
+    ],
+    "noEngineReferences": false
+}
