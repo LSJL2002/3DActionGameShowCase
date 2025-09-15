@@ -85,7 +85,7 @@ public class GameManager : Singleton<GameManager>
         Debug.Log($"IsPauseGame : {check}");
 
         // 일시정지 UI를 활성화/비활성화
-        await UIManager.Instance.Show<PauseUI>();
+        //await UIManager.Instance.Show<PauseUI>();
     }
 
     // 게임 오버
