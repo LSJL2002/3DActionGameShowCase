@@ -20,9 +20,6 @@ public class PlayerAttackState : PlayerBaseState
     private bool attackEnded = false;
     private float attackEndTime;
 
-    // Dash 관련
-    private float dashSpeed = 10f;
-    private float stopDistance = 1.5f;
 
     public override PlayerStateID StateID => PlayerStateID.Attack;
     public override bool AllowRotation => false;
@@ -161,11 +158,16 @@ public class PlayerAttackState : PlayerBaseState
         if (attackEnded)
         {
             // 입력이 있으면 콤보로 이어감
-            if (bufferedComboIndex >= 0 || Time.time - lastAttackInputTime <= 0.3f) // 짧은 입력 허용 시간
+            if (bufferedComboIndex >= 0 || Time.time - lastAttackInputTime <= 0.1f) // 짧은 입력 허용 시간
             {
                 SetAttack(bufferedComboIndex >= 0 ? bufferedComboIndex : currentAttack.ComboStateIndex);
                 bufferedComboIndex = -1;
                 attackEnded = false;
+            }
+            else
+            {
+                // 아무 입력 없으면 FinishAttackState로
+                stateMachine.ChangeState(stateMachine.FinishAttackState);
             }
         }
     }
@@ -179,10 +181,17 @@ public class PlayerAttackState : PlayerBaseState
         }
 
         // 이동 입력 체크
-        Vector2 moveInput = stateMachine.MovementInput; // InputReader에 방향 입력
+        Vector2 moveInput = stateMachine.MovementInput;
         bool isMoving = moveInput.sqrMagnitude > 0.01f;
 
-        if (Time.time - lastAttackInputTime >= idleTimeout || isMoving)
+        // 공격 끝나고 입력 없으면 FinishAttackState로
+        if (Time.time - lastAttackInputTime >= idleTimeout)
+        {
+            stateMachine.ComboIndex = 0;
+            stateMachine.ChangeState(stateMachine.FinishAttackState);
+        }
+        // 공격이 완전히 끝난 후에만 이동 허용
+        else if (attackEnded && isMoving)
         {
             stateMachine.ComboIndex = 0;
             stateMachine.ChangeState(stateMachine.IdleState);

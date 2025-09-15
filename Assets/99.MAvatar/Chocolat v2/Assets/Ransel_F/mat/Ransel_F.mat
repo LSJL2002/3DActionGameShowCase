@@ -2,20 +2,24 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Ransel_F
   m_Shader: {fileID: 4800000, guid: 3701d6a6f5f988b4a9cea92f1426a955, type: 3}
-  m_ShaderKeywords: 
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -48,6 +52,22 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FurDirection:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FurMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FurShapeTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FurTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -107,6 +127,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaMaskStrength: 1
@@ -116,6 +137,8 @@ Material:
     - _Bright: 1
     - _BumpScale: 1
     - _Culling: 0
+    - _CustomLightRotX: 90
+    - _CustomLightRotY: 0
     - _Cutoff: 0.5
     - _Cutout: 0.5
     - _DecalAnimX: 1
@@ -154,18 +177,30 @@ Material:
     - _EnableBlightFix: 0
     - _EnableGammaFix: 0
     - _EnableZWrite: 1
+    - _FurEnable: 0
+    - _FurFixScale: 0
+    - _FurGravity: 0
+    - _FurLength: 0.5
+    - _FurLighting: 1
+    - _FurRoughness: 0.2
+    - _FurShapeMode: 0
+    - _FurTexColor: 1
+    - _FurWidth: 0.3
     - _GammaB: 1
     - _GammaG: 1
     - _GammaR: 1
     - _GlossMapScale: 0.7
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _IgnoreProjector: 0
     - _IgnoreTexAlphaE: 0
     - _IgnoreTexAlphaPE: 0
     - _IgnoreTexAlphaR: 0
     - _IgnoreTexAlphaRL: 0
     - _LightBoost: 3
+    - _LightDirMode: 0
     - _LightLimitter: 1
+    - _LightingFO: 0
     - _LimitterEnable: 0
     - _LimitterMax: 1
     - _MainFO: 0
@@ -216,6 +251,7 @@ Material:
     - _RimLitMode: 0
     - _RimLitTexColor: 0
     - _SHLight: 1
+    - _SSFallback: 0
     - _Shade: 0.3
     - _ShadeColor: 0.5
     - _ShadeGradient: 0.75
@@ -249,8 +285,8 @@ Material:
     - _UVSec: 0
     - _Unlit: 0
     - _VersionH: 1
-    - _VersionL: 4
-    - _VersionM: 5
+    - _VersionL: 2
+    - _VersionM: 6
     - _VertexColor: 0
     - _ZWrite: 1
     m_Colors:
@@ -258,9 +294,11 @@ Material:
     - _CustomShadeColor: {r: 0, g: 0, b: 0, a: 0}
     - _DecalColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FurColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlossColor: {r: 1, g: 1, b: 1, a: 1}
     - _MatCapColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutLineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ParallaxColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimLitColor: {r: 1, g: 1, b: 1, a: 1}
     - _SubColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

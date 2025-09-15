@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillManagers : Singleton<SkillManagers>
+public class SkillManagers : MonoBehaviour
 {
     [Serializable]
     public class SkillPrefab
