@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -19,11 +20,11 @@ public class UIManager : Singleton<UIManager>
     public UIBase currentUI; // 현재 활성화 된 UI를 저장할 변수
 
     // 한번 생성한 UI를 다시 생성하지 않도록 Dictionary로 관리
-    private Dictionary<string, UIBase> ui_List = new Dictionary<string, UIBase>();
+    private Dictionary<string, AsyncOperationHandle<GameObject>> uiHandles = new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
-    // 다른 스크립트에서 UI를 쉽게 띄울 수 있도록 제네릭 메서드 제공
+    // UI호출시 사용하는 함수
     // 리소스매니저의 LoadAsset 메서드가 비동기 메서드이므로 Show 메서드도 비동기 메서드로 변경 (반환타입 async Task<T>)
-    public async Task<T> Show<T>() where T : UIBase
+    public async UniTask<T> Show<T>() where T : UIBase
     {
         // 현재UI상태가 있었다면, 이전UI상태 변수에 저장
         if (currentUI != null)
@@ -33,39 +34,30 @@ public class UIManager : Singleton<UIManager>
 
         string uiName = typeof(T).ToString();
 
-        // 딕셔너리에서 key : uiName에 해당하는 UIBase를 꺼내서 uiBase에 저장
-        ui_List.TryGetValue(uiName, out UIBase uiBase);
-
-        if (uiBase == null)
+        // 딕셔너리에 있는지 확인
+        // TryGetValue : 딕셔너리에서 값을 가져오는것을 시도 (반환값이 bool이기 때문에 if에 사용가능)
+        // IsValid() : 어드레서블 핸들이 유효한 상태인지 확인하는 함수 (메모리에 있는지)
+        if (uiHandles.TryGetValue(uiName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
         {
-            // 없으면 로드 함수를 통해서 리소스매니저의 함수를 호출하여 UI와 캔버스를 로드
-            // await : 반환타입이 string이 되도록 멈췄다가 받고 변수에 저장한다는 의미
-            // (await이 없으면 Task<T> 타입이 되어버려서 타입불일치 오류)
-            uiBase = await Load<T>(uiName);
-
-            // 생성한 리소스를 딕셔너리에 추가
-            ui_List.Add(uiName, uiBase);
-
-            // 해당 UI 활성화
-            uiBase.canvas.gameObject.SetActive(true);
+            T uiBase = handle.Result.GetComponent<T>();
+            uiBase.canvas.gameObject.SetActive(!uiBase.canvas.gameObject.activeSelf);
+            currentUI = uiBase;
+            return uiBase;
         }
+
+        // 없으면 새로 로드
         else
         {
-            // 해당 UI 활성화 <-> 비활성화
-            uiBase.canvas.gameObject.SetActive(!uiBase.canvas.gameObject.activeSelf);
+            T uiBase = await Load<T>(uiName);
+            currentUI = uiBase;
+            return uiBase;
         }
-
-        // 현재 UI상태를 변수에 저장
-        currentUI = uiBase;
-
-        return (T)uiBase;
     }
 
-    // 리소스매니저를 통하여 UI 프리팹을 로드하고 캔버스를 생성하는 메서드
-    // 리소스매니저의 LoadAsset 메서드가 비동기 메서드이므로 Show 메서드도 비동기 메서드로 변경 (반환타입 async Task<T>)
-    public async Task<T> Load<T>(string uiName) where T : UIBase
+    // UniTask<T> : 비동기메서드에서 특정타입(T)의 반환값이 있을경우 사용 (C# 기본 Task 상위호환)
+    public async UniTask<T> Load<T>(string uiName) where T : UIBase
     {
-        // ""으로 된 새로운 게임오브젝트 생성
+        // 캔버스 오브젝트 생성
         var newCanvasObject = new GameObject(uiName + "Canvas");
 
         // 'Canvas' 컴포넌트 추가 후 변수에 저장 및 renderMode 설정
@@ -80,17 +72,15 @@ public class UIManager : Singleton<UIManager>
         // 'GraphicRaycaster' 컴포넌트 추가
         newCanvasObject.gameObject.AddComponent<GraphicRaycaster>();
 
-        // await : 반환타입이 GameObject가 되도록 멈췄다가 받고 변수에 저장한다는 의미 =/= 동기
-        // (await이 없으면 Task<T> 타입이 되어버려서 타입불일치 오류)
-        // 프리팹을 캔버스의 자식으로 생성 후 변수에 저장
-        var obj = await Addressables.InstantiateAsync(uiName, newCanvasObject.transform);
-
-        // Instantiate를 통해 생성된 오브젝트의 이름에서 (Clone) 제거
-        obj.name = obj.name.Replace("(Clone)", "");
+        // 어드레서블 로드 및 딕셔너리에 추가
+        var newHandle = Addressables.InstantiateAsync(uiName, newCanvasObject.transform);
+        var obj = await newHandle.Task;
+        obj.name = uiName;
+        uiHandles.Add(uiName, newHandle);
 
         var result = obj.GetComponent<T>();
         result.canvas = canvas;
-        result.canvas.sortingOrder = ui_List.Count;
+        result.canvas.sortingOrder = uiHandles.Count;
 
         return result;
     }
@@ -99,11 +89,11 @@ public class UIManager : Singleton<UIManager>
     public T Get<T>() where T : UIBase
     {
         string uiName = typeof(T).ToString();
-        
 
-        if(ui_List.TryGetValue(uiName, out UIBase uiBase))
+        // 핸들을 통해 UIBase 인스턴스를 반환
+        if (uiHandles.TryGetValue(uiName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
         {
-            return (T)uiBase;
+            return handle.Result.GetComponent<T>();
         }
 
         Debug.LogError($"에셋 '{uiName}'이 없음");
@@ -115,50 +105,45 @@ public class UIManager : Singleton<UIManager>
     {
         string uiName = typeof(T).ToString();
 
-        Hide(uiName);
+        if (uiHandles.TryGetValue(uiName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
+        {
+            handle.Result.GetComponent<UIBase>().canvas.gameObject.SetActive(false);
+        }
     }
 
     public void Hide(string uiName)
     {
-        ui_List.TryGetValue(uiName, out UIBase uiBase);
-        
-        if(uiBase == null)
+        if (uiHandles.TryGetValue(uiName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
         {
-            return;
+            handle.Result.GetComponent<UIBase>().canvas.gameObject.SetActive(false);
         }
-
-        // 생성한 UI 비활성화
-        uiBase.canvas.gameObject.SetActive(false);
-
-        // UI 제거 (딕셔너리에서 삭제하고 캔버스 오브젝트 파괴)
-        // DestroyImmediate(uiBase.canvas.gameObject);
-        // ui_List.Remove(uiName);
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        // 씬 로드 이벤트 구독
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // 씬 언로드 이벤트 구독
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        // 씬 로드 이벤트 구독 해제
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        // 씬 언로드 이벤트 구독 해제
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
-    // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬전환시 호출할것)
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬 언로드시 호출할것)
+    private void OnSceneUnloaded(Scene scene)
     {
-        // 딕셔너리에 저장된 모든 핸들을 순회하며 릴리스
-        foreach (var handle in ui_List.Values)
+        foreach (var handle in uiHandles.Values)
         {
-            Addressables.ReleaseInstance(handle.gameObject);
+            if (handle.IsValid())
+            {
+                Addressables.ReleaseInstance(handle);
+            }
         }
 
-        // 딕셔너리 '참조' 삭제
-        ui_List.Clear();
+        uiHandles.Clear();
     }
 }

@@ -37,7 +37,7 @@ public class SkillIconUI : MonoBehaviour
     }
 
     // 초기화 메서드
-    public async Task InitializeAsync(string skillId, string skillIconPaht)
+    public async UniTask InitializeAsync(string skillId, string skillIconPaht)
     {
         skillID = skillId;
 
