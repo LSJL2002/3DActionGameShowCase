@@ -28,8 +28,8 @@ public partial class GameUI : UIBase
         OnEnablePlayer();
 
         // 몬스터 소환
-        try { LoadEnemy("Test_Monster"); }
-        catch { Debug.Log($"{"Test_Monster"} 소환 실패"); }
+        //try { LoadEnemy("Test_Monster"); }
+        //catch { Debug.Log($"{"Test_Monster"} 소환 실패"); }
     }
 
     protected override void OnDisable()
