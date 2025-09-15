@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class HomeUI : UIBase
@@ -10,7 +11,10 @@ public class HomeUI : UIBase
         {
             case "GameStart":
                 // 게임매니저의 게임시작 메서드를 호출
-                GameManager.Instance.StartGame();
+                //GameManager.Instance.StartGame();
+
+                // 타임라인 매니저의 타임라인시작 함수 호출
+                TimeLineManager.Instance.PlayTimeLine();
                 break;
 
             case "OptionUI":
