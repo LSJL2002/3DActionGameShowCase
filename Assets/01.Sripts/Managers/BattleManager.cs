@@ -22,7 +22,7 @@ public class BattleManager : Singleton<BattleManager>
         activeZone.SetWallsActive(true);
 
         // 2. 몬스터 소환
-        GameObject monster = await SpawnMonster(zone.MonsterID, zone.transform.position);
+        currentMonster = await SpawnMonster(zone.MonsterID, zone.transform.position);
 
         OnBattleStart?.Invoke(zone);
     }
@@ -61,8 +61,8 @@ public class BattleManager : Singleton<BattleManager>
         OnBattleClear?.Invoke(activeZone);
         if (currentMonster != null)
         {
-            currentMonster.gameObject.SetActive(false);
-            //Addressables.ReleaseInstance(currentMonster.gameObject);
+            //currentMonster.gameObject.SetActive(false);
+            Addressables.ReleaseInstance(currentMonster.gameObject);
             currentMonster = null;
             monsterStats = null;
         }
