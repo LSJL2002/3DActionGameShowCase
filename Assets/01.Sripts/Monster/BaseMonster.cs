@@ -72,7 +72,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnAttackAnimationComplete() //나중에 삭제
     {
-        
+        stateMachine.isAttacking = false; 
     }
 
     public void OnAttackHit()
@@ -82,7 +82,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public virtual void OnTakeDamage(int amount)
     {
-        Stats.CurrentHP -= 10;
+        Stats.CurrentHP = amount - Stats.Defense;
         if (Stats.CurrentHP <= 0)
         {
             Stats.Die();

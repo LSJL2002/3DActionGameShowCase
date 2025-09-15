@@ -47,18 +47,12 @@ public class MonsterStateMachine : StateMachine
     {
         if (aiEvents == null) return;
 
-        aiEvents.OnPlayerDetected += HandlePlayerDetected;
-        aiEvents.OnInAttackRange += HandlePlayerInAttackRange;
-        aiEvents.RestingPhase += HandleRestingPhase;
     }
 
     public void DisableAIEvents()
     {
         if (aiEvents == null) return;
-
-        aiEvents.OnPlayerDetected -= HandlePlayerDetected;
-        aiEvents.OnInAttackRange -= HandlePlayerInAttackRange;
-        aiEvents.RestingPhase -= HandleRestingPhase;
+        
     }
 
     private void HandlePlayerDetected()

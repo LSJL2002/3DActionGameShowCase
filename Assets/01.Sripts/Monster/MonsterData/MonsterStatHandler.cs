@@ -8,6 +8,8 @@ public class MonsterStatHandler : MonoBehaviour
     public MonsterSO monsterData;
 
     [Header("Runtime Stats (Inspector창 변경)")]
+    public float maxHp;
+    public float maxMp;
     public float CurrentHP;
     public float CurrentMP;
     public int AttackPower;
@@ -26,8 +28,10 @@ public class MonsterStatHandler : MonoBehaviour
     {
         if (monsterData != null)
         {
-            CurrentHP = monsterData.maxHp;
-            CurrentMP = monsterData.maxMp;
+            maxHp = monsterData.maxHp;
+            CurrentHP = maxHp;
+            maxMp = monsterData.maxMp;
+            CurrentMP = maxMp;
             AttackPower = monsterData.attackPower;
             Defense = monsterData.defense;
             AttackSpeed = monsterData.attackSpeed;

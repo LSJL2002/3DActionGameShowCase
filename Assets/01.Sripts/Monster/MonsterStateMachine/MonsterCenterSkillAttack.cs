@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MonsterCenterSkillAttack : MonsterBaseState
@@ -15,8 +16,6 @@ public class MonsterCenterSkillAttack : MonsterBaseState
 
     public override void Enter()
     {
-
-        //Debug Logs of Using Skill
         Debug.Log($"[CenterSkillAttack] Entering with skill: {skill?.skillName}");
         if (skill == null)
         {
@@ -46,12 +45,9 @@ public class MonsterCenterSkillAttack : MonsterBaseState
             Debug.LogError("Prefab has no AreaEffectController attached!");
             return;
         }
-        //End of Debug Log
 
-        // Initialize with telegraph cast time & range
         aoeController.Initialize(skill.preCastTime, skill.range, stateMachine.Monster.Stats.AttackPower);
 
-        // Subscribe to telegraph finished event
         aoeController.OnTelegraphFinished += OnTelegraphComplete;
     }
 
