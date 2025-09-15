@@ -50,8 +50,10 @@ public class AudioManager : Singleton<AudioManager>
     public float sfxVolume => _bgmVolume;
 
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // BGM 오디오 소스 생성
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.outputAudioMixerGroup = bgmGroup;
@@ -151,6 +153,8 @@ public class AudioManager : Singleton<AudioManager>
         if (bgmSource.clip == clip) return;
         bgmSource.clip = clip;
         bgmSource.Play();
+
+        Debug.Log(bgmSource);
     }
 
     public async UniTask FadeToBGM(string name, float duration)
