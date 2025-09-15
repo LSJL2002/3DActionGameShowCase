@@ -13,13 +13,6 @@ public class PlayerAttackState : PlayerBaseState
 
     private Transform attackTarget;
 
-    // Idle 전환 관련
-    private float idleTimeout = 2f;
-    private float lastAttackInputTime;
-
-    private bool attackEnded = false;
-    private float attackEndTime;
-
     // Dash 관련
     private float dashSpeed = 10f;
     private float stopDistance = 1.5f;
@@ -51,9 +44,6 @@ public class PlayerAttackState : PlayerBaseState
         bufferedComboIndex = -1;
         stateMachine.IsAttacking = true;
         forceApplied = false;
-
-        lastAttackInputTime = Time.time;
-        attackEnded = false;
     }
 
     public override void Exit()
@@ -68,7 +58,6 @@ public class PlayerAttackState : PlayerBaseState
         forceApplied = false;
         stateMachine.IsAttacking = false;
         attackTarget = null;
-        attackEnded = false;
     }
 
     public override void LogicUpdate()
@@ -80,8 +69,6 @@ public class PlayerAttackState : PlayerBaseState
         HandleDashAndForce(normalizedTime);
         HandleComboBuffer(normalizedTime);
         HandleAttackEnd(normalizedTime);
-
-        UpdateIdleCheck();
     }
 
 
@@ -132,7 +119,6 @@ public class PlayerAttackState : PlayerBaseState
 
     private void HandleComboBuffer(float normalizedTime)
     {
-        // 최근 입력 시간이 buffer 안에 있을 때만 인정
         if (attackButtonHeld && bufferedComboIndex < 0)
         {
             int nextIndex = currentAttack.ComboStateIndex;
@@ -151,39 +137,15 @@ public class PlayerAttackState : PlayerBaseState
 
     private void HandleAttackEnd(float normalizedTime)
     {
-        // 애니 끝난 첫 순간 체크
-        if (!attackEnded && normalizedTime >= 1f)
+        if (normalizedTime >= 1f)
         {
-            attackEnded = true;
-            attackEndTime = Time.time;
-        }
-
-        if (attackEnded)
-        {
-            // 입력이 있으면 콤보로 이어감
-            if (bufferedComboIndex >= 0 || Time.time - lastAttackInputTime <= 0.3f) // 짧은 입력 허용 시간
+            if (bufferedComboIndex >= 0)
             {
-                SetAttack(bufferedComboIndex >= 0 ? bufferedComboIndex : currentAttack.ComboStateIndex);
+                SetAttack(bufferedComboIndex);
                 bufferedComboIndex = -1;
-                attackEnded = false;
+                return;
             }
-        }
-    }
 
-    private void UpdateIdleCheck()
-    {
-        // 공격 입력 시간 갱신
-        if (attackButtonHeld)
-        {
-            lastAttackInputTime = Time.time;
-        }
-
-        // 이동 입력 체크
-        Vector2 moveInput = stateMachine.MovementInput; // InputReader에 방향 입력
-        bool isMoving = moveInput.sqrMagnitude > 0.01f;
-
-        if (Time.time - lastAttackInputTime >= idleTimeout || isMoving)
-        {
             stateMachine.ComboIndex = 0;
             stateMachine.ChangeState(stateMachine.IdleState);
         }
@@ -205,8 +167,6 @@ public class PlayerAttackState : PlayerBaseState
     protected override void OnAttackStarted(InputAction.CallbackContext context)
     {
         attackButtonHeld = true;
-        lastAttackInputTime = Time.time;
-
         if (!stateMachine.IsAttacking)
             stateMachine.IsAttacking = true;
     }
