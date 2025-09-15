@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
+
 
 public class PlayerStateMachine : StateMachine
 {
     public PlayerManager Player { get; }
+
 
     // 원본 데이터
     public readonly PlayerGroundData GroundData;
@@ -14,7 +17,7 @@ public class PlayerStateMachine : StateMachine
 
     public Vector2 MovementInput { get; set; } // 입력 방향 (WASD, 스틱)
     public float MovementSpeed { get; private set; } // 현재 이동 속도
-    public float RotationDamping { get; private set; } // 회전할 때 부드럽게 보정하는 값
+    public float RotationDamping { get; set; } // 회전할 때 부드럽게 보정하는 값
 
     private float _movementSpeedModifier = 1f;
     public float MovementSpeedModifier // 속도 보정 계수
@@ -24,7 +27,7 @@ public class PlayerStateMachine : StateMachine
         {
             _movementSpeedModifier = value;
             Player.Animator.SetFloat(
-            Player.AnimationData.MoveSpeedParameterHash,
+            Player.AnimationData.MoveSpeedHash,
             MovementSpeedModifier);
         }
     }
@@ -35,7 +38,6 @@ public class PlayerStateMachine : StateMachine
     public bool IsAttacking {  get; set; } //공격중인지
     public int ComboIndex {  get; set; } //콤보인덱스
 
-    public Transform MainCamTransform { get; set; }
 
     //Ground 로직
     public PlayerIdleState IdleState { get;}
@@ -56,8 +58,6 @@ public class PlayerStateMachine : StateMachine
     {
         this.Player = player;
 
-        MainCamTransform = Camera.main.transform;
-
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
         RunState = new PlayerRunState(this);
@@ -67,9 +67,9 @@ public class PlayerStateMachine : StateMachine
         AttackState = new PlayerAttackState(this);
         ComboAttackState = new PlayerComboAttackState(this);
 
-        MovementSpeed = player.Data.GroundData.BaseSpeed;
-        RotationDamping = player.Data.GroundData.BaseRotationDamping;
-        GroundData = player.Data.GroundData;
+        MovementSpeed = player.InfoData.GroundData.BaseSpeed;
+        RotationDamping = player.InfoData.GroundData.BaseRotationDamping;
+        GroundData = player.InfoData.GroundData;
 
         // AttackInfo 초기화
         ComboIndex = 0;
@@ -79,6 +79,6 @@ public class PlayerStateMachine : StateMachine
     public void SetAttackInfo(int comboIndex)
     {
         ComboIndex = comboIndex;
-        AttackInfo = Player.Data.AttackData.GetAttackInfoData(comboIndex);
+        AttackInfo = Player.InfoData.AttackData.GetAttackInfoData(comboIndex);
     }
 }

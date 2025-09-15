@@ -10,7 +10,7 @@ public class MapManager : MonoBehaviour
 
     private Dictionary<int, BattleZone> stageDict = new();
     private BattleZone currentZone;
-    private BattleZone lastClearedZone;
+    //private BattleZone lastClearedZone;
 
     void OnEnable()
     {
@@ -30,6 +30,7 @@ public class MapManager : MonoBehaviour
         foreach (var zone in FindObjectsOfType<BattleZone>(true))
         {
             RegisterStage(zone);
+            zone.Deactivate();
         }
 
         // 시작 스테이지만 켜기
@@ -75,10 +76,10 @@ public class MapManager : MonoBehaviour
         if (zone.isEndingStage)
         {
             Debug.Log("모든 스테이지 클리어! 엔딩씬으로 이동!");
-            SceneLoadManager.Instance.LoadScene(04);
+            //SceneLoadManager.Instance.LoadScene(04);
         }
 
-        lastClearedZone = zone;
+        //lastClearedZone = zone;
         currentZone = null;
     }
 

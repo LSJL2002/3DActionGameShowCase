@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -33,7 +36,7 @@ public class UIManager : Singleton<UIManager>
         // 딕셔너리에서 key : uiName에 해당하는 UIBase를 꺼내서 uiBase에 저장
         ui_List.TryGetValue(uiName, out UIBase uiBase);
 
-        if(uiBase == null)
+        if (uiBase == null)
         {
             // 없으면 로드 함수를 통해서 리소스매니저의 함수를 호출하여 UI와 캔버스를 로드
             // await : 반환타입이 string이 되도록 멈췄다가 받고 변수에 저장한다는 의미
@@ -42,13 +45,18 @@ public class UIManager : Singleton<UIManager>
 
             // 생성한 리소스를 딕셔너리에 추가
             ui_List.Add(uiName, uiBase);
+
+            // 해당 UI 활성화
+            uiBase.canvas.gameObject.SetActive(true);
+        }
+        else
+        {
+            // 해당 UI 활성화 <-> 비활성화
+            uiBase.canvas.gameObject.SetActive(!uiBase.canvas.gameObject.activeSelf);
         }
 
         // 현재 UI상태를 변수에 저장
         currentUI = uiBase;
-
-        // 생성한 UI 활성화
-        uiBase.canvas.gameObject.SetActive(true);
 
         return (T)uiBase;
     }
@@ -72,13 +80,10 @@ public class UIManager : Singleton<UIManager>
         // 'GraphicRaycaster' 컴포넌트 추가
         newCanvasObject.gameObject.AddComponent<GraphicRaycaster>();
 
-        // 리소스매니저의 LoadAsset 메서드를 호출하여 UI 프리팹을 로드 후 변수에 저장
-        // await : 반환타입이 GameObject가 되도록 멈췄다가 받고 변수에 저장한다는 의미
+        // await : 반환타입이 GameObject가 되도록 멈췄다가 받고 변수에 저장한다는 의미 =/= 동기
         // (await이 없으면 Task<T> 타입이 되어버려서 타입불일치 오류)
-        var prefab = await ResourceManager.Instance.LoadAsset<GameObject>(uiName, eAssetType.UI);
-
         // 프리팹을 캔버스의 자식으로 생성 후 변수에 저장
-        var obj = Instantiate(prefab, newCanvasObject.transform);
+        var obj = await Addressables.InstantiateAsync(uiName, newCanvasObject.transform);
 
         // Instantiate를 통해 생성된 오브젝트의 이름에서 (Clone) 제거
         obj.name = obj.name.Replace("(Clone)", "");
@@ -147,18 +152,13 @@ public class UIManager : Singleton<UIManager>
     // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬전환시 호출할것)
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        foreach (var uiBase in ui_List.Values)
+        // 딕셔너리에 저장된 모든 핸들을 순회하며 릴리스
+        foreach (var handle in ui_List.Values)
         {
-            if (uiBase != null && uiBase.canvas != null)
-            {
-                Destroy(uiBase.canvas.gameObject);
-            }
+            Addressables.ReleaseInstance(handle.gameObject);
         }
 
-        // 딕셔너리 '참조'만 삭제
+        // 딕셔너리 '참조' 삭제
         ui_List.Clear();
-
-        // 어디에도 참조되지 않은 에셋들을 찾아 메모리에서 완전히 언로드하는 함수 호출
-        Resources.UnloadUnusedAssets();
     }
 }

@@ -6,13 +6,11 @@ using Zenject.SpaceFighter;
 
 public interface IPlayer
 {
-    public void LockOnInput(int val);
 }
 
 public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
-    [field: SerializeField] public PlayerSO Data { get; private set; }
-    [field: SerializeField] public PlayerStatsData StatsData { get; private set; }
+    [field: SerializeField] public PlayerInfo InfoData { get; private set; }
 
     public PlayerStats Stats { get; private set; }
 
@@ -31,6 +29,9 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
 
 
     private PlayerStateMachine stateMachine; //순수 C# 클래스
+    public SkillManagers skillManagers;
+    public CameraManager cameraManager;
+
 
     private void Awake()
     {
@@ -46,9 +47,11 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         ForceReceiver ??= GetComponent<ForceReceiver>();
         Interaction ??= GetComponent<Interaction>();
         Combat ??= GetComponent<PlayerCombat>();
-        Stats = new PlayerStats(StatsData);
 
+        Stats = new PlayerStats(InfoData.StatData);
         stateMachine = new PlayerStateMachine(this);
+        skillManagers ??= GetComponentInChildren<SkillManagers>();
+        cameraManager ??= GetComponentInChildren<CameraManager>();
 
         Stats.OnDie += OnDie;
     }
@@ -73,11 +76,5 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     {
         Animator.SetTrigger("Die");
         enabled = false;
-    }
-
-    // 외부에서 이 메서드로만 접근
-    public void LockOnInput(int val)
-    {
-        //Controller.LockOnInput(val);
     }
 }

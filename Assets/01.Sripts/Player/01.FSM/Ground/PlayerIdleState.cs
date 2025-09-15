@@ -12,7 +12,7 @@ public class PlayerIdleState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.IdleParameterHash);
+        StartAnimation(stateMachine.Player.AnimationData.IdleBoolHash);
 
 
 
@@ -23,7 +23,7 @@ public class PlayerIdleState : PlayerGroundState
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.IdleParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.IdleBoolHash);
     }
 
     public override void LogicUpdate()

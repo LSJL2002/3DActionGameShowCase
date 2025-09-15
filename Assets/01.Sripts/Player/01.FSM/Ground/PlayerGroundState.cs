@@ -5,19 +5,22 @@ using UnityEngine.InputSystem;
 
 public class PlayerGroundState : PlayerBaseState
 {
+    public PlayerGroundState(PlayerStateMachine sm) : base(sm) { }
 
-    public PlayerGroundState(PlayerStateMachine stateMachine) : base(stateMachine) { }
+    public override PlayerStateID StateID => PlayerStateID.Idle;
+
+
 
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
+        StartAnimation(stateMachine.Player.AnimationData.GroundBoolHash);
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.GroundBoolHash);
     }
 
     public override void LogicUpdate()

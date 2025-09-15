@@ -1,11 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [Serializable]
@@ -33,7 +31,7 @@ public class AudioManager : Singleton<AudioManager>
 
     [Header("SFX Clips")]
     [SerializeField] private List<NamedSFX> sfxList;
-    public int sfxPoolSize = 5; //µ¿½ÃÀç»ı°¡´ÉÇÑ¼ö
+    public int sfxPoolSize = 5; //ë™ì‹œì¬ìƒê°€ëŠ¥í•œìˆ˜
 
     private List<AudioSource> sfxSources = new List<AudioSource>();
     private int currentSfxIndex = 0;
@@ -42,8 +40,10 @@ public class AudioManager : Singleton<AudioManager>
     private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
 
+    [SerializeField, Range(0f, 1f)] private float _masterVolume = 1f;
+
     [Range(0f, 1f)]
-    [SerializeField] private float _bgmVolume = 0.25f;
+    [SerializeField] private float _bgmVolume = 0.5f;
     public float bgmVolume => _bgmVolume;
     [Range(0f, 1f)]
     [SerializeField] private float _sfxVolume = 0.5f;
@@ -52,13 +52,13 @@ public class AudioManager : Singleton<AudioManager>
 
     private void Awake()
     {
-        // BGM ¿Àµğ¿À ¼Ò½º »ı¼º
+        // BGM ì˜¤ë””ì˜¤ ì†ŒìŠ¤ ìƒì„±
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.outputAudioMixerGroup = bgmGroup;
         bgmSource.loop = true;
         bgmSource.playOnAwake = false;
 
-        // SFX Ç® ÃÊ±âÈ­
+        // SFX í’€ ì´ˆê¸°í™”
         for (int i = 0; i < sfxPoolSize; i++)
         {
             AudioSource sfx = gameObject.AddComponent<AudioSource>();
@@ -67,7 +67,7 @@ public class AudioManager : Singleton<AudioManager>
             sfxSources.Add(sfx);
         }
 
-        // µñ¼Å³Ê¸® ÃÊ±âÈ­
+        // ë”•ì…”ë„ˆë¦¬ ì´ˆê¸°í™”
         foreach (var bgm in bgmList)
         {
             if (!bgmDict.ContainsKey(bgm.name))
@@ -80,13 +80,22 @@ public class AudioManager : Singleton<AudioManager>
                 sfxDict.Add(sfx.name, sfx.clip);
         }
 
+        SetMasterVolume(_masterVolume);
         SetBgmVolume(_bgmVolume);
         SetSfxVolume(_sfxVolume);
+
+        PlayBGM("1");
+
+        float masterDB;
+        if (audioMixer.GetFloat("Master_Volume", out masterDB))
+            Debug.Log("Master dB after Awake: " + masterDB);
+        else
+            Debug.LogWarning("Master_Volume parameter not found in AudioMixer!");
     }
 
-    // ¿ø·¡ ¾À·Îµå½Ã ¾À³×ÀÓÀ» ¸Å°³º¯¼ö·Î ¹Ş¾Æ¿Í¼­ ¾À³×ÀÓ°ú °°Àº ÀÌ¸§ÀÇ BGMÀ» Àç»ıÇÏ´Â ¹æ½ÄÀÌ¾úÀ¸³ª,
-    // ÇöÀç ¾À·Îµå¸Å´ÏÀú¸¦ µû·Î ¸¸µé¾ú±â¶§¹®¿¡ ¹æ½ÄÀÌ ¾à°£ º¯°æµÅ¼­ ÀÏ´Ü ÁÖ¼®Ã³¸® ÃßÈÄ BGM ÇÃ·¹ÀÌ ¹æ½ÄÀ» º¯°æ ÇÊ¿ä
-    // ¿¹Á¤ : °¢ ¾À¿¡ Á¸ÀçÇÏ´Â ¾À¿ÀºêÁ§Æ® Start ÇÔ¼ö¿¡¼­ Àç»ı
+    // ì›ë˜ ì”¬ë¡œë“œì‹œ ì”¬ë„¤ì„ì„ ë§¤ê°œë³€ìˆ˜ë¡œ ë°›ì•„ì™€ì„œ ì”¬ë„¤ì„ê³¼ ê°™ì€ ì´ë¦„ì˜ BGMì„ ì¬ìƒí•˜ëŠ” ë°©ì‹ì´ì—ˆìœ¼ë‚˜,
+    // í˜„ì¬ ì”¬ë¡œë“œë§¤ë‹ˆì €ë¥¼ ë”°ë¡œ ë§Œë“¤ì—ˆê¸°ë•Œë¬¸ì— ë°©ì‹ì´ ì•½ê°„ ë³€ê²½ë¼ì„œ ì¼ë‹¨ ì£¼ì„ì²˜ë¦¬ ì¶”í›„ BGM í”Œë ˆì´ ë°©ì‹ì„ ë³€ê²½ í•„ìš”
+    // ì˜ˆì • : ê° ì”¬ì— ì¡´ì¬í•˜ëŠ” ì”¬ì˜¤ë¸Œì íŠ¸ Start í•¨ìˆ˜ì—ì„œ ì¬ìƒ
     //private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
     //private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
     //private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -100,11 +109,11 @@ public class AudioManager : Singleton<AudioManager>
 
     void Update()
     {
-        // Ç×»ó º¼·ı ÃÖ½ÅÈ­ (¿É¼Ç¿¡¼­ ½½¶óÀÌ´õ·Î Á¶Àı ½Ã ¹İ¿µµÇ°Ô)
+        // í•­ìƒ ë³¼ë¥¨ ìµœì‹ í™” (ì˜µì…˜ì—ì„œ ìŠ¬ë¼ì´ë”ë¡œ ì¡°ì ˆ ì‹œ ë°˜ì˜ë˜ê²Œ)
         bgmSource.volume = bgmVolume;
         foreach (var sfx in sfxSources) sfx.volume = _sfxVolume;
 
-        // ¹öÆ° Å¬¸¯ SFX
+        // ë²„íŠ¼ í´ë¦­ SFX
         if (Input.GetMouseButtonDown(0))
         {
             GameObject clicked = EventSystem.current.currentSelectedGameObject;
@@ -116,6 +125,11 @@ public class AudioManager : Singleton<AudioManager>
     #region Mixer Volume Control
     private float LinearToDecibel(float linear) => linear <= 0f ? -80f : Mathf.Log10(linear) * 20f;
 
+    public void SetMasterVolume(float volume)
+    {
+        _masterVolume = Mathf.Clamp01(volume);
+        audioMixer.SetFloat("Master_Volume", LinearToDecibel(_masterVolume));
+    }
     public void SetBgmVolume(float volume)
     {
         _bgmVolume = Mathf.Clamp01(volume);
@@ -146,7 +160,7 @@ public class AudioManager : Singleton<AudioManager>
         float startVolume = _bgmVolume;
         float time = 0f;
 
-        // ÆäÀÌµå ¾Æ¿ô
+        // í˜ì´ë“œ ì•„ì›ƒ
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -154,11 +168,11 @@ public class AudioManager : Singleton<AudioManager>
             await UniTask.Yield();
         }
 
-        // »õ Å¬¸³ Àç»ı
+        // ìƒˆ í´ë¦½ ì¬ìƒ
         bgmSource.clip = newClip;
         bgmSource.Play();
 
-        // ÆäÀÌµå ÀÎ
+        // í˜ì´ë“œ ì¸
         time = 0f;
         while (time < duration)
         {

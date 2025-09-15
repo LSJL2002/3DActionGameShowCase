@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -63,26 +64,27 @@ public class GameManager : Singleton<GameManager>
     }
 
     // 게임 일시정지
-    public void PauseGame(bool check)
+    public async Task PauseGame(bool check)
     {
         // 게임 정지
         if (check)
         {
             Time.timeScale = 0;
-            return;
         }
 
         // 게임 재개
         else if (!check)
         {
             Time.timeScale = 1;
-            return;
         }
 
         // 게임 상태를 변경
         ChangeState(eGameState.Pause);
 
         Debug.Log($"IsPauseGame : {check}");
+
+        // 일시정지 UI를 활성화/비활성화
+        await UIManager.Instance.Show<PauseUI>();
     }
 
     // 게임 오버
