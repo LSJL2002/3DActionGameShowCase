@@ -16,6 +16,11 @@ public class ObjectFollow : MonoBehaviour
     [Header("This.RigidBody")]
     [SerializeField] private Rigidbody rb;
 
+    private void Update()
+    {
+        OnClickTarget();
+    }
+
     private void FixedUpdate()
     {
         FollowObject();
@@ -36,6 +41,18 @@ public class ObjectFollow : MonoBehaviour
         Quaternion nextRotation = Quaternion.RotateTowards(rb.rotation, look, rotationSpeed * Time.deltaTime);
         rb.MoveRotation(nextRotation);
 
+    }
+
+    void OnClickTarget()
+    {
+        if (targetObject == null) return;
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            targetObject.position += targetObject.right * 1.03f;
+            targetObject.position += targetObject.forward * 1.2f;
+        }
+            
     }
 }
 
