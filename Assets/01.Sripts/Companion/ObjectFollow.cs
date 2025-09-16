@@ -32,9 +32,11 @@ public class ObjectFollow : MonoBehaviour
 
     void FollowObject()
     {
-        if (targetObject == null || rb == null) return;
+        if (targetObject == null || rb == null /* || 플래이어에 현재상태 == 공격상태  (싱클톤확인) */) return;
 
-        
+        // Rigidbody를 이용한 부드러운 위치 이동
+        Vector3 nextMove = Vector3.MoveTowards(rb.position, targetObject.position, moveSpeed * Time.deltaTime);
+        rb.MovePosition(nextMove);
 
         // 회전하는 방향을 정위하기 위해 로직 추가
         Vector3 dir = (lookObject.position - this.rb.position).normalized; // 바라볼 방향
@@ -42,14 +44,11 @@ public class ObjectFollow : MonoBehaviour
         Quaternion look = Quaternion.LookRotation(dir, Vector3.up); // 바라보는 회전
         Quaternion nextRotation = Quaternion.RotateTowards(rb.rotation, look, rotationSpeed * Time.deltaTime);
         rb.MoveRotation(nextRotation);
-
     }
 
     void OnMove()
     {
-        // Rigidbody를 이용한 부드러운 위치 이동
-        Vector3 nextMove = Vector3.MoveTowards(rb.position, targetObject.position, moveSpeed * Time.deltaTime);
-        rb.MovePosition(nextMove);
+        anim.SetBool("isMove", (rb.velocity.magnitude > 0.1f) ? true : false);
     }
 
     void OnClickTarget()
