@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 public class MonsterStatHandler : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class MonsterStatHandler : MonoBehaviour
     public int AttackRange;
     public List<string> StatusEffect;
     public List<int> DropItem;
+    public List<MonsterSkillSO> MonsterSkills;
+
+    private Dictionary<string, MonsterSkillSO> skillDict;
 
     void Awake()
     {
@@ -31,8 +35,23 @@ public class MonsterStatHandler : MonoBehaviour
             DetectRange = monsterData.detectRange;
             AttackRange = monsterData.attackRange;
             StatusEffect = new List<string>(monsterData.statusEffect);
-            DropItem = new List<int>(monsterData.dropItem);
+
+            skillDict = new Dictionary<string, MonsterSkillSO>();
+            foreach (var skill in MonsterSkills)
+            {
+                if (!skillDict.ContainsKey(skill.skillName))
+                {
+                    skillDict.Add(skill.skillName, skill);
+                }
+            }
         }
+    }
+
+    public MonsterSkillSO GetSkill(string skillName)
+    {
+        if (skillDict != null && skillDict.TryGetValue(skillName, out var skill))
+            return skill;
+        return null;
     }
 
     public void Heal(int amount)
@@ -40,9 +59,18 @@ public class MonsterStatHandler : MonoBehaviour
         CurrentHP = Mathf.Min(CurrentHP + amount, monsterData.maxHp);
     }
 
+    public bool isAlive()
+    {
+        if (CurrentHP > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public void Die()
     {
         Debug.Log($"{monsterData.monsterName} 사망!");
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }

@@ -34,16 +34,8 @@ public class MonsterAIEvents : MonoBehaviour
 
         Debug.Log("Aievent");
 
-        // 플레이어가 감지 범위 안에 있을시
-        if (distance <= detectRange && !stateMachine.isAttacking)
-        {
-            stateMachine.Monster.PlayerTarget = player;
-            OnPlayerDetected?.Invoke();
-            Debug.Log("Detected");
-        }
-
-        // 공격 사거리 입장시
-        if (distance <= attackRange && !stateMachine.isAttacking) //공격 범위를 스킬의 공격 범위로 변경
+        // ---- 우선순위: 공격 범위 먼저 ----
+        if (distance <= attackRange && !stateMachine.isAttacking)
         {
             if (Time.time >= lastAttackTime + attackCooldown)
             {
@@ -56,6 +48,13 @@ public class MonsterAIEvents : MonoBehaviour
                 RestingPhase?.Invoke();
                 Debug.Log("Idle");
             }
+        }
+        // ---- 공격 범위 밖, 탐지 범위 안 ----
+        else if (distance <= detectRange && !stateMachine.isAttacking)
+        {
+            stateMachine.Monster.PlayerTarget = player;
+            OnPlayerDetected?.Invoke();
+            Debug.Log("Detected");
         }
     }
 

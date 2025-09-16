@@ -66,9 +66,27 @@ namespace UnityEngine.InputSystem
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""HeavyAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""f5e23f77-563e-4675-bcb5-0db3c9e05e6b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""7eae478f-d95d-49fe-a55b-fa3efcf9a752"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""13088985-771f-4df9-b9ae-c0b474e1846e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -114,15 +132,6 @@ namespace UnityEngine.InputSystem
                     ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""4eadf7cd-77da-459b-821f-72ea6f5d280c"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Menu"",
-                    ""type"": ""Button"",
-                    ""id"": ""13088985-771f-4df9-b9ae-c0b474e1846e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -295,17 +304,6 @@ namespace UnityEngine.InputSystem
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e1d1c7cf-0b71-400e-ac0c-458ce88d9a6d"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Menu"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""55d3000c-6b3e-43bf-9ad1-4963a642e865"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
@@ -398,7 +396,7 @@ namespace UnityEngine.InputSystem
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
+                    ""groups"": """",
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -410,17 +408,6 @@ namespace UnityEngine.InputSystem
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Dodge"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""65506f57-e97d-40f4-a7e5-5734830eb8a9"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
                     ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -455,6 +442,72 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": ""Joystick"",
                     ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d6229bd6-02cb-4f3b-92d8-c968bad722b5"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""HeavyAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""831c5d56-a635-4641-9743-76cf0a4a1d4e"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Touch"",
+                    ""action"": ""HeavyAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""64858efd-1829-4f51-a430-bf69dd7c6ec5"",
+                    ""path"": ""<Joystick>/trigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick"",
+                    ""action"": ""HeavyAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1578d59-2e5b-4428-8c7a-d173ca3bc493"",
+                    ""path"": ""<XRController>/{PrimaryAction}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""XR"",
+                    ""action"": ""HeavyAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9c0737c5-7d0a-4c2d-95f5-5defed5fe4a5"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HeavyAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e1d1c7cf-0b71-400e-ac0c-458ce88d9a6d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1046,13 +1099,14 @@ namespace UnityEngine.InputSystem
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
             m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
             m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+            m_Player_HeavyAttack = m_Player.FindAction("HeavyAttack", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+            m_Player_Menu = m_Player.FindAction("Menu", throwIfNotFound: true);
             m_Player_Flash = m_Player.FindAction("Flash", throwIfNotFound: true);
             m_Player_CameraToggle = m_Player.FindAction("CameraToggle", throwIfNotFound: true);
             m_Player_Action = m_Player.FindAction("Action", throwIfNotFound: true);
             m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
             m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
-            m_Player_Menu = m_Player.FindAction("Menu", throwIfNotFound: true);
             m_Player_PotalGun = m_Player.FindAction("PotalGun", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -1131,13 +1185,14 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Look;
         private readonly InputAction m_Player_Dodge;
         private readonly InputAction m_Player_Attack;
+        private readonly InputAction m_Player_HeavyAttack;
         private readonly InputAction m_Player_Jump;
+        private readonly InputAction m_Player_Menu;
         private readonly InputAction m_Player_Flash;
         private readonly InputAction m_Player_CameraToggle;
         private readonly InputAction m_Player_Action;
         private readonly InputAction m_Player_Interaction;
         private readonly InputAction m_Player_Inventory;
-        private readonly InputAction m_Player_Menu;
         private readonly InputAction m_Player_PotalGun;
         public struct PlayerActions
         {
@@ -1147,13 +1202,14 @@ namespace UnityEngine.InputSystem
             public InputAction @Look => m_Wrapper.m_Player_Look;
             public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
             public InputAction @Attack => m_Wrapper.m_Player_Attack;
+            public InputAction @HeavyAttack => m_Wrapper.m_Player_HeavyAttack;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
+            public InputAction @Menu => m_Wrapper.m_Player_Menu;
             public InputAction @Flash => m_Wrapper.m_Player_Flash;
             public InputAction @CameraToggle => m_Wrapper.m_Player_CameraToggle;
             public InputAction @Action => m_Wrapper.m_Player_Action;
             public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
             public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
-            public InputAction @Menu => m_Wrapper.m_Player_Menu;
             public InputAction @PotalGun => m_Wrapper.m_Player_PotalGun;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
@@ -1176,9 +1232,15 @@ namespace UnityEngine.InputSystem
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @HeavyAttack.started += instance.OnHeavyAttack;
+                @HeavyAttack.performed += instance.OnHeavyAttack;
+                @HeavyAttack.canceled += instance.OnHeavyAttack;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Menu.started += instance.OnMenu;
+                @Menu.performed += instance.OnMenu;
+                @Menu.canceled += instance.OnMenu;
                 @Flash.started += instance.OnFlash;
                 @Flash.performed += instance.OnFlash;
                 @Flash.canceled += instance.OnFlash;
@@ -1194,9 +1256,6 @@ namespace UnityEngine.InputSystem
                 @Inventory.started += instance.OnInventory;
                 @Inventory.performed += instance.OnInventory;
                 @Inventory.canceled += instance.OnInventory;
-                @Menu.started += instance.OnMenu;
-                @Menu.performed += instance.OnMenu;
-                @Menu.canceled += instance.OnMenu;
                 @PotalGun.started += instance.OnPotalGun;
                 @PotalGun.performed += instance.OnPotalGun;
                 @PotalGun.canceled += instance.OnPotalGun;
@@ -1216,9 +1275,15 @@ namespace UnityEngine.InputSystem
                 @Attack.started -= instance.OnAttack;
                 @Attack.performed -= instance.OnAttack;
                 @Attack.canceled -= instance.OnAttack;
+                @HeavyAttack.started -= instance.OnHeavyAttack;
+                @HeavyAttack.performed -= instance.OnHeavyAttack;
+                @HeavyAttack.canceled -= instance.OnHeavyAttack;
                 @Jump.started -= instance.OnJump;
                 @Jump.performed -= instance.OnJump;
                 @Jump.canceled -= instance.OnJump;
+                @Menu.started -= instance.OnMenu;
+                @Menu.performed -= instance.OnMenu;
+                @Menu.canceled -= instance.OnMenu;
                 @Flash.started -= instance.OnFlash;
                 @Flash.performed -= instance.OnFlash;
                 @Flash.canceled -= instance.OnFlash;
@@ -1234,9 +1299,6 @@ namespace UnityEngine.InputSystem
                 @Inventory.started -= instance.OnInventory;
                 @Inventory.performed -= instance.OnInventory;
                 @Inventory.canceled -= instance.OnInventory;
-                @Menu.started -= instance.OnMenu;
-                @Menu.performed -= instance.OnMenu;
-                @Menu.canceled -= instance.OnMenu;
                 @PotalGun.started -= instance.OnPotalGun;
                 @PotalGun.performed -= instance.OnPotalGun;
                 @PotalGun.canceled -= instance.OnPotalGun;
@@ -1426,13 +1488,14 @@ namespace UnityEngine.InputSystem
             void OnLook(InputAction.CallbackContext context);
             void OnDodge(InputAction.CallbackContext context);
             void OnAttack(InputAction.CallbackContext context);
+            void OnHeavyAttack(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
+            void OnMenu(InputAction.CallbackContext context);
             void OnFlash(InputAction.CallbackContext context);
             void OnCameraToggle(InputAction.CallbackContext context);
             void OnAction(InputAction.CallbackContext context);
             void OnInteraction(InputAction.CallbackContext context);
             void OnInventory(InputAction.CallbackContext context);
-            void OnMenu(InputAction.CallbackContext context);
             void OnPotalGun(InputAction.CallbackContext context);
         }
         public interface IUIActions

@@ -1,0 +1,36 @@
+﻿msgid,en-US,ja-JP
+editor.config.color.title.label,Color,色設定
+editor.config.color.default.label,Default Color,デフォルト値
+editor.config.color.rgb.label,Use RGB Color Picker(+24),RGBで色変更(+8)
+editor.config.color.palette.label,Use Color Palette(+8),色パレット(+8)
+editor.config.color.palette_colors.label,Palette Colors,パレットのカラーセット
+editor.config.width.title.label,Width,太さ設定
+editor.config.width.default.label,Default Width,デフォルト値
+editor.config.width.control.label,Width Control (+8),太さ変更機能 (+8)
+editor.config.width.range.label,Width Range,太さ調整の範囲
+editor.config.optional_objects.title.label,Optional Objects,連動オブジェクト設定
+editor.config.optional_objects.title.tips,GameObjects activated/deactivated with PPPen\nObject: object you can toggle\nIsActiveWithPen:\n  When true "Enable PPPen and object will activated. Disable PPPen and object will deactivated"\n  When false "Enable PPPen and object will deactivated. Disable PPPen and object will activated,PPPenと同時に出し入れするオブジェクトの設定です\nObject: 出し入れしたいオブジェクト\nペン有効時に表示: \n  オンの場合「ペンが有効だと表示/ペンが無効だと非表示」\n  オフの場合「ペンが有効だと非表示/ペンが無効だと表示」
+editor.config.optional_objects.is_active.label,Active with pen,ペン有効時に表示する
+editor.config.general.pickup_object.label,Pickup Target,ピックアップ追随点
+editor.config.general.pickup_object.tips,You can pickup your drows with this bone,描いたのと別の手（ボーン以外も可）で移動させるための設定
+editor.config.gesture.title.label,Gesture,ジェスチャー設定
+editor.config.gesture.title.tips,Which hand and gesture to draw,どちらの手で、どのジェスチャーで描くかの設定
+editor.config.parameter.title.label,Internal Parameters,内部パラメーター設定
+editor.config.parameter.title.tips,Settings to rename parameters manualy and use in your own custom animations,パラメータ名を手動で定義し、自作のギミックとの連動に使用するための設定
+editor.config.parameter.isInternal.label,Auto rename parameters,自動リネーム
+editor.general.support.button,Discord Server,Discordサーバー
+editor.general.advanced.label,Advanced,詳細設定
+editor.general.preset.label,Presets,プリセット
+editor.general.preset.RightHand.label,Right Handed,右利き向け
+editor.general.preset.LeftHand.label,Left Handed,左利き向け
+editor.general.preset.RightHandLeftMove.label,Right Handed(Left hand to pickup),右手で描いて左手で動かす
+editor.general.preset.LeftHandRightMove.label,Left Handed(Right hand to pickup),左手で描いて右手で動かす
+editor.general.support.title,User support,ユーザーサポート
+editor.general.support.update_notification.message,Update {0} is now available,アップデート {0} が利用可能です
+editor.general.language.label,Editor Language,Editor Language
+editor.general.language.english,English,English
+editor.general.language.japanese,Japanese,日本語
+editor.general.document.button,Manual,マニュアル
+editor.general.document.link,https://docs.google.com/document/d/14-rPnxjXZqsm_Og_w2zmNQ88Ry2L90e9M1hzwf3nin0,https://docs.google.com/document/d/14-rPnxjXZqsm_Og_w2zmNQ88Ry2L90e9M1hzwf3nin0
+build.error.asset_holder_not_found.message,PPPen failed to load internal assets. Setup avoted! Re-import PPPen.,内部アセットの読み込みに失敗したため、PPPenのセットアップが中断されました。PPPenを再インポートしてください。
+build.warning.localization_not_found.message,Localization file not found. Re-import PPPen.,ローカライズファイルが見つかりませんでした。PPPenを再インポートしてください。

@@ -6,12 +6,12 @@ using Zenject.SpaceFighter;
 
 public interface IPlayer
 {
-    public void LockOnInput(int val);
 }
 
 public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
-    [field: SerializeField] public PlayerSO Data { get; private set; }
+    [field: SerializeField] public PlayerInfo InfoData { get; private set; }
+
     public PlayerStats Stats { get; private set; }
 
 
@@ -19,13 +19,19 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     [field: SerializeField] public PlayerAnimationHash AnimationData { get; private set; }
     //런타임 계산이 필요한 데이터는 이렇게 초기화
 
+
     public Animator Animator { get; private set; } //루트모션은 본체에
     public CharacterController Controller { get; private set; }
     public PlayerController Input { get; private set; }
     public ForceReceiver ForceReceiver { get; private set; }
     public Interaction Interaction { get; private set; }
+    public PlayerCombat Combat { get; private set; }
+
 
     private PlayerStateMachine stateMachine; //순수 C# 클래스
+    public SkillManagers skillManagers;
+    public CameraManager cameraManager;
+
 
     private void Awake()
     {
@@ -40,9 +46,12 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         Input ??= GetComponent<PlayerController>();
         ForceReceiver ??= GetComponent<ForceReceiver>();
         Interaction ??= GetComponent<Interaction>();
-        Stats = new PlayerStats(Data);
+        Combat ??= GetComponent<PlayerCombat>();
 
+        Stats = new PlayerStats(InfoData.StatData);
         stateMachine = new PlayerStateMachine(this);
+        skillManagers ??= GetComponentInChildren<SkillManagers>();
+        cameraManager ??= GetComponentInChildren<CameraManager>();
 
         Stats.OnDie += OnDie;
     }
@@ -67,11 +76,5 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     {
         Animator.SetTrigger("Die");
         enabled = false;
-    }
-
-    // 외부에서 이 메서드로만 접근
-    public void LockOnInput(int val)
-    {
-        //Controller.LockOnInput(val);
     }
 }

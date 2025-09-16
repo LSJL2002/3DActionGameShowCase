@@ -1,14 +1,12 @@
-
-
 using System;
 
 public interface Istate
 {
-    public void Enter();
-    public void Exit();
-    public void HandleInput(); //Å°ÀÔ·ÂÈ®ÀÎ
-    public void LogicUpdate(); //Ã¼·ÂÈ¸º¹ µî ³í¸®
-    public void PhysicsUpdate(); //¹°¸®°è»ê
+    void Enter();
+    void Exit();
+    void HandleInput(); //í‚¤ìž…ë ¥í™•ì¸
+    void LogicUpdate(); //ì²´ë ¥íšŒë³µ ë“± ë…¼ë¦¬
+    void PhysicsUpdate(); //ë¬¼ë¦¬ê³„ì‚°
 }
 
 
@@ -28,4 +26,18 @@ public abstract class StateMachine
     public void HandleInput() => currentState?.HandleInput();
     public void LogicUpdate() => currentState?.LogicUpdate();
     public void Physicsupdate() => currentState?.PhysicsUpdate();
+}
+
+
+public enum PlayerStateID
+{
+    None,
+    Idle,
+    Walk,
+    Run,
+    Jump,
+    Fall,
+    Attack,
+    ComboAttack,
+    Dodge
 }

@@ -1,20 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
 
-public class PlayerBaseState : Istate
+
+public abstract class PlayerBaseState : Istate
 {
     protected PlayerStateMachine stateMachine;
-    protected readonly PlayerGroundData groundData;
-
 
     public PlayerBaseState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
-        groundData = stateMachine.Player.Data.GroundData;
     }
+
+
+    public abstract PlayerStateID StateID { get; }
+    // 상태별 행동 훅
+    public virtual bool AllowRotation => true;
+    public virtual bool AllowMovement => true;
+
 
     public virtual void Enter()
     {
@@ -30,9 +37,11 @@ public class PlayerBaseState : Istate
         PlayerController input = stateMachine.Player.Input;
         input.PlayerActions.Move.canceled += OnMoveCanceled;
         input.PlayerActions.Dodge.started += OnDodgeStarted;
-        input.PlayerActions.Attack.performed += OnAttackPerformed;
+        input.PlayerActions.Attack.started += OnAttackStarted;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
-        input.PlayerActions.Jump.started += OnJumpStarted;
+        input.PlayerActions.HeavyAttack.started += OnHeavyAttackStarted;
+
+        input.PlayerActions.Menu.performed += OnMenuToggle;
     }
 
     protected virtual void RemoveInputActionCallbacks()
@@ -40,28 +49,47 @@ public class PlayerBaseState : Istate
         PlayerController input = stateMachine.Player.Input;
         input.PlayerActions.Move.canceled -= OnMoveCanceled;
         input.PlayerActions.Dodge.started -= OnDodgeStarted;
-        input.PlayerActions.Attack.performed -= OnAttackPerformed;
+        input.PlayerActions.Attack.started -= OnAttackStarted;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
-        input.PlayerActions.Jump.started -= OnJumpStarted;
+        input.PlayerActions.HeavyAttack.started -= OnHeavyAttackStarted;
 
+        input.PlayerActions.Menu.performed -= OnMenuToggle;
     }
 
     public virtual void HandleInput() => ReadMovementInput();
     public virtual void PhysicsUpdate() => MoveCharacter();
-    public virtual void LogicUpdate()
-    {    }
+    public virtual void LogicUpdate() { }
 
 
     protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
-
     protected virtual void OnDodgeStarted(InputAction.CallbackContext context) { }
-
-    protected virtual void OnAttackPerformed(InputAction.CallbackContext context)
-         => stateMachine.IsAttacking = true;
-
+    protected virtual void OnAttackStarted(InputAction.CallbackContext context)
+        => stateMachine.IsAttacking = true;
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
         => stateMachine.IsAttacking = false;
+    protected virtual void OnHeavyAttackStarted(InputAction.CallbackContext context) { }
+
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
+
+    private bool isPaused = false;
+    protected virtual void OnMenuToggle(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        isPaused = !isPaused;
+        GameManager.Instance.PauseGame(isPaused);
+        if (isPaused)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            stateMachine.Player.cameraManager.volume.enabled = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            stateMachine.Player.cameraManager.volume.enabled = false;
+        }
+    }
 
 
 
@@ -74,16 +102,6 @@ public class PlayerBaseState : Istate
         stateMachine.Player.Animator.SetBool(animatorHash, false);
     }
 
-    private void UpdateAnimatorMovementSpeed()
-    {
-        float speed = stateMachine.MovementInput.magnitude * stateMachine.MovementSpeedModifier;
-        stateMachine.Player.Animator.SetFloat(
-            stateMachine.Player.AnimationData.MoveSpeedParameterHash,
-            speed
-        );
-    }
-
-
     private void ReadMovementInput()
     {
         stateMachine.MovementInput = stateMachine.Player.Input.PlayerActions.Move.ReadValue<Vector2>();
@@ -93,8 +111,8 @@ public class PlayerBaseState : Istate
     {
         Vector3 moveDir = GetMovementDir();
 
-        //캐릭터 회전
-        if (moveDir.sqrMagnitude > 0.01f)
+        // 캐릭터 회전
+        if (AllowRotation && moveDir.sqrMagnitude > 0.01f) // 회전 제어
         {
             Quaternion targetRot = Quaternion.LookRotation(moveDir);
             stateMachine.Player.transform.rotation = Quaternion.Slerp(
@@ -121,10 +139,11 @@ public class PlayerBaseState : Istate
         }
     }
 
+
     protected Vector3 GetMovementDir()
     {
-        Vector3 forward = stateMachine.MainCamTransform.forward;
-        Vector3 right = stateMachine.MainCamTransform.right;
+        Vector3 forward = stateMachine.Player.cameraManager.MainCamera.forward;
+        Vector3 right = stateMachine.Player.cameraManager.MainCamera.right;
 
         forward.y = 0;
         right.y = 0;
@@ -145,17 +164,11 @@ public class PlayerBaseState : Istate
         AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
         AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
 
-        if(animator.IsInTransition(0) && nextInfo.IsTag(tag))
-        {
+        if (animator.IsInTransition(0) && nextInfo.IsTag(tag))
             return nextInfo.normalizedTime;
-        }
         else if(!animator.IsInTransition(0) && currentInfo.IsTag(tag))
-        {
             return currentInfo.normalizedTime;
-        }
         else
-        {
             return 0f;
-        }
     }
 }

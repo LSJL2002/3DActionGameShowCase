@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 892d1a7aeb4cc284dbf62e69e125db52, type: 3}
+  m_Name: Atlasname
+  m_EditorClassIdentifier: 
+  textureQuads:
+  - {fileID: 8141692450897513554}
+  selectedTextureQuad: {fileID: 8141692450897513554}
+  showTextures: 1
+  exportSettings: {fileID: 11400000, guid: af910371e3952a84999eb749425a8cb2, type: 2}
+  textureAtlasSize: {x: 2048, y: 2048}
+  textureGroupRegistration:
+  - name: Albedo
+--- !u!114 &8141692450897513554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
+  m_Name: new Quad
+  m_EditorClassIdentifier: 
+  isSelected: 1
+  rect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 379
+    height: 128
+  guiRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 384
+    height: 128
+  debugMode: 0
+  dragRectHeight:
+    serializedVersion: 2
+    x: 287.16666
+    y: 203
+    width: 64
+    height: 16
+  dragRectWidth:
+    serializedVersion: 2
+    x: 495.16666
+    y: 123
+    width: 16
+    height: 64
+  dragRectPos:
+    serializedVersion: 2
+    x: 303.16666
+    y: 139
+    width: 32
+    height: 32
+  textureGroups:
+  - name: Albedo
+    texture: {fileID: 0}
+  modelGroups: []

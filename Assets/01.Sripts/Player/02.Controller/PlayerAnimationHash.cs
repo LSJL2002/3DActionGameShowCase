@@ -6,55 +6,66 @@ using UnityEngine;
 [Serializable]
 public class PlayerAnimationHash
 {
-    [SerializeField] private string groundParameterName = "@Ground";
-    [SerializeField] private string idleParameterName = "Idle";
-    [SerializeField] private string moveSpeedParameterName = "MovementSpeed";
+    [Header("Ground / Movement")]
+    [SerializeField] private string groundBoolName = "@Ground";
+    [SerializeField] private string idleBoolName = "Idle";
+    [SerializeField] private string moveSpeedFloatName = "MovementSpeed"; //Blend
 
-    [SerializeField] private string airParameterName = "@Air";
-    [SerializeField] private string jumpParameterName = "Jump";
-    [SerializeField] private string fallParameterName = "Fall";
+    [Header("Air / Jump / Fall")]
+    [SerializeField] private string airBoolName = "@Air";
+    [SerializeField] private string jumpTriggerName = "Jump"; //Trigger로 바꿔야함
+    [SerializeField] private string fallBoolName = "Fall";
 
-    [SerializeField] private string attackParameterName = "@Attack";
-    [SerializeField] private string comboAttackParameterName = "ComboAttack";
-    [SerializeField] private string baseAttackParameterName = "BaseAttack";
+    [Header("Combat")]
+    [SerializeField] private string attackBoolName = "@Attack";
+    [SerializeField] private string attackTriggerName = "Attack"; // Trigger (AnyState 공격)
+    [SerializeField] private string comboAttackBoolName = "ComboAttack"; // Bool (콤보 진입 중)
+    [SerializeField] private string comboIntName = "ComboIndex"; // Int (콤보 상태)
+    [SerializeField] private string finishAttackName = "FinishAttack"; // Trigger
 
     [SerializeField] private string dodgeParameterName = "Dodge";
     [SerializeField] private string dodgeDirParameterName = "DodgeDir";
 
 
 
+    // ===== 해시 값 =====
+    public int GroundBoolHash { get; private set; }
+    public int IdleBoolHash { get; private set; }
+    public int MoveSpeedHash { get; private set; }
 
-    public int GroundParameterHash { get; private set; }
-    public int IdleParameterHash { get; private set; }
-    public int MoveSpeedParameterHash { get; private set; }
+    public int AirBoolHash { get; private set; }
+    public int JumpTriggerHash { get; private set; }
+    public int FallBoolHash { get; private set; }
 
-    public int AirParameterHash { get; private set; }
-    public int JumpParameterHash { get; private set; }
-    public int FallParameterHash { get; private set; }
+    public int AttackBoolHash { get; private set; }
+    public int AttackTriggerHash { get; private set; }
+    public int ComboBoolHash { get; private set; }
+    public int ComboIntHash { get; private set; }
+    public int FinishAttackHash { get; private set; }
 
-    public int AttackParameterHash { get; private set; }
-    public int ComboAttackParameterHash { get; private set; }
-    public int BaseAttackParameterHash { get; private set; }
+
 
     public int DodgeParameterHash { get; private set; }
     public int DodgeDirParameterHash { get; private set; }
 
 
 
-
+    // ===== 초기화 =====
     public void Initialize()
     {
-        GroundParameterHash = Animator.StringToHash(groundParameterName);
-        IdleParameterHash = Animator.StringToHash(idleParameterName);
-        MoveSpeedParameterHash = Animator.StringToHash(moveSpeedParameterName);
+        GroundBoolHash = Animator.StringToHash(groundBoolName);
+        IdleBoolHash = Animator.StringToHash(idleBoolName);
+        MoveSpeedHash = Animator.StringToHash(moveSpeedFloatName);
 
-        AirParameterHash = Animator.StringToHash(airParameterName);
-        JumpParameterHash = Animator.StringToHash(jumpParameterName);
-        FallParameterHash = Animator.StringToHash(fallParameterName);
+        AirBoolHash = Animator.StringToHash(airBoolName);
+        JumpTriggerHash = Animator.StringToHash(jumpTriggerName);
+        FallBoolHash = Animator.StringToHash(fallBoolName);
 
-        AttackParameterHash = Animator.StringToHash(attackParameterName);
-        ComboAttackParameterHash = Animator.StringToHash(comboAttackParameterName);
-        BaseAttackParameterHash = Animator.StringToHash(baseAttackParameterName);
+        AttackBoolHash = Animator.StringToHash(attackBoolName);
+        AttackTriggerHash = Animator.StringToHash(attackTriggerName);
+        ComboBoolHash = Animator.StringToHash(comboAttackBoolName);
+        ComboIntHash = Animator.StringToHash(comboIntName);
+        FinishAttackHash = Animator.StringToHash(finishAttackName);
 
         DodgeParameterHash = Animator.StringToHash(dodgeParameterName);
         DodgeDirParameterHash = Animator.StringToHash(dodgeDirParameterName);
