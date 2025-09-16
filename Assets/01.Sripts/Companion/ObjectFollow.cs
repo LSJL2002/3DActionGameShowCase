@@ -19,6 +19,9 @@ public class ObjectFollow : MonoBehaviour
     [Header("This.RigidBody")]
     [SerializeField] private Rigidbody rb;
 
+    [Header("This.RigidBody")]
+    [SerializeField] private GameObject talkUI;
+
     private void Update()
     {
         OnClickTarget();
@@ -59,6 +62,7 @@ public class ObjectFollow : MonoBehaviour
         {
             targetObject.position += targetObject.right * 1.03f;
             targetObject.position += targetObject.forward * 1.2f;
+            talkUI.SetActive(true);
         }
             
     }
