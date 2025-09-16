@@ -5,13 +5,16 @@ public class ObjectFollow : MonoBehaviour
     [Header("FollowObject")]
     [SerializeField] private Transform targetObject;
 
-    //[Header("LookAtObject")]
+    [Header("LookAtObject")]
     [SerializeField] private Transform lookObject;
 
     // 회전과 이동에 속도를 적용합니다.
     [Header("Speed")]
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float rotationSpeed = 360f;
+
+    [Header("Animation")]
+    [SerializeField] private Animator anim;
 
     [Header("This.RigidBody")]
     [SerializeField] private Rigidbody rb;
@@ -23,6 +26,7 @@ public class ObjectFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
+        OnMove();
         FollowObject();
     }
 
@@ -30,9 +34,7 @@ public class ObjectFollow : MonoBehaviour
     {
         if (targetObject == null || rb == null) return;
 
-        // Rigidbody를 이용한 부드러운 위치 이동
-        Vector3 nextMove = Vector3.MoveTowards(rb.position, targetObject.position, moveSpeed * Time.deltaTime);
-        rb.MovePosition(nextMove);
+        
 
         // 회전하는 방향을 정위하기 위해 로직 추가
         Vector3 dir = (lookObject.position - this.rb.position).normalized; // 바라볼 방향
@@ -41,6 +43,13 @@ public class ObjectFollow : MonoBehaviour
         Quaternion nextRotation = Quaternion.RotateTowards(rb.rotation, look, rotationSpeed * Time.deltaTime);
         rb.MoveRotation(nextRotation);
 
+    }
+
+    void OnMove()
+    {
+        // Rigidbody를 이용한 부드러운 위치 이동
+        Vector3 nextMove = Vector3.MoveTowards(rb.position, targetObject.position, moveSpeed * Time.deltaTime);
+        rb.MovePosition(nextMove);
     }
 
     void OnClickTarget()
