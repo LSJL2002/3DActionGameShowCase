@@ -6,11 +6,13 @@ using UnityEngine.InputSystem;
 public class PlyerFinishAttackState : PlayerBaseState
 {
     private float enterTime; // 상태 진입 시각 기록
-    private float finishDelay = 5f; // 2초 대기
+    private float finishDelay = 2f; // 2초 대기
 
     public PlyerFinishAttackState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     public override PlayerStateID StateID => throw new System.NotImplementedException();
+
+    public override bool AllowRotation => false;
 
 
     public override void Enter()

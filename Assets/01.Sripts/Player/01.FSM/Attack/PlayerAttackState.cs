@@ -14,7 +14,7 @@ public class PlayerAttackState : PlayerBaseState
     private Transform attackTarget;
 
     // Idle 전환 관련
-    private float idleTimeout = 2f;
+    private float idleTimeout = 1f;
     private float lastAttackInputTime;
 
     private bool attackEnded = false;
@@ -155,21 +155,15 @@ public class PlayerAttackState : PlayerBaseState
             attackEndTime = Time.time;
         }
 
-        if (attackEnded)
+        // 콤보 입력 있으면 이어서 공격
+        if (attackEnded && bufferedComboIndex >= 0)
         {
-            // 입력이 있으면 콤보로 이어감
-            if (bufferedComboIndex >= 0 || Time.time - lastAttackInputTime <= 0.1f) // 짧은 입력 허용 시간
-            {
-                SetAttack(bufferedComboIndex >= 0 ? bufferedComboIndex : currentAttack.ComboStateIndex);
-                bufferedComboIndex = -1;
-                attackEnded = false;
-            }
-            else
-            {
-                // 아무 입력 없으면 FinishAttackState로
-                stateMachine.ChangeState(stateMachine.FinishAttackState);
-            }
+            SetAttack(bufferedComboIndex);
+            bufferedComboIndex = -1;
+            attackEnded = false;
         }
+
+        // FinishAttackState 전환은 UpdateIdleCheck()에서만 처리
     }
 
     private void UpdateIdleCheck()
@@ -191,11 +185,11 @@ public class PlayerAttackState : PlayerBaseState
             stateMachine.ChangeState(stateMachine.FinishAttackState);
         }
         // 공격이 완전히 끝난 후에만 이동 허용
-        else if (attackEnded && isMoving)
-        {
-            stateMachine.ComboIndex = 0;
-            stateMachine.ChangeState(stateMachine.IdleState);
-        }
+        //else if (attackEnded && isMoving)
+        //{
+        //    stateMachine.ComboIndex = 0;
+        //    stateMachine.ChangeState(stateMachine.IdleState);
+        //}
     }
 
     private void SetAttack(int comboIndex)

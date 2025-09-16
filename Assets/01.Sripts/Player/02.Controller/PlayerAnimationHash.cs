@@ -7,27 +7,30 @@ using UnityEngine;
 public class PlayerAnimationHash
 {
     [Header("Ground / Movement")]
-    [SerializeField] private string groundBoolName = "@Ground";
-    [SerializeField] private string idleBoolName = "Idle";
-    [SerializeField] private string waitingAnimationTriggerName = "Idle2";
-    [SerializeField] private string getUpTriggerName = "GetUp";
+    [SerializeField] private string groundBoolName = "Base/Switch_GroundState";
+    [SerializeField] private string idleBoolName = "Base/Toggle_Idle";
+    [SerializeField] private string waitingAnimationTriggerName = "Base/Toggle_Idle2"; //Trigger
+    [SerializeField] private string getUpTriggerName = "Base/Toggle_GetUp"; //Trigger
 
-    [SerializeField] private string moveSpeedFloatName = "MovementSpeed"; //Blend
+    [SerializeField] private string moveSpeedFloatName = "Base/Blend_MovementSpeed"; //Blend
 
     [Header("Air / Jump / Fall")]
-    [SerializeField] private string airBoolName = "@Air";
-    [SerializeField] private string jumpTriggerName = "Jump"; //Trigger로 바꿔야함
-    [SerializeField] private string fallBoolName = "Fall";
+    [SerializeField] private string airBoolName = "Base/Switch_AirState";
+    [SerializeField] private string jumpTriggerName = "Base/Toggle_Jump"; //Trigger로 바꿔야함
+    [SerializeField] private string fallBoolName = "Base/Toggle_Fall";
 
     [Header("Combat")]
-    [SerializeField] private string attackBoolName = "@Attack";
-    [SerializeField] private string attackTriggerName = "Attack"; // Trigger (AnyState 공격)
-    [SerializeField] private string comboAttackBoolName = "ComboAttack"; // Bool (콤보 진입 중)
-    [SerializeField] private string comboIntName = "ComboIndex"; // Int (콤보 상태)
-    [SerializeField] private string finishAttackName = "FinishAttack"; // Trigger
+    [SerializeField] private string attackBoolName = "Base/Switch_AttackState";
+    [SerializeField] private string attackTriggerName = "Base/Toggle_Attack"; // Trigger (AnyState 공격)
+    [SerializeField] private string finishAttackName = "Base/Toggle_FinishAttack"; // Trigger
+    [SerializeField] private string comboAttackBoolName = "Base/Toggle_ComboAttack"; // Bool (콤보 진입 중)
+    [SerializeField] private string comboIntName = "Base/Index_ComboIndex"; // Int (콤보 상태)
 
-    [SerializeField] private string dodgeParameterName = "Dodge";
-    [SerializeField] private string dodgeDirParameterName = "DodgeDir";
+    [SerializeField] private string dodgeParameterName = "Dodge/Switch_DodgeState";
+    [SerializeField] private string dodgeDirParameterName = "Dodge/Direction_DodgeDir";
+
+    [SerializeField] private string dieParameterName = "Base/Toggle_DieState";
+
 
 
 
@@ -48,10 +51,11 @@ public class PlayerAnimationHash
     public int ComboIntHash { get; private set; }
     public int FinishAttackHash { get; private set; }
 
-
-
     public int DodgeParameterHash { get; private set; }
     public int DodgeDirParameterHash { get; private set; }
+
+    public int DieParameterHash { get; private set; }
+
 
 
 
@@ -76,5 +80,7 @@ public class PlayerAnimationHash
 
         DodgeParameterHash = Animator.StringToHash(dodgeParameterName);
         DodgeDirParameterHash = Animator.StringToHash(dodgeDirParameterName);
+
+        DieParameterHash = Animator.StringToHash(dieParameterName);
     }
 }
