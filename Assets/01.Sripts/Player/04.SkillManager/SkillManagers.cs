@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillManagers : Singleton<SkillManagers>
+public class SkillManagers : MonoBehaviour
 {
     [Serializable]
     public class SkillPrefab
@@ -62,11 +62,11 @@ public class SkillManagers : Singleton<SkillManagers>
         obj.SetActive(true);
 
         // Hitbox 켜기
-        var hitbox = obj.GetComponent<Hitbox>();
+        var hitbox = obj.GetComponentInChildren<Hitbox>();
         hitbox?.OnEnable();
 
         // ParticleSystem 재생
-        var ps = obj.GetComponent<ParticleSystem>();
+        var ps = obj.GetComponentInChildren<ParticleSystem>();
         if (ps != null) ps.Play(true);
 
         // 오디오 재생 (AudioManager 사용)
@@ -97,7 +97,7 @@ public class SkillManagers : Singleton<SkillManagers>
         }
 
         // Hitbox 끄기
-        var hitbox = obj.GetComponent<Hitbox>();
+        var hitbox = obj.GetComponentInChildren<Hitbox>();
         hitbox?.OnDisable();
 
         obj.SetActive(false);

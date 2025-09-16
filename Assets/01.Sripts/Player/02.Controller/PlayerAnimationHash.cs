@@ -21,6 +21,7 @@ public class PlayerAnimationHash
     [SerializeField] private string attackTriggerName = "Attack"; // Trigger (AnyState 공격)
     [SerializeField] private string comboAttackBoolName = "ComboAttack"; // Bool (콤보 진입 중)
     [SerializeField] private string comboIntName = "ComboIndex"; // Int (콤보 상태)
+    [SerializeField] private string finishAttackName = "FinishAttack"; // Trigger
 
     [SerializeField] private string dodgeParameterName = "Dodge";
     [SerializeField] private string dodgeDirParameterName = "DodgeDir";
@@ -40,6 +41,8 @@ public class PlayerAnimationHash
     public int AttackTriggerHash { get; private set; }
     public int ComboBoolHash { get; private set; }
     public int ComboIntHash { get; private set; }
+    public int FinishAttackHash { get; private set; }
+
 
 
     public int DodgeParameterHash { get; private set; }
@@ -62,6 +65,7 @@ public class PlayerAnimationHash
         AttackTriggerHash = Animator.StringToHash(attackTriggerName);
         ComboBoolHash = Animator.StringToHash(comboAttackBoolName);
         ComboIntHash = Animator.StringToHash(comboIntName);
+        FinishAttackHash = Animator.StringToHash(finishAttackName);
 
         DodgeParameterHash = Animator.StringToHash(dodgeParameterName);
         DodgeDirParameterHash = Animator.StringToHash(dodgeDirParameterName);
