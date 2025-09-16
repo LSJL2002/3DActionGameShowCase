@@ -23,14 +23,11 @@ public abstract class PlayerBaseState : Istate
     public virtual bool AllowMovement => true;
 
 
-    public virtual void Enter()
-    {
-        AddInputActionCallbacks();
-    }
-    public virtual void Exit()
-    {
-        RemoveInputActionCallbacks();
-    }
+    public virtual void Enter() => AddInputActionCallbacks();
+    public virtual void Exit() => RemoveInputActionCallbacks();
+    protected void StartAnimation(int animatorHash) => stateMachine.Player.Animator.SetBool(animatorHash, true);
+    protected void StopAnimation(int animatorHash) => stateMachine.Player.Animator.SetBool(animatorHash, false);
+
 
     protected virtual void AddInputActionCallbacks()
     {
@@ -56,9 +53,14 @@ public abstract class PlayerBaseState : Istate
         input.PlayerActions.Menu.performed -= OnMenuToggle;
     }
 
-    public virtual void HandleInput() => ReadMovementInput();
-    public virtual void PhysicsUpdate() => MoveCharacter();
+    public virtual void HandleInput()
+    {
+        ReadMovementInput();
+        ReadZoomInput(); // 줌 값 읽기 추가
+    }
     public virtual void LogicUpdate() { }
+
+    public virtual void PhysicsUpdate() => MoveCharacter();
 
 
     protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
@@ -81,31 +83,45 @@ public abstract class PlayerBaseState : Istate
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            stateMachine.Player.cameraManager.volume.enabled = true;
+            stateMachine.Player.cameraManager.Volume.enabled = true;
         }
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            stateMachine.Player.cameraManager.volume.enabled = false;
+            stateMachine.Player.cameraManager.Volume.enabled = false;
         }
     }
-
-
-
-    protected void StartAnimation(int animatorHash)
-    {
-        stateMachine.Player.Animator.SetBool(animatorHash, true);
-    }
-    protected void StopAnimation(int animatorHash)
-    {
-        stateMachine.Player.Animator.SetBool(animatorHash, false);
-    }
-
+    // ========== 개별 입력 읽기 ==========
     private void ReadMovementInput()
     {
-        stateMachine.MovementInput = stateMachine.Player.Input.PlayerActions.Move.ReadValue<Vector2>();
+        stateMachine.MovementInput =
+            stateMachine.Player.Input.PlayerActions.Move.ReadValue<Vector2>();
     }
+
+    private void ReadZoomInput()
+    {
+        float zoomDelta =
+            stateMachine.Player.Input.PlayerActions.Zoom.ReadValue<float>();
+
+        if (Mathf.Abs(zoomDelta) > 0.01f)
+            OnZoom(zoomDelta);
+    }
+
+    // ========== Zoom 처리 ==========
+    private void OnZoom(float zoomDelta)
+    {
+        var vcam = stateMachine.Player.cameraManager.FreeLook;
+        if (vcam == null) return;
+
+        float fov = vcam.m_Lens.FieldOfView;
+        float zoomSpeed = 3f;
+        float zoomAmount = Mathf.Sign(zoomDelta) * zoomSpeed; // 방향만 가져오기
+        fov -= zoomAmount; 
+        fov = Mathf.Clamp(fov, 10f, 40f);
+        vcam.m_Lens.FieldOfView = fov;
+    }
+
 
     private void MoveCharacter()
     {
