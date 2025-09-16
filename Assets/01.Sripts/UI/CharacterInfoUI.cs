@@ -2,36 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public class CharacterInfoUI : UIBase
+public partial class CharacterInfoUI : UIBase
 {
-    public TextMeshProUGUI nameText;
+    public List<GameObject> infoUIList;
 
-    public TextMeshProUGUI healthText;
-    public TextMeshProUGUI currentHealthText;
+    private int currentIndex = 0;
 
-    public TextMeshProUGUI energyText;
-    public TextMeshProUGUI currentEnergyText;
-
-    public TextMeshProUGUI attackText;
-    public TextMeshProUGUI extraAttackText; // 추가 공격력
-
-    public TextMeshProUGUI defenseText;
-    public TextMeshProUGUI extraDefenseText; // 추가 방어력
-
-    public TextMeshProUGUI moveSpeedText;
-    public TextMeshProUGUI extraMoveSpeedText; // 추가 이동속도
-
-    public void OnClickButton(string str)
+    public async void OnClickButton(string str)
     {
         switch (str)
         {
-            // 이전 UI로 돌아가기
+            // 게임UI로 돌아가기
             case "Return":
-                // UI매니저의 '이전UI' 변수를 찾아 활성화
-                UIManager.Instance.previousUI.canvas.gameObject.SetActive(true);
-                // UI매니저의 '현재UI' 변수에 이전 변수를 저장
-                UIManager.Instance.currentUI = UIManager.Instance.previousUI;
+                await UIManager.Instance.Show<GameUI>();
                 break;
         }
 
@@ -41,8 +26,44 @@ public class CharacterInfoUI : UIBase
 
     protected override void OnEnable()
     {
-        
+        // 초기 UI 설정 (첫 번째 UI만 활성화)
+        SetUI();
+
+        SetPlayerStat(); // 플레이어 스탯 UI 초기화
     }
 
-    // 플레이어 정보 초기화 함수
+    // 왼쪽/오른쪽 버튼 클릭 시 호출될 함수
+    public void ChangeUI(int direction)
+    {
+        // 현재 인덱스를 다음 또는 이전으로 이동
+        currentIndex += direction;
+
+        // 인덱스를 배열 범위 내로 유지 (순환 구조)
+        // C#에서는 음수 % 연산이 원하는 대로 작동하지 않을 수 있으므로, 별도로 처리
+        if (currentIndex < 0)
+        {
+            currentIndex = infoUIList.Count - 1;
+        }
+        else if (currentIndex >= infoUIList.Count)
+        {
+            currentIndex = 0;
+        }
+
+        SetUI();
+    }
+
+    private void SetUI()
+    {
+        // 모든 UI를 비활성화
+        for (int i = 0; i < infoUIList.Count; i++)
+        {
+            infoUIList[i].SetActive(false);
+        }
+
+        // 현재 인덱스에 해당하는 UI만 활성화
+        if (infoUIList.Count > 0)
+        {
+            infoUIList[currentIndex].SetActive(true);
+        }
+    }
 }
