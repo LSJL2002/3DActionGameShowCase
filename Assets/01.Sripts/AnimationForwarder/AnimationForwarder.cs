@@ -23,11 +23,4 @@ public class AnimationEventForwarder : MonoBehaviour
     }
 
     // Called by the animation event
-    public void OnAttackHit()
-    {
-        if (parentMonster != null)
-        {
-            parentMonster.OnAttackHit();
-        }
-    }
 }

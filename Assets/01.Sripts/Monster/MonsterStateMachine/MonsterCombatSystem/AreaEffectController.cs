@@ -47,6 +47,22 @@ public class AreaEffectController : MonoBehaviour
     public void EnableDamage()
     {
         damageCollider.enabled = true;
+
+        // Get all colliders overlapping this trigger collider
+        Collider[] hits = Physics.OverlapBox(
+            damageCollider.bounds.center,
+            damageCollider.bounds.extents,
+            damageCollider.transform.rotation
+        );
+
+        foreach (Collider col in hits)
+        {
+            if (col.CompareTag("Player"))
+            {
+                IDamageable damageable = col.GetComponent<IDamageable>();
+                damageable?.OnTakeDamage(damage);
+            }
+        }
     }
 
     public void DisableDamage()
@@ -56,6 +72,7 @@ public class AreaEffectController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Testing Hit");
         if (!damageCollider.enabled) return;
 
         if (other.CompareTag("Player"))

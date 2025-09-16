@@ -38,24 +38,53 @@ public class MonsterBaseState : Istate
 
     protected void MoveTo(Vector3 destination)
     {
-        if (stateMachine.Monster.Agent.isActiveAndEnabled)
-        {
-            stateMachine.Monster.Agent.isStopped = false;
-            stateMachine.Monster.Agent.speed = stateMachine.MovementSpeed;
-            stateMachine.Monster.Agent.angularSpeed = 200f;
+        var cc = stateMachine.Monster.GetComponent<CharacterController>();
+        var forceReceiver = stateMachine.Monster.GetComponent<ForceReceiver>();
+        var agent = stateMachine.Monster.Agent;
+        if (cc == null || forceReceiver == null || agent == null) return;
 
-            stateMachine.Monster.Agent.SetDestination(destination);
+        // Make sure agent is active
+        if (!agent.isActiveAndEnabled) return;
+
+        // Set the destination on the agent (so it calculates the path)
+        agent.SetDestination(destination);
+
+        // Get the agent's desired velocity (what direction it wants to go)
+        Vector3 desiredVelocity = agent.desiredVelocity;
+
+        // AI movement from agent
+        Vector3 aiMove = desiredVelocity.normalized * stateMachine.MovementSpeed * Time.deltaTime;
+
+        // Combine with forces (gravity, knockback)
+        Vector3 totalMove = aiMove + forceReceiver.Movement;
+
+        // Move using CharacterController
+        cc.Move(totalMove);
+
+        // Smooth rotation toward movement direction
+        Vector3 lookDir = new Vector3(desiredVelocity.x, 0, desiredVelocity.z);
+        if (lookDir.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(lookDir);
+            stateMachine.Monster.transform.rotation = Quaternion.Slerp(
+                stateMachine.Monster.transform.rotation,
+                targetRot,
+                Time.deltaTime * 10f
+            );
         }
     }
+
 
     protected void StopMoving()
     {
-        if (stateMachine.Monster.Agent.isActiveAndEnabled)
+        var agent = stateMachine.Monster.Agent;
+        if (agent != null && agent.isActiveAndEnabled)
         {
-            stateMachine.Monster.Agent.isStopped = true;
-            stateMachine.Monster.Agent.ResetPath();
+            agent.isStopped = true;
+            agent.ResetPath();
         }
     }
+
     protected bool IsEnemyInDetectionRange()
     {
         if (stateMachine.Monster.PlayerTarget == null) return false;

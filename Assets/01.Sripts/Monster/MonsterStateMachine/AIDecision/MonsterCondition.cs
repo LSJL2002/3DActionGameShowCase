@@ -6,6 +6,9 @@ using UnityEngine;
 public class MonsterCondition
 {
     public int id; // 조건 ID
-    public string description; // 설명 (디버깅용)
+    [Range(0, 100)]
+    public float minHpPercent;
+    [Range(0, 100)]
+    public float maxHpPerecent;
     public List<int> possiblePatterns; // 해당 조건에서 선택 가능한 패턴 ID들
 }

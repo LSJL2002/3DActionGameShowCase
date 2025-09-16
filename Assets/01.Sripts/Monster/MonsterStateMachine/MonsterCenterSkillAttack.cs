@@ -54,7 +54,7 @@ public class MonsterCenterSkillAttack : MonsterBaseState
     private void OnTelegraphComplete()
     {
         // Play monster's attack animation
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Attack));
+        //StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.));
     }
 
     // Called by Animation Event

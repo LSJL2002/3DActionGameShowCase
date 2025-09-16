@@ -51,8 +51,10 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5c30cc288c3931248832293d1d42e30a, type: 2}
   conditions:
   - id: 1
-    description: 100%>monster_hp>90%
+    minHpPercent: 90
+    maxHpPerecent: 100
     possiblePatterns: 01000000
   - id: 2
-    description: 90%>monster_hp>60%
+    minHpPercent: 60
+    maxHpPerecent: 90
     possiblePatterns: 01000000020000000400000007000000

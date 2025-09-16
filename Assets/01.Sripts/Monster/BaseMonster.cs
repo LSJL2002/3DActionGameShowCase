@@ -10,10 +10,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
 {
     [Header("References")]
     [SerializeField] public MonsterAnimationData animationData;
-    
+
     public Animator Animator { get; private set; }
     public NavMeshAgent Agent { get; private set; }
-    public MonsterStatHandler Stats {get; private set; }
+    public MonsterStatHandler Stats { get; private set; }
     public MonsterAIEvents aiEvents { get; private set; }
     public Transform PlayerTarget { get; set; }
 
@@ -72,20 +72,32 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnAttackAnimationComplete() //나중에 삭제
     {
-        stateMachine.isAttacking = false; 
+        stateMachine.isAttacking = false;
     }
 
-    public void OnAttackHit()
+    public void OnAttackHitEvent()
     {
-
+        // Call the method on the currently active state, assuming you know it's SmileToiletSlamState
+        if (stateMachine.SmileToiletSlamState != null)
+        {
+            stateMachine.SmileToiletSlamState.OnAttackHit();
+        }
+        else if (stateMachine.SmileToiletSmashState != null)
+        {
+            stateMachine.SmileToiletSmashState.OnAttackHit();
+        }
     }
 
     public virtual void OnTakeDamage(int amount)
     {
         Stats.CurrentHP = amount - Stats.Defense;
+        // 체력 변동 애니메이션 추가
         if (Stats.CurrentHP <= 0)
         {
             Stats.Die();
         }
     }
+    
+
+    //메소드 추가 몬스터 애니메이션
 }
