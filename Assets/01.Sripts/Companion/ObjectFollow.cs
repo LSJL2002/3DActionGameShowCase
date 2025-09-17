@@ -1,26 +1,43 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjectFollow : MonoBehaviour
 {
     [Header("FollowObject")]
-    [SerializeField] private Transform targetObject;
+    [SerializeField] public Transform targetObject;
 
     [Header("LookAtObject")]
-    [SerializeField] private Transform lookObject;
+    [SerializeField] public Transform lookObject;
 
     // 회전과 이동에 속도를 적용합니다.
     [Header("Speed")]
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float rotationSpeed = 360f;
+    [SerializeField] public float moveSpeed = 2f;
+    [SerializeField] public float rotationSpeed = 360f;
 
     [Header("Animation")]
-    [SerializeField] private Animator anim;
+    [SerializeField] public Animator anim;
 
     [Header("This.RigidBody")]
-    [SerializeField] private Rigidbody rb;
+    [SerializeField] public Rigidbody rb;
 
-    [Header("This.RigidBody")]
-    [SerializeField] private GameObject talkUI;
+    [Header("TalkUI")]
+    [SerializeField] public GameObject talkUI;
+    [SerializeField] public Button stateBtn;
+    [SerializeField] public Button inventoryBtn;
+    [SerializeField] public Button talkBtn;
+
+    // G키를 다시 누렀을 때 원상복귀에 필요한 변수
+    private bool isTalkMode = false; 
+    private Vector3 cachedAnchorLocalPos; // 캐릭터 중심으로 처음에 고정한 오브젝트 위치
+    private CursorLockMode cachedLockMode; // 커서
+    private bool cachedCursorVisible; // 커서가 보이고 안보이고하는 bool값
+
+    private void Awake()
+    {
+        if (targetObject != null)
+            cachedAnchorLocalPos = targetObject.localPosition; // 최초 위치세팅 저장
+    }
 
     private void Update()
     {
@@ -60,11 +77,51 @@ public class ObjectFollow : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            targetObject.position += targetObject.right * 1.03f;
-            targetObject.position += targetObject.forward * 1.2f;
-            talkUI.SetActive(true);
+            if (!isTalkMode)
+            {
+                // 키 클릭 시 상태
+                StartCoroutine(ShowTalkAndPauseAfterDelay(1.5f));
+            }
+            else
+            {
+                ExitTalkMode();
+            }
         }
-            
+    }
+
+    IEnumerator ShowTalkAndPauseAfterDelay(float delay)
+    {
+        cachedLockMode = Cursor.lockState;
+        cachedCursorVisible = Cursor.visible;
+
+        yield return new WaitForSeconds(delay);
+
+        Vector3 localOffset = new Vector3(1.03f, 0f, 1.2f); // x=Right, z=Forward
+        targetObject.localPosition = cachedAnchorLocalPos + localOffset;
+
+
+        talkUI.SetActive(true); // UI 표시
+
+        // UI 조작을 위해 커서 해제
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        isTalkMode = true;
+    }
+
+    void ExitTalkMode()
+    {
+        // UI 닫기 + 정지 해제
+        talkUI.SetActive(false);
+
+        // 위치 원복
+        targetObject.localPosition = cachedAnchorLocalPos;
+
+        // 커서 상태 복원
+        Cursor.lockState = cachedLockMode;
+        Cursor.visible = cachedCursorVisible;
+
+        isTalkMode = false;
     }
 }
 
@@ -126,4 +183,20 @@ public class ObjectFollow : MonoBehaviour
 //    Vector3 p = targetObject.position;
 //    targetObject.position = new Vector3(0f, p.y, 0f);
 //}
+
+//void OnClickTarget()
+//{
+//    if (targetObject == null) return;
+
+//    if (Input.GetKeyDown(KeyCode.G))
+//    {
+//        targetObject.position += targetObject.right * 1.03f;
+//        targetObject.position += targetObject.forward * 1.2f;
+//        StartCoroutine(ShowTalkAndPauseAfterDelay(1.5f));
+//    }
+
+//}
+
+//targetObject.position += targetObject.right * 1.03f;
+//targetObject.position += targetObject.forward * 1.2f;
 #endregion
