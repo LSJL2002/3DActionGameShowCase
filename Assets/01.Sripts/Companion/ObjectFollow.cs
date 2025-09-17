@@ -68,7 +68,7 @@ public class ObjectFollow : MonoBehaviour
 
     void OnMove()
     {
-        anim.SetBool("isMove", (rb.velocity.magnitude > 0.1f) ? true : false);
+        anim.SetBool("isMove", rb.velocity.magnitude > 0.1f);
     }
 
     void OnClickTarget()
@@ -79,8 +79,11 @@ public class ObjectFollow : MonoBehaviour
         {
             if (!isTalkMode)
             {
+                Vector3 localOffset = new Vector3(1.03f, 0f, 1.2f); // x=Right, z=Forward
+                targetObject.localPosition = cachedAnchorLocalPos + localOffset;
+
                 // 키 클릭 시 상태
-                StartCoroutine(ShowTalkAndPauseAfterDelay(1.5f));
+                StartCoroutine(ShowTalkAndPauseAfterDelay(1.2f));
             }
             else
             {
@@ -95,10 +98,6 @@ public class ObjectFollow : MonoBehaviour
         cachedCursorVisible = Cursor.visible;
 
         yield return new WaitForSeconds(delay);
-
-        Vector3 localOffset = new Vector3(1.03f, 0f, 1.2f); // x=Right, z=Forward
-        targetObject.localPosition = cachedAnchorLocalPos + localOffset;
-
 
         talkUI.SetActive(true); // UI 표시
 
