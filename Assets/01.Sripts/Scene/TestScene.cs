@@ -13,6 +13,7 @@ public class TestScene : SceneBase
 
     private async void ShowUI()
     {
-        await UIManager.Instance.Show<InventoryUI>();
+        //await UIManager.Instance.Show<InventoryUI>();
+        await UIManager.Instance.Show<TownUI>();
     }
 }

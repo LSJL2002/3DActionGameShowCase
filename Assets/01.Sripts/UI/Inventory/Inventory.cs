@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-// 아이템 리스트를 갖고 있고, 아이템을 관리할 수 있는 Model 계층의 클래스 (빼고 넣기 등)
+// 인벤토리의 아이템'들'에 대한 정보(리스트)를 가진 클래스 (Model 계층)
+// 리스트 중 특정 아이템을 찾을 수 있도록 도와줌
 public class Inventory
 {
     public event Action OnInventoryChanged; // 인벤토리 변경 알림 (구독:인벤토리뷰모델)

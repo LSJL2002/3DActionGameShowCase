@@ -12,6 +12,15 @@ public class InventoryUI : UIBase
 
     private InventoryViewModel _viewModel;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        InventoryManager.Instance.inventoryUI = this;
+
+        InventoryManager.Instance.SetInventory();
+    }
+
     public void Setup(InventoryViewModel viewModel)
     {
         _viewModel = viewModel;
@@ -31,13 +40,11 @@ public class InventoryUI : UIBase
             {
                 // 아이템이 있는 경우 데이터 할당
                 itemSlots[i].SetData(items[i].data, items[i].stackCount);
-                Debug.Log($"{itemSlots[i]} set");
             }
             else
             {
                 // 아이템이 없는 경우 슬롯을 초기화 (내용만 지움)
                 itemSlots[i].ClearSlot();
-                Debug.Log($"{itemSlots[i]} clear");
             }
         }
     }
@@ -53,9 +60,13 @@ public class InventoryUI : UIBase
                 // UI매니저의 '현재UI' 변수에 이전 변수를 저장
                 UIManager.Instance.currentUI = UIManager.Instance.previousUI;
                 break;
+
+            case "AddItem":
+                InventoryManager.Instance.LoadTestData_Addressables("HealPotion");
+                break;
         }
 
         // 현재 팝업창 닫기
-        Hide();
+        //Hide();
     }
 }
