@@ -19,7 +19,11 @@ public class MonsterBaseState : Istate
     public virtual void HandleInput() { }
     public virtual void LogicUpdate() { }
     public virtual void PhysicsUpdate() { }
-    public virtual void Update() { }
+    public virtual void Update()
+    {
+        ApplyForcesOnly();
+    }
+    public virtual void OnAttackHit() { }
 
     protected void StartAnimation(int animationHash)
     {
@@ -78,10 +82,19 @@ public class MonsterBaseState : Istate
     protected void StopMoving()
     {
         var agent = stateMachine.Monster.Agent;
+        var cc = stateMachine.Monster.GetComponent<CharacterController>();
+        var forceReceiver = stateMachine.Monster.GetComponent<ForceReceiver>();
+
         if (agent != null && agent.isActiveAndEnabled)
         {
             agent.isStopped = true;
             agent.ResetPath();
+        }
+
+        // Still apply gravity/knockback
+        if (cc != null && forceReceiver != null)
+        {
+            cc.Move(forceReceiver.Movement * Time.deltaTime);
         }
     }
 
@@ -91,5 +104,14 @@ public class MonsterBaseState : Istate
 
         float distSqr = (stateMachine.Monster.PlayerTarget.position - stateMachine.Monster.transform.position).sqrMagnitude;
         return distSqr <= stateMachine.Monster.Stats.DetectRange * stateMachine.Monster.Stats.DetectRange;
+    }
+
+    protected void ApplyForcesOnly()
+    {
+        var cc = stateMachine.Monster.GetComponent<CharacterController>();
+        var forceReceiver = stateMachine.Monster.GetComponent<ForceReceiver>();
+        if (cc == null || forceReceiver == null) return;
+
+        cc.Move(forceReceiver.Movement * Time.deltaTime);
     }
 }

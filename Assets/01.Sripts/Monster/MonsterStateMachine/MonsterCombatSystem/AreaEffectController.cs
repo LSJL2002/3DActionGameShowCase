@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AreaEffectController : MonoBehaviour
@@ -6,14 +7,15 @@ public class AreaEffectController : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform filler;
     [SerializeField] private Transform border;
-    [SerializeField] private SphereCollider damageCollider;
+    [SerializeField] private Collider damageCollider;
 
+    public event System.Action OnTelegraphStarted;
     public event System.Action OnTelegraphFinished;
 
     private float castTime;
     private int damage;
 
-    public void Initialize(float castDuration, float radius, int damageAmount)
+    public void CircleInitialize(float castDuration, float radius, int damageAmount)
     {
         castTime = castDuration;
         damage = damageAmount;
@@ -25,8 +27,28 @@ public class AreaEffectController : MonoBehaviour
         StartCoroutine(FillRoutine());
     }
 
+    public void DashInitialize(float castDuration, float length, int damageAmount, Transform monsterTransform)
+    {
+        castTime = castDuration;
+        damage = damageAmount;
+
+        Vector3 originalScale = transform.localScale;
+        transform.localScale = new Vector3(originalScale.x, originalScale.y, length);
+
+        // Position it in front of the monster
+        Vector3 forwardOffset = monsterTransform.forward * (length / 2 + 0.5f); // 0.5f can adjust for monster pivot
+        transform.position = monsterTransform.position + forwardOffset;
+
+        // Align rotation to the monster's forward
+        transform.rotation = Quaternion.LookRotation(monsterTransform.forward);
+
+        StartCoroutine(FillRoutine());
+    }
+
+
     private IEnumerator FillRoutine()
     {
+        OnTelegraphStarted?.Invoke();
         filler.localScale = new Vector3(0, 0, 1);
         float timer = 0f;
 

@@ -7,7 +7,6 @@ public class SmileToiletSmashState : MonsterBaseState
     private MonsterSkillSO skillData;
     private GameObject aoeInstance;
     private AreaEffectController aoeController;
-
     public SmileToiletSmashState(MonsterStateMachine ms, MonsterSkillSO smashSkill) : base(ms)
     {
         skillData = smashSkill;
@@ -15,6 +14,8 @@ public class SmileToiletSmashState : MonsterBaseState
 
     public override void Enter()
     {
+        StopMoving();
+
         if (skillData == null)
         {
             Debug.LogError("SmileToiletSmashState: skillData is null!");
@@ -25,10 +26,9 @@ public class SmileToiletSmashState : MonsterBaseState
         stateMachine.isAttacking = true;
 
         Vector3 spawnPos = stateMachine.Monster.transform.position;
-        Quaternion spawnRot = Quaternion.LookRotation(stateMachine.Monster.transform.forward) * Quaternion.Euler(0, 90f, 0); // adjust offset
+        Quaternion spawnRot = Quaternion.LookRotation(stateMachine.Monster.transform.forward) * Quaternion.Euler(0, 90f, 0);
 
-
-        // Spawn the AOE effect with proper rotation
+        // Spawn the AOE effect
         aoeInstance = Object.Instantiate(skillData.areaEffectPrefab, spawnPos, spawnRot);
         aoeController = aoeInstance.GetComponent<AreaEffectController>();
 
@@ -40,17 +40,16 @@ public class SmileToiletSmashState : MonsterBaseState
         }
 
         aoeController.OnTelegraphFinished += OnTelegraphComplete;
-        aoeController.Initialize(skillData.preCastTime, skillData.range, stateMachine.Monster.Stats.AttackPower);
+        aoeController.CircleInitialize(skillData.preCastTime, skillData.range, stateMachine.Monster.Stats.AttackPower);
     }
-
 
     private void OnTelegraphComplete()
     {
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
     }
 
-    // Call this from animation event
-    public void OnAttackHit()
+    // Called from animation event
+    public override void OnAttackHit()
     {
         if (aoeController == null) return;
 

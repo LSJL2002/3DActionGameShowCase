@@ -72,20 +72,14 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnAttackAnimationComplete() //나중에 삭제
     {
+        Debug.Log("Finished");
         stateMachine.isAttacking = false;
     }
 
     public void OnAttackHitEvent()
     {
-        // Call the method on the currently active state, assuming you know it's SmileToiletSlamState
-        if (stateMachine.SmileToiletSlamState != null)
-        {
-            stateMachine.SmileToiletSlamState.OnAttackHit();
-        }
-        else if (stateMachine.SmileToiletSmashState != null)
-        {
-            stateMachine.SmileToiletSmashState.OnAttackHit();
-        }
+        Debug.Log("OnHit");
+        (stateMachine.CurrentState as MonsterBaseState)?.OnAttackHit();
     }
 
     public virtual void OnTakeDamage(int amount)

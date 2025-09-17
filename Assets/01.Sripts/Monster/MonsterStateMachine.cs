@@ -44,6 +44,8 @@ public class MonsterStateMachine : StateMachine
             SmileToiletSlamState = new SmileToiletSlamState(this, slamSkill);
             var smashSkill = monster.Stats.GetSkill("SmileMachine_Smash");
             SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
+            var chargeSkill = monster.Stats.GetSkill("SmileMachine_Charge");
+            SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
         }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>();
@@ -96,7 +98,7 @@ public class MonsterStateMachine : StateMachine
         if (!isAttacking && CurrentState == MonsterIdleState)
         {
             isAttacking = true;
-            ChangeState(SmileToiletSmashState);
+            ChangeState(SmileToiletChargeState);
         }
     }
 

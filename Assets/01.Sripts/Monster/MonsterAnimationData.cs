@@ -12,9 +12,11 @@ public class MonsterAnimationData
         Idle,
         Walk,
         Run,
+        Charge,
         BaseAttack,
         Skill1,
         Skill2,
+        Skill3,
         Death
     }
 

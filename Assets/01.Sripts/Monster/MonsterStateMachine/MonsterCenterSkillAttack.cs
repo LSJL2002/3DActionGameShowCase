@@ -46,7 +46,7 @@ public class MonsterCenterSkillAttack : MonsterBaseState
             return;
         }
 
-        aoeController.Initialize(skill.preCastTime, skill.range, stateMachine.Monster.Stats.AttackPower);
+        aoeController.CircleInitialize(skill.preCastTime, skill.range, stateMachine.Monster.Stats.AttackPower);
 
         aoeController.OnTelegraphFinished += OnTelegraphComplete;
     }
