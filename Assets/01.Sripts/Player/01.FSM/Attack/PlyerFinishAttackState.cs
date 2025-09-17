@@ -5,9 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlyerFinishAttackState : PlayerBaseState
 {
-    public PlyerFinishAttackState(PlayerStateMachine stateMachine) : base(stateMachine)
-    {
-    }
+    private float enterTime; // 상태 진입 시각 기록
+    private float finishDelay = 5f; // 2초 대기
+
+    public PlyerFinishAttackState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     public override PlayerStateID StateID => throw new System.NotImplementedException();
 
@@ -15,6 +16,9 @@ public class PlyerFinishAttackState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
+
+        enterTime = Time.time; // 상태 진입 시간 기록
+
         var anim = stateMachine.Player.Animator;
         anim.SetTrigger(stateMachine.Player.AnimationData.FinishAttackHash);
     }
@@ -36,9 +40,8 @@ public class PlyerFinishAttackState : PlayerBaseState
             return;
         }
 
-        // 애니 끝나면 Idle로
-        float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "FinishAttack");
-        if (normalizedTime >= 1f)
+        // 2초 뒤 Idle로 전환
+        if (Time.time - enterTime >= finishDelay)
         {
             stateMachine.ChangeState(stateMachine.IdleState);
         }

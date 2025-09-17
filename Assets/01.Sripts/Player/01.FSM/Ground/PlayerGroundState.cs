@@ -36,10 +36,12 @@ public class PlayerGroundState : PlayerBaseState
         Vector3 inputDir = GetMovementDir();
         bool hasInput = inputDir.sqrMagnitude > 0.0001f;
 
-        if (!hasInput)
-        {
-            stateMachine.ChangeState(stateMachine.IdleState);
-        }
+        //Walk상태 무한재진입함 -> 진입은 Idle에서 관리
+        //if (hasInput && AllowRotation && AllowMovement)
+        //{
+        //    stateMachine.ChangeState(stateMachine.WalkState);
+        //    return;
+        //}
     }
 
     public override void PhysicsUpdate()

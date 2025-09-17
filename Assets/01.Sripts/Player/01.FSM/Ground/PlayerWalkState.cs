@@ -8,6 +8,7 @@ public class PlayerWalkState : PlayerGroundState
     private float targetModifier;
     private float accelerationTime;
 
+
     public PlayerWalkState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
@@ -16,10 +17,11 @@ public class PlayerWalkState : PlayerGroundState
 
         // SO에서 가속 시간 + 최대 Modifier 가져오기
         accelerationTime = stateMachine.GroundData.RunAccelerationTime;   // 걷기→달리기까지 시간
-        targetModifier = 0f;
 
         // 초기값 세팅
-        stateMachine.MovementSpeedModifier = 0f;
+        // Idle → Walk 전환 시 MovementSpeedModifier는 0에서 시작
+        if (stateMachine.MovementSpeedModifier < 0.01f)
+            stateMachine.MovementSpeedModifier = 0f;
     }
 
     public override void Exit()
@@ -43,7 +45,7 @@ public class PlayerWalkState : PlayerGroundState
         // 목표 Modifier = 입력 세기 (0~1)
         targetModifier = inputMagnitude;
 
-        // 점진적으로 목표 Modifier로 이동
+        // 점진적으로 속도 Modifier 증가
         float modifierStep = 1f / accelerationTime * Time.deltaTime;
         stateMachine.MovementSpeedModifier = Mathf.MoveTowards(
             stateMachine.MovementSpeedModifier,
@@ -52,7 +54,7 @@ public class PlayerWalkState : PlayerGroundState
         );
 
         // 입력 없으면 Idle 전환
-        if (inputMagnitude == 0f)
+        if (inputMagnitude <= 0.01f)
         {
             stateMachine.ChangeState(stateMachine.IdleState);
         }

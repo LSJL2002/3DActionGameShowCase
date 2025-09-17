@@ -9,6 +9,9 @@ public class PlayerAnimationHash
     [Header("Ground / Movement")]
     [SerializeField] private string groundBoolName = "@Ground";
     [SerializeField] private string idleBoolName = "Idle";
+    [SerializeField] private string waitingAnimationTriggerName = "Idle2";
+    [SerializeField] private string getUpTriggerName = "GetUp";
+
     [SerializeField] private string moveSpeedFloatName = "MovementSpeed"; //Blend
 
     [Header("Air / Jump / Fall")]
@@ -31,6 +34,8 @@ public class PlayerAnimationHash
     // ===== 해시 값 =====
     public int GroundBoolHash { get; private set; }
     public int IdleBoolHash { get; private set; }
+    public int WaitingAnimationTriggerHash { get; private set; }
+    public int GetUpTriggerHash { get; private set; }
     public int MoveSpeedHash { get; private set; }
 
     public int AirBoolHash { get; private set; }
@@ -55,6 +60,8 @@ public class PlayerAnimationHash
     {
         GroundBoolHash = Animator.StringToHash(groundBoolName);
         IdleBoolHash = Animator.StringToHash(idleBoolName);
+        WaitingAnimationTriggerHash = Animator.StringToHash(waitingAnimationTriggerName);
+        GetUpTriggerHash = Animator.StringToHash(getUpTriggerName);
         MoveSpeedHash = Animator.StringToHash(moveSpeedFloatName);
 
         AirBoolHash = Animator.StringToHash(airBoolName);
