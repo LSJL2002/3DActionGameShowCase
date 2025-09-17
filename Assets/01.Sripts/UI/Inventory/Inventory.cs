@@ -18,7 +18,6 @@ public class Inventory
     // 아이템을 추가하는 메인 메서드
     public void AddItem(ItemData itemData, int count)
     {
-        // ItemData에 ItemType이 정의되어 있다고 가정
         switch (itemData.itemType)
         {
             case ItemType.Consumable:
