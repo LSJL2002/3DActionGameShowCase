@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour, IDamageable
 {
     private PlayerManager player;
+    private SkillManagers skillManager;
 
     [Header("Debug / Gizmos")]
     [SerializeField] private PlayerInfo playerInfo;
@@ -17,13 +18,14 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     private void Awake()
     {
         player ??= GetComponent<PlayerManager>();
+        skillManager = GetComponentInChildren<SkillManagers>();
         playerInfo = player.InfoData;
     }
 
     /// 공격 입력 시 호출 에니메이션 이벤트로 조작
     public void OnAttack(string skillName)
     {
-        var skillObj = SkillManagers.Instance.SpawnSkill(skillName);
+        var skillObj = skillManager.SpawnSkill(skillName);
 
         // Hitbox 연결
         var skillHitbox = skillObj.GetComponentInChildren<Hitbox>();

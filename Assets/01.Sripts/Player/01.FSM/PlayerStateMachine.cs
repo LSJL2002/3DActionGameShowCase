@@ -49,6 +49,7 @@ public class PlayerStateMachine : StateMachine
     //Attack 로직
     public PlayerAttackState AttackState { get;}
     public PlayerComboAttackState ComboAttackState { get; set; }
+    public PlyerFinishAttackState FinishAttackState { get; set; }
     // 독립적인 Sub-State Dodge 로직
     public PlayerDodgeState DodgeState { get; }
 
@@ -66,6 +67,7 @@ public class PlayerStateMachine : StateMachine
         FallState = new PlayerFallState(this);
         AttackState = new PlayerAttackState(this);
         ComboAttackState = new PlayerComboAttackState(this);
+        FinishAttackState = new PlyerFinishAttackState(this);
 
         MovementSpeed = player.InfoData.GroundData.BaseSpeed;
         RotationDamping = player.InfoData.GroundData.BaseRotationDamping;
