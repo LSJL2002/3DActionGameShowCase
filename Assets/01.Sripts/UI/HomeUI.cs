@@ -15,6 +15,7 @@ public class HomeUI : UIBase
 
                 // 타임라인 매니저의 타임라인시작 함수 호출
                 TimeLineManager.Instance.PlayTimeLine();
+                // 오디오매니저의 BGM을 정지
                 break;
 
             case "OptionUI":
