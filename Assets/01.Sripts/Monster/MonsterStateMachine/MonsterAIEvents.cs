@@ -32,7 +32,7 @@ public class MonsterAIEvents : MonoBehaviour
         float detectRange = stateMachine.Monster.Stats.DetectRange;
         float attackRange = stateMachine.Monster.Stats.AttackRange;
 
-        Debug.Log("Aievent");
+        //Debug.Log("Aievent");
 
         // ---- 우선순위: 공격 범위 먼저 ----
         if (distance <= attackRange && !stateMachine.isAttacking)
@@ -40,13 +40,13 @@ public class MonsterAIEvents : MonoBehaviour
             if (Time.time >= lastAttackTime + attackCooldown)
             {
                 OnInAttackRange?.Invoke();
-                Debug.Log("Attack");
+                //Debug.Log("Attack");
                 lastAttackTime = Time.time;
             }
             else
             {
                 RestingPhase?.Invoke();
-                Debug.Log("Idle");
+                //Debug.Log("Idle");
             }
         }
         // ---- 공격 범위 밖, 탐지 범위 안 ----
@@ -54,7 +54,7 @@ public class MonsterAIEvents : MonoBehaviour
         {
             stateMachine.Monster.PlayerTarget = player;
             OnPlayerDetected?.Invoke();
-            Debug.Log("Detected");
+            //Debug.Log("Detected");
         }
     }
 
