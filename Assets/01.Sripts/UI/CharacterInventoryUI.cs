@@ -5,7 +5,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 // 아이템 슬롯부분을 제외한 인벤토리 전체의 UI를 보여주는 View 계층의 클래스
 // 아이템에 직접 접근할 수는 없고 ViewModel과 이벤트를 통해 아이템이 변경 될 수 있도록 신호를 보내는 역할
-public class InventoryUI : UIBase
+public class CharacterInventoryUI : UIBase
 {
     // 인스펙터에서 직접 할당할 아이템 슬롯 목록
     [SerializeField] private List<ItemSlotUI> itemSlots;
@@ -16,7 +16,7 @@ public class InventoryUI : UIBase
     {
         base.Awake();
 
-        InventoryManager.Instance.inventoryUI = this;
+        InventoryManager.Instance.CharacterInventoryUI = this;
 
         InventoryManager.Instance.SetInventory();
     }
@@ -49,20 +49,38 @@ public class InventoryUI : UIBase
         }
     }
 
-    public void OnClickButton(string str)
+    public async void OnClickButton(string str)
     {
         switch (str)
         {
-            // 이전 UI로 돌아가기
+            // 게임UI로 돌아가기
             case "Return":
-                // UI매니저의 '이전UI' 변수를 찾아 활성화
-                UIManager.Instance.previousUI.canvas.gameObject.SetActive(true);
-                // UI매니저의 '현재UI' 변수에 이전 변수를 저장
-                UIManager.Instance.currentUI = UIManager.Instance.previousUI;
+                await UIManager.Instance.Show<TownUI>();
+                Hide();
                 break;
 
-            case "AddItem":
-                InventoryManager.Instance.LoadTestData_Addressables("HealPotion");
+            // CoreUI로 이동
+            case "left":
+                // UIManager.Instance.Show<CharacterCoreUI>();
+                //Hide();
+                break;
+
+            // StatUI로 이동
+            case "Right":
+                await UIManager.Instance.Show<CharacterStatUI>();
+                Hide();
+                break;
+
+            case "ConsumableItem_1":
+                InventoryManager.Instance.LoadTestData_Addressables(str);
+                break;
+
+            case "SkillItem_1":
+                InventoryManager.Instance.LoadTestData_Addressables(str);
+                break;
+
+            case "CoreItem_1":
+                InventoryManager.Instance.LoadTestData_Addressables(str);
                 break;
         }
 

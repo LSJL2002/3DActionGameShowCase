@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEngine;
 
-// 플레이어 스탯창 관련 UI
-public partial class CharacterInfoUI : UIBase
+public class CharacterStatUI : UIBase
 {
     public TextMeshProUGUI nameText;
 
@@ -36,5 +32,29 @@ public partial class CharacterInfoUI : UIBase
         //attackText.text = $"공격력 : {playerStats.Attack.ToString()} + ({})"; // 추가 스탯 아직 없음
         //defenseText.text = $"방어력 : {playerStats.Defense.ToString()} + ({})"; // 추가 스탯 아직 없음
         //moveSpeedText.text = $"이동속도 : {playerStats.MoveSpeed.ToString()} + ({})"; // 플레이어 스탯에 이동속도 스탯 아직 없음
+    }
+
+    public async void OnClickButton(string str)
+    {
+        switch (str)
+        {
+            // 게임UI로 돌아가기
+            case "Return":
+                await UIManager.Instance.Show<TownUI>();
+                break;
+
+            // 인벤토리 UI 켜기
+            case "Left":
+                await UIManager.Instance.Show<CharacterInventoryUI>();
+                break;
+
+            // 캐릭터 스킬 UI 켜기
+            case "Right":
+                await UIManager.Instance.Show<CharacterSkillUI>();
+                break;
+        }
+
+        // 현재 팝업창 닫기
+        Hide();
     }
 }

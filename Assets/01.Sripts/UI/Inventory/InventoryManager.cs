@@ -8,14 +8,14 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
-    public InventoryUI inventoryUI;
+    public CharacterInventoryUI CharacterInventoryUI;
 
     // 인벤토리 시스템 최초 초기화시 호출될 함수 (InventoryUI에서 호출)
     public void SetInventory()
     {
         inventoryModel = new Inventory();
         InventoryViewModel inventoryViewModel = new InventoryViewModel(inventoryModel);
-        inventoryUI.Setup(inventoryViewModel);
+        CharacterInventoryUI.Setup(inventoryViewModel);
     }
 
     // 아이템 추가 함수
@@ -34,7 +34,7 @@ public class InventoryManager : Singleton<InventoryManager>
         }
         else
         {
-            Debug.LogError("Fail");
+            Debug.LogError($"{adress} Fail");
         }
     }
 }

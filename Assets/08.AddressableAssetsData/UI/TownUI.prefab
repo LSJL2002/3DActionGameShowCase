@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7032009402728479557}
   - component: {fileID: 1230315642881548888}
   m_Layer: 0
-  m_Name: QuestButton
+  m_Name: OptionButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Quest
+          m_StringArgument: Option
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &2661795635368645344
@@ -164,8 +164,8 @@ RectTransform:
   m_Children:
   - {fileID: 5245725104155064284}
   - {fileID: 2233207686917734335}
-  - {fileID: 6487370455052430688}
   - {fileID: 2935682340494007817}
+  - {fileID: 6487370455052430688}
   - {fileID: 6809352550095135527}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -317,7 +317,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: CharacterInfo
+          m_StringArgument: CharacterStat
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &4596540850801345183
@@ -356,7 +356,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -186, y: 425}
+  m_AnchoredPosition: {x: 100, y: 425}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5038313871640022813
@@ -518,7 +518,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CharacterInfo
+  m_text: Stat
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
   m_sharedMaterial: {fileID: 8307105273037715314, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
@@ -652,7 +652,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Quest
+  m_text: Option
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
   m_sharedMaterial: {fileID: 8307105273037715314, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
@@ -920,7 +920,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Shop
+  m_text: Core
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
   m_sharedMaterial: {fileID: 8307105273037715314, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
@@ -1054,7 +1054,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Option
+  m_text: Skill
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
   m_sharedMaterial: {fileID: 8307105273037715314, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
@@ -1136,7 +1136,7 @@ GameObject:
   - component: {fileID: 8697016149306065013}
   - component: {fileID: 7614440317632049942}
   m_Layer: 0
-  m_Name: OptionUIButton
+  m_Name: SkillUIButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1253,7 +1253,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Option
+          m_StringArgument: Skill
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &9009923395947029054
@@ -1269,7 +1269,7 @@ GameObject:
   - component: {fileID: 2627853086263372005}
   - component: {fileID: 4599394892482485050}
   m_Layer: 0
-  m_Name: ShopButton
+  m_Name: CoreButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1292,7 +1292,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 116, y: 425}
+  m_AnchoredPosition: {x: -203, y: 425}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6223185626001071165
@@ -1386,6 +1386,6 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Shop
+          m_StringArgument: Core
           m_BoolArgument: 0
         m_CallState: 2
