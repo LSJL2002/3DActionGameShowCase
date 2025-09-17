@@ -94,6 +94,7 @@ public class ObjectFollow : MonoBehaviour
 
     IEnumerator ShowTalkAndPauseAfterDelay(float delay)
     {
+        // 현재 커서 상태를 저장 (나중에 복원할 때 사용)
         cachedLockMode = Cursor.lockState;
         cachedCursorVisible = Cursor.visible;
 
@@ -117,8 +118,8 @@ public class ObjectFollow : MonoBehaviour
         targetObject.localPosition = cachedAnchorLocalPos;
 
         // 커서 상태 복원
-        Cursor.lockState = cachedLockMode;
-        Cursor.visible = cachedCursorVisible;
+        Cursor.lockState = cachedLockMode; // ShowTalkAndPauseAfterDelay() 메서드에 저장한 상태로 복원
+        Cursor.visible = cachedCursorVisible; // 원래 안 보이던 상태로 돌림
 
         isTalkMode = false;
     }
