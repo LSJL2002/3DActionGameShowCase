@@ -109,6 +109,9 @@ public abstract class PlayerBaseState : Istate
 
     private void MoveCharacter()
     {
+        if (!AllowRotation && !AllowMovement)
+            return; // 회전/이동 모두 막기
+
         Vector3 moveDir = GetMovementDir();
 
         // 캐릭터 회전
@@ -123,18 +126,20 @@ public abstract class PlayerBaseState : Istate
         }
 
         // 이동 처리
-        if (stateMachine.Player.Animator.applyRootMotion)
+        if (AllowMovement)
         {
-            // 루트모션 사용 시 Animator.deltaPosition 적용
-            Vector3 rootMove = stateMachine.Player.Animator.deltaPosition;
-            rootMove += stateMachine.Player.ForceReceiver.Movement * Time.deltaTime;
-            stateMachine.Player.Controller.Move(rootMove);
-        }
-        else
-        {
-            // 루트모션 꺼져있으면 기존 방식
-            float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
-            Vector3 move = moveDir * moveSpeed + stateMachine.Player.ForceReceiver.Movement;
+            Vector3 move = Vector3.zero;
+
+            if (stateMachine.Player.Animator.applyRootMotion)
+            {
+                move = stateMachine.Player.Animator.deltaPosition + stateMachine.Player.ForceReceiver.Movement * Time.deltaTime;
+            }
+            else
+            {
+                float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
+                move = moveDir * moveSpeed + stateMachine.Player.ForceReceiver.Movement;
+            }
+
             stateMachine.Player.Controller.Move(move * Time.deltaTime);
         }
     }
@@ -164,10 +169,13 @@ public abstract class PlayerBaseState : Istate
         AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
         AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
 
+        // 애니메이션 전환(Transition) 중이고, 다음 상태가 지정한 tag면 → 다음 애니메이션의 진행도 반환
         if (animator.IsInTransition(0) && nextInfo.IsTag(tag))
             return nextInfo.normalizedTime;
-        else if(!animator.IsInTransition(0) && currentInfo.IsTag(tag))
+        // 전환 중이 아니고, 현재 상태가 지정한 tag면 → 현재 애니메이션의 진행도 반환
+        else if (!animator.IsInTransition(0) && currentInfo.IsTag(tag))
             return currentInfo.normalizedTime;
+        // 태그랑 맞는 애니메이션이 없다면 0 반환
         else
             return 0f;
     }
