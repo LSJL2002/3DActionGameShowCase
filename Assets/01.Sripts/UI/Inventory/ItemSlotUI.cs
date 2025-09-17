@@ -11,7 +11,11 @@ public class ItemSlotUI : MonoBehaviour
     public void SetData(ItemData data, int count)
     {
         iconImage.sprite = data.itemIcon;
-        countText.text = count.ToString();
+
+        if (count > 0)
+        {
+            countText.text = count.ToString();
+        }
     }
 
     public void ClearSlot()

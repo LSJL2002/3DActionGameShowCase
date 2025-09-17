@@ -8,18 +8,37 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
+    private InventoryViewModel inventoryViewModel;
     public CharacterInventoryUI CharacterInventoryUI;
+    public CharacterSkillUI CharacterSkillUI;
+    public CharacterCoreUI CharacterCoreUI;
 
-    // 인벤토리 시스템 최초 초기화시 호출될 함수 (InventoryUI에서 호출)
-    public void SetInventory()
+    protected override void Start()
     {
+        base.Start();
+
         inventoryModel = new Inventory();
-        InventoryViewModel inventoryViewModel = new InventoryViewModel(inventoryModel);
+        inventoryViewModel = new InventoryViewModel(inventoryModel);
+    }
+
+    // 인벤토리 시스템 최초 초기화시 호출될 함수 (각 UI에서 호출)
+    public void SetInventoryUI()
+    {
         CharacterInventoryUI.Setup(inventoryViewModel);
     }
 
+    public void SetSkillUI()
+    {
+        CharacterSkillUI.Setup(inventoryViewModel);
+    }
+
+    public void SetCoreUI()
+    {
+        CharacterCoreUI.Setup(inventoryViewModel);
+    }
+
     // 아이템 추가 함수
-    public async void LoadTestData_Addressables(string adress)
+    public async void LoadTestData_Addressables(string adress, int stack = default)
     {
         // 어드레서블로 아이템 데이터 로드
         AsyncOperationHandle<ItemData> loadHandle = Addressables.LoadAssetAsync<ItemData>(adress);
@@ -30,7 +49,7 @@ public class InventoryManager : Singleton<InventoryManager>
         if (loadHandle.Status == AsyncOperationStatus.Succeeded)
         {
             ItemData loadedItem = loadHandle.Result;
-            inventoryModel.AddItem(loadedItem, 1);
+            inventoryModel.AddItem(loadedItem, stack);
         }
         else
         {

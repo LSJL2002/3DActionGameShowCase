@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterSkillUI : UIBase
+public class CharacterCoreUI : UIBase
 {
     // 인스펙터에서 직접 할당할 아이템 슬롯 목록
     [SerializeField] private List<ItemSlotUI> itemSlots;
@@ -13,21 +13,21 @@ public class CharacterSkillUI : UIBase
     {
         base.Awake();
 
-        InventoryManager.Instance.CharacterSkillUI = this;
+        InventoryManager.Instance.CharacterCoreUI = this;
 
-        InventoryManager.Instance.SetSkillUI();
+        InventoryManager.Instance.SetCoreUI();
     }
 
     public void Setup(InventoryViewModel viewModel)
     {
         _viewModel = viewModel;
-        _viewModel.OnSkillUIUpdate += UpdateUI;
+        _viewModel.OnCoreUIUpdate += UpdateUI;
         UpdateUI();
     }
 
     private void UpdateUI()
     {
-        var items = _viewModel.GetSkillItems();
+        var items = _viewModel.GetCoreItems();
         int slotCount = itemSlots.Count;
         int itemCount = items.Count;
 
@@ -55,14 +55,14 @@ public class CharacterSkillUI : UIBase
                 await UIManager.Instance.Show<TownUI>();
                 break;
 
-            // StatUI로 이동
+            // 스킬UI로 이동
             case "Left":
-                await UIManager.Instance.Show<CharacterStatUI>();
+                await UIManager.Instance.Show<CharacterSkillUI>();
                 break;
 
-            // CoreUI로 이동
+            // 인벤토리UI로 이동
             case "Right":
-                await UIManager.Instance.Show<CharacterCoreUI>();
+                await UIManager.Instance.Show<CharacterInventoryUI>();
                 break;
         }
         

@@ -20,7 +20,7 @@ public class TownUI : UIBase
 
             // 코어UI 활성화
             case "Core":
-                //await UIManager.Instance.Show<CharacterCoreUI>();
+                await UIManager.Instance.Show<CharacterCoreUI>();
                 break;
 
             // 인벤토리UI 활성화

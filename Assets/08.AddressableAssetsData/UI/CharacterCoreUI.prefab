@@ -199,7 +199,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uCE90\uB9AD\uD130 \uC2A4\uD0AC\uC815\uBCF4"
+  m_text: "\uCE90\uB9AD\uD130 \uCF54\uC5B4\uC815\uBCF4"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
   m_sharedMaterial: {fileID: 8307105273037715314, guid: 1b205a3abeb6b9b45825e8acb8e44553, type: 2}
@@ -464,8 +464,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 384982422370360748}
-        m_TargetAssemblyTypeName: CharacterInfo_SkillUI, Assembly-CSharp
+      - m_Target: {fileID: 4987898522640670377}
+        m_TargetAssemblyTypeName: CharacterCoreUI, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 5
         m_Arguments:
@@ -867,8 +867,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 384982422370360748}
-        m_TargetAssemblyTypeName: CharacterInfo_SkillUI, Assembly-CSharp
+      - m_Target: {fileID: 4987898522640670377}
+        m_TargetAssemblyTypeName: CharacterCoreUI, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 5
         m_Arguments:
@@ -1358,9 +1358,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6080265677097561535}
-  - component: {fileID: 384982422370360748}
+  - component: {fileID: 4987898522640670377}
   m_Layer: 5
-  m_Name: CharacterSkillUI
+  m_Name: CharacterCoreUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1391,7 +1391,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &384982422370360748
+--- !u!114 &4987898522640670377
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1400,7 +1400,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6766279856803785483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be4dcc04c04b4564ba3dc6b37a3b2177, type: 3}
+  m_Script: {fileID: 11500000, guid: f94904f2132d94c4680743d107999302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
@@ -1707,8 +1707,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 384982422370360748}
-        m_TargetAssemblyTypeName: CharacterInfo_SkillUI, Assembly-CSharp
+      - m_Target: {fileID: 4987898522640670377}
+        m_TargetAssemblyTypeName: CharacterCoreUI, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 5
         m_Arguments:

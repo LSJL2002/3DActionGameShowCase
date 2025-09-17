@@ -18,19 +18,19 @@ public class CharacterInventoryUI : UIBase
 
         InventoryManager.Instance.CharacterInventoryUI = this;
 
-        InventoryManager.Instance.SetInventory();
+        InventoryManager.Instance.SetInventoryUI();
     }
 
     public void Setup(InventoryViewModel viewModel)
     {
         _viewModel = viewModel;
-        _viewModel.OnUpdateUI += UpdateUI;
+        _viewModel.OnConsumableUIUpdate += UpdateUI;
         UpdateUI();
     }
 
     private void UpdateUI()
     {
-        var items = _viewModel.GetItems();
+        var items = _viewModel.GetConsumableItems();
         int slotCount = itemSlots.Count;
         int itemCount = items.Count;
 
@@ -60,9 +60,9 @@ public class CharacterInventoryUI : UIBase
                 break;
 
             // CoreUI로 이동
-            case "left":
-                // UIManager.Instance.Show<CharacterCoreUI>();
-                //Hide();
+            case "Left":
+                await UIManager.Instance.Show<CharacterCoreUI>();
+                Hide();
                 break;
 
             // StatUI로 이동
@@ -72,7 +72,7 @@ public class CharacterInventoryUI : UIBase
                 break;
 
             case "ConsumableItem_1":
-                InventoryManager.Instance.LoadTestData_Addressables(str);
+                InventoryManager.Instance.LoadTestData_Addressables(str, 1);
                 break;
 
             case "SkillItem_1":
