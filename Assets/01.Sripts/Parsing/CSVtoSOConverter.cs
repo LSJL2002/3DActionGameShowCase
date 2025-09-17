@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -130,15 +130,10 @@ public class CSVtoSOConverter : EditorWindow
                 }
             }
 
-            //생성된 SO 이름 결졍
-            string assetName = null;
-            FieldInfo nameField = soType.GetField("skillName") ?? soType.GetField("monsterName");
-            if (nameField != null)
-            {
-                assetName = nameField.GetValue(soInstance)?.ToString();
-            }
+            //생성된 SO 이름 결정
+            string assetName = values.Length > 1 ? values[1] : $"SO_{i}";
             if (string.IsNullOrEmpty(assetName))
-                    assetName = $"SO_{i}";
+                assetName = $"SO_{i}";
 
             string assetPath = $"{outputPath}/{assetName}.asset";
             AssetDatabase.CreateAsset(soInstance, assetPath);
