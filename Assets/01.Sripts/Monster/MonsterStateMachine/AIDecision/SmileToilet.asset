@@ -14,21 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patterns:
   - id: 1
-    states:
-    - BaseAttack
-    - BaseAttack
+    states: 0000000000000000
   - id: 2
-    states:
-    - BaseAttack
-    - BaseAttack
+    states: 000000000000000001000000
   - id: 3
-    states:
-    - Smash
-    - BaseAttack
+    states: 020000000000000001000000
   - id: 4
-    states:
-    - Charge
+    states: 0100000002000000
   - id: 5
-    states:
-    - Smash
-    - Slam
+    states: 0300000002000000
+  - id: 6
+    states: 040000000400000004000000
+  - id: 7
+    states: 03000000
+  - id: 8
+    states: 01000000
+  - id: 9
+    states: 04000000

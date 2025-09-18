@@ -52,4 +52,28 @@ public class InventoryViewModel
     {
         return _model.GetCoreItems();
     }
+
+    // 아이템 사용 (아이템슬롯UI(View)에서 호출)
+    public async void UseItem(ItemData itemData)
+    {
+        DecisionButtonUI decisionUI = await UIManager.Instance.Show<DecisionButtonUI>();
+
+        // 이벤트 구독을 위한 델리게이트 변수 생성
+        Action<bool> onDecisionMadeCallback = null;
+        onDecisionMadeCallback = (isConfirmed) =>
+        {
+            if (isConfirmed)
+            {
+                InventoryManager.Instance.UseConsumableItem(itemData);
+            }
+
+            // 이벤트 구독 해제
+            decisionUI.OnDecisionMade -= onDecisionMadeCallback;
+            Debug.Log("구독해제");
+        };
+
+        // 이벤트 구독
+        decisionUI.OnDecisionMade += onDecisionMadeCallback;
+        Debug.Log("구독");
+    }
 }

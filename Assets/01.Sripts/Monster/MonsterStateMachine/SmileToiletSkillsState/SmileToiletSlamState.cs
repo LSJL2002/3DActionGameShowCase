@@ -38,7 +38,6 @@ public class SmileToiletSlamState : MonsterBaseState
             return;
         }
         aoeController.OnTelegraphFinished += OnTelegraphComplete;
-
         aoeController.CircleInitialize(skillData.preCastTime, skillData.range, stateMachine.Monster.Stats.AttackPower);
     }
 

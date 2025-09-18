@@ -13,9 +13,10 @@ public class MonsterAIEvents : MonoBehaviour
 
     private MonsterStateMachine stateMachine;
     private Transform player;
+    [SerializeField] private float attackBuffer = 1f;
 
     [Header("Attack Cooldown")]
-    public float attackCooldown = 10f; // seconds between attacks
+    public float attackCooldown = 10f;
     private float lastAttackTime;
 
     private void Awake()
@@ -25,37 +26,39 @@ public class MonsterAIEvents : MonoBehaviour
 
     private void Update()
     {
-        if (player == null) return;
+        if (player == null || stateMachine == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
 
         float detectRange = stateMachine.Monster.Stats.DetectRange;
         float attackRange = stateMachine.Monster.Stats.AttackRange;
 
-        //Debug.Log("Aievent");
-
-        // ---- 우선순위: 공격 범위 먼저 ----
-        if (distance <= attackRange && !stateMachine.isAttacking)
+        if (!stateMachine.isAttacking)
         {
-            if (Time.time >= lastAttackTime + attackCooldown)
+            if (distance <= attackRange - attackBuffer)
             {
-                stateMachine.ChangeState(stateMachine.MonsterIdleState);
-                OnInAttackRange?.Invoke();
-                //Debug.Log("Attack");
-                lastAttackTime = Time.time;
+                // Safely within attack range
+                if (Time.time >= lastAttackTime + attackCooldown)
+                {
+                    OnInAttackRange?.Invoke();
+                    lastAttackTime = Time.time;
+                }
+                else
+                {
+                    RestingPhase?.Invoke(); // cooldown
+                }
+            }
+            else if (distance <= detectRange)
+            {
+                // Still need to move closer → chase
+                stateMachine.Monster.PlayerTarget = player;
+                OnPlayerDetected?.Invoke();
             }
             else
             {
+                // Out of detect range → idle
                 RestingPhase?.Invoke();
-                //Debug.Log("Idle");
             }
-        }
-        // ---- 공격 범위 밖, 탐지 범위 안 ----
-        else if (distance <= detectRange && !stateMachine.isAttacking)
-        {
-            stateMachine.Monster.PlayerTarget = player;
-            OnPlayerDetected?.Invoke();
-            //Debug.Log("Detected");
         }
     }
 
@@ -63,5 +66,4 @@ public class MonsterAIEvents : MonoBehaviour
     {
         stateMachine = sm;
     }
-
 }

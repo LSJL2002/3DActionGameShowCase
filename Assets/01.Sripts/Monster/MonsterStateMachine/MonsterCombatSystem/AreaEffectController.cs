@@ -65,6 +65,59 @@ public class AreaEffectController : MonoBehaviour
 
         OnTelegraphFinished?.Invoke();
     }
+    // ------------------- Half-Circle Method -------------------
+    public void HalfCircleInitialize(float castDuration, float radius, int damageAmount, Transform origin, float angle = 180f)
+    {
+        castTime = castDuration;
+        damage = damageAmount;
+        transform.localScale = new Vector3(radius, 1, radius);
+
+        transform.position = origin.position;
+        transform.rotation = Quaternion.LookRotation(origin.forward);
+
+        StartCoroutine(HalfCircleRoutine(origin, radius, angle));
+    }
+
+    private IEnumerator HalfCircleRoutine(Transform origin, float radius, float angle)
+    {
+        OnTelegraphStarted?.Invoke();
+
+        filler.localScale = Vector3.zero;
+        float timer = 0f;
+
+        while (timer < castTime)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.Clamp01(timer / castTime);
+            filler.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, t);
+            yield return null;
+        }
+
+        // Apply damage after telegraph
+        ApplyHalfCircleDamage(origin, radius, angle);
+
+        OnTelegraphFinished?.Invoke();
+    }
+
+    private void ApplyHalfCircleDamage(Transform origin, float radius, float angle)
+    {
+        Collider[] hits = Physics.OverlapSphere(origin.position, radius);
+
+        foreach (var hit in hits)
+        {
+            if (!hit.CompareTag("Player")) continue;
+
+            Vector3 dirToTarget = (hit.transform.position - origin.position).normalized;
+            float angleToTarget = Vector3.Angle(origin.forward, dirToTarget);
+
+            if (angleToTarget <= angle / 2f)
+            {
+                IDamageable damageable = hit.GetComponent<IDamageable>();
+                damageable?.OnTakeDamage(damage);
+            }
+        }
+    }
+
 
     public void EnableDamage()
     {

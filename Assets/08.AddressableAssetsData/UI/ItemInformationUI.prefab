@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -40, y: 200}
+  m_SizeDelta: {x: -100, y: 200}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &7519419224285177963
 CanvasRenderer:
@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 7254486357295667082}
   - component: {fileID: 6890471933882170889}
   m_Layer: 5
-  m_Name: ItemDescriptionUI
+  m_Name: ItemInformationUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -187,6 +187,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  itemNameText: {fileID: 4498170655787951019}
+  itemTypeText: {fileID: 6581247818957330152}
+  descriptionText: {fileID: 12496265294453225}
 --- !u!1 &3711969876990163566
 GameObject:
   m_ObjectHideFlags: 0
