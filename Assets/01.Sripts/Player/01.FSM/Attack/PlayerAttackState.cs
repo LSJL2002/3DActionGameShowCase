@@ -8,14 +8,17 @@ public class PlayerAttackState : PlayerBaseState
 {
     private AttackInfoData currentAttack;
     private int bufferedComboIndex = -1;
+
     private bool attackButtonHeld = false;
     private bool forceApplied = false;
+    private bool attackEnded = false;
 
     private Transform attackTarget;
 
-    // Dash 관련
-    private float dashSpeed = 10f;
-    private float stopDistance = 1.5f;
+    private float lastAttackInputTime;
+    private float attackEndTime;
+    private readonly float idleTimeout = 1f;
+
 
     public override PlayerStateID StateID => PlayerStateID.Attack;
     public override bool AllowRotation => false;
@@ -26,24 +29,27 @@ public class PlayerAttackState : PlayerBaseState
     {
         base.Enter();
 
-        // PlayerInfo SO에서 공격 데이터 가져오기
+        // 현재 공격 데이터 세팅
         currentAttack = stateMachine.Player.InfoData.AttackData.GetAttackInfoData(stateMachine.ComboIndex);
 
-        // 근처 타겟 탐지
-        attackTarget = FindNearestMonster(currentAttack.AttackRange);
+        // 타겟 탐지 & 세팅
+        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange);
         stateMachine.Player.Combat.SetAttackTarget(attackTarget);
 
-        // 공격 시작 시 Trigger + Bool 세팅
+        // 애니메이션 시작
         var anim = stateMachine.Player.Animator;
         anim.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
         StartAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
         StartAnimation(stateMachine.Player.AnimationData.ComboBoolHash);
 
-        SetAttack(stateMachine.ComboIndex); // ComboIndex만 적용
+        SetAttack(stateMachine.ComboIndex);
 
         bufferedComboIndex = -1;
-        stateMachine.IsAttacking = true;
         forceApplied = false;
+        attackEnded = false;
+
+        stateMachine.IsAttacking = true;
+        lastAttackInputTime = Time.time;
     }
 
     public override void Exit()
@@ -56,8 +62,10 @@ public class PlayerAttackState : PlayerBaseState
         attackButtonHeld = false;
         bufferedComboIndex = -1;
         forceApplied = false;
-        stateMachine.IsAttacking = false;
+        attackEnded = false;
         attackTarget = null;
+
+        stateMachine.IsAttacking = false;
     }
 
     public override void LogicUpdate()
@@ -66,58 +74,59 @@ public class PlayerAttackState : PlayerBaseState
 
         float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
 
-        HandleDashAndForce(normalizedTime);
-        HandleComboBuffer(normalizedTime);
+        ApplyAttackMovement(normalizedTime);
+        HandleCombo(normalizedTime);
         HandleAttackEnd(normalizedTime);
+        CheckIdleTransition();
     }
 
 
-    private void HandleDashAndForce(float normalizedTime)
+    private void ApplyAttackMovement(float normalizedTime)
     {
-        CharacterController cc = stateMachine.Player.GetComponent<CharacterController>();
+        var cc = stateMachine.Player.Controller;
+        float dashSpeed = stateMachine.Player.InfoData.AttackData.DashSpeed;
+        float stopDistance = stateMachine.Player.InfoData.AttackData.StopDistance;
 
-        float dashSpeedValue = currentAttack.DashSpeed;
-        float stopDistanceValue = currentAttack.StopDistance;
-
+        // Dash 처리
         if (attackTarget != null)
         {
             Vector3 dir = (attackTarget.position - stateMachine.Player.transform.position).normalized;
             float distance = Vector3.Distance(stateMachine.Player.transform.position, attackTarget.position);
 
-            // 타겟 가까이 오면 멈춤
-            if (distance > stopDistanceValue)
+            if (distance > stopDistance)
             {
-                cc.Move(dir * dashSpeedValue * Time.deltaTime);
+                cc.Move(dir * dashSpeed * Time.deltaTime);
                 stateMachine.Player.transform.forward = dir;
             }
         }
 
+        // Force 적용
         if (!forceApplied && normalizedTime >= currentAttack.ForceTransitionTime)
         {
-            forceApplied = true;
-            stateMachine.Player.ForceReceiver.Reset();
-
-            // 타겟 방향 (수평만 적용)
-            Vector3 dir = attackTarget != null
-                ? (attackTarget.position - stateMachine.Player.transform.position)
-                : stateMachine.Player.transform.forward;
-
-            dir.y = 0; // 여기서 y 제거
-            dir.Normalize();
-
-            // 공격 돌진은 수평으로만
-            stateMachine.Player.ForceReceiver.AddForce(dir * currentAttack.Force, true);
-
-            // 바라보는 방향 회전
-            stateMachine.Player.transform.forward = dir;
-
-            // 스킬/이펙트 호출
-            stateMachine.Player.Combat.OnAttack(currentAttack.AttackName);
+            ApplyForce();
         }
     }
 
+    private void ApplyForce()
+    {
+        forceApplied = true;
+        stateMachine.Player.ForceReceiver.Reset();
 
-    private void HandleComboBuffer(float normalizedTime)
+        Vector3 dir = attackTarget != null
+            ? (attackTarget.position - stateMachine.Player.transform.position)
+            : stateMachine.Player.transform.forward;
+
+        dir.y = 0;
+        dir.Normalize();
+
+        stateMachine.Player.ForceReceiver.AddForce(dir * currentAttack.Force, true);
+        stateMachine.Player.transform.forward = dir;
+
+        stateMachine.Player.Combat.OnAttack(currentAttack.AttackName);
+    }
+
+
+    private void HandleCombo(float normalizedTime)
     {
         if (attackButtonHeld && bufferedComboIndex < 0)
         {
@@ -135,21 +144,36 @@ public class PlayerAttackState : PlayerBaseState
         }
     }
 
+
     private void HandleAttackEnd(float normalizedTime)
     {
-        if (normalizedTime >= 1f)
+        if (!attackEnded && normalizedTime >= 1f)
         {
-            if (bufferedComboIndex >= 0)
-            {
-                SetAttack(bufferedComboIndex);
-                bufferedComboIndex = -1;
-                return;
-            }
+            attackEnded = true;
+            attackEndTime = Time.time;
+        }
 
-            stateMachine.ComboIndex = 0;
-            stateMachine.ChangeState(stateMachine.IdleState);
+        if (attackEnded && bufferedComboIndex >= 0)
+        {
+            SetAttack(bufferedComboIndex);
+            bufferedComboIndex = -1;
+            attackEnded = false;
         }
     }
+
+
+    private void CheckIdleTransition()
+    {
+        if (attackButtonHeld)
+            lastAttackInputTime = Time.time;
+
+        if (Time.time - lastAttackInputTime >= idleTimeout)
+        {
+            stateMachine.ComboIndex = 0;
+            stateMachine.ChangeState(stateMachine.FinishAttackState);
+        }
+    }
+
 
     private void SetAttack(int comboIndex)
     {
@@ -158,8 +182,6 @@ public class PlayerAttackState : PlayerBaseState
         currentAttack = stateMachine.AttackInfo;
 
         forceApplied = false;
-
-        // 애니메이션 재시작 없이 ComboInt만 갱신
         stateMachine.Player.Animator.SetInteger(stateMachine.Player.AnimationData.ComboIntHash, comboIndex);
     }
 
@@ -167,6 +189,7 @@ public class PlayerAttackState : PlayerBaseState
     protected override void OnAttackStarted(InputAction.CallbackContext context)
     {
         attackButtonHeld = true;
+        lastAttackInputTime = Time.time;
         if (!stateMachine.IsAttacking)
             stateMachine.IsAttacking = true;
     }
@@ -179,16 +202,13 @@ public class PlayerAttackState : PlayerBaseState
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
     {
         float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
-
-        // 공격 애니메이션 일정 시간 이후 캔슬 가능
         if (normalizedTime >= 0.1f)
         {
             stateMachine.ChangeState(stateMachine.DodgeState);
         }
     }
 
-    // -------------------
-    // 몬스터 탐지 함수
+
     private Transform FindNearestMonster(float radius)
     {
         Collider[] hits = Physics.OverlapSphere(stateMachine.Player.transform.position, radius, LayerMask.GetMask("Enemy"));
@@ -196,6 +216,7 @@ public class PlayerAttackState : PlayerBaseState
 
         Transform nearest = null;
         float minDist = float.MaxValue;
+
         foreach (var hit in hits)
         {
             float dist = Vector3.Distance(stateMachine.Player.transform.position, hit.transform.position);

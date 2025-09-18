@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,39 +8,157 @@ using UnityEngine;
 
 public class CSVtoSOConverter : EditorWindow
 {
-    private string csvPath = "Assets/01.Sripts/Monster/MonsterData/MonsterData.csv";
-    private string outputPath = "Assets/01.Sripts/Monster/MonsterData";
-    private string soTypeName = "MonsterSO"; // 원하는 ScriptableObject 클래스 이름
+    private string csvFilePath = "";
+    private int selectedTypeIndex = 0;
+
+    private CSVtoSOSettings settings;
+    private const string SETTINGS_PATH = "Assets/Editor/CSVtoSOSettings.asset";
 
     [MenuItem("Tools/Generic CSV to SO")]
     public static void ShowWindow()
     {
-        GetWindow(typeof(CSVtoSOConverter));
+        GetWindow<CSVtoSOConverter>("CSV to SO Converter");
     }
 
-    void OnGUI() //보기 편하게 GUI로 표시
+    void OnEnable()
+    {
+        LoadSettings();
+    }
+
+    private void LoadSettings()
+    {
+        settings = AssetDatabase.LoadAssetAtPath<CSVtoSOSettings>(SETTINGS_PATH);
+        if (settings == null)
+        {
+            string directoryPath = Path.GetDirectoryName(SETTINGS_PATH);
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+                Debug.Log($"Created directory: {directoryPath}");
+            }
+            settings = CreateInstance<CSVtoSOSettings>();
+            AssetDatabase.CreateAsset(settings, SETTINGS_PATH);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+    }
+
+    void OnGUI()
     {
         GUILayout.Label("CSV → ScriptableObjects (Generic)", EditorStyles.boldLabel);
 
-        csvPath = EditorGUILayout.TextField("CSV File Path", csvPath);
-        outputPath = EditorGUILayout.TextField("Output Folder", outputPath);
-        soTypeName = EditorGUILayout.TextField("SO Class Name", soTypeName);
+        // CSV 파일 드래그 앤 드롭 영역
+        Event currentEvent = Event.current;
+        Rect csvDropArea = EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.Height(50));
+        // 오류가 발생했던 부분을 아래와 같이 수정
+        GUILayout.Label("Drag & Drop CSV File Here", new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter });
+        EditorGUILayout.EndVertical();
+
+        HandleCSVDragAndDrop(currentEvent, csvDropArea);
+
+        EditorGUILayout.TextField("Selected CSV Path", csvFilePath, GUI.skin.textField);
+
+        Rect soDropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
+        GUI.Box(soDropArea, "Drag & Drop ScriptableObject Script Here");
+        HandleSODragAndDrop(currentEvent, soDropArea);
+
+        GUILayout.Label("Registered ScriptableObject Types:", EditorStyles.boldLabel);
+        if (settings.soTypeNames.Count > 0)
+        {
+            string[] typeNames = settings.soTypeNames.ToArray();
+            selectedTypeIndex = EditorGUILayout.Popup("Select SO Class", selectedTypeIndex, typeNames);
+
+            if (GUILayout.Button("Delete Selected"))
+            {
+                if (EditorUtility.DisplayDialog("Confirm Deletion", "Are you sure you want to delete the selected ScriptableObject type?", "Delete", "Cancel"))
+                {
+                    settings.soTypeNames.RemoveAt(selectedTypeIndex);
+                    selectedTypeIndex = Mathf.Clamp(selectedTypeIndex, 0, settings.soTypeNames.Count - 1);
+                    SaveSettings();
+                }
+            }
+        }
+        else
+
+        {
+            EditorGUILayout.LabelField("No ScriptableObject types added yet.");
+        }
 
         if (GUILayout.Button("Convert"))
         {
-            ConvertCSVtoSO(csvPath, outputPath, soTypeName);
+            if (!string.IsNullOrEmpty(csvFilePath) && settings.soTypeNames.Count > 0)
+            {
+                string soTypeName = settings.soTypeNames[selectedTypeIndex];
+                ConvertCSVtoSO(csvFilePath, Path.GetDirectoryName(csvFilePath), soTypeName);
+            }
+            else
+            {
+                Debug.LogError("CSV file path or ScriptableObject type is not selected.");
+            }
         }
+    }
+
+    private void HandleCSVDragAndDrop(Event currentEvent, Rect dropArea)
+    {
+        if (dropArea.Contains(currentEvent.mousePosition))
+        {
+            DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+            if (currentEvent.type == EventType.DragPerform)
+            {
+                DragAndDrop.AcceptDrag();
+                foreach (var draggedObject in DragAndDrop.objectReferences)
+                {
+                    string path = AssetDatabase.GetAssetPath(draggedObject);
+                    if (path.EndsWith(".csv"))
+                    {
+                        csvFilePath = path;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void HandleSODragAndDrop(Event currentEvent, Rect dropArea)
+    {
+        if (dropArea.Contains(currentEvent.mousePosition))
+        {
+            DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+            if (currentEvent.type == EventType.DragPerform)
+            {
+                DragAndDrop.AcceptDrag();
+                foreach (var draggedObject in DragAndDrop.objectReferences)
+                {
+                    MonoScript monoScript = draggedObject as MonoScript;
+                    if (monoScript != null)
+                    {
+                        Type scriptType = monoScript.GetClass();
+                        if (scriptType != null && typeof(ScriptableObject).IsAssignableFrom(scriptType) && !settings.soTypeNames.Contains(scriptType.FullName))
+                        {
+                            settings.soTypeNames.Add(scriptType.FullName);
+                            SaveSettings();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void SaveSettings()
+    {
+        EditorUtility.SetDirty(settings);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 
     public static void ConvertCSVtoSO(string csvPath, string outputPath, string soTypeName)
     {
         if (!File.Exists(csvPath))
         {
-            Debug.LogError("CSV file not found at path: " + csvPath); //없을시에는 에러 표시
+            Debug.LogError("CSV file not found at path: " + csvPath);
             return;
         }
 
-        // SO 타입 가져오기
         Type soType = Type.GetType(soTypeName);
         if (soType == null || !typeof(ScriptableObject).IsAssignableFrom(soType))
         {
@@ -49,40 +167,34 @@ public class CSVtoSOConverter : EditorWindow
         }
 
         if (!Directory.Exists(outputPath))
-            Directory.CreateDirectory(outputPath); //출력 파일이 없다면 생성
+            Directory.CreateDirectory(outputPath);
 
-        string[] lines = File.ReadAllLines(csvPath); //CSV 모든 줄 읽기
+        string[] lines = File.ReadAllLines(csvPath);
         if (lines.Length <= 1)
         {
             Debug.LogError("CSV has no data rows.");
             return;
         }
 
-        //첫줄은 해더
         string[] headers = lines[0].Split(',');
 
-        // 데이터 줄 반복
         for (int i = 1; i < lines.Length; i++)
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue; // 빈 줄인 경우에는 건너뜀
+            if (string.IsNullOrWhiteSpace(lines[i])) continue;
             string[] values = lines[i].Split(',');
 
-            // 새로운 SO 인스턴스 생성
             ScriptableObject soInstance = ScriptableObject.CreateInstance(soType);
 
-            // CSV 열로 통해 SO 필드 매핑
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
                 string header = headers[j];
                 string value = values[j];
 
-                // 필드 정보 가져오기
                 FieldInfo field = soType.GetField(header, BindingFlags.Public | BindingFlags.Instance);
                 if (field == null) continue;
 
                 try
                 {
-                    // 필드 타입별로 값 변환
                     if (field.FieldType == typeof(int))
                     {
                         int parsed = 0;
@@ -99,9 +211,8 @@ public class CSVtoSOConverter : EditorWindow
                         {
                             parsed = float.Parse(value.Replace("f", ""));
                         }
-                        field.SetValue(soInstance, float.Parse(value.Replace("f", "")));
+                        field.SetValue(soInstance, parsed);
                     }
-
                     else if (field.FieldType == typeof(string))
                         field.SetValue(soInstance, value);
                     else if (field.FieldType == typeof(List<int>))
@@ -130,21 +241,14 @@ public class CSVtoSOConverter : EditorWindow
                 }
             }
 
-            //생성된 SO 이름 결졍
-            string assetName = null;
-            FieldInfo nameField = soType.GetField("skillName") ?? soType.GetField("monsterName");
-            if (nameField != null)
-            {
-                assetName = nameField.GetValue(soInstance)?.ToString();
-            }
+            string assetName = values.Length > 1 ? values[1] : $"SO_{i}";
             if (string.IsNullOrEmpty(assetName))
-                    assetName = $"SO_{i}";
+                assetName = $"SO_{i}";
 
             string assetPath = $"{outputPath}/{assetName}.asset";
             AssetDatabase.CreateAsset(soInstance, assetPath);
         }
 
-        // 저장 및 갱신
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 

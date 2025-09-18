@@ -19,7 +19,7 @@ public class PlayerStateMachine : StateMachine
     public float MovementSpeed { get; private set; } // 현재 이동 속도
     public float RotationDamping { get; set; } // 회전할 때 부드럽게 보정하는 값
 
-    private float _movementSpeedModifier = 1f;
+    private float _movementSpeedModifier;
     public float MovementSpeedModifier // 속도 보정 계수
     { 
         get => _movementSpeedModifier; 
@@ -49,6 +49,7 @@ public class PlayerStateMachine : StateMachine
     //Attack 로직
     public PlayerAttackState AttackState { get;}
     public PlayerComboAttackState ComboAttackState { get; set; }
+    public PlyerFinishAttackState FinishAttackState { get; set; }
     // 독립적인 Sub-State Dodge 로직
     public PlayerDodgeState DodgeState { get; }
 
@@ -66,6 +67,7 @@ public class PlayerStateMachine : StateMachine
         FallState = new PlayerFallState(this);
         AttackState = new PlayerAttackState(this);
         ComboAttackState = new PlayerComboAttackState(this);
+        FinishAttackState = new PlyerFinishAttackState(this);
 
         MovementSpeed = player.InfoData.GroundData.BaseSpeed;
         RotationDamping = player.InfoData.GroundData.BaseRotationDamping;

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -60,11 +61,11 @@ public class GameManager : Singleton<GameManager>
         ChangeState(eGameState.GamePlaying);
 
         // 게임씬을 로드
-        SceneLoadManager.Instance.LoadScene(3);
+        //SceneLoadManager.Instance.LoadScene(5);
     }
 
     // 게임 일시정지
-    public async Task PauseGame(bool check)
+    public async UniTask PauseGame(bool check)
     {
         // 게임 정지
         if (check)
@@ -84,7 +85,7 @@ public class GameManager : Singleton<GameManager>
         Debug.Log($"IsPauseGame : {check}");
 
         // 일시정지 UI를 활성화/비활성화
-        await UIManager.Instance.Show<PauseUI>();
+        //await UIManager.Instance.Show<PauseUI>();
     }
 
     // 게임 오버
