@@ -9,14 +9,12 @@ public class ItemData : ScriptableObject
 
     [TextArea]
     public string itemDescription;
-    public int itemID;
-    public string itemName;
-    public int imageId;
+    public int id;
+    public string inGameName;
     public Sprite itemIcon;
     public int maxEa;
     public ItemType itemType;
     public EffectType effectType;
     public float effectValue;
     public float duration; // 효과 지속시간
-    public int itemParticleId;
 }
