@@ -39,8 +39,9 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         Cursor.lockState = CursorLockMode.Locked;
         Application.targetFrameRate = 120;
 
-
+        AnimationData = new PlayerAnimationHash();
         AnimationData.Initialize();
+
         Animator ??= GetComponent<Animator>();
         Controller ??= GetComponent<CharacterController>();
         Input ??= GetComponent<PlayerController>();
@@ -76,5 +77,13 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     {
         Animator.SetTrigger("Die");
         enabled = false;
+    }
+
+    public void EnableInput(bool active)
+    {
+        if (active)
+            Input.PlayerActions.Enable();
+        else
+            Input.PlayerActions.Disable();
     }
 }
