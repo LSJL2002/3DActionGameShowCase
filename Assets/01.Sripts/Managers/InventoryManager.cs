@@ -38,7 +38,7 @@ public class InventoryManager : Singleton<InventoryManager>
     }
 
     // 아이템 추가 함수
-    public async void LoadTestData_Addressables(string adress, int stack = default)
+    public async void LoadData_Addressables(string adress, int stack = default)
     {
         // 어드레서블로 아이템 데이터 로드
         AsyncOperationHandle<ItemData> loadHandle = Addressables.LoadAssetAsync<ItemData>(adress);

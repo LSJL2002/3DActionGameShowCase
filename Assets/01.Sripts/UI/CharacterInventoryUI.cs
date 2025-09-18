@@ -72,15 +72,15 @@ public class CharacterInventoryUI : UIBase
                 break;
 
             case "Healing_Potion":
-                InventoryManager.Instance.LoadTestData_Addressables(str, 1);
+                InventoryManager.Instance.LoadData_Addressables(str, 1);
                 break;
 
             case "SkillItem_1":
-                InventoryManager.Instance.LoadTestData_Addressables(str);
+                InventoryManager.Instance.LoadData_Addressables(str);
                 break;
 
             case "Blazing_Core":
-                InventoryManager.Instance.LoadTestData_Addressables(str);
+                InventoryManager.Instance.LoadData_Addressables(str);
                 break;
         }
 
