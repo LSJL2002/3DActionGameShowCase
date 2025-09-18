@@ -27,13 +27,13 @@ public class ObjectFollow : MonoBehaviour
     [SerializeField] public Button inventoryBtn;
     [SerializeField] public Button talkBtn;
     [SerializeField] public GameObject chatUI;
-    
+
     [Header("파티클")]
     [SerializeField] private GameObject moveFx;   // 파티클이 붙은 오브젝트(프리팹 인스턴스)
     [SerializeField] private float moveSpeedThreshold = 0.1f; // 이동 판정 기준
 
     // G키를 다시 누렀을 때 원상복귀에 필요한 변수
-    private bool isTalkMode = false; 
+    private bool isTalkMode = false;
     private Vector3 cachedAnchorLocalPos; // 캐릭터 중심으로 처음에 고정한 오브젝트 위치
     private CursorLockMode cachedLockMode; // 커서
     private bool cachedCursorVisible; // 커서가 보이고 안보이고하는 bool값
@@ -46,7 +46,10 @@ public class ObjectFollow : MonoBehaviour
 
     private void Update()
     {
-        OnClickTarget();
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            OnClickTarget();
+        }
     }
 
     private void FixedUpdate()
@@ -86,21 +89,19 @@ public class ObjectFollow : MonoBehaviour
     void OnClickTarget()
     {
         if (targetObject == null) return;
-
-        if (Input.GetKeyDown(KeyCode.G))
+        if (!isTalkMode)
         {
-            if (!isTalkMode)
-            {
-                Vector3 localOffset = new Vector3(1.03f, 0f, 1.2f); // x=Right, z=Forward
-                targetObject.localPosition = cachedAnchorLocalPos + localOffset;
+            Vector3 localOffset = new Vector3(1.03f, 0f, 1.2f); // x=Right, z=Forward
+            targetObject.localPosition = cachedAnchorLocalPos + localOffset;
+            PlayerManager.Instance.EnableInput(false); // 캐릭터 움직임 제어
 
-                // 키 클릭 시 상태
-                StartCoroutine(ShowTalkAndPauseAfterDelay(1.2f));
-            }
-            else
-            {
-                ExitTalkMode();
-            }
+            // 키 클릭 시 상태
+            StartCoroutine(ShowTalkAndPauseAfterDelay(1.2f));
+        }
+        else
+        {
+            ExitTalkMode();
+            PlayerManager.Instance.EnableInput(true); // 캐릭터 움직임 제어
         }
     }
 
@@ -136,6 +137,31 @@ public class ObjectFollow : MonoBehaviour
         Cursor.visible = cachedCursorVisible; // 원래 안 보이던 상태로 돌림
 
         isTalkMode = false;
+    }
+
+    public async void OnCharacterStatUI()
+    {
+        await UIManager.Instance.Show<CharacterStatUI>();
+        talkUI.SetActive(false);
+    }
+
+    public async void OnCharacterInventoryUI()
+    {
+        await UIManager.Instance.Show<CharacterInventoryUI>();
+        talkUI.SetActive(false);
+    }
+
+    public void OnClickBtn(string btn)
+    {
+        if (btn == "stateBtn")
+        {
+            OnCharacterStatUI();
+        }
+
+        if (btn == "inventoryBtn")
+        {
+            OnCharacterInventoryUI();
+        }
     }
 
     // FSM에서 사용할 메서드
@@ -225,4 +251,6 @@ public class ObjectFollow : MonoBehaviour
 //targetObject.position += targetObject.forward * 1.2f;.
 
 // anim.SetBool("isMove", rb.velocity.magnitude > 0.1f);
+
+
 #endregion
