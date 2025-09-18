@@ -32,30 +32,30 @@ public class MapManager : Singleton<MapManager>
 
     private async void Start()
     {
-        GameObject map = await LoadAscync("Map");
-        if(map != null)
-        {
-            Debug.Log("Map 성공적으로 불러옴!");
-        }
-        else
-        {
-            Debug.Log("Map 로드실패");
-        }
+        //GameObject map = await LoadAscync("Map");
+        //if(map != null)
+        //{
+        //    Debug.Log("Map 성공적으로 불러옴!");
+        //}
+        //else
+        //{
+        //    Debug.Log("Map 로드실패");
+        //}
 
-            GameObject btZone = await LoadAscync("BattleZone");
-        if (btZone != null)
-        {
-            Debug.Log("BattleZone 성공적으로 불러옴!");
-        }
-        else
-        {
-            Debug.LogError("BattleZone 로드 실패");
-        }
+        //    GameObject btZone = await LoadAscync("BattleZone");
+        //if (btZone != null)
+        //{
+        //    Debug.Log("BattleZone 성공적으로 불러옴!");
+        //}
+        //else
+        //{
+        //    Debug.LogError("BattleZone 로드 실패");
+        //}
 
-        // NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
-        await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
-        //생성
-        //AddressableManager.Instance.MakeGameObject("Map");
+        //// NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
+        //await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
+        ////생성
+        ////AddressableManager.Instance.MakeGameObject("Map");
 
 
         //배틀존 딕셔너리에 아이디를 키값으로 등록
