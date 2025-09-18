@@ -26,6 +26,11 @@ public class ObjectFollow : MonoBehaviour
     [SerializeField] public Button stateBtn;
     [SerializeField] public Button inventoryBtn;
     [SerializeField] public Button talkBtn;
+    [SerializeField] public GameObject chatUI;
+    
+    [Header("파티클")]
+    [SerializeField] private GameObject moveFx;   // 파티클이 붙은 오브젝트(프리팹 인스턴스)
+    [SerializeField] private float moveSpeedThreshold = 0.1f; // 이동 판정 기준
 
     // G키를 다시 누렀을 때 원상복귀에 필요한 변수
     private bool isTalkMode = false; 
@@ -46,6 +51,7 @@ public class ObjectFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isTalkMode) return; // 조력자 이동을 못하게 막는 로직.
         OnMove();
         FollowObject();
     }
@@ -68,7 +74,13 @@ public class ObjectFollow : MonoBehaviour
 
     void OnMove()
     {
-        anim.SetBool("isMove", rb.velocity.magnitude > 0.1f);
+        bool isMoving = rb != null && rb.velocity.sqrMagnitude > (moveSpeedThreshold * moveSpeedThreshold);
+
+        // 애니메이션
+        anim.SetBool("isMove", isMoving);
+
+        // 파티클 ON/OFF
+        if (moveFx != null) moveFx.SetActive(isMoving);
     }
 
     void OnClickTarget()
@@ -101,6 +113,7 @@ public class ObjectFollow : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         talkUI.SetActive(true); // UI 표시
+        chatUI.SetActive(true);
 
         // UI 조작을 위해 커서 해제
         Cursor.lockState = CursorLockMode.None;
@@ -113,6 +126,7 @@ public class ObjectFollow : MonoBehaviour
     {
         // UI 닫기 + 정지 해제
         talkUI.SetActive(false);
+        chatUI.SetActive(false);
 
         // 위치 원복
         targetObject.localPosition = cachedAnchorLocalPos;
@@ -122,6 +136,16 @@ public class ObjectFollow : MonoBehaviour
         Cursor.visible = cachedCursorVisible; // 원래 안 보이던 상태로 돌림
 
         isTalkMode = false;
+    }
+
+    // FSM에서 사용할 메서드
+    public void EnterTalkMode()
+    {
+        StartCoroutine(ShowTalkAndPauseAfterDelay(1.2f)); // 기존 코루틴 재활용
+    }
+    public void ExitTalkModePublic() // 이름만 다르게 공개
+    {
+        ExitTalkMode();
     }
 }
 
@@ -198,5 +222,7 @@ public class ObjectFollow : MonoBehaviour
 //}
 
 //targetObject.position += targetObject.right * 1.03f;
-//targetObject.position += targetObject.forward * 1.2f;
+//targetObject.position += targetObject.forward * 1.2f;.
+
+// anim.SetBool("isMove", rb.velocity.magnitude > 0.1f);
 #endregion
