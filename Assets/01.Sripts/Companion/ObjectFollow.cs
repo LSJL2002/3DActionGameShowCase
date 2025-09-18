@@ -21,11 +21,7 @@ public class ObjectFollow : MonoBehaviour
     [Header("This.RigidBody")]
     [SerializeField] public Rigidbody rb;
 
-    [Header("TalkUI")]
-    [SerializeField] public GameObject talkUI;
-    [SerializeField] public Button stateBtn;
-    [SerializeField] public Button inventoryBtn;
-    [SerializeField] public Button talkBtn;
+    [Header("ChatUI")]
     [SerializeField] public GameObject chatUI;
 
     [Header("파티클")]
@@ -37,6 +33,8 @@ public class ObjectFollow : MonoBehaviour
     private Vector3 cachedAnchorLocalPos; // 캐릭터 중심으로 처음에 고정한 오브젝트 위치
     private CursorLockMode cachedLockMode; // 커서
     private bool cachedCursorVisible; // 커서가 보이고 안보이고하는 bool값
+
+    public CompanionUI ui;
 
     private void Awake()
     {
@@ -113,7 +111,7 @@ public class ObjectFollow : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
 
-        talkUI.SetActive(true); // UI 표시
+        OnUi();
         chatUI.SetActive(true);
 
         // UI 조작을 위해 커서 해제
@@ -122,11 +120,15 @@ public class ObjectFollow : MonoBehaviour
 
         isTalkMode = true;
     }
+    public async void OnUi()
+    {
+        ui = await UIManager.Instance.Show<CompanionUI>();
+    }
 
     void ExitTalkMode()
     {
         // UI 닫기 + 정지 해제
-        talkUI.SetActive(false);
+        ui.Hide();
         chatUI.SetActive(false);
 
         // 위치 원복
@@ -137,31 +139,6 @@ public class ObjectFollow : MonoBehaviour
         Cursor.visible = cachedCursorVisible; // 원래 안 보이던 상태로 돌림
 
         isTalkMode = false;
-    }
-
-    public async void OnCharacterStatUI()
-    {
-        await UIManager.Instance.Show<CharacterStatUI>();
-        talkUI.SetActive(false);
-    }
-
-    public async void OnCharacterInventoryUI()
-    {
-        await UIManager.Instance.Show<CharacterInventoryUI>();
-        talkUI.SetActive(false);
-    }
-
-    public void OnClickBtn(string btn)
-    {
-        if (btn == "stateBtn")
-        {
-            OnCharacterStatUI();
-        }
-
-        if (btn == "inventoryBtn")
-        {
-            OnCharacterInventoryUI();
-        }
     }
 
     // FSM에서 사용할 메서드
