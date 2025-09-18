@@ -9,23 +9,23 @@ public class TownUI : UIBase
         switch (str)
         {
             // 캐릭터 정보UI 활성화
-            case "CharacterInfo":
-                await UIManager.Instance.Show<CharacterInfoUI>();
+            case "CharacterStat":
+                await UIManager.Instance.Show<CharacterStatUI>();
+                break;
+
+            // 스킬UI 활성화
+            case "Skill":
+                await UIManager.Instance.Show<CharacterSkillUI>();
+                break;
+
+            // 코어UI 활성화
+            case "Core":
+                await UIManager.Instance.Show<CharacterCoreUI>();
                 break;
 
             // 인벤토리UI 활성화
             case "Inventory":
-                await UIManager.Instance.Show<InventoryUI>();
-                break;
-
-            // 상점UI 활성화
-            case "Shop":
-                await UIManager.Instance.Show<ShopUI>();
-                break;
-
-            // 퀘스트UI 활성화
-            case "Quest":
-                await UIManager.Instance.Show<QuestUI>();
+                await UIManager.Instance.Show<CharacterInventoryUI>();
                 break;
 
             // 설정UI 활성화

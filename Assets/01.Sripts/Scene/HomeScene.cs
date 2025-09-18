@@ -23,7 +23,7 @@ public class HomeScene : SceneBase
     {
         base.Start();
         ShowUI();
-        try { AudioManager.Instance.PlayBGM("BGM_Home"); }
+        try { AudioManager.Instance.PlayBGM("2"); }
         catch { Debug.LogError("BGM 없음"); }
     }
 
