@@ -79,7 +79,7 @@ public class CharacterInventoryUI : UIBase
                 InventoryManager.Instance.LoadTestData_Addressables(str);
                 break;
 
-            case "CoreItem_1":
+            case "Blazing_Core":
                 InventoryManager.Instance.LoadTestData_Addressables(str);
                 break;
         }
