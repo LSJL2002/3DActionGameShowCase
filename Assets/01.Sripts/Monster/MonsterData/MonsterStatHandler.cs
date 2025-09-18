@@ -8,6 +8,8 @@ public class MonsterStatHandler : MonoBehaviour
     public MonsterSO monsterData;
 
     [Header("Runtime Stats (Inspector창 변경)")]
+    public float maxHp;
+    public float maxMp;
     public float CurrentHP;
     public float CurrentMP;
     public int AttackPower;
@@ -26,8 +28,10 @@ public class MonsterStatHandler : MonoBehaviour
     {
         if (monsterData != null)
         {
-            CurrentHP = monsterData.maxHp;
-            CurrentMP = monsterData.maxMp;
+            maxHp = monsterData.maxHp;
+            CurrentHP = maxHp;
+            maxMp = monsterData.maxMp;
+            CurrentMP = maxMp;
             AttackPower = monsterData.attackPower;
             Defense = monsterData.defense;
             AttackSpeed = monsterData.attackSpeed;
@@ -36,16 +40,20 @@ public class MonsterStatHandler : MonoBehaviour
             AttackRange = monsterData.attackRange;
             StatusEffect = new List<string>(monsterData.statusEffect);
 
+            // ✅ Copy skills from SO into runtime list
+            MonsterSkills = new List<MonsterSkillSO>(monsterData.useSkill);
+
             skillDict = new Dictionary<string, MonsterSkillSO>();
             foreach (var skill in MonsterSkills)
             {
-                if (!skillDict.ContainsKey(skill.skillName))
+                if (skill != null && !skillDict.ContainsKey(skill.skillName))
                 {
                     skillDict.Add(skill.skillName, skill);
                 }
             }
         }
     }
+
 
     public MonsterSkillSO GetSkill(string skillName)
     {

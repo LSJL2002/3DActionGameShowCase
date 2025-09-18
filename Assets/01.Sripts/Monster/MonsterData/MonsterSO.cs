@@ -20,5 +20,4 @@ public class MonsterSO : ScriptableObject
     public int detectRange;
     public int attackRange; //나중에 삭제
     public List<MonsterSkillSO> useSkill; //나중에 추가
-    public string test;
 }
