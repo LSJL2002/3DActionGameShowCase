@@ -22,7 +22,7 @@ public class BattleManager : Singleton<BattleManager>
         activeZone.SetWallsActive(true);
 
         // 2. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.MonsterID, zone.transform.position);
+        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
 
         OnBattleStart?.Invoke(zone);
     }

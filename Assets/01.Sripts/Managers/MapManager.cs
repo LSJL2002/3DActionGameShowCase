@@ -85,8 +85,8 @@ public class MapManager : Singleton<MapManager>
 
     public void RegisterStage(BattleZone zone)
     {
-        if (!zoneDict.ContainsKey(zone.zoneID)) //아이디가없으면 추가
-            zoneDict.Add(zone.zoneID, zone);
+        if (!zoneDict.ContainsKey(zone.id)) //아이디가없으면 추가
+            zoneDict.Add(zone.id, zone);
     }
 
     private void HandleZoneEnter(BattleZone zone) //입장시
@@ -104,7 +104,7 @@ public class MapManager : Singleton<MapManager>
 
     private void HandleZoneClear(BattleZone zone) // 클리어시
     {
-        if (zone.nextZoneID == null || zone.nextZoneID.Length == 0)
+        if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
             Debug.Log("마지막 스테이지 클리어!");
             round++;
@@ -116,7 +116,7 @@ public class MapManager : Singleton<MapManager>
             return;
         }
 
-        foreach (var nextId in zone.nextZoneID)
+        foreach (var nextId in zone.moveAbleStage)
         {
             if (zoneDict.TryGetValue(nextId, out var nextZone))
             {
@@ -130,7 +130,7 @@ public class MapManager : Singleton<MapManager>
 
         //클리어한 존 지우기
         zone.gameObject.SetActive(false); //Release
-        zoneDict.Remove(zone.zoneID);
+        zoneDict.Remove(zone.id);
         //Addressables.ReleaseInstance(zone.gameObject);
         currentZone = null;
 
