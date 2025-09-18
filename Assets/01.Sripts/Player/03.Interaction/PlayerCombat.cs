@@ -76,22 +76,22 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     // 기즈모 시각화 (씬뷰에서 공격 범위/Force 확인용)
     private void OnDrawGizmosSelected()
     {
-        if (playerInfo == null || playerInfo.AttackData.GetAttackInfoCount() == 0)
+        if (playerInfo == null || playerInfo.AttackData == null)
             return;
 
-        var attack = playerInfo.AttackData.GetAttackInfoData(attackIndex);
+        var attackData = playerInfo.AttackData;
 
-        // 공격 범위
+        // 공격 범위 (공용)
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attack.AttackRange);
+        Gizmos.DrawWireSphere(transform.position, attackData.AttackRange);
 
-        // 돌진 멈춤 거리
+        // 돌진 멈춤 거리 (공용)
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, attack.StopDistance);
+        Gizmos.DrawWireSphere(transform.position, attackData.StopDistance);
 
-        // Force 방향 표시
+        // Force 방향 표시 (공용 기본값만 사용)
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + transform.forward * attack.Force);
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * 1f);
 
         // 타겟이 있으면 연결 선 표시
         if (Application.isPlaying && player != null && player.Combat != null)
@@ -101,7 +101,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(transform.position, target.position);
-                Gizmos.DrawWireSphere(target.position, 0.5f); // 타겟 위치 표시
+                Gizmos.DrawWireSphere(target.position, 0.5f);
             }
         }
     }

@@ -61,7 +61,7 @@ public class GameManager : Singleton<GameManager>
         ChangeState(eGameState.GamePlaying);
 
         // 게임씬을 로드
-        SceneLoadManager.Instance.LoadScene(5);
+        //SceneLoadManager.Instance.LoadScene(5);
     }
 
     // 게임 일시정지
