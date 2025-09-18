@@ -1,21 +1,24 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.XR;
+using System;
 
 public class BaseMonster : MonoBehaviour, IDamageable
 {
     [Header("References")]
     [SerializeField] public MonsterAnimationData animationData;
-    
+
     public Animator Animator { get; private set; }
     public NavMeshAgent Agent { get; private set; }
-    public MonsterStatHandler Stats {get; private set; }
+    public MonsterStatHandler Stats { get; private set; }
     public MonsterAIEvents aiEvents { get; private set; }
     public Transform PlayerTarget { get; set; }
+
+    public event Action OnAttackAnimationCompleteEvent;
 
 
     public MonsterStateMachine stateMachine;
@@ -72,23 +75,26 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnAttackAnimationComplete() //나중에 삭제
     {
-        if (stateMachine?.MonsterSkillOneState != null)
-        {
-            stateMachine.MonsterSkillOneState.OnAttackAnimationComplete();
-        }
+        Debug.Log("Finished");
+        stateMachine.isAttacking = false;
     }
 
-    public void OnAttackHit()
+    public void OnAttackHitEvent()
     {
-
+        Debug.Log("OnHit");
+        (stateMachine.CurrentState as MonsterBaseState)?.OnAttackHit();
     }
 
     public virtual void OnTakeDamage(int amount)
     {
-        Stats.CurrentHP -= 100;
+        Stats.CurrentHP = amount - Stats.Defense;
+        // 체력 변동 애니메이션 추가
         if (Stats.CurrentHP <= 0)
         {
             Stats.Die();
         }
     }
+    
+
+    //메소드 추가 몬스터 애니메이션
 }

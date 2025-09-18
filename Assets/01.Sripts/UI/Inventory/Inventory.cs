@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static ItemData;
 
-// 인벤토리의 아이템'들'에 대한 정보(리스트)를 가진 클래스 (Model 계층)
-// 리스트 중 특정 아이템을 찾을 수 있도록 도와줌
 public class Inventory
 {
     public event Action OnConsumableItemsChanged;
     public event Action OnSkillItemsChanged;
     public event Action OnCoreItemsChanged;
 
-    private List<InventoryItem> consumableItems = new List<InventoryItem>();
-    private List<InventoryItem> skillItems = new List<InventoryItem>();
-    private List<InventoryItem> coreItems = new List<InventoryItem>();
+    private Dictionary<ItemData, InventoryItem> consumableItems = new Dictionary<ItemData, InventoryItem>();
+    private Dictionary<ItemData, InventoryItem> skillItems = new Dictionary<ItemData, InventoryItem>();
+    private Dictionary<ItemData, InventoryItem> coreItems = new Dictionary<ItemData, InventoryItem>();
 
-    // 아이템을 추가하는 메인 메서드
+    // 아이템 추가 함수 (인벤토리 매니저에서 호출)
     public void AddItem(ItemData itemData, int count)
     {
         switch (itemData.itemType)
@@ -35,24 +34,49 @@ public class Inventory
         }
     }
 
-    private void AddItemToCollection(List<InventoryItem> collection, ItemData itemData, int count)
+    // 딕셔너리에 아이템 추가 함수
+    private void AddItemToCollection(Dictionary<ItemData, InventoryItem> collection, ItemData itemData, int count)
     {
-        // 이미 존재하는 아이템 찾기
-        InventoryItem existingItem = collection.Find(item => item.data == itemData);
-
-        // 아이템이 있다면 개수 업데이트, 없다면 추가
-        if (existingItem != null)
+        // 딕셔너리에서 아이템을 키로 사용하여 존재 여부 확인
+        if (collection.ContainsKey(itemData))
         {
-            existingItem.stackCount += count;
+            collection[itemData].stackCount += count;
         }
         else
         {
-            collection.Add(new InventoryItem(itemData, count));
+            // 새로운 InventoryItem 객체 추가
+            collection.Add(itemData, new InventoryItem(itemData, count));
         }
     }
 
-    // 각 카테고리의 아이템 리스트를 반환하는 메서드
-    public IReadOnlyList<InventoryItem> GetConsumableItems() => consumableItems;
-    public IReadOnlyList<InventoryItem> GetSkillItems() => skillItems;
-    public IReadOnlyList<InventoryItem> GetCoreItems() => coreItems;
+    // 아이템 수량 감소 함수 (인벤토리 매니저에서 호출)
+    public void DecreaseItemCount(ItemData itemData, int count)
+    {
+        switch (itemData.itemType)
+        {
+            case ItemType.Consumable:
+                DecreaseItemFromCollection(consumableItems, itemData, count);
+                OnConsumableItemsChanged?.Invoke();
+                break;
+        }
+    }
+
+    // 딕셔너리에서 아이템 수량 감소 및 삭제
+    private void DecreaseItemFromCollection(Dictionary<ItemData, InventoryItem> collection, ItemData itemData, int count)
+    {
+        if (collection.ContainsKey(itemData))
+        {
+            collection[itemData].stackCount -= count;
+
+            if (collection[itemData].stackCount <= 0)
+            {
+                collection.Remove(itemData);
+            }
+        }
+    }
+
+    // 반환하는 메서드도 Dictionary의 Values를 List로 변환하여 반환
+    public IReadOnlyList<InventoryItem> GetConsumableItems() => consumableItems.Values.ToList();
+    public IReadOnlyList<InventoryItem> GetSkillItems() => skillItems.Values.ToList();
+    public IReadOnlyList<InventoryItem> GetCoreItems() => coreItems.Values.ToList();
 }
