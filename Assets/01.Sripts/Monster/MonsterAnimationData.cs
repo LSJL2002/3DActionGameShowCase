@@ -8,11 +8,15 @@ public class MonsterAnimationData
 {
     public enum MonsterAnimationType
     {
+        Rise,
         Idle,
         Walk,
         Run,
-        Attack,
+        Charge,
         BaseAttack,
+        Skill1,
+        Skill2,
+        Skill3,
         Death
     }
 
