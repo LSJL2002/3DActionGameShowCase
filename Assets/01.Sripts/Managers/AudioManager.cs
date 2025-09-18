@@ -22,7 +22,7 @@ public class NamedSFX
 public class AudioManager : Singleton<AudioManager>
 {
     [Header("Mixer")]
-    [SerializeField] private AudioMixer audioMixer; // MainMixer
+    [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private AudioMixerGroup bgmGroup;
     [SerializeField] private AudioMixerGroup sfxGroup;
 
@@ -31,24 +31,22 @@ public class AudioManager : Singleton<AudioManager>
 
     [Header("SFX Clips")]
     [SerializeField] private List<NamedSFX> sfxList;
-    public int sfxPoolSize = 5; //동시재생가능한수
+    [SerializeField] private int sfxPoolSize = 5; //동시재생 가능 수
 
-    private List<AudioSource> sfxSources = new List<AudioSource>();
+    private List<AudioSource> sfxSources = new();
     private int currentSfxIndex = 0;
     private AudioSource bgmSource;
 
-    private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
-    private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
+    private Dictionary<string, AudioClip> bgmDict = new();
+    private Dictionary<string, AudioClip> sfxDict = new();
 
     [SerializeField, Range(0f, 1f)] private float _masterVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float _bgmVolume = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float _sfxVolume = 0.5f;
 
-    [Range(0f, 1f)]
-    [SerializeField] private float _bgmVolume = 0.5f;
-    public float bgmVolume => _bgmVolume;
-    [Range(0f, 1f)]
-    [SerializeField] private float _sfxVolume = 0.5f;
-    public float sfxVolume => _bgmVolume;
-
+    public float MasterVolume => _masterVolume;
+    public float BgmVolume => _bgmVolume;
+    public float SfxVolume => _sfxVolume;
 
     protected override void Awake()
     {
@@ -70,61 +68,45 @@ public class AudioManager : Singleton<AudioManager>
         }
 
         // 딕셔너리 초기화
-        foreach (var bgm in bgmList)
-        {
-            if (!bgmDict.ContainsKey(bgm.name))
-                bgmDict.Add(bgm.name, bgm.clip);
-        }
+        InitDictionary(bgmList, bgmDict);
+        InitDictionary(sfxList, sfxDict);
 
-        foreach (var sfx in sfxList)
-        {
-            if (!sfxDict.ContainsKey(sfx.name))
-                sfxDict.Add(sfx.name, sfx.clip);
-        }
-
+        // 초기 볼륨 세팅
         SetMasterVolume(_masterVolume);
         SetBgmVolume(_bgmVolume);
         SetSfxVolume(_sfxVolume);
 
+        // 테스트용 BGM 재생 (나중에 삭제 가능)
         PlayBGM("1");
-
-        float masterDB;
-        if (audioMixer.GetFloat("Master_Volume", out masterDB))
-            Debug.Log("Master dB after Awake: " + masterDB);
-        else
-            Debug.LogWarning("Master_Volume parameter not found in AudioMixer!");
     }
 
-    // 원래 씬로드시 씬네임을 매개변수로 받아와서 씬네임과 같은 이름의 BGM을 재생하는 방식이었으나,
-    // 현재 씬로드매니저를 따로 만들었기때문에 방식이 약간 변경돼서 일단 주석처리 추후 BGM 플레이 방식을 변경 필요
-    // 예정 : 각 씬에 존재하는 씬오브젝트 Start 함수에서 재생
-    //private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
-    //private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
-    //private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    //{
-    //    if (Enum.TryParse(scene.name, out GameScene gameScene))
-    //    {
-    //        string sceneName = SceneUtility.GetSceneName(gameScene);
-    //        PlayBGM(sceneName);
-    //    }
-    //}
 
     void Update()
     {
-        // 항상 볼륨 최신화 (옵션에서 슬라이더로 조절 시 반영되게)
-        bgmSource.volume = bgmVolume;
+        // 항상 볼륨 최신화
+        bgmSource.volume = _bgmVolume;
         foreach (var sfx in sfxSources) sfx.volume = _sfxVolume;
 
-        // 버튼 클릭 SFX
-        if (Input.GetMouseButtonDown(0))
-        {
-            GameObject clicked = EventSystem.current.currentSelectedGameObject;
-            if (clicked != null && clicked.GetComponent<Button>() != null)
-                PlayClickSFX();
-        }
+        // UI 버튼 클릭 SFX 처리
+        CheckUIButtonClick();
     }
 
-    #region Mixer Volume Control
+
+    #region Dictionary Init
+    private void InitDictionary<T>(List<T> list, Dictionary<string, AudioClip> dict) where T : class
+    {
+        dict.Clear();
+        foreach (var item in list)
+        {
+            if (item is NamedBGM bgm && !dict.ContainsKey(bgm.name))
+                dict.Add(bgm.name, bgm.clip);
+            else if (item is NamedSFX sfx && !dict.ContainsKey(sfx.name))
+                dict.Add(sfx.name, sfx.clip);
+        }
+    }
+    #endregion
+
+    #region Mixer Volume
     private float LinearToDecibel(float linear) => linear <= 0f ? -80f : Mathf.Log10(linear) * 20f;
 
     public void SetMasterVolume(float volume)
@@ -132,6 +114,7 @@ public class AudioManager : Singleton<AudioManager>
         _masterVolume = Mathf.Clamp01(volume);
         audioMixer.SetFloat("Master_Volume", LinearToDecibel(_masterVolume));
     }
+
     public void SetBgmVolume(float volume)
     {
         _bgmVolume = Mathf.Clamp01(volume);
@@ -145,16 +128,20 @@ public class AudioManager : Singleton<AudioManager>
     }
     #endregion
 
-
     #region BGM
     public void PlayBGM(string name)
     {
         if (!bgmDict.TryGetValue(name, out var clip)) return;
         if (bgmSource.clip == clip) return;
+
         bgmSource.clip = clip;
         bgmSource.Play();
+    }
 
-        Debug.Log(bgmSource);
+    public void StopBGM()
+    {
+        if (bgmSource.isPlaying)
+            bgmSource.Stop();
     }
 
     public async UniTask FadeToBGM(string name, float duration)
@@ -164,7 +151,7 @@ public class AudioManager : Singleton<AudioManager>
         float startVolume = _bgmVolume;
         float time = 0f;
 
-        // 페이드 아웃
+        // Fade Out
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -172,11 +159,11 @@ public class AudioManager : Singleton<AudioManager>
             await UniTask.Yield();
         }
 
-        // 새 클립 재생
+        // 새로운 BGM 재생
         bgmSource.clip = newClip;
         bgmSource.Play();
 
-        // 페이드 인
+        // Fade In
         time = 0f;
         while (time < duration)
         {
@@ -185,8 +172,25 @@ public class AudioManager : Singleton<AudioManager>
             await UniTask.Yield();
         }
     }
-    #endregion
 
+    public async UniTask FadeOutBGM(float duration)
+    {
+        if (!bgmSource.isPlaying) return;
+
+        float startVolume = _bgmVolume;
+        float time = 0f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            SetBgmVolume(Mathf.Lerp(startVolume, 0f, time / duration));
+            await UniTask.Yield();
+        }
+
+        StopBGM();
+        SetBgmVolume(startVolume); // 원래 볼륨 복원
+    }
+    #endregion
 
     #region SFX
     public void PlaySFX(string name)
@@ -198,5 +202,17 @@ public class AudioManager : Singleton<AudioManager>
     }
 
     public void PlayClickSFX() => PlaySFX("Click");
+    #endregion
+
+    #region UI Click Check
+    private void CheckUIButtonClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameObject clicked = EventSystem.current.currentSelectedGameObject;
+            if (clicked != null && clicked.GetComponent<Button>() != null)
+                PlayClickSFX();
+        }
+    }
     #endregion
 }

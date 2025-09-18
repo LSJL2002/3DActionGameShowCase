@@ -19,7 +19,7 @@ public class PlayerStateMachine : StateMachine
     public float MovementSpeed { get; private set; } // 현재 이동 속도
     public float RotationDamping { get; set; } // 회전할 때 부드럽게 보정하는 값
 
-    private float _movementSpeedModifier = 1f;
+    private float _movementSpeedModifier;
     public float MovementSpeedModifier // 속도 보정 계수
     { 
         get => _movementSpeedModifier; 
