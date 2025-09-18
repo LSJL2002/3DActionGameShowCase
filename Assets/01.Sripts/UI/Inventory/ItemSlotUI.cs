@@ -9,11 +9,17 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI countText;
     [SerializeField] private Outline outline;
+    public string itemName;
+    public string itemType;
+    public string itemDescription;
     private ItemDescriptionUI itemDescriptionUI;
 
     public void SetData(ItemData data, int count)
     {
         iconImage.sprite = data.itemIcon;
+        itemName = data.inGameName;
+        itemType = data.itemType.ToString();
+        itemDescription = data.itemDescription;
 
         if (count > 0)
         {
@@ -52,6 +58,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             {
                 itemDescriptionUI = UIManager.Instance.Get<ItemDescriptionUI>();
             }
+
+            itemDescriptionUI.SetItemSlotData(this);
 
             // 마우스 커서 위치로 옮기기
             RectTransform rectTransform = itemDescriptionUI.GetComponent<RectTransform>();

@@ -71,7 +71,7 @@ public class CharacterInventoryUI : UIBase
                 Hide();
                 break;
 
-            case "ConsumableItem_1":
+            case "Healing_Potion":
                 InventoryManager.Instance.LoadTestData_Addressables(str, 1);
                 break;
 

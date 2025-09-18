@@ -7,7 +7,6 @@ public class ItemData : ScriptableObject
 
     public enum EffectType { None, Heal, }
 
-    [TextArea]
     public string itemDescription;
     public int id;
     public string inGameName;
