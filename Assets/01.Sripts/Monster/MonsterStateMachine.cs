@@ -98,7 +98,10 @@ public class MonsterStateMachine : StateMachine
         if (!isAttacking && CurrentState == MonsterIdleState)
         {
             isAttacking = true;
-            ChangeState(SmileToiletChargeState);
+            if (Monster is ToiletMonster toilet)
+            {
+                toilet.PickPatternById(5); 
+            }
         }
     }
 

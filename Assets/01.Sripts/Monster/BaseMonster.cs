@@ -5,6 +5,7 @@ using System.Data;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.XR;
+using System;
 
 public class BaseMonster : MonoBehaviour, IDamageable
 {
@@ -16,6 +17,8 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public MonsterStatHandler Stats { get; private set; }
     public MonsterAIEvents aiEvents { get; private set; }
     public Transform PlayerTarget { get; set; }
+
+    public event Action OnAttackAnimationCompleteEvent;
 
 
     public MonsterStateMachine stateMachine;

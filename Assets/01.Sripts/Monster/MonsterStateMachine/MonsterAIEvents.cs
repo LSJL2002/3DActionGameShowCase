@@ -39,6 +39,7 @@ public class MonsterAIEvents : MonoBehaviour
         {
             if (Time.time >= lastAttackTime + attackCooldown)
             {
+                stateMachine.ChangeState(stateMachine.MonsterIdleState);
                 OnInAttackRange?.Invoke();
                 Debug.Log("Attack");
                 lastAttackTime = Time.time;

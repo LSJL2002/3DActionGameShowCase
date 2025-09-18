@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8b3cc2b5aca0f47ab2d2ea5ee8544b, type: 3}
+  m_Name: SmileToilet
+  m_EditorClassIdentifier: 
+  patterns:
+  - id: 1
+    states:
+    - BaseAttack
+    - BaseAttack
+  - id: 2
+    states:
+    - BaseAttack
+    - BaseAttack
+  - id: 3
+    states:
+    - Smash
+    - BaseAttack
+  - id: 4
+    states:
+    - Charge
+  - id: 5
+    states:
+    - Smash
+    - Slam

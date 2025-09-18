@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public class MonsterBaseState : Istate
 {
     protected readonly MonsterStateMachine stateMachine;
+    public event Action OnStateFinished;
 
     public MonsterBaseState(MonsterStateMachine stateMachine)
     {
@@ -36,6 +38,10 @@ public class MonsterBaseState : Istate
     protected void PlayTriggerAnimation(int triggerHash)
     {
         stateMachine.Monster.Animator.SetTrigger(triggerHash);
+    }
+    protected void StateFinished()
+    {
+        OnStateFinished?.Invoke();
     }
 
     //Movement Helpers (NavMesh)
