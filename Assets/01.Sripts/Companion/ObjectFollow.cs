@@ -77,7 +77,7 @@ public class ObjectFollow : MonoBehaviour
         // 애니메이션
         anim.SetBool("isMove", isMoving);
 
-        // 파티클 ON/OFF — 딱 이것만!
+        // 파티클 ON/OFF
         if (moveFx != null) moveFx.SetActive(isMoving);
     }
 
