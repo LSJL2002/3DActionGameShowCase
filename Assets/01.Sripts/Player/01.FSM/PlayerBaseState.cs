@@ -59,6 +59,16 @@ public abstract class PlayerBaseState : Istate
     {
         ReadMovementInput();
         ReadZoomInput(); // 줌 값 읽기 추가
+
+        // Animator에 입력값 전달 (공통 처리)
+        stateMachine.Player.Animator.SetFloat(
+            stateMachine.Player.AnimationData.HorizontalHash,
+            stateMachine.MovementInput.x
+        );
+        stateMachine.Player.Animator.SetFloat(
+            stateMachine.Player.AnimationData.VerticalHash,
+            stateMachine.MovementInput.y
+        );
     }
     public virtual void LogicUpdate() { }
 
@@ -193,6 +203,7 @@ public abstract class PlayerBaseState : Istate
     }
 
 
+    //ForceReceiver에 쌓인 힘을 실제 캐릭터에 적용하는 역할
     protected void ForceMove()
     {
         stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime);
