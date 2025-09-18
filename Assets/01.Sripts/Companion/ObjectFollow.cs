@@ -26,6 +26,10 @@ public class ObjectFollow : MonoBehaviour
     [SerializeField] public Button stateBtn;
     [SerializeField] public Button inventoryBtn;
     [SerializeField] public Button talkBtn;
+    
+    [Header("파티클")]
+    [SerializeField] private GameObject moveFx;   // 파티클이 붙은 오브젝트(프리팹 인스턴스)
+    [SerializeField] private float moveSpeedThreshold = 0.1f; // 이동 판정 기준
 
     // G키를 다시 누렀을 때 원상복귀에 필요한 변수
     private bool isTalkMode = false; 
@@ -68,7 +72,13 @@ public class ObjectFollow : MonoBehaviour
 
     void OnMove()
     {
-        anim.SetBool("isMove", rb.velocity.magnitude > 0.1f);
+        bool isMoving = rb != null && rb.velocity.sqrMagnitude > (moveSpeedThreshold * moveSpeedThreshold);
+
+        // 애니메이션
+        anim.SetBool("isMove", isMoving);
+
+        // 파티클 ON/OFF — 딱 이것만!
+        if (moveFx != null) moveFx.SetActive(isMoving);
     }
 
     void OnClickTarget()
@@ -198,5 +208,7 @@ public class ObjectFollow : MonoBehaviour
 //}
 
 //targetObject.position += targetObject.right * 1.03f;
-//targetObject.position += targetObject.forward * 1.2f;
+//targetObject.position += targetObject.forward * 1.2f;.
+
+// anim.SetBool("isMove", rb.velocity.magnitude > 0.1f);
 #endregion
