@@ -14,6 +14,7 @@ public class MonsterAnimationData
         Run,
         Charge,
         BaseAttack,
+        BaseAttack2,
         Skill1,
         Skill2,
         Skill3,

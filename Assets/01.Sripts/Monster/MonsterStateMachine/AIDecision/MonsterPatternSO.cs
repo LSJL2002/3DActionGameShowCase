@@ -1,6 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum States
+{
+    BaseAttack,
+    BaseAttack2,
+    Skill1,
+    Skill2,
+    Skill3,
+    Skill4
+
+}
+
 [CreateAssetMenu(menuName = "Monster/AllPatterns")]
 public class MonsterAllPatternsSO : ScriptableObject
 {
@@ -8,7 +19,7 @@ public class MonsterAllPatternsSO : ScriptableObject
     public class PatternEntry
     {
         public int id;
-        public List<string> states;
+        public List<States> states;
     }
 
     public List<PatternEntry> patterns = new List<PatternEntry>();
