@@ -56,4 +56,11 @@ public class InventoryManager : Singleton<InventoryManager>
             Debug.LogError($"{adress} Fail");
         }
     }
+
+    // 아이템 감소 및 삭제 함수
+    public void UseConsumableItem(ItemData itemData)
+    {
+        // Model에게 아이템 수량 감소를 요청
+        inventoryModel.DecreaseItemCount(itemData, 1);
+    }
 }

@@ -10,7 +10,7 @@ public class CharacterInventoryUI : UIBase
     // 인스펙터에서 직접 할당할 아이템 슬롯 목록
     [SerializeField] private List<ItemSlotUI> itemSlots;
 
-    private InventoryViewModel _viewModel;
+    private InventoryViewModel inventoryViewModel;
 
     protected override void Awake()
     {
@@ -23,14 +23,14 @@ public class CharacterInventoryUI : UIBase
 
     public void Setup(InventoryViewModel viewModel)
     {
-        _viewModel = viewModel;
-        _viewModel.OnConsumableUIUpdate += UpdateUI;
+        inventoryViewModel = viewModel;
+        inventoryViewModel.OnConsumableUIUpdate += UpdateUI;
         UpdateUI();
     }
 
     private void UpdateUI()
     {
-        var items = _viewModel.GetConsumableItems();
+        var items = inventoryViewModel.GetConsumableItems();
         int slotCount = itemSlots.Count;
         int itemCount = items.Count;
 
@@ -39,7 +39,7 @@ public class CharacterInventoryUI : UIBase
             if (i < itemCount)
             {
                 // 아이템이 있는 경우 데이터 할당
-                itemSlots[i].SetData(items[i].data, items[i].stackCount);
+                itemSlots[i].SetData(inventoryViewModel, items[i].data, items[i].stackCount);
             }
             else
             {

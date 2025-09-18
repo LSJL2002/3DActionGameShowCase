@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewItemData", menuName = "Inventory/Item Data")]
@@ -16,4 +17,7 @@ public class ItemData : ScriptableObject
     public EffectType effectType;
     public float effectValue;
     public float duration; // 효과 지속시간
+
+    // 능력 배열
+    public List<ItemAbility> abilities;
 }

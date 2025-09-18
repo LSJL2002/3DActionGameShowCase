@@ -1,7 +1,9 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 // 아이템 슬롯 하나하나의 상태를 시각적으로 보여주는 View 계층의 클래스 (아이콘, 수량숫자 넣고 빼기 등)
 public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -9,13 +11,20 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI countText;
     [SerializeField] private Outline outline;
+
+    private InventoryViewModel inventoryViewModel;
+
+    private ItemData itemData;
     public string itemName;
     public string itemType;
     public string itemDescription;
     private ItemInformationUI itemInformationUI;
 
-    public void SetData(ItemData data, int count)
+    public void SetData(InventoryViewModel viewModel, ItemData data, int count)
     {
+        inventoryViewModel = viewModel;
+
+        itemData = data;
         iconImage.sprite = data.itemIcon;
         itemName = data.inGameName;
         itemType = data.itemType.ToString();
@@ -31,21 +40,38 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         iconImage.sprite = null;
         countText.text = null;
+        itemData = null;
     }
 
     // 버튼 클릭시 효과 함수
     public void OnClickButton()
     {
-        // 아웃라인 컴포넌트 On / Off
-        if (outline != null)
+        if (itemData != null)
         {
-            // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)
-            outline.enabled = !outline.enabled;
+            // 소비아이템이라면
+            if (itemData.itemType == ItemData.ItemType.Consumable)
+            {
+                // ViewModel의 함수 호출
+                inventoryViewModel.UseItem(itemData);
+            }
+
+            // 코어라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
+            else if (itemData.itemType == ItemData.ItemType.Core)
+            {
+                // 아웃라인 컴포넌트 On / Off
+                // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)
+                outline.enabled = !outline.enabled;
+            }
+
+            // 스킬이라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
+            else if (itemData.itemType == ItemData.ItemType.Skill)
+            {
+                // 아웃라인 컴포넌트 On / Off
+                // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)
+                outline.enabled = !outline.enabled;
+            }
         }
-
-        // 장비라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
-
-        // 소비아이템이라면 사용 확인 UI 팝업
+        
     }
 
     // 마우스 커서가 올라왔을때 효과
