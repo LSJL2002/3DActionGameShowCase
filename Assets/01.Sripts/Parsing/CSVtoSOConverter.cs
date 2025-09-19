@@ -144,66 +144,6 @@ public class CSVtoSOConverter : EditorWindow
         }
     }
 
-    static char DetectDelimiter(string line)
-    {
-        if (line.Contains('\t')) return '\t';
-        if (line.Contains(';')) return ';';
-        return ','; // 기본
-    }
-
-    // 2) CSV 한 줄을 따옴표 규칙 지키며 split
-    static string[] SplitCsvLine(string line, char delimiter)
-    {
-        var list = new List<string>();
-        var sb = new System.Text.StringBuilder();
-        bool inQuotes = false;
-
-        for (int i = 0; i < line.Length; i++)
-        {
-            char c = line[i];
-            if (c == '"')
-            {
-                // "" -> 내부 따옴표 이스케이프
-                if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
-                {
-                    sb.Append('"');
-                    i++;
-                }
-                else
-                {
-                    inQuotes = !inQuotes;
-                }
-            }
-            else if (c == delimiter && !inQuotes)
-            {
-                list.Add(sb.ToString());
-                sb.Clear();
-            }
-            else
-            {
-                sb.Append(c);
-            }
-        }
-        list.Add(sb.ToString());
-        return list.ToArray();
-    }
-
-    // 3) 타입줄인지 판단 (int,string,List<int> 등만 있으면 true)
-    static bool IsTypeRow(string[] tokens)
-    {
-        bool IsTypeToken(string t)
-        {
-            t = t.Trim().Trim('"', '\'');
-            if (t.Equals("int", StringComparison.OrdinalIgnoreCase)) return true;
-            if (t.Equals("float", StringComparison.OrdinalIgnoreCase)) return true;
-            if (t.Equals("string", StringComparison.OrdinalIgnoreCase)) return true;
-            if (t.StartsWith("List<", StringComparison.OrdinalIgnoreCase)) return true;
-            return false;
-        }
-        if (tokens.Length == 0) return false;
-        return tokens.All(IsTypeToken);
-    }
-
     private void SaveSettings()
     {
         EditorUtility.SetDirty(settings);
@@ -236,83 +176,62 @@ public class CSVtoSOConverter : EditorWindow
             return;
         }
 
-        // 구분자 자동 감지
-        char delim = DetectDelimiter(lines[0]);
+        string[] headers = lines[0].Split(',');
 
-        // 헤더 (0행)
-        string[] headers = SplitCsvLine(lines[0], delim)
-                            .Select(h => h.Trim().Trim('"', '\''))
-                            .ToArray();
-
-        // 타입줄(1행)이라면 건너뛰기
-        int dataStart = 1;
-        if (lines.Length > 1 && IsTypeRow(
-                SplitCsvLine(lines[1], delim).Select(t => t.Trim()).ToArray()))
-        {
-            dataStart = 2;
-        }
-
-        // 데이터
-        for (int i = dataStart; i < lines.Length; i++)
+        for (int i = 1; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
+            string[] values = lines[i].Split(',');
 
-            string[] values = SplitCsvLine(lines[i], delim);
-
-            var soInstance = ScriptableObject.CreateInstance(soType);
+            ScriptableObject soInstance = ScriptableObject.CreateInstance(soType);
 
             for (int j = 0; j < headers.Length && j < values.Length; j++)
             {
                 string header = headers[j];
-                string value = values[j].Trim().Trim('"', '\'');
+                string value = values[j];
 
-                FieldInfo field = soType.GetField(header,
-                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                FieldInfo field = soType.GetField(header, BindingFlags.Public | BindingFlags.Instance);
                 if (field == null) continue;
 
                 try
                 {
                     if (field.FieldType == typeof(int))
                     {
-                        field.SetValue(soInstance,
-                            string.IsNullOrWhiteSpace(value) ? 0 : int.Parse(value));
+                        int parsed = 0;
+                        if (!string.IsNullOrWhiteSpace(value))
+                        {
+                            parsed = int.Parse(value);
+                        }
+                        field.SetValue(soInstance, parsed);
                     }
                     else if (field.FieldType == typeof(float))
                     {
-                        field.SetValue(soInstance,
-                            string.IsNullOrWhiteSpace(value) ? 0f :
-                            float.Parse(value.Replace("f", ""),
-                                        System.Globalization.CultureInfo.InvariantCulture));
+                        float parsed = 0f;
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            parsed = float.Parse(value.Replace("f", ""));
+                        }
+                        field.SetValue(soInstance, parsed);
                     }
                     else if (field.FieldType == typeof(string))
-                    {
                         field.SetValue(soInstance, value);
-                    }
                     else if (field.FieldType == typeof(List<int>))
                     {
                         var list = new List<int>();
-                        if (!string.IsNullOrWhiteSpace(value))
-                        {
-                            list.AddRange(value
-                                .Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(s => int.Parse(s.Trim().Trim('"', '\''))));
-                        }
+                        if (!string.IsNullOrEmpty(value))
+                            list.AddRange(value.Split(';').Select(s => int.Parse(s)));
                         field.SetValue(soInstance, list);
                     }
                     else if (field.FieldType == typeof(List<string>))
                     {
                         var list = new List<string>();
-                        if (!string.IsNullOrWhiteSpace(value))
-                        {
-                            list.AddRange(value
-                                .Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(s => s.Trim().Trim('"', '\'')));
-                        }
+                        if (!string.IsNullOrEmpty(value))
+                            list.AddRange(value.Split(';'));
                         field.SetValue(soInstance, list);
                     }
                     else if (field.FieldType.IsEnum)
                     {
-                        var enumValue = Enum.Parse(field.FieldType, value, true);
+                        object enumValue = Enum.Parse(field.FieldType, value, true);
                         field.SetValue(soInstance, enumValue);
                     }
                 }
@@ -322,10 +241,17 @@ public class CSVtoSOConverter : EditorWindow
                 }
             }
 
-            string assetName = (values.Length > 1 ? values[1] : $"SO_{i}") ?? $"SO_{i}";
-            string assetPath = AssetDatabase.GenerateUniqueAssetPath($"{outputPath}/{assetName}.asset");
+            string assetName = values.Length > 1 ? values[1] : $"SO_{i}";
+            if (string.IsNullOrEmpty(assetName))
+                assetName = $"SO_{i}";
+
+            string assetPath = $"{outputPath}/{assetName}.asset";
             AssetDatabase.CreateAsset(soInstance, assetPath);
         }
 
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        Debug.Log("CSV → SO 변환 완료!");
     }
 }
