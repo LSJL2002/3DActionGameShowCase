@@ -51,7 +51,7 @@ public class CharacterStatUI : UIBase
         {
             // 게임UI로 돌아가기
             case "Return":
-                await UIManager.Instance.Show<TownUI>();
+                await UIManager.Instance.Show<CompanionUI>();
                 break;
 
             // 인벤토리 UI 켜기

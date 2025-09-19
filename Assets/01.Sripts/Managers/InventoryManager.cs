@@ -60,6 +60,12 @@ public class InventoryManager : Singleton<InventoryManager>
     // 아이템 감소 및 삭제 함수
     public void UseConsumableItem(ItemData itemData)
     {
+        // 아이템의 효과리스트를 전부 발동
+        for (int i = 0; i < itemData.abilities.Count; i++ )
+        {
+            itemData.abilities[i].Use(itemData);
+        }
+
         // Model에게 아이템 수량 감소를 요청
         inventoryModel.DecreaseItemCount(itemData, 1);
     }

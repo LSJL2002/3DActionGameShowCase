@@ -29,6 +29,7 @@ public class SmileToiletSlamState : MonsterBaseState
         Vector3 spawnPos = stateMachine.Monster.transform.position;
 
         aoeInstance = Object.Instantiate(skillData.areaEffectPrefab, spawnPos, Quaternion.identity);
+        stateMachine.Monster.RegisterAOE(aoeInstance);
 
         aoeController = aoeInstance.GetComponent<AreaEffectController>();
         if (aoeController == null)
@@ -69,8 +70,11 @@ public class SmileToiletSlamState : MonsterBaseState
             aoeController.OnTelegraphFinished -= OnTelegraphComplete;
 
         if (aoeInstance != null)
+        {
+            stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
-
+        }
+        
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
     }
 }

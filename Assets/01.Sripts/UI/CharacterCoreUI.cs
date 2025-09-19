@@ -52,7 +52,7 @@ public class CharacterCoreUI : UIBase
         {
             // 게임UI로 돌아가기
             case "Return":
-                await UIManager.Instance.Show<TownUI>();
+                await UIManager.Instance.Show<CompanionUI>();
                 break;
 
             // 스킬UI로 이동

@@ -52,7 +52,7 @@ public class CharacterSkillUI : UIBase
         {
             // 게임UI로 돌아가기
             case "Return":
-                await UIManager.Instance.Show<TownUI>();
+                await UIManager.Instance.Show<CompanionUI>();
                 break;
 
             // StatUI로 이동

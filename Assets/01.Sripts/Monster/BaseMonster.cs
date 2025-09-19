@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.XR;
 using System;
+using Unity.VisualScripting;
 
 public class BaseMonster : MonoBehaviour, IDamageable
 {
@@ -19,6 +20,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public Transform PlayerTarget { get; set; }
 
     public event Action OnAttackAnimationCompleteEvent;
+    private readonly List<GameObject> activeAOEs = new List<GameObject>();
 
 
     public MonsterStateMachine stateMachine;
@@ -91,10 +93,38 @@ public class BaseMonster : MonoBehaviour, IDamageable
         // 체력 변동 애니메이션 추가
         if (Stats.CurrentHP <= 0)
         {
-            Stats.Die();
+            Stats.CurrentHP = 0;
+            stateMachine.ChangeState(stateMachine.MonsterDeathState);
+
+            //여기서 이벤트 활성씨 파괴
         }
     }
-    
 
-    //메소드 추가 몬스터 애니메이션
+    public void RegisterAOE(GameObject aoe)
+    {
+        if (aoe != null && !activeAOEs.Contains(aoe))
+        {
+            activeAOEs.Add(aoe);
+        }
+    }
+
+    public void UnregisterAOE(GameObject aoe)
+    {
+        if (aoe != null && activeAOEs.Contains(aoe))
+        {
+            activeAOEs.Remove(aoe);
+        }
+    }
+
+    public void ClearAOEs()
+    {
+        foreach (var aoe in activeAOEs)
+        {
+            if (aoe != null)
+            {
+                Destroy(aoe);
+            }
+            activeAOEs.Clear();
+        }
+    }
 }

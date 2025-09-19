@@ -8,6 +8,7 @@ public class MonsterStateMachine : StateMachine
     public BaseMonster Monster { get; }
     public float MovementSpeedModifier { get; set; }
 
+    public MonsterDeathState MonsterDeathState { get; }
     public MonsterIdleState MonsterIdleState { get; }
     public MonsterChaseState MonsterChaseState { get; }
     public MonsterBaseAttack MonsterBaseAttack { get; private set; }
@@ -31,6 +32,7 @@ public class MonsterStateMachine : StateMachine
         MonsterIdleState = new MonsterIdleState(this);
         MonsterChaseState = new MonsterChaseState(this);
         MonsterBaseAttack = new MonsterBaseAttack(this);
+        MonsterDeathState = new MonsterDeathState(this);
         MonsterBaseAttackAlt = new MonsterBaseAttackAlt(this, MonsterAnimationData.MonsterAnimationType.BaseAttack2); // new animation
 
         if (monster is ToiletMonster)
