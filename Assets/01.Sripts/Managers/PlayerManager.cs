@@ -28,7 +28,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     public PlayerCombat Combat { get; private set; }
 
 
-    private PlayerStateMachine stateMachine; //순수 C# 클래스
+    public PlayerStateMachine stateMachine; //순수 C# 클래스
     public SkillManagers skill;
     public CameraManager camera;
 

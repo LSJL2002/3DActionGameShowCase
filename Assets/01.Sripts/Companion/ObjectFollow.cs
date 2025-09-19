@@ -42,6 +42,18 @@ public class ObjectFollow : MonoBehaviour
             cachedAnchorLocalPos = targetObject.localPosition; // 최초 위치세팅 저장
     }
 
+    private void OnEnable()
+    {
+        BattleManager.OnBattleStart += DanceMove; // 구독했다
+        BattleManager.OnBattleClear += IdleMove;
+    }
+
+    private void OnDisable()
+    {
+        BattleManager.OnBattleStart -= DanceMove; // 구독취소
+        BattleManager.OnBattleClear -= IdleMove;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.G))
@@ -59,8 +71,8 @@ public class ObjectFollow : MonoBehaviour
 
     void FollowObject()
     {
-        if (targetObject == null || rb == null /* || 플래이어에 현재상태 == 공격상태  (싱클톤확인) */) return;
-
+        if (targetObject == null || rb == null || PlayerManager.Instance.stateMachine.IsAttacking) return;
+        
         // Rigidbody를 이용한 부드러운 위치 이동
         Vector3 nextMove = Vector3.MoveTowards(rb.position, targetObject.position, moveSpeed * Time.deltaTime);
         rb.MovePosition(nextMove);
@@ -134,6 +146,20 @@ public class ObjectFollow : MonoBehaviour
         Cursor.visible = cachedCursorVisible; // 원래 안 보이던 상태로 돌림
 
         isTalkMode = false;
+    }
+    public bool isAttack;
+    // 춤추는 메서드
+    public void DanceMove(BattleZone zone)
+    {
+        // 춤추는 시작점
+        isAttack = true;
+        anim.SetBool("isDance", true);
+    }
+
+    public void IdleMove(BattleZone zone)
+    {
+        isAttack = false;
+        anim.SetBool("isDance", false);
     }
 }
 
