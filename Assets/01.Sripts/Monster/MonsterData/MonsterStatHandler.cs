@@ -79,6 +79,6 @@ public class MonsterStatHandler : MonoBehaviour
     public void Die()
     {
         Debug.Log($"{monsterData.monsterName} 사망!");
-        //Destroy(gameObject);
+        
     }
 }

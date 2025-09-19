@@ -13,7 +13,7 @@ public class MonsterAIEvents : MonoBehaviour
 
     private MonsterStateMachine stateMachine;
     private Transform player;
-    [SerializeField] private float attackBuffer = 1f;
+    [SerializeField] private float attackBuffer = 2f;
 
     [Header("Attack Cooldown")]
     public float attackCooldown = 10f;
