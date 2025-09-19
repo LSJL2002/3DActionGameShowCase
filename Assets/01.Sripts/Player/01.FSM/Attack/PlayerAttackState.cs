@@ -10,13 +10,11 @@ public class PlayerAttackState : PlayerBaseState
     private int bufferedComboIndex = -1;
 
     private bool attackButtonHeld = false;
-    private bool forceApplied = false;
     private bool attackEnded = false;
 
     private Transform attackTarget;
 
     private float lastAttackInputTime;
-    private float attackEndTime;
     private readonly float idleTimeout = 1f;
 
     public override PlayerStateID StateID => PlayerStateID.Attack;
@@ -67,10 +65,8 @@ public class PlayerAttackState : PlayerBaseState
         SetAttack(stateMachine.ComboIndex);
 
         bufferedComboIndex = -1;
-        forceApplied = false;
         attackEnded = false;
         attackButtonHeld = true;
-
         stateMachine.IsAttacking = true;
         lastAttackInputTime = Time.time;
     }
@@ -80,12 +76,10 @@ public class PlayerAttackState : PlayerBaseState
         StopAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
         StopAnimation(stateMachine.Player.AnimationData.ComboBoolHash);
 
-        attackButtonHeld = false;
         bufferedComboIndex = -1;
-        forceApplied = false;
+        attackButtonHeld = false;
         attackEnded = false;
         attackTarget = null;
-
         stateMachine.IsAttacking = false;
     }
 
@@ -115,38 +109,34 @@ public class PlayerAttackState : PlayerBaseState
     // ===================== 공격 콤보 처리 =====================
     private void HandleCombo(float normalizedTime)
     {
-        if (attackButtonHeld && bufferedComboIndex < 0)
+        // 입력 버퍼링: 현재 공격이 마지막(-1)이 아닌 경우만
+        if (attackButtonHeld && bufferedComboIndex < 0 && currentAttack.ComboStateIndex != -1)
         {
-            int nextIndex = currentAttack.ComboStateIndex;
-            if (nextIndex >= 0 && nextIndex < stateMachine.Player.InfoData.AttackData.GetAttackInfoCount())
-            {
-                bufferedComboIndex = nextIndex;
-            }
+            bufferedComboIndex = currentAttack.ComboStateIndex;
         }
 
+        // ComboTransitionTime 이상이면 버퍼 적용
         if (bufferedComboIndex >= 0 && normalizedTime >= currentAttack.ComboTransitionTime)
         {
             SetAttack(bufferedComboIndex);
             bufferedComboIndex = -1;
         }
-    }
 
+        // 마지막 공격(-1) -> FinishState
+        if (currentAttack.ComboStateIndex == -1)
+        {
+            // normalizedTime ≥ 1f 이후 FinishState로 전환
+            if (normalizedTime >= 1f)
+                stateMachine.ChangeState(stateMachine.FinishAttackState);
+        }
+    }
     private void HandleAttackEnd(float normalizedTime)
     {
         if (!attackEnded && normalizedTime >= 1f)
         {
             attackEnded = true;
-            attackEndTime = Time.time;
-        }
-
-        if (attackEnded && bufferedComboIndex >= 0)
-        {
-            SetAttack(bufferedComboIndex);
-            bufferedComboIndex = -1;
-            attackEnded = false;
         }
     }
-
     private void CheckIdleTransition()
     {
         if (attackButtonHeld)
@@ -154,18 +144,17 @@ public class PlayerAttackState : PlayerBaseState
 
         if (Time.time - lastAttackInputTime >= idleTimeout)
         {
-            stateMachine.ComboIndex = 0;
+            stateMachine.ComboIndex = 1;
             stateMachine.ChangeState(stateMachine.FinishAttackState);
         }
     }
-
     private void SetAttack(int comboIndex)
     {
         stateMachine.ComboIndex = comboIndex;
         stateMachine.SetAttackInfo(comboIndex);
         currentAttack = stateMachine.AttackInfo;
 
-        forceApplied = false;
+        attackEnded = false;
         stateMachine.Player.Animator.SetInteger(stateMachine.Player.AnimationData.ComboIntHash, comboIndex);
     }
 
