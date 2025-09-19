@@ -64,7 +64,7 @@ public class ObjectFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isTalkMode) return; // 조력자 이동을 못하게 막는 로직.
+        if (isTalkMode || isAttack) return; // 조력자 이동을 못하게 막는 로직.
         OnMove();
         FollowObject();
     }
@@ -153,6 +153,7 @@ public class ObjectFollow : MonoBehaviour
     {
         // 춤추는 시작점
         isAttack = true;
+        anim.SetBool("isMove", false);
         anim.SetBool("isDance", true);
     }
 
@@ -160,6 +161,7 @@ public class ObjectFollow : MonoBehaviour
     {
         isAttack = false;
         anim.SetBool("isDance", false);
+        anim.SetBool("isMove", true);
     }
 }
 
