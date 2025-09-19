@@ -29,8 +29,8 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
 
 
     private PlayerStateMachine stateMachine; //순수 C# 클래스
-    public SkillManagers skill;
-    public CameraManager camera;
+    public SkillManagers skillManagers;
+    public CameraManager cameraManager;
 
 
     private void Awake()
@@ -51,8 +51,8 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
 
         Stats = new PlayerStats(InfoData.StatData);
         stateMachine = new PlayerStateMachine(this);
-        skill ??= GetComponentInChildren<SkillManagers>();
-        camera ??= GetComponentInChildren<CameraManager>();
+        skillManagers ??= GetComponentInChildren<SkillManagers>();
+        cameraManager ??= GetComponentInChildren<CameraManager>();
 
         Stats.OnDie += OnDie;
     }
@@ -82,14 +82,8 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     public void EnableInput(bool active)
     {
         if (active)
-        {
             Input.PlayerActions.Enable();
-            camera.SetCameraInputEnabled(true);
-        }
         else
-        {
             Input.PlayerActions.Disable();
-            camera.SetCameraInputEnabled(false);
-        }
     }
 }

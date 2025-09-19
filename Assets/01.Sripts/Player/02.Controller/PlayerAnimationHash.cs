@@ -12,9 +12,6 @@ public class PlayerAnimationHash
     private string getUpTriggerName = "Base/Toggle_GetUp"; //Trigger
 
     private string moveSpeedFloatName = "Base/Blend_MovementSpeed"; //Blend
-    private string horizontalFloatName = "Horizontal";  //Blend
-    private string verticalFloatName = "Vertical"; //Blend
-
 
     [Header("Air / Jump / Fall")]
     private string airBoolName = "Base/Switch_AirState";
@@ -42,9 +39,6 @@ public class PlayerAnimationHash
     public int WaitingAnimationTriggerHash { get; private set; }
     public int GetUpTriggerHash { get; private set; }
     public int MoveSpeedHash { get; private set; }
-    public int HorizontalHash { get; private set; }
-    public int VerticalHash { get; private set; }
-
 
     public int AirBoolHash { get; private set; }
     public int JumpTriggerHash { get; private set; }
@@ -72,8 +66,6 @@ public class PlayerAnimationHash
         WaitingAnimationTriggerHash = Animator.StringToHash(waitingAnimationTriggerName);
         GetUpTriggerHash = Animator.StringToHash(getUpTriggerName);
         MoveSpeedHash = Animator.StringToHash(moveSpeedFloatName);
-        HorizontalHash = Animator.StringToHash(horizontalFloatName);
-        VerticalHash = Animator.StringToHash(verticalFloatName);
 
         AirBoolHash = Animator.StringToHash(airBoolName);
         JumpTriggerHash = Animator.StringToHash(jumpTriggerName);

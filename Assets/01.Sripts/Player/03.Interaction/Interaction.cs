@@ -9,14 +9,14 @@ using UnityEngine.UI;
 
 
 
-public class Interaction : MonoBehaviour //itemobjectë‘ ìƒí˜¸ì‘ìš©ë§Œ í•˜ëŠ” í´ë˜ìŠ¤
+public class Interaction : MonoBehaviour //itemobject¶û »óÈ£ÀÛ¿ë¸¸ ÇÏ´Â Å¬·¡½º
 {
     [Header("UI")]
     [SerializeField] private GameObject promptPanel;
     [SerializeField] private TMP_Text promptText;
 
     [Header("Interaction Settings")]
-    public float interactionRadius = 1f; // ìƒí˜¸ì‘ìš© ë²”ìœ„
+    public float interactionRadius = 1f; // »óÈ£ÀÛ¿ë ¹üÀ§
     private IInteractable nearestItem;
 
     private void Start()
@@ -24,19 +24,19 @@ public class Interaction : MonoBehaviour //itemobjectë‘ ìƒí˜¸ì‘ìš©ë§Œ í•˜ëŠ” 
         if (promptPanel != null)
             promptPanel.SetActive(false);
 
-        // UniTask ë£¨í”„ ì‹œì‘
+        // UniTask ·çÇÁ ½ÃÀÛ
         CheckInteractablesLoop().Forget();
     }
 
     private void Update()
     {
-        // Eí‚¤ ì…ë ¥ ì‹œ ìƒí˜¸ì‘ìš©
+        // EÅ° ÀÔ·Â ½Ã »óÈ£ÀÛ¿ë
         if (Input.GetKeyDown(KeyCode.E) && nearestItem != null)
         {
             nearestItem.OnInteract();
         }
 
-        // UI í‘œì‹œ
+        // UI Ç¥½Ã
         if (nearestItem != null)
         {
             promptPanel.SetActive(true);
@@ -50,11 +50,11 @@ public class Interaction : MonoBehaviour //itemobjectë‘ ìƒí˜¸ì‘ìš©ë§Œ í•˜ëŠ” 
 
     private async UniTaskVoid CheckInteractablesLoop()
     {
-        while (this != null) // ì˜¤ë¸Œì íŠ¸ íŒŒê´´ë˜ë©´ ìë™ì¢…ë£Œ
+        while (this != null) // ¿ÀºêÁ§Æ® ÆÄ±«µÇ¸é ÀÚµ¿Á¾·á
         {
             nearestItem = FindNearestInteractable();
 
-            // 0.3ì´ˆ ëŒ€ê¸°
+            // 0.3ÃÊ ´ë±â
             await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: this.GetCancellationTokenOnDestroy());
         }
     }
@@ -83,10 +83,10 @@ public class Interaction : MonoBehaviour //itemobjectë‘ ìƒí˜¸ì‘ìš©ë§Œ í•˜ëŠ” 
         return closest;
     }
 
-    // ì„ íƒ ì‚¬í•­: ì‹œê°í™”ìš©
+    // ¼±ÅÃ »çÇ×: ½Ã°¢È­¿ë
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.magenta;
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 }

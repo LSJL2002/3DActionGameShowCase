@@ -39,7 +39,6 @@ public abstract class PlayerBaseState : Istate
         input.PlayerActions.HeavyAttack.started += OnHeavyAttackStarted;
 
         input.PlayerActions.Menu.performed += OnMenuToggle;
-        input.PlayerActions.Camera.started += OnLockOnToggle;
     }
 
     protected virtual void RemoveInputActionCallbacks()
@@ -52,23 +51,12 @@ public abstract class PlayerBaseState : Istate
         input.PlayerActions.HeavyAttack.started -= OnHeavyAttackStarted;
 
         input.PlayerActions.Menu.performed -= OnMenuToggle;
-        input.PlayerActions.Camera.started -= OnLockOnToggle;
     }
 
     public virtual void HandleInput()
     {
         ReadMovementInput();
         ReadZoomInput(); // 줌 값 읽기 추가
-
-        // Animator에 입력값 전달 (공통 처리)
-        stateMachine.Player.Animator.SetFloat(
-            stateMachine.Player.AnimationData.HorizontalHash,
-            stateMachine.MovementInput.x
-        );
-        stateMachine.Player.Animator.SetFloat(
-            stateMachine.Player.AnimationData.VerticalHash,
-            stateMachine.MovementInput.y
-        );
     }
     public virtual void LogicUpdate() { }
 
@@ -85,22 +73,6 @@ public abstract class PlayerBaseState : Istate
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
 
-    protected virtual void OnLockOnToggle(InputAction.CallbackContext context)
-    {
-        var cam = stateMachine.Player.camera;
-
-        if (cam.HasTarget())
-        {
-            cam.SetLockOnTarget(null); // 해제
-        }
-        else
-        {
-            // 가까운 몬스터 자동 탐색 후 락온
-            //var nearest = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange);
-            //camManager.SetLockOnTarget(nearest);
-        }
-    }
-
     private bool isPaused = false;
     protected virtual void OnMenuToggle(InputAction.CallbackContext context)
     {
@@ -111,13 +83,13 @@ public abstract class PlayerBaseState : Istate
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            stateMachine.Player.camera.Volume.enabled = true;
+            stateMachine.Player.cameraManager.Volume.enabled = true;
         }
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            stateMachine.Player.camera.Volume.enabled = false;
+            stateMachine.Player.cameraManager.Volume.enabled = false;
         }
     }
     // ========== 개별 입력 읽기 ==========
@@ -139,7 +111,7 @@ public abstract class PlayerBaseState : Istate
     // ========== Zoom 처리 ==========
     private void OnZoom(float zoomDelta)
     {
-        var vcam = stateMachine.Player.camera.FreeLook;
+        var vcam = stateMachine.Player.cameraManager.FreeLook;
         if (vcam == null) return;
 
         float fov = vcam.m_Lens.FieldOfView;
@@ -191,8 +163,8 @@ public abstract class PlayerBaseState : Istate
 
     protected Vector3 GetMovementDir()
     {
-        Vector3 forward = stateMachine.Player.camera.MainCamera.forward;
-        Vector3 right = stateMachine.Player.camera.MainCamera.right;
+        Vector3 forward = stateMachine.Player.cameraManager.MainCamera.forward;
+        Vector3 right = stateMachine.Player.cameraManager.MainCamera.right;
 
         forward.y = 0;
         right.y = 0;
@@ -203,7 +175,6 @@ public abstract class PlayerBaseState : Istate
     }
 
 
-    //ForceReceiver에 쌓인 힘을 실제 캐릭터에 적용하는 역할
     protected void ForceMove()
     {
         stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime);

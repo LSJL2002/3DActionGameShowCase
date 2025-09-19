@@ -19,46 +19,24 @@ public class PlayerAttackState : PlayerBaseState
     private float attackEndTime;
     private readonly float idleTimeout = 1f;
 
+
     public override PlayerStateID StateID => PlayerStateID.Attack;
-    public override bool AllowRotation => false; // 공격 중 캐릭터 회전은 ApplyAttackMovement에서 처리
+    public override bool AllowRotation => false;
 
     public PlayerAttackState(PlayerStateMachine sm) : base(sm) { }
 
     public override void Enter()
     {
         base.Enter();
-        InitializeAttack();
-    }
 
-    public override void Exit()
-    {
-        base.Exit();
-        ResetAttackState();
-    }
-
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
-
-        float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
-
-        ApplyAttackMovement(normalizedTime);  // 이동/돌진 처리
-        HandleCombo(normalizedTime);          // 콤보 처리
-        HandleAttackEnd(normalizedTime);      // 공격 종료 체크
-        CheckIdleTransition();                // Idle 상태 전환 체크
-    }
-
-    // ===================== 공격 초기화 =====================
-    private void InitializeAttack()
-    {
+        // 현재 공격 데이터 세팅
         currentAttack = stateMachine.Player.InfoData.AttackData.GetAttackInfoData(stateMachine.ComboIndex);
 
-        // 가장 가까운 몬스터 탐색
+        // 타겟 탐지 & 세팅
         attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange);
         stateMachine.Player.Combat.SetAttackTarget(attackTarget);
-        // 공격 진입 시 Lock-On 강제 적용
-        if (attackTarget != null)  stateMachine.Player.camera.SetLockOnTarget(attackTarget);
 
+        // 애니메이션 시작
         var anim = stateMachine.Player.Animator;
         anim.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
         StartAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
@@ -69,14 +47,15 @@ public class PlayerAttackState : PlayerBaseState
         bufferedComboIndex = -1;
         forceApplied = false;
         attackEnded = false;
-        attackButtonHeld = true;
 
         stateMachine.IsAttacking = true;
         lastAttackInputTime = Time.time;
     }
 
-    private void ResetAttackState()
+    public override void Exit()
     {
+        base.Exit();
+
         StopAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
         StopAnimation(stateMachine.Player.AnimationData.ComboBoolHash);
 
@@ -89,30 +68,64 @@ public class PlayerAttackState : PlayerBaseState
         stateMachine.IsAttacking = false;
     }
 
-    // ===================== 공격 이동 & Force =====================
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+
+        float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
+
+        ApplyAttackMovement(normalizedTime);
+        HandleCombo(normalizedTime);
+        HandleAttackEnd(normalizedTime);
+        CheckIdleTransition();
+    }
+
+
     private void ApplyAttackMovement(float normalizedTime)
     {
+        var cc = stateMachine.Player.Controller;
+        float dashSpeed = stateMachine.Player.InfoData.AttackData.DashSpeed;
+        float stopDistance = stateMachine.Player.InfoData.AttackData.StopDistance;
+
+        // Dash 처리
         if (attackTarget != null)
         {
-            // 몬스터 바라보기만 적용
             Vector3 dir = (attackTarget.position - stateMachine.Player.transform.position).normalized;
-            dir.y = 0;
-            dir.Normalize();
+            float distance = Vector3.Distance(stateMachine.Player.transform.position, attackTarget.position);
 
-            stateMachine.Player.transform.forward = dir;
+            if (distance > stopDistance)
+            {
+                cc.Move(dir * dashSpeed * Time.deltaTime);
+                stateMachine.Player.transform.forward = dir;
+            }
         }
 
-        // Force 제거: 제자리 공격
-        // ApplyForce() 호출하지 않음
+        // Force 적용
+        if (!forceApplied && normalizedTime >= currentAttack.ForceTransitionTime)
+        {
+            ApplyForce();
+        }
     }
 
-    // ApplyForce()도 사용하지 않으므로 빈 메서드로 두거나 삭제 가능
     private void ApplyForce()
     {
-        // 이제 Force 효과 제거
+        forceApplied = true;
+        stateMachine.Player.ForceReceiver.Reset();
+
+        Vector3 dir = attackTarget != null
+            ? (attackTarget.position - stateMachine.Player.transform.position)
+            : stateMachine.Player.transform.forward;
+
+        dir.y = 0;
+        dir.Normalize();
+
+        stateMachine.Player.ForceReceiver.AddForce(dir * currentAttack.Force, true);
+        stateMachine.Player.transform.forward = dir;
+
+        stateMachine.Player.Combat.OnAttack(currentAttack.AttackName);
     }
 
-    // ===================== 공격 콤보 처리 =====================
+
     private void HandleCombo(float normalizedTime)
     {
         if (attackButtonHeld && bufferedComboIndex < 0)
@@ -131,6 +144,7 @@ public class PlayerAttackState : PlayerBaseState
         }
     }
 
+
     private void HandleAttackEnd(float normalizedTime)
     {
         if (!attackEnded && normalizedTime >= 1f)
@@ -147,6 +161,7 @@ public class PlayerAttackState : PlayerBaseState
         }
     }
 
+
     private void CheckIdleTransition()
     {
         if (attackButtonHeld)
@@ -159,6 +174,7 @@ public class PlayerAttackState : PlayerBaseState
         }
     }
 
+
     private void SetAttack(int comboIndex)
     {
         stateMachine.ComboIndex = comboIndex;
@@ -169,7 +185,7 @@ public class PlayerAttackState : PlayerBaseState
         stateMachine.Player.Animator.SetInteger(stateMachine.Player.AnimationData.ComboIntHash, comboIndex);
     }
 
-    // ===================== 입력 처리 =====================
+
     protected override void OnAttackStarted(InputAction.CallbackContext context)
     {
         attackButtonHeld = true;
@@ -193,7 +209,6 @@ public class PlayerAttackState : PlayerBaseState
     }
 
 
-    // ===================== 타겟 탐지 =====================
     private Transform FindNearestMonster(float radius)
     {
         Collider[] hits = Physics.OverlapSphere(stateMachine.Player.transform.position, radius, LayerMask.GetMask("Enemy"));

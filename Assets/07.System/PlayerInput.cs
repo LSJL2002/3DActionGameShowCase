@@ -84,15 +84,6 @@ namespace UnityEngine.InputSystem
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Camera"",
-                    ""type"": ""Button"",
-                    ""id"": ""d6be459b-89f8-405a-89a3-c9c8f9b330e8"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""7eae478f-d95d-49fe-a55b-fa3efcf9a752"",
@@ -114,6 +105,15 @@ namespace UnityEngine.InputSystem
                     ""name"": ""Flash"",
                     ""type"": ""Button"",
                     ""id"": ""0d1f1195-9395-42d8-b2fa-56be90195d2c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CameraToggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""d6be459b-89f8-405a-89a3-c9c8f9b330e8"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -297,6 +297,17 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Flash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44dff754-2aac-4bf3-bd05-1f810f8be290"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CameraToggle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -517,17 +528,6 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Zoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""44dff754-2aac-4bf3-bd05-1f810f8be290"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Camera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1121,10 +1121,10 @@ namespace UnityEngine.InputSystem
             m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
             m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
             m_Player_HeavyAttack = m_Player.FindAction("HeavyAttack", throwIfNotFound: true);
-            m_Player_Camera = m_Player.FindAction("Camera", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Menu = m_Player.FindAction("Menu", throwIfNotFound: true);
             m_Player_Flash = m_Player.FindAction("Flash", throwIfNotFound: true);
+            m_Player_CameraToggle = m_Player.FindAction("CameraToggle", throwIfNotFound: true);
             m_Player_Action = m_Player.FindAction("Action", throwIfNotFound: true);
             m_Player_Interaction = m_Player.FindAction("Interaction", throwIfNotFound: true);
             m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
@@ -1208,10 +1208,10 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Dodge;
         private readonly InputAction m_Player_Attack;
         private readonly InputAction m_Player_HeavyAttack;
-        private readonly InputAction m_Player_Camera;
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Menu;
         private readonly InputAction m_Player_Flash;
+        private readonly InputAction m_Player_CameraToggle;
         private readonly InputAction m_Player_Action;
         private readonly InputAction m_Player_Interaction;
         private readonly InputAction m_Player_Inventory;
@@ -1226,10 +1226,10 @@ namespace UnityEngine.InputSystem
             public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
             public InputAction @Attack => m_Wrapper.m_Player_Attack;
             public InputAction @HeavyAttack => m_Wrapper.m_Player_HeavyAttack;
-            public InputAction @Camera => m_Wrapper.m_Player_Camera;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Menu => m_Wrapper.m_Player_Menu;
             public InputAction @Flash => m_Wrapper.m_Player_Flash;
+            public InputAction @CameraToggle => m_Wrapper.m_Player_CameraToggle;
             public InputAction @Action => m_Wrapper.m_Player_Action;
             public InputAction @Interaction => m_Wrapper.m_Player_Interaction;
             public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
@@ -1261,9 +1261,6 @@ namespace UnityEngine.InputSystem
                 @HeavyAttack.started += instance.OnHeavyAttack;
                 @HeavyAttack.performed += instance.OnHeavyAttack;
                 @HeavyAttack.canceled += instance.OnHeavyAttack;
-                @Camera.started += instance.OnCamera;
-                @Camera.performed += instance.OnCamera;
-                @Camera.canceled += instance.OnCamera;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -1273,6 +1270,9 @@ namespace UnityEngine.InputSystem
                 @Flash.started += instance.OnFlash;
                 @Flash.performed += instance.OnFlash;
                 @Flash.canceled += instance.OnFlash;
+                @CameraToggle.started += instance.OnCameraToggle;
+                @CameraToggle.performed += instance.OnCameraToggle;
+                @CameraToggle.canceled += instance.OnCameraToggle;
                 @Action.started += instance.OnAction;
                 @Action.performed += instance.OnAction;
                 @Action.canceled += instance.OnAction;
@@ -1307,9 +1307,6 @@ namespace UnityEngine.InputSystem
                 @HeavyAttack.started -= instance.OnHeavyAttack;
                 @HeavyAttack.performed -= instance.OnHeavyAttack;
                 @HeavyAttack.canceled -= instance.OnHeavyAttack;
-                @Camera.started -= instance.OnCamera;
-                @Camera.performed -= instance.OnCamera;
-                @Camera.canceled -= instance.OnCamera;
                 @Jump.started -= instance.OnJump;
                 @Jump.performed -= instance.OnJump;
                 @Jump.canceled -= instance.OnJump;
@@ -1319,6 +1316,9 @@ namespace UnityEngine.InputSystem
                 @Flash.started -= instance.OnFlash;
                 @Flash.performed -= instance.OnFlash;
                 @Flash.canceled -= instance.OnFlash;
+                @CameraToggle.started -= instance.OnCameraToggle;
+                @CameraToggle.performed -= instance.OnCameraToggle;
+                @CameraToggle.canceled -= instance.OnCameraToggle;
                 @Action.started -= instance.OnAction;
                 @Action.performed -= instance.OnAction;
                 @Action.canceled -= instance.OnAction;
@@ -1519,10 +1519,10 @@ namespace UnityEngine.InputSystem
             void OnDodge(InputAction.CallbackContext context);
             void OnAttack(InputAction.CallbackContext context);
             void OnHeavyAttack(InputAction.CallbackContext context);
-            void OnCamera(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnMenu(InputAction.CallbackContext context);
             void OnFlash(InputAction.CallbackContext context);
+            void OnCameraToggle(InputAction.CallbackContext context);
             void OnAction(InputAction.CallbackContext context);
             void OnInteraction(InputAction.CallbackContext context);
             void OnInventory(InputAction.CallbackContext context);
