@@ -25,10 +25,10 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         inventoryViewModel = viewModel;
 
         itemData = data;
-        iconImage.sprite = data.itemIcon;
+        iconImage.sprite = data.sprite;
         itemName = data.inGameName;
         itemType = data.itemType.ToString();
-        itemDescription = data.itemDescription;
+        itemDescription = data.scriptText;
 
         if (count > 0)
         {
@@ -64,7 +64,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
 
             // 스킬이라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
-            else if (itemData.itemType == ItemData.ItemType.Skill)
+            else if (itemData.itemType == ItemData.ItemType.SkillCard)
             {
                 // 아웃라인 컴포넌트 On / Off
                 // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)

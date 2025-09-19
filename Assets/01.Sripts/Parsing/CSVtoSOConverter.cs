@@ -8,8 +8,9 @@ using UnityEngine;
 
 public class CSVtoSOConverter : EditorWindow
 {
-    private string csvFilePath = "";
-    private int selectedTypeIndex = 0;
+    private string firstCsvFilePath = "";
+    private string secondCsvFilePath = "";
+    private int selectedSoTypeIndex = 0;
 
     private CSVtoSOSettings settings;
     private const string SETTINGS_PATH = "Assets/Editor/CSVtoSOSettings.asset";
@@ -47,16 +48,22 @@ public class CSVtoSOConverter : EditorWindow
     {
         GUILayout.Label("CSV → ScriptableObjects (Generic)", EditorStyles.boldLabel);
 
-        // CSV 파일 드래그 앤 드롭 영역
         Event currentEvent = Event.current;
-        Rect csvDropArea = EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.Height(50));
-        // 오류가 발생했던 부분을 아래와 같이 수정
-        GUILayout.Label("Drag & Drop CSV File Here", new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter });
+
+        GUILayout.Label("Drag & Drop First CSV File Here", EditorStyles.boldLabel);
+        Rect firstCsvDropArea = EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.Height(50));
+        GUILayout.Label(string.IsNullOrEmpty(firstCsvFilePath) ? "No file selected" : Path.GetFileName(firstCsvFilePath), new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter });
         EditorGUILayout.EndVertical();
+        HandleCsvDragAndDrop(currentEvent, firstCsvDropArea, ref firstCsvFilePath);
+        EditorGUILayout.TextField("Selected CSV Path (1)", firstCsvFilePath, GUI.skin.textField);
 
-        HandleCSVDragAndDrop(currentEvent, csvDropArea);
+        GUILayout.Label("Drag & Drop Second CSV File Here (Optional)", EditorStyles.boldLabel);
+        Rect secondCsvDropArea = EditorGUILayout.BeginVertical(GUI.skin.box, GUILayout.Height(50));
+        GUILayout.Label(string.IsNullOrEmpty(secondCsvFilePath) ? "No file selected" : Path.GetFileName(secondCsvFilePath), new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter });
+        EditorGUILayout.EndVertical();
+        HandleCsvDragAndDrop(currentEvent, secondCsvDropArea, ref secondCsvFilePath);
+        EditorGUILayout.TextField("Selected CSV Path (2)", secondCsvFilePath, GUI.skin.textField);
 
-        EditorGUILayout.TextField("Selected CSV Path", csvFilePath, GUI.skin.textField);
 
         Rect soDropArea = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
         GUI.Box(soDropArea, "Drag & Drop ScriptableObject Script Here");
@@ -66,39 +73,38 @@ public class CSVtoSOConverter : EditorWindow
         if (settings.soTypeNames.Count > 0)
         {
             string[] typeNames = settings.soTypeNames.ToArray();
-            selectedTypeIndex = EditorGUILayout.Popup("Select SO Class", selectedTypeIndex, typeNames);
+            selectedSoTypeIndex = EditorGUILayout.Popup("Select SO Class", selectedSoTypeIndex, typeNames);
 
             if (GUILayout.Button("Delete Selected"))
             {
                 if (EditorUtility.DisplayDialog("Confirm Deletion", "Are you sure you want to delete the selected ScriptableObject type?", "Delete", "Cancel"))
                 {
-                    settings.soTypeNames.RemoveAt(selectedTypeIndex);
-                    selectedTypeIndex = Mathf.Clamp(selectedTypeIndex, 0, settings.soTypeNames.Count - 1);
+                    settings.soTypeNames.RemoveAt(selectedSoTypeIndex);
+                    selectedSoTypeIndex = Mathf.Clamp(selectedSoTypeIndex, 0, settings.soTypeNames.Count - 1);
                     SaveSettings();
                 }
             }
         }
         else
-
         {
             EditorGUILayout.LabelField("No ScriptableObject types added yet.");
         }
 
         if (GUILayout.Button("Convert"))
         {
-            if (!string.IsNullOrEmpty(csvFilePath) && settings.soTypeNames.Count > 0)
+            if (!string.IsNullOrEmpty(firstCsvFilePath) && settings.soTypeNames.Count > 0)
             {
-                string soTypeName = settings.soTypeNames[selectedTypeIndex];
-                ConvertCSVtoSO(csvFilePath, Path.GetDirectoryName(csvFilePath), soTypeName);
+                string soTypeName = settings.soTypeNames[selectedSoTypeIndex];
+                ConvertCSVtoSO(firstCsvFilePath, Path.GetDirectoryName(firstCsvFilePath), soTypeName, secondCsvFilePath);
             }
             else
             {
-                Debug.LogError("CSV file path or ScriptableObject type is not selected.");
+                Debug.LogError("First CSV file path or ScriptableObject type is not selected.");
             }
         }
     }
 
-    private void HandleCSVDragAndDrop(Event currentEvent, Rect dropArea)
+    private void HandleCsvDragAndDrop(Event currentEvent, Rect dropArea, ref string pathVariable)
     {
         if (dropArea.Contains(currentEvent.mousePosition))
         {
@@ -111,7 +117,7 @@ public class CSVtoSOConverter : EditorWindow
                     string path = AssetDatabase.GetAssetPath(draggedObject);
                     if (path.EndsWith(".csv"))
                     {
-                        csvFilePath = path;
+                        pathVariable = path;
                         break;
                     }
                 }
@@ -151,11 +157,11 @@ public class CSVtoSOConverter : EditorWindow
         AssetDatabase.Refresh();
     }
 
-    public static void ConvertCSVtoSO(string csvPath, string outputPath, string soTypeName)
+    public static void ConvertCSVtoSO(string firstCsvPath, string outputPath, string soTypeName, string secondCsvPath)
     {
-        if (!File.Exists(csvPath))
+        if (!File.Exists(firstCsvPath))
         {
-            Debug.LogError("CSV file not found at path: " + csvPath);
+            Debug.LogError("First CSV file not found at path: " + firstCsvPath);
             return;
         }
 
@@ -166,22 +172,64 @@ public class CSVtoSOConverter : EditorWindow
             return;
         }
 
+        // 두 번째 CSV 파일의 ID와 텍스트를 미리 로드하여 딕셔너리에 저장
+        Dictionary<int, string> scriptTextMap = new Dictionary<int, string>();
+        if (!string.IsNullOrEmpty(secondCsvPath) && File.Exists(secondCsvPath))
+        {
+            string[] secondLines = File.ReadAllLines(secondCsvPath);
+            if (secondLines.Length > 1)
+            {
+                // 변수 이름 'headers'를 'secondHeaders'로 변경하여 충돌 해결
+                string[] secondHeaders = secondLines[0].Split(',');
+                int idIndex = Array.IndexOf(secondHeaders, "id");
+                int textIndex = Array.IndexOf(secondHeaders, "textContent"); // 또는 "text", "scriptText" 등 실제 헤더 이름
+                if (idIndex != -1 && textIndex != -1)
+                {
+                    for (int i = 1; i < secondLines.Length; i++)
+                    {
+                        if (string.IsNullOrWhiteSpace(secondLines[i])) continue;
+                        string[] values = secondLines[i].Split(',');
+                        if (values.Length > idIndex && values.Length > textIndex && int.TryParse(values[idIndex], out int id))
+                        {
+                            string text = values[textIndex];
+                            if (!scriptTextMap.ContainsKey(id))
+                            {
+                                scriptTextMap.Add(id, text);
+                            }
+                        }
+                    }
+                }
+                Debug.Log($"Second CSV 파일에서 {scriptTextMap.Count}개의 스크립트 텍스트 로드 완료.");
+            }
+        }
+
         if (!Directory.Exists(outputPath))
             Directory.CreateDirectory(outputPath);
 
-        string[] lines = File.ReadAllLines(csvPath);
-        if (lines.Length <= 1)
+        string[] firstLines = File.ReadAllLines(firstCsvPath);
+        if (firstLines.Length <= 1)
         {
-            Debug.LogError("CSV has no data rows.");
+            Debug.LogError("First CSV has no data rows.");
             return;
         }
 
-        string[] headers = lines[0].Split(',');
+        string[] headers = firstLines[0].Split(',');
 
-        for (int i = 1; i < lines.Length; i++)
+        FieldInfo spriteIdField = soType.GetField("spriteID", BindingFlags.Public | BindingFlags.Instance);
+        FieldInfo spriteField = soType.GetField("sprite", BindingFlags.Public | BindingFlags.Instance);
+        FieldInfo scriptIdField = soType.GetField("scriptID", BindingFlags.Public | BindingFlags.Instance);
+        FieldInfo scriptTextField = soType.GetField("scriptText", BindingFlags.Public | BindingFlags.Instance);
+
+        string spriteFolderPath = null;
+        if (spriteIdField != null && spriteField != null)
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] values = lines[i].Split(',');
+            spriteFolderPath = "Assets/99.Externals/Images/Sprite"; // 스프라이트 경로 직접 지정
+        }
+
+        for (int i = 1; i < firstLines.Length; i++)
+        {
+            if (string.IsNullOrWhiteSpace(firstLines[i])) continue;
+            string[] values = firstLines[i].Split(',');
 
             ScriptableObject soInstance = ScriptableObject.CreateInstance(soType);
 
@@ -198,35 +246,29 @@ public class CSVtoSOConverter : EditorWindow
                     if (field.FieldType == typeof(int))
                     {
                         int parsed = 0;
-                        if (!string.IsNullOrWhiteSpace(value))
-                        {
-                            parsed = int.Parse(value);
-                        }
+                        if (!string.IsNullOrWhiteSpace(value)) parsed = int.Parse(value);
                         field.SetValue(soInstance, parsed);
                     }
                     else if (field.FieldType == typeof(float))
                     {
                         float parsed = 0f;
-                        if (!string.IsNullOrEmpty(value))
-                        {
-                            parsed = float.Parse(value.Replace("f", ""));
-                        }
+                        if (!string.IsNullOrEmpty(value)) parsed = float.Parse(value.Replace("f", ""));
                         field.SetValue(soInstance, parsed);
                     }
                     else if (field.FieldType == typeof(string))
+                    {
                         field.SetValue(soInstance, value);
+                    }
                     else if (field.FieldType == typeof(List<int>))
                     {
                         var list = new List<int>();
-                        if (!string.IsNullOrEmpty(value))
-                            list.AddRange(value.Split(';').Select(s => int.Parse(s)));
+                        if (!string.IsNullOrEmpty(value)) list.AddRange(value.Split(';').Select(s => int.Parse(s)));
                         field.SetValue(soInstance, list);
                     }
                     else if (field.FieldType == typeof(List<string>))
                     {
                         var list = new List<string>();
-                        if (!string.IsNullOrEmpty(value))
-                            list.AddRange(value.Split(';'));
+                        if (!string.IsNullOrEmpty(value)) list.AddRange(value.Split(';'));
                         field.SetValue(soInstance, list);
                     }
                     else if (field.FieldType.IsEnum)
@@ -241,17 +283,60 @@ public class CSVtoSOConverter : EditorWindow
                 }
             }
 
-            string assetName = values.Length > 1 ? values[0] : $"SO_{i}";
-            if (string.IsNullOrEmpty(assetName))
-                assetName = $"SO_{i}";
+            // Sprite 할당 로직 (기존과 동일)
+            if (spriteIdField != null && spriteField != null && !string.IsNullOrEmpty(spriteFolderPath))
+            {
+                int spriteId = (int)spriteIdField.GetValue(soInstance);
+                FindAndAssignSprite(soInstance, spriteField, spriteId, spriteFolderPath);
+            }
 
+            // ScriptText 할당 로직
+            if (scriptIdField != null && scriptTextField != null)
+            {
+                int scriptId = (int)scriptIdField.GetValue(soInstance);
+                if (scriptTextMap.TryGetValue(scriptId, out string scriptText))
+                {
+                    scriptTextField.SetValue(soInstance, scriptText);
+                    Debug.Log($"ID {scriptId}에 해당하는 스크립트 텍스트 할당 완료.");
+                }
+                else
+                {
+                    Debug.LogWarning($"ID {scriptId}에 해당하는 스크립트 텍스트를 찾을 수 없습니다.");
+                }
+            }
+
+            string assetName = values.Length > 1 ? values[0] : $"SO_{i}";
+            if (string.IsNullOrEmpty(assetName)) assetName = $"SO_{i}";
             string assetPath = $"{outputPath}/{assetName}.asset";
             AssetDatabase.CreateAsset(soInstance, assetPath);
         }
-
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-
         Debug.Log("CSV → SO 변환 완료!");
+    }
+
+    private static void FindAndAssignSprite(ScriptableObject so, FieldInfo spriteField, int spriteId, string spriteFolderPath)
+    {
+        string spriteName = spriteId.ToString();
+        string searchFilter = $"t:Sprite {spriteName}";
+        string[] guids = AssetDatabase.FindAssets(searchFilter, new[] { spriteFolderPath });
+
+        if (guids.Length > 0)
+        {
+            string spritePath = AssetDatabase.GUIDToAssetPath(guids[0]);
+            if (Path.GetFileNameWithoutExtension(spritePath) == spriteName)
+            {
+                Sprite foundSprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+                if (foundSprite != null)
+                {
+                    spriteField.SetValue(so, foundSprite);
+                    Debug.Log($"ID {spriteName}에 해당하는 스프라이트 할당 완료.");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"ID {spriteName}에 해당하는 스프라이트를 '{spriteFolderPath}'에서 찾을 수 없습니다.");
+        }
     }
 }

@@ -4,14 +4,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewItemData", menuName = "Inventory/Item Data")]
 public class ItemData : ScriptableObject
 {
-    public enum ItemType { Consumable, Skill, Core, }
+    public enum ItemType { Consumable, SkillCard, Core, }
 
     public enum EffectType { None, Heal, }
 
-    public string itemDescription;
     public int id;
     public string inGameName;
-    public Sprite itemIcon;
+    public int spriteID;
+    public Sprite sprite;
+    public int scriptID;
+    public string scriptText;
     public int maxEa;
     public ItemType itemType;
     public EffectType effectType;
