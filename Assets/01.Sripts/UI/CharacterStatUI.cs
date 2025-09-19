@@ -16,6 +16,9 @@ public class CharacterStatUI : UIBase
     public TextMeshProUGUI defenseText;
     private TextMeshProUGUI extraDefenseText; // 추가 방어력
 
+    public TextMeshProUGUI attackSpeedText;
+    private TextMeshProUGUI extraAttackSpeedText; // 추가 공격속도
+
     public TextMeshProUGUI moveSpeedText;
     private TextMeshProUGUI extraMoveSpeedText; // 추가 이동속도
 
@@ -31,6 +34,7 @@ public class CharacterStatUI : UIBase
 
         //attackText.text = $"공격력 : {playerStats.Attack.ToString()} + ({})"; // 추가 스탯 아직 없음
         //defenseText.text = $"방어력 : {playerStats.Defense.ToString()} + ({})"; // 추가 스탯 아직 없음
+        //attackSpeedText.text = $"공격속도 : {playerStats.attackSpeed.ToString()} + ({})"; // 플레이어 스탯에 공격속도 스탯 아직 없음
         //moveSpeedText.text = $"이동속도 : {playerStats.MoveSpeed.ToString()} + ({})"; // 플레이어 스탯에 이동속도 스탯 아직 없음
     }
 
