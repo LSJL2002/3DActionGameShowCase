@@ -11,6 +11,12 @@ public class BattleZoneSO : ScriptableObject
     public int summonMonsterId;
     public List<int> moveAbleStage;
     public List<int> getableItemTable;
+    public float extraHP;
+    public float extraMP;
+    public int extraATK;
+    public int extraDEF;
+    public float extraSpeed;
+    public float extraAtkSpeed;
 }
 //public int id;
 //public int MonsterId;

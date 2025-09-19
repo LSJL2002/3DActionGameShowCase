@@ -87,7 +87,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public virtual void OnTakeDamage(int amount)
     {
-        Stats.CurrentHP = amount - Stats.Defense;
+        Stats.CurrentHP -= amount - Stats.Defense;
         // 체력 변동 애니메이션 추가
         if (Stats.CurrentHP <= 0)
         {

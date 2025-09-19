@@ -10,9 +10,15 @@ public class BattleZone : MonoBehaviour
     public int summonMonsterId;
     public List<int> moveAbleStage;
     public List<int> getableItemTable;
+    public float extraHP;
+    public float extraMP;
+    public int extraATK;
+    public int extraDEF;
+    public float extraSpeed;
+    public float extraAtkSpeed;
 
     [Header("못나가게막는벽")]
-    [SerializeField]private GameObject walls;
+    [SerializeField] private GameObject walls;
 
     [SerializeField]
     private BattleZoneSO ZoneData;
@@ -27,6 +33,12 @@ public class BattleZone : MonoBehaviour
             summonMonsterId = ZoneData.summonMonsterId;
             moveAbleStage = ZoneData.moveAbleStage;
             getableItemTable = ZoneData.getableItemTable;
+            extraHP = ZoneData.extraHP;
+            extraMP = ZoneData.extraMP;
+            extraATK = ZoneData.extraATK;
+            extraDEF = ZoneData.extraDEF;
+            extraSpeed = ZoneData.extraSpeed;
+            extraAtkSpeed = ZoneData.extraAtkSpeed;
         }
     }
 

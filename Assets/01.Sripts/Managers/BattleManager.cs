@@ -26,7 +26,8 @@ public class BattleManager : Singleton<BattleManager>
         currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
 
         OnBattleStart?.Invoke(zone);
-        
+
+      
     }
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
@@ -70,6 +71,20 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
+    public string GetItemInfo(int index)
+    {
+        if (index >= 0 && index < currentZone.getableItemTable.Count)
+        {
+            // 2. 유효한 경우, 해당 인덱스의 값을 반환합니다.
+            return currentZone.getableItemTable[index].ToString();
+        }
+        else
+        {
+            // 3. 유효하지 않은 경우, 오류 로그를 출력하고 null을 반환합니다.
+            Debug.LogError($"Invalid index: {index}. The list has only {currentZone.getableItemTable.Count} items.");
+            return null;
+        }
+    }
 
 
 
