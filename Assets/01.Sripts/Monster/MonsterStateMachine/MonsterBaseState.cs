@@ -53,29 +53,20 @@ public class MonsterBaseState : Istate
         var agent = stateMachine.Monster.Agent;
         if (cc == null || forceReceiver == null || agent == null) return;
 
-        // Make sure agent is active
-        if (!agent.isActiveAndEnabled) return;
-
-        // Set the destination on the agent (so it calculates the path)
+        // NavMeshAgent은 이동 경로에만 사용
         agent.SetDestination(destination);
-
-        // Get the agent's desired velocity (what direction it wants to go)
         Vector3 desiredVelocity = agent.desiredVelocity;
 
-        // AI movement from agent
-        Vector3 aiMove = desiredVelocity.normalized * stateMachine.MovementSpeed * Time.deltaTime;
+        // 찾은 경로와 force을 이용을하여 몬스터를 이동을 하게 한다
+        Vector3 move = desiredVelocity.normalized * stateMachine.MovementSpeed * Time.deltaTime;
+        move += forceReceiver.Movement;
 
-        // Combine with forces (gravity, knockback)
-        Vector3 totalMove = aiMove + forceReceiver.Movement;
+        cc.Move(move);
 
-        // Move using CharacterController
-        cc.Move(totalMove);
-
-        // Smooth rotation toward movement direction
-        Vector3 lookDir = new Vector3(desiredVelocity.x, 0, desiredVelocity.z);
-        if (lookDir.sqrMagnitude > 0.001f)
+        // Rotation하는 방법
+        if (desiredVelocity.sqrMagnitude > 0.001f)
         {
-            Quaternion targetRot = Quaternion.LookRotation(lookDir);
+            Quaternion targetRot = Quaternion.LookRotation(new Vector3(desiredVelocity.x, 0, desiredVelocity.z));
             stateMachine.Monster.transform.rotation = Quaternion.Slerp(
                 stateMachine.Monster.transform.rotation,
                 targetRot,
@@ -97,7 +88,7 @@ public class MonsterBaseState : Istate
             agent.ResetPath();
         }
 
-        // Still apply gravity/knockback
+        // 나중에
         if (cc != null && forceReceiver != null)
         {
             cc.Move(forceReceiver.Movement * Time.deltaTime);

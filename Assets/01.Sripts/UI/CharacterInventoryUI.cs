@@ -55,7 +55,7 @@ public class CharacterInventoryUI : UIBase
         {
             // 게임UI로 돌아가기
             case "Return":
-                await UIManager.Instance.Show<TownUI>();
+                await UIManager.Instance.Show<CompanionUI>();
                 Hide();
                 break;
 
@@ -75,7 +75,7 @@ public class CharacterInventoryUI : UIBase
                 InventoryManager.Instance.LoadData_Addressables(str, 1);
                 break;
 
-            case "SkillItem_1":
+            case "20010008":
                 InventoryManager.Instance.LoadData_Addressables(str);
                 break;
 

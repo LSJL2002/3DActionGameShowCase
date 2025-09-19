@@ -25,10 +25,10 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         inventoryViewModel = viewModel;
 
         itemData = data;
-        iconImage.sprite = data.itemIcon;
+        iconImage.sprite = data.sprite;
         itemName = data.inGameName;
         itemType = data.itemType.ToString();
-        itemDescription = data.itemDescription;
+        itemDescription = data.scriptText;
 
         if (count > 0)
         {

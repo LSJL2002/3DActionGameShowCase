@@ -29,6 +29,7 @@ public class SmileToiletChargeState : MonsterBaseState
 
         Vector3 spawnPos = stateMachine.Monster.transform.position;
         aoeInstance = Object.Instantiate(skillData.areaEffectPrefab, spawnPos, skillData.areaEffectPrefab.transform.rotation);
+        stateMachine.Monster.RegisterAOE(aoeInstance);
         aoeController = aoeInstance.GetComponent<AreaEffectController>();
 
         if (aoeController == null)
@@ -91,8 +92,11 @@ public class SmileToiletChargeState : MonsterBaseState
         }
 
         if (aoeInstance != null)
+        {
+            stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
-
+        }
+        
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
     }
     public override void OnAttackHit()
