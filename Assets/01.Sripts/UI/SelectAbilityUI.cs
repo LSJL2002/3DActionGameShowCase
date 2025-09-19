@@ -1,22 +1,112 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UI;
 
 public class SelectAbilityUI : UIBase
 {
+    public Image statImage;
+    public Image skillImage;
+    public Image coreImage;
+
+    public TextMeshProUGUI statDescriptionText;
+    public TextMeshProUGUI skillDescriptionText;
+    public TextMeshProUGUI coreDescriptionText;
+
     // 배틀매니저가 가지고 있는 아이템을 저장할 변수
-    private int upgradeStat;
+    private int statPoint;
     private string skillItemAdress;
     private string coreItemAdress;
+
+    // AsyncOperationHandle을 저장할 변수 추가
+    private AsyncOperationHandle<ItemData> skillLoadHandle;
+    private AsyncOperationHandle<ItemData> coreLoadHandle;
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
         // 변수 초기화
-        //upgradeStat =
+        //statPoint =
         //skillItemAdress = 
         //coreItemAdress =
+
+        statDescriptionText.text = $"스탯이 {statPoint}만큼 증가합니다.";
+        GetItemInfo(skillItemAdress, "Skill"); // 스킬 아이템 정보 가져오고 UI에 세팅
+        GetItemInfo(coreItemAdress, "Core");   // 코어 아이템 정보 가져오고 UI에 세팅
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        // 로드했던 데이터 해제
+        ReleaseHandles();
+    }
+
+    public async void GetItemInfo(string adress, string type)
+    {
+        // 타입 확인 / 이미 핸들이 유효한지 확인
+        if (type == "Skill" && skillLoadHandle.IsValid())
+        {
+            Addressables.Release(skillLoadHandle);
+        }
+        else if (type == "Core" && coreLoadHandle.IsValid())
+        {
+            Addressables.Release(coreLoadHandle);
+        }
+
+        // 어드레서블로 아이템 데이터 로드
+        AsyncOperationHandle<ItemData> loadHandle = Addressables.LoadAssetAsync<ItemData>(adress);
+
+        if (type == "Skill")
+        {
+            skillLoadHandle = loadHandle;
+        }
+        else if (type == "Core")
+        {
+            coreLoadHandle = loadHandle;
+        }
+
+        // 로딩 완료까지 대기
+        await loadHandle.Task;
+
+        // 로딩이 완료된 시점에 핸들 유효성 확인
+        if (loadHandle.Status == AsyncOperationStatus.Succeeded)
+        {
+            ItemData loadedItem = loadHandle.Result;
+
+            if (type == "Skill")
+            {
+                skillDescriptionText.text = loadedItem.itemDescription;
+                skillImage.sprite = loadedItem.itemIcon;
+            }
+            else if (type == "Core")
+            {
+                coreDescriptionText.text = loadedItem.itemDescription;
+                coreImage.sprite = loadedItem.itemIcon;
+            }
+        }
+        else
+        {
+            Debug.LogError($"{adress} Fail");
+        }
+    }
+
+    // 모든 핸들을 해제하는 함수
+    private void ReleaseHandles()
+    {
+        if (skillLoadHandle.IsValid())
+        {
+            Addressables.Release(skillLoadHandle);
+            Debug.Log("스킬 데이터 해제 완료");
+        }
+        if (coreLoadHandle.IsValid())
+        {
+            Addressables.Release(coreLoadHandle);
+            Debug.Log("코어 데이터 해제 완료");
+        }
     }
 
     public void OnClickButton(string str)
@@ -28,7 +118,7 @@ public class SelectAbilityUI : UIBase
         {
             case "Stat":
                 // 플레이어 스탯 증가 함수 호출
-                Debug.Log($"플레이어 {upgradeStat} 스탯증가");
+                Debug.Log($"플레이어 {statPoint} 스탯증가");
                 break;
 
             case "Skill":
