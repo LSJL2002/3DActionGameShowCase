@@ -17,12 +17,12 @@ public class SelectAbilityUI : UIBase
     // 배틀매니저가 가지고 있는 아이템을 저장할 변수
     private string skillItemAdress;
     private string coreItemAdress;
-    private int statPoint_MaxHP;
-    private int statPoint_MaxMP;
+    private float statPoint_MaxHP;
+    private float statPoint_MaxMP;
     private int statPoint_ATK;
     private int statPoint_DEF;
-    private int statPoint_AttackSPD;
-    private int statPoint_MoveSPD;
+    private float statPoint_AttackSPD;
+    private float statPoint_MoveSPD;
 
     // AsyncOperationHandle을 저장할 변수 추가
     private AsyncOperationHandle<ItemData> skillLoadHandle;
@@ -32,15 +32,17 @@ public class SelectAbilityUI : UIBase
     {
         base.OnEnable();
 
+        BattleManager battleManager = BattleManager.Instance;
+
         // 변수 초기화
-        skillItemAdress = BattleManager.Instance.GetItemInfo(0); // 0번째정보 : 스킬아이템ID
-        coreItemAdress = BattleManager.Instance.GetItemInfo(1); // 1번째정보 : 코어아이템ID
-        //statPoint_MaxHP = BattleManager.Instance.
-        //statPoint_MaxMP = BattleManager.Instance.
-        //statPoint_ATK = BattleManager.Instance.;
-        //statPoint_DEF = BattleManager.Instance.
-        //statPoint_AttackSPD = BattleManager.Instance.
-        //statPoint_MoveSPD = BattleManager.Instance.
+        skillItemAdress = battleManager.GetItemInfo(0); // 0번째정보 : 스킬아이템ID
+        coreItemAdress = battleManager.GetItemInfo(1); // 1번째정보 : 코어아이템ID
+        statPoint_MaxHP = battleManager.currentZone.extraHP;
+        statPoint_MaxMP = battleManager.currentZone.extraMP;
+        statPoint_ATK = battleManager.currentZone.extraATK;
+        statPoint_DEF = battleManager.currentZone.extraDEF;
+        statPoint_AttackSPD = battleManager.currentZone.extraAtkSpeed;
+        statPoint_MoveSPD = battleManager.currentZone.extraSpeed;
 
         statDescriptionText.text = $"최대체력 : {statPoint_MaxHP}\n최대마력 : {statPoint_MaxMP}\n 공격력 : {statPoint_ATK}\n 방어력 : {statPoint_DEF}\n 공격속도 : {statPoint_AttackSPD}\n 이동속도 : {statPoint_MoveSPD} 만큼 증가합니다.";
         GetItemInfo(skillItemAdress, "Skill"); // 스킬 아이템 정보 가져오고 UI에 세팅
