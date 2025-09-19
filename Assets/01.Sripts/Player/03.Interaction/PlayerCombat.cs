@@ -62,7 +62,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
 
     private void HandleHit(IDamageable target)
     {
-        int damage = player?.Stats.Attack ?? 0;
+        int damage = Mathf.RoundToInt(player.Stats.Attack.Value);
         target.OnTakeDamage(damage);
     }
 
