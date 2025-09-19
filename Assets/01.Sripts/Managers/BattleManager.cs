@@ -9,22 +9,24 @@ public class BattleManager : Singleton<BattleManager>
 {
     private GameObject currentMonster; //현재 소환된 몬스터
     public MonsterStatHandler monsterStats; //그몬스터 스텟
-    private BattleZone activeZone; // 지금 전투하는 방
+    private BattleZone currentZone; // 지금 전투하는 방
 
     public static event Action<BattleZone> OnBattleStart;
     public static event Action<BattleZone> OnBattleClear;
 
     public async void StartBattle(BattleZone zone)
     {
-        activeZone = zone;
+        currentZone = zone;
+
 
         // 1. 벽 켜기
-        activeZone.SetWallsActive(true);
+        currentZone.SetWallsActive(true);
 
         // 2. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.MonsterID, zone.transform.position);
+        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
 
         OnBattleStart?.Invoke(zone);
+        
     }
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
@@ -58,7 +60,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public void ClearBattle()
     {
-        OnBattleClear?.Invoke(activeZone);
+        OnBattleClear?.Invoke(currentZone);
         if (currentMonster != null)
         {
             //currentMonster.gameObject.SetActive(false);

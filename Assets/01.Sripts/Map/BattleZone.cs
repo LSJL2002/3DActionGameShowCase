@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleZone : MonoBehaviour
 {
     [Header("스테이지 정보")]
-    public int zoneID;
-    public int MonsterID;
-    public int[] nextZoneID;
+    public int id;
+    public string stageName;
+    public int summonMonsterId;
+    public List<int> moveAbleStage;
+    public List<int> getableItemTable;
 
     [Header("못나가게막는벽")]
     [SerializeField]private GameObject walls;
@@ -19,9 +22,11 @@ public class BattleZone : MonoBehaviour
     {
         if (ZoneData != null)
         {
-            zoneID = ZoneData.id;
-            MonsterID = ZoneData.MonsterId;
-            nextZoneID = ZoneData.nextZoneId;
+            id = ZoneData.id;
+            stageName = ZoneData.stageName;
+            summonMonsterId = ZoneData.summonMonsterId;
+            moveAbleStage = ZoneData.moveAbleStage;
+            getableItemTable = ZoneData.getableItemTable;
         }
     }
 
