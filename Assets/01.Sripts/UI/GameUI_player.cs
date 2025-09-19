@@ -26,8 +26,8 @@ public partial class GameUI : UIBase
         playerStats = PlayerManager.Instance.Stats;
 
         // 플레이어 변수 초기화
-        playerMaxHP = playerStats.MaxHealth;
-        playerMaxMP = playerStats.MaxEnergy;
+        playerMaxHP = playerStats.MaxHealth.Value;
+        playerMaxMP = playerStats.MaxEnergy.Value;
 
         // 플레이어 슬라이더를 초기화
         playerHPSlider.maxValue = 1f;

@@ -27,19 +27,19 @@ public class CameraManager : MonoBehaviour
     // ===================== Lock-On =====================
     public void SetLockOnTarget(Transform target)
     {
-        lockOnTarget = target;
-        if (lockOnTarget != null)
-        {
-            // 다크소울식: 카메라의 LookAt을 타겟으로 변경
-            FreeLook.LookAt = lockOnTarget;
-            FreeLook.Follow = player; // 카메라는 플레이어를 따라다님
-        }
-        else
-        {
-            // Lock-On 해제 → 기본은 플레이어 중심
-            FreeLook.LookAt = player;
-            FreeLook.Follow = player;
-        }
+        //lockOnTarget = target;
+        //if (lockOnTarget != null)
+        //{
+        //    // 다크소울식: 카메라의 LookAt을 타겟으로 변경
+        //    FreeLook.LookAt = lockOnTarget;
+        //    FreeLook.Follow = player; // 카메라는 플레이어를 따라다님
+        //}
+        //else
+        //{
+        //    // Lock-On 해제 → 기본은 플레이어 중심
+        //    FreeLook.LookAt = player;
+        //    FreeLook.Follow = player;
+        //}
     }
 
     public bool HasTarget() => lockOnTarget != null;

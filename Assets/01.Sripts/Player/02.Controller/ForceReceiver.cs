@@ -44,7 +44,7 @@ public class ForceReceiver : MonoBehaviour
     }
 
     
-    // 공격/점프 구분 가능
+    // 공격/점프 구분 가능, 임펄스같은느낌
     public void AddForce(Vector3 force, bool horizontalOnly = false)
     {
         if (horizontalOnly)
