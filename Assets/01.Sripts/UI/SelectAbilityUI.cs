@@ -91,13 +91,13 @@ public class SelectAbilityUI : UIBase
 
             if (type == "Skill")
             {
-                skillDescriptionText.text = loadedItem.itemDescription;
-                skillImage.sprite = loadedItem.itemIcon;
+                skillDescriptionText.text = loadedItem.scriptText;
+                skillImage.sprite = loadedItem.sprite;
             }
             else if (type == "Core")
             {
-                coreDescriptionText.text = loadedItem.itemDescription;
-                coreImage.sprite = loadedItem.itemIcon;
+                coreDescriptionText.text = loadedItem.scriptText;
+                coreImage.sprite = loadedItem.sprite;
             }
         }
         else
