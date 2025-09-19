@@ -9,7 +9,7 @@ public class BattleManager : Singleton<BattleManager>
 {
     private GameObject currentMonster; //현재 소환된 몬스터
     public MonsterStatHandler monsterStats; //그몬스터 스텟
-    private BattleZone currentZone; // 지금 전투하는 방
+    public BattleZone currentZone; // 지금 전투하는 방
 
     public static event Action<BattleZone> OnBattleStart;
     public static event Action<BattleZone> OnBattleClear;
