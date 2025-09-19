@@ -18,6 +18,5 @@ public class GameScene : SceneBase
     private async void ShowUI()
     {
         await UIManager.Instance.Show<GameUI>();
-        await UIManager.Instance.Show<SkillUI>();
     }
 }
