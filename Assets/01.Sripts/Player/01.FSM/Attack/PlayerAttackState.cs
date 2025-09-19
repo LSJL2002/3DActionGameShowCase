@@ -11,9 +11,9 @@ public class PlayerAttackState : PlayerBaseState
 
     private bool attackButtonHeld = false;
     private bool attackEnded = false;
+    private bool comboTriggered = false; // 트리거 한 번만 발동
 
     private Transform attackTarget;
-
     private float lastAttackInputTime;
     private readonly float idleTimeout = 1f;
 
@@ -58,14 +58,16 @@ public class PlayerAttackState : PlayerBaseState
         if (attackTarget != null)  stateMachine.Player.camera.SetLockOnTarget(attackTarget);
 
         var anim = stateMachine.Player.Animator;
-        anim.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
+        //anim.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
         StartAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
-        StartAnimation(stateMachine.Player.AnimationData.ComboBoolHash);
+        // 첫 공격 트리거
+        stateMachine.Player.Animator.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
 
         SetAttack(stateMachine.ComboIndex);
 
         bufferedComboIndex = -1;
         attackEnded = false;
+        comboTriggered = false;
         attackButtonHeld = true;
         stateMachine.IsAttacking = true;
         lastAttackInputTime = Time.time;
@@ -74,11 +76,11 @@ public class PlayerAttackState : PlayerBaseState
     private void ResetAttackState()
     {
         StopAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
-        StopAnimation(stateMachine.Player.AnimationData.ComboBoolHash);
 
         bufferedComboIndex = -1;
         attackButtonHeld = false;
         attackEnded = false;
+        comboTriggered = false;
         attackTarget = null;
         stateMachine.IsAttacking = false;
     }
@@ -86,16 +88,14 @@ public class PlayerAttackState : PlayerBaseState
     // ===================== 공격 이동 & Force =====================
     private void ApplyAttackMovement(float normalizedTime)
     {
-        if (attackTarget != null)
-        {
-            // 몬스터 바라보기만 적용
-            Vector3 dir = (attackTarget.position - stateMachine.Player.transform.position).normalized;
-            dir.y = 0;
-            dir.Normalize();
+        if (attackTarget == null) return;
 
-            stateMachine.Player.transform.forward = dir;
-        }
+        //몬스터 바라보기만 적용
+        Vector3 dir = (attackTarget.position - stateMachine.Player.transform.position).normalized;
+        dir.y = 0;
+        dir.Normalize();
 
+        stateMachine.Player.transform.forward = dir;
         // Force 제거: 제자리 공격
         // ApplyForce() 호출하지 않음
     }
@@ -109,25 +109,27 @@ public class PlayerAttackState : PlayerBaseState
     // ===================== 공격 콤보 처리 =====================
     private void HandleCombo(float normalizedTime)
     {
-        // 입력 버퍼링: 현재 공격이 마지막(-1)이 아닌 경우만
+        // 다음 공격 버퍼링
         if (attackButtonHeld && bufferedComboIndex < 0 && currentAttack.ComboStateIndex != -1)
-        {
             bufferedComboIndex = currentAttack.ComboStateIndex;
-        }
 
-        // ComboTransitionTime 이상이면 버퍼 적용
-        if (bufferedComboIndex >= 0 && normalizedTime >= currentAttack.ComboTransitionTime)
+        // ComboTransitionTime 이상 + 트리거 미발동
+        if (bufferedComboIndex >= 0 && normalizedTime >= currentAttack.ComboTransitionTime && !comboTriggered)
         {
+            comboTriggered = true;
+            stateMachine.Player.Animator.SetTrigger(stateMachine.Player.AnimationData.ComboTriggerHash);
             SetAttack(bufferedComboIndex);
             bufferedComboIndex = -1;
         }
 
-        // 마지막 공격(-1) -> FinishState
-        if (currentAttack.ComboStateIndex == -1)
+        // 마지막 공격(-1) 처리
+        if (currentAttack.ComboStateIndex == -1 && normalizedTime >= 1f)
         {
-            // normalizedTime ≥ 1f 이후 FinishState로 전환
-            if (normalizedTime >= 1f)
-                stateMachine.ChangeState(stateMachine.FinishAttackState);
+            if (attackButtonHeld)
+            {
+                SetAttack(1); // 입력 유지 시 1타부터 재시작
+            }
+            // 입력 없으면 FinishAttackState로 CheckIdleTransition에서 전환
         }
     }
     private void HandleAttackEnd(float normalizedTime)
@@ -142,9 +144,8 @@ public class PlayerAttackState : PlayerBaseState
         if (attackButtonHeld)
             lastAttackInputTime = Time.time;
 
-        if (Time.time - lastAttackInputTime >= idleTimeout)
+        if (attackEnded && Time.time - lastAttackInputTime >= idleTimeout)
         {
-            stateMachine.ComboIndex = 1;
             stateMachine.ChangeState(stateMachine.FinishAttackState);
         }
     }
@@ -155,6 +156,9 @@ public class PlayerAttackState : PlayerBaseState
         currentAttack = stateMachine.AttackInfo;
 
         attackEnded = false;
+        comboTriggered = false; // 트리거 재발동 가능
+
+        // Animator 파라미터 업데이트
         stateMachine.Player.Animator.SetInteger(stateMachine.Player.AnimationData.ComboIntHash, comboIndex);
     }
 
@@ -165,6 +169,9 @@ public class PlayerAttackState : PlayerBaseState
         lastAttackInputTime = Time.time;
         if (!stateMachine.IsAttacking)
             stateMachine.IsAttacking = true;
+
+        // 트리거는 여기서만 발동
+        stateMachine.Player.Animator.SetTrigger(stateMachine.Player.AnimationData.ComboTriggerHash);
     }
 
     protected override void OnAttackCanceled(InputAction.CallbackContext context)

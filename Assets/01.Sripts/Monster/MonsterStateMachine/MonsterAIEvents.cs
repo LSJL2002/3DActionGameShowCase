@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MonsterAIEvents : MonoBehaviour
@@ -13,11 +9,13 @@ public class MonsterAIEvents : MonoBehaviour
 
     private MonsterStateMachine stateMachine;
     private Transform player;
-    [SerializeField] private float attackBuffer = 1f;
+    [SerializeField] private float attackBuffer = 2f;
 
     [Header("Attack Cooldown")]
     public float attackCooldown = 10f;
     private float lastAttackTime;
+
+    private bool processingEnabled = true;
 
     private void Awake()
     {
@@ -26,7 +24,7 @@ public class MonsterAIEvents : MonoBehaviour
 
     private void Update()
     {
-        if (player == null || stateMachine == null) return;
+        if (!processingEnabled || player == null || stateMachine == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
 
@@ -65,5 +63,14 @@ public class MonsterAIEvents : MonoBehaviour
     public void SetStateMachine(MonsterStateMachine sm)
     {
         stateMachine = sm;
+    }
+    public void Disable()
+    {
+        processingEnabled = false;
+    }
+
+    public void Enable()
+    {
+        processingEnabled = true;
     }
 }

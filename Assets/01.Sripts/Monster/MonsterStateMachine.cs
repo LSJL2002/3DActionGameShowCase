@@ -7,7 +7,9 @@ public class MonsterStateMachine : StateMachine
 {
     public BaseMonster Monster { get; }
     public float MovementSpeedModifier { get; set; }
+    public MonsterAIEvents AIEvents => aiEvents;
 
+    public MonsterDeathState MonsterDeathState { get; }
     public MonsterIdleState MonsterIdleState { get; }
     public MonsterChaseState MonsterChaseState { get; }
     public MonsterBaseAttack MonsterBaseAttack { get; private set; }
@@ -31,6 +33,7 @@ public class MonsterStateMachine : StateMachine
         MonsterIdleState = new MonsterIdleState(this);
         MonsterChaseState = new MonsterChaseState(this);
         MonsterBaseAttack = new MonsterBaseAttack(this);
+        MonsterDeathState = new MonsterDeathState(this);
         MonsterBaseAttackAlt = new MonsterBaseAttackAlt(this, MonsterAnimationData.MonsterAnimationType.BaseAttack2); // new animation
 
         if (monster is ToiletMonster)
@@ -101,6 +104,16 @@ public class MonsterStateMachine : StateMachine
                 toilet.PickPatternById(randomValue);
             }
         }
+    }
+    //Enable or Disable the AI events
+    public void DisableAIProcessing()
+    {
+        aiEvents?.Disable();
+    }
+
+    public void EnableAIProcessing()
+    {
+        aiEvents?.Enable();
     }
 
     public float MovementSpeed => Monster.Stats.MoveSpeed * MovementSpeedModifier;

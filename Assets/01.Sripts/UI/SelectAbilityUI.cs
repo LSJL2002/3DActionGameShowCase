@@ -44,7 +44,8 @@ public class SelectAbilityUI : UIBase
         statPoint_AttackSPD = battleManager.currentZone.extraAtkSpeed;
         statPoint_MoveSPD = battleManager.currentZone.extraSpeed;
 
-        statDescriptionText.text = $"최대체력 : {statPoint_MaxHP}\n최대마력 : {statPoint_MaxMP}\n 공격력 : {statPoint_ATK}\n 방어력 : {statPoint_DEF}\n 공격속도 : {statPoint_AttackSPD}\n 이동속도 : {statPoint_MoveSPD} 만큼 증가합니다.";
+        //statDescriptionText.text = $"최대체력 : {statPoint_MaxHP}\n최대마력 : {statPoint_MaxMP}\n 공격력 : {statPoint_ATK}\n 방어력 : {statPoint_DEF}\n 공격속도 : {statPoint_AttackSPD}\n 이동속도 : {statPoint_MoveSPD} 만큼 증가합니다.";
+        statDescriptionText.text = $"선택장애";
         GetItemInfo(skillItemAdress, "Skill"); // 스킬 아이템 정보 가져오고 UI에 세팅
         GetItemInfo(coreItemAdress, "Core");   // 코어 아이템 정보 가져오고 UI에 세팅
     }
@@ -91,13 +92,13 @@ public class SelectAbilityUI : UIBase
 
             if (type == "Skill")
             {
-                skillDescriptionText.text = loadedItem.itemDescription;
-                skillImage.sprite = loadedItem.itemIcon;
+                skillDescriptionText.text = loadedItem.scriptText;
+                skillImage.sprite = loadedItem.sprite;
             }
             else if (type == "Core")
             {
-                coreDescriptionText.text = loadedItem.itemDescription;
-                coreImage.sprite = loadedItem.itemIcon;
+                coreDescriptionText.text = loadedItem.scriptText;
+                coreImage.sprite = loadedItem.sprite;
             }
         }
         else

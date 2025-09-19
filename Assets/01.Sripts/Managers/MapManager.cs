@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
 using UnityEngine.WSA;
 
 public class MapManager : Singleton<MapManager>
@@ -20,42 +21,42 @@ public class MapManager : Singleton<MapManager>
 
     private void OnEnable()
     {
-        BattleManager.OnBattleStart += HandleZoneEnter;
-        BattleManager.OnBattleClear += HandleZoneClear;
+        BattleManager.OnBattleStart += OpenZone;
+        BattleManager.OnBattleClear += OpenNextZone;
     }
 
     private void OnDisable()
     {
-        BattleManager.OnBattleStart -= HandleZoneEnter;
-        BattleManager.OnBattleClear -= HandleZoneClear;
+        BattleManager.OnBattleStart -= OpenZone;
+        BattleManager.OnBattleClear -= OpenNextZone;
     }
 
     private async void Start()
     {
-        GameObject map = await LoadAscync("Map");
-        if (map != null)
-        {
-            Debug.Log("Map 성공적으로 불러옴!");
-        }
-        else
-        {
-            Debug.Log("Map 로드실패");
-        }
+        //GameObject map = await LoadAscync("Map");
+        //if (map != null)
+        //{
+        //    Debug.Log("Map 성공적으로 불러옴!");
+        //}
+        //else
+        //{
+        //    Debug.Log("Map 로드실패");
+        //}
 
-        GameObject btZone = await LoadAscync("BattleZone");
-        if (btZone != null)
-        {
-            Debug.Log("BattleZone 성공적으로 불러옴!");
-        }
-        else
-        {
-            Debug.LogError("BattleZone 로드 실패");
-        }
+        //GameObject btZone = await LoadAscync("BattleZone");
+        //if (btZone != null)
+        //{
+        //    Debug.Log("BattleZone 성공적으로 불러옴!");
+        //}
+        //else
+        //{
+        //    Debug.LogError("BattleZone 로드 실패");
+        //}
 
-        // NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
-        await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
-        //생성
-        //AddressableManager.Instance.MakeGameObject("Map");
+        //// NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
+        //await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
+        ////생성
+        ////AddressableManager.Instance.MakeGameObject("Map");
 
 
         //배틀존 딕셔너리에 아이디를 키값으로 등록
@@ -73,14 +74,7 @@ public class MapManager : Singleton<MapManager>
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (currentZone == null) return;
-            BattleManager.Instance.ClearBattle();
-        }
-    }
+
 
 
     public void RegisterStage(BattleZone zone)
@@ -89,7 +83,7 @@ public class MapManager : Singleton<MapManager>
             zoneDict.Add(zone.id, zone);
     }
 
-    private void HandleZoneEnter(BattleZone zone) //입장시
+    private void OpenZone(BattleZone zone) //입장시
     {
         currentZone = zone;
 
@@ -102,10 +96,11 @@ public class MapManager : Singleton<MapManager>
         }
     }
 
-    private void HandleZoneClear(BattleZone zone) // 클리어시
+    private void OpenNextZone(BattleZone zone) // 클리어시
     {
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
+            SceneLoadManager.Instance.ChangeScene(2);
             Debug.Log("마지막 스테이지 클리어!");
             round++;
             Debug.Log("현재 회차 : " + round);
@@ -136,48 +131,48 @@ public class MapManager : Singleton<MapManager>
 
     }
 
-    public async Task<GameObject> LoadAscync(string str)
-    {   // 프리팹 비동기 로드 & 인스턴스화
-        var op = Addressables.InstantiateAsync(str, Vector3.zero, Quaternion.identity);
-        await op.Task; // 여기서 먼저 대기
-        Debug.Log(op.PercentComplete);
-        if (op.Status == AsyncOperationStatus.Succeeded)
-        {
-            return op.Result; // 성공적으로 불러온 프리팹 반환
-        }
-        else
-        {
-            Debug.LogError($"BattleZone 로드 실패: {op}");
-            return null; // 실패 시 null 반환
-        }
+    //public async Task<GameObject> LoadAscync(string str)
+    //{   // 프리팹 비동기 로드 & 인스턴스화
+    //    var op = Addressables.InstantiateAsync(str, Vector3.zero, Quaternion.identity);
+    //    await op.Task; // 여기서 먼저 대기
+    //    Debug.Log(op.PercentComplete);
+    //    if (op.Status == AsyncOperationStatus.Succeeded)
+    //    {
+    //        return op.Result; // 성공적으로 불러온 프리팹 반환
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError($"BattleZone 로드 실패: {op}");
+    //        return null; // 실패 시 null 반환
+    //    }
 
-    }
+    //}
 
 
 
-    public async Task LoadNavMesh(string navKey, Vector3 position, Quaternion rotation)
-    {
-        // 1. NavMeshData 불러오기
-        var navOp = Addressables.LoadAssetAsync<NavMeshData>(navKey);
-        NavMeshData navData = await navOp.Task;
+    //public async Task LoadNavMesh(string navKey, Vector3 position, Quaternion rotation)
+    //{
+    //    // 1. NavMeshData 불러오기
+    //    var navOp = Addressables.LoadAssetAsync<NavMeshData>(navKey);
+    //    NavMeshData navData = await navOp.Task;
 
-        if (navData == null)
-        {
-            Debug.LogError($"NavMeshData 로드 실패: {navKey}");
-            return;
-        }
+    //    if (navData == null)
+    //    {
+    //        Debug.LogError($"NavMeshData 로드 실패: {navKey}");
+    //        return;
+    //    }
 
-        // 2. NavMeshData 등록
-        navMeshInstance = NavMesh.AddNavMeshData(navData, position, rotation);
+    //    // 2. NavMeshData 등록
+    //    navMeshInstance = NavMesh.AddNavMeshData(navData, position, rotation);
 
-        Debug.Log($"NavMeshData 로드 완료: {navKey}");
-    }
+    //    Debug.Log($"NavMeshData 로드 완료: {navKey}");
+    //}
 
-    public void UnloadNavMesh()
-    {
-        navMeshInstance.Remove();
-        Debug.Log("NavMeshData 제거 완료");
-    }
+    //public void UnloadNavMesh()
+    //{
+    //    navMeshInstance.Remove();
+    //    Debug.Log("NavMeshData 제거 완료");
+    //}
 }
 
 //[Header("Stage Flow")]
