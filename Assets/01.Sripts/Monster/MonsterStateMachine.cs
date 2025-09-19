@@ -8,90 +8,100 @@ public class MonsterStateMachine : StateMachine
     public BaseMonster Monster { get; }
     public float MovementSpeedModifier { get; set; }
 
-    public GameObject Target { get; private set; }
-
-    // 모든 State 
     public MonsterIdleState MonsterIdleState { get; }
-    public MonsterSkillOneState MonsterSkillOneState { get; set; } //delete later
     public MonsterChaseState MonsterChaseState { get; }
-    public MonsterBaseAttack MonsterBaseAttack { get; }
+    public MonsterBaseAttack MonsterBaseAttack { get; private set; }
+    public MonsterBaseAttackAlt MonsterBaseAttackAlt { get; private set; }
 
-    // Toilet Monster
-    public MonsterSkillToiletWideSwing MonsterSkillToiletWideSwing { get; set; }
+    public SmileToiletSlamState SmileToiletSlamState { get; private set; }
+    public SmileToiletSmashState SmileToiletSmashState { get; private set; }
+    public SmileToiletChargeState SmileToiletChargeState { get; private set; }
 
     private MonsterAIEvents aiEvents;
-
     public bool isAttacking = false;
+
+    private Istate currentStateInternal;
+    public Istate CurrentState => currentStateInternal;
 
     public MonsterStateMachine(BaseMonster monster)
     {
         Monster = monster;
-
         MovementSpeedModifier = 1f;
 
         MonsterIdleState = new MonsterIdleState(this);
         MonsterChaseState = new MonsterChaseState(this);
+        MonsterBaseAttack = new MonsterBaseAttack(this);
+        MonsterBaseAttackAlt = new MonsterBaseAttackAlt(this, MonsterAnimationData.MonsterAnimationType.BaseAttack2); // new animation
 
         if (monster is ToiletMonster)
         {
-            MonsterSkillToiletWideSwing = new MonsterSkillToiletWideSwing(this);
-            MonsterBaseAttack = new MonsterBaseAttack(this);
-            
+            var slamSkill = monster.Stats.GetSkill("SmileMachine_Slam");
+            SmileToiletSlamState = new SmileToiletSlamState(this, slamSkill);
+            var smashSkill = monster.Stats.GetSkill("SmileMachine_Smash");
+            SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
+            var chargeSkill = monster.Stats.GetSkill("SmileMachine_Charge");
+            SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
         }
-        else if (monster is TestMonster)
-        {
-            MonsterSkillOneState = new MonsterSkillOneState(this);
-        }
-        
-        aiEvents = monster.GetComponent<MonsterAIEvents>();
-        if (aiEvents == null)
-        {
-            aiEvents = monster.gameObject.AddComponent<MonsterAIEvents>();
-        }
+
+        aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();
+        aiEvents.SetStateMachine(this);
+
+        EnableAIEvents();
+
+        ChangeState(MonsterIdleState);
     }
+
+    public new void ChangeState(Istate newState)
+    {
+        base.ChangeState(newState);
+        currentStateInternal = newState;
+    }
+
     public void EnableAIEvents()
     {
-        if (aiEvents == null) return;
-
-        aiEvents.OnPlayerDetected += HandlePlayerDetected;
+        aiEvents.OnPlayerDetected += HandleChase;
+        aiEvents.RestingPhase += HandleIdle;
         aiEvents.OnInAttackRange += HandlePlayerInAttackRange;
-        aiEvents.RestingPhase += HandleRestingPhase;
     }
 
     public void DisableAIEvents()
     {
-        if (aiEvents == null) return;
-
-        aiEvents.OnPlayerDetected -= HandlePlayerDetected;
+        aiEvents.OnPlayerDetected -= HandleChase;
+        aiEvents.RestingPhase -= HandleIdle;
         aiEvents.OnInAttackRange -= HandlePlayerInAttackRange;
-        aiEvents.RestingPhase -= HandleRestingPhase;
     }
 
-    private void HandlePlayerDetected()
-    {
-        ChangeState(MonsterChaseState);
-    }
-
-    private void HandlePlayerInAttackRange()
+    private void HandleChase()
     {
         if (!isAttacking)
         {
-            isAttacking = true;
-            if (Monster is ToiletMonster)
-            {
-                ChangeState(MonsterSkillToiletWideSwing);
-            }
-            else
-            {
-                ChangeState(MonsterSkillOneState);
-            }
-            
+            ChangeState(MonsterChaseState);
         }
     }
 
-    private void HandleRestingPhase()
+    private void HandleIdle()
     {
-        ChangeState(MonsterIdleState);
+        if (!isAttacking)
+        {
+            ChangeState(MonsterIdleState);
+        }
     }
+
+
+
+    private void HandlePlayerInAttackRange()
+    {
+        if (!isAttacking && CurrentState == MonsterIdleState)
+        {
+            isAttacking = true;
+            if (Monster is ToiletMonster toilet)
+            {
+                //Temporary
+                int randomValue = Random.Range(1, 10);
+                toilet.PickPatternById(randomValue);
+            }
+        }
+    }
+
     public float MovementSpeed => Monster.Stats.MoveSpeed * MovementSpeedModifier;
 }

@@ -49,7 +49,7 @@ public class MonsterSkillOneState : MonsterBaseState
         fillQuad.transform.localScale = targetScale;
 
         // Play attack animation
-        PlayTriggerAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Attack));
+        //PlayTriggerAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Attack));
 
         yield return new WaitForSeconds(0.5f);
 
