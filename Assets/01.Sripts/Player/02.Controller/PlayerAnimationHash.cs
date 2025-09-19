@@ -25,7 +25,7 @@ public class PlayerAnimationHash
     private string attackBoolName = "Base/Switch_AttackState";
     private string attackTriggerName = "Base/Toggle_Attack"; // Trigger (AnyState 공격)
     private string finishAttackName = "Base/Toggle_FinishAttack"; // Trigger
-    private string comboAttackBoolName = "Base/Toggle_ComboAttack"; // Bool (콤보 진입 중)
+    private string comboAttackName = "Base/Toggle_ComboAttack"; // Trigger (콤보 공격)
     private string comboIntName = "Base/Index_ComboIndex"; // Int (콤보 상태)
 
     private string dodgeParameterName = "Dodge/Switch_DodgeState";
@@ -52,7 +52,7 @@ public class PlayerAnimationHash
 
     public int AttackBoolHash { get; private set; }
     public int AttackTriggerHash { get; private set; }
-    public int ComboBoolHash { get; private set; }
+    public int ComboTriggerHash { get; private set; }
     public int ComboIntHash { get; private set; }
     public int FinishAttackHash { get; private set; }
 
@@ -81,7 +81,7 @@ public class PlayerAnimationHash
 
         AttackBoolHash = Animator.StringToHash(attackBoolName);
         AttackTriggerHash = Animator.StringToHash(attackTriggerName);
-        ComboBoolHash = Animator.StringToHash(comboAttackBoolName);
+        ComboTriggerHash = Animator.StringToHash(comboAttackName);
         ComboIntHash = Animator.StringToHash(comboIntName);
         FinishAttackHash = Animator.StringToHash(finishAttackName);
 
