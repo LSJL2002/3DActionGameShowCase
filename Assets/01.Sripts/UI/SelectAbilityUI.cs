@@ -28,9 +28,9 @@ public class SelectAbilityUI : UIBase
         base.OnEnable();
 
         // 변수 초기화
-        //statPoint =
-        //skillItemAdress = 
-        //coreItemAdress =
+        //statPoint = 10; // 일단 되는지만 확인용
+        //skillItemAdress = BattleManager.Instance.GetItemInfo(0); // 0번째정보 : 스킬아이템ID
+        //coreItemAdress = BattleManager.Instance.GetItemInfo(1); // 1번째정보 : 코어아이템ID
 
         statDescriptionText.text = $"스탯이 {statPoint}만큼 증가합니다.";
         GetItemInfo(skillItemAdress, "Skill"); // 스킬 아이템 정보 가져오고 UI에 세팅
