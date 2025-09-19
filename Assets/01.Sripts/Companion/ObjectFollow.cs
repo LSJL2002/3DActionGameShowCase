@@ -96,11 +96,6 @@ public class ObjectFollow : MonoBehaviour
             // 키 클릭 시 상태
             StartCoroutine(ShowTalkAndPauseAfterDelay(1.2f));
         }
-        else
-        {
-            ExitTalkMode();
-            PlayerManager.Instance.EnableInput(true); // 캐릭터 움직임 제어
-        }
     }
 
     IEnumerator ShowTalkAndPauseAfterDelay(float delay)
@@ -125,7 +120,7 @@ public class ObjectFollow : MonoBehaviour
         ui = await UIManager.Instance.Show<CompanionUI>();
     }
 
-    void ExitTalkMode()
+    public void ExitTalkMode()
     {
         // UI 닫기 + 정지 해제
         ui.Hide();
@@ -139,16 +134,6 @@ public class ObjectFollow : MonoBehaviour
         Cursor.visible = cachedCursorVisible; // 원래 안 보이던 상태로 돌림
 
         isTalkMode = false;
-    }
-
-    // FSM에서 사용할 메서드
-    public void EnterTalkMode()
-    {
-        StartCoroutine(ShowTalkAndPauseAfterDelay(1.2f)); // 기존 코루틴 재활용
-    }
-    public void ExitTalkModePublic() // 이름만 다르게 공개
-    {
-        ExitTalkMode();
     }
 }
 
@@ -229,5 +214,10 @@ public class ObjectFollow : MonoBehaviour
 
 // anim.SetBool("isMove", rb.velocity.magnitude > 0.1f);
 
+//else
+//{
+//    ExitTalkMode();
+//    PlayerManager.Instance.EnableInput(true); // 캐릭터 움직임 제어
+//}
 
 #endregion
