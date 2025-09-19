@@ -46,11 +46,12 @@ public class PlayerDefenseData
 [Serializable]
 public class PlayerAttackData
 {
-    [field: SerializeField][field: Range(0f, 10f)] public float DashSpeed { get; private set; } = 10f;
-    [field: SerializeField][field: Range(0f, 5f)] public float StopDistance { get; private set; } = 3f;
-    //돌진 거리
     [field: SerializeField][field: Range(0f, 10f)] public float AttackRange { get; private set; } = 5f;
     //공격 범위
+    [field: SerializeField][field: Range(0f, 10f)] public float DashSpeed { get; private set; } = 5f;
+    //돌진 속도
+    [field: SerializeField][field: Range(0f, 10f)] public float StopDistance { get; private set; } = 3f;
+    //돌진 거리
 
     [field: SerializeField] public List<AttackInfoData> AttackInfoDatas { get; private set; }
     public int GetAttackInfoCount() { return AttackInfoDatas.Count; }
@@ -129,6 +130,7 @@ public class PlayerStatData
     [field: SerializeField] public float maxMp { get; private set; } = 100;
     [field: SerializeField] public int attackPower { get; private set; } = 10;
     [field: SerializeField] public int defense { get; private set; } = 0;
+    [field: SerializeField] public float Speed { get; private set; } = 1; //임시
     [field: SerializeField] public float attackSpeed { get; private set; } = 1.0f;
     //public List<StatusEffect> statusEffectList = new List<StatusEffect>();
     [field: SerializeField] public float moveSpeed { get; private set; } = 1.0f;
@@ -152,6 +154,6 @@ public class PlayerInfo : ScriptableObject
     [field: SerializeField] public PlayerGroundData GroundData { get; private set; }
     [field: SerializeField] public PlayerAirData AirData { get; private set; }
     [field: SerializeField] public PlayerAttackData AttackData { get; private set; }
-    [field: SerializeField] public PlayerStatData StatData { get; private set; }
     [field: SerializeField] public PlayerSkillData SkillData { get; private set; }
+    [field: SerializeField] public PlayerStatData StatData { get; private set; }
 }

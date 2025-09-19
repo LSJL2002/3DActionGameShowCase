@@ -241,7 +241,7 @@ public class CSVtoSOConverter : EditorWindow
                 }
             }
 
-            string assetName = values.Length > 1 ? values[1] : $"SO_{i}";
+            string assetName = values.Length > 1 ? values[0] : $"SO_{i}";
             if (string.IsNullOrEmpty(assetName))
                 assetName = $"SO_{i}";
 

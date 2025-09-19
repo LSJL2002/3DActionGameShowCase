@@ -12,8 +12,12 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     [SerializeField] private PlayerInfo playerInfo;
     [SerializeField] private int attackIndex = 0; // 인스펙터에서 공격 선택
 
-    public Transform CurrentAttackTarget { get; private set; }
-
+    [SerializeField] private Transform currentAttackTarget; // 인스펙터용
+    public Transform CurrentAttackTarget
+    {
+        get => currentAttackTarget;
+        private set => currentAttackTarget = value;
+    }
 
     private void Awake()
     {
@@ -58,7 +62,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
 
     private void HandleHit(IDamageable target)
     {
-        int damage = player?.Stats.Attack ?? 0;
+        int damage = Mathf.RoundToInt(player.Stats.Attack.Value);
         target.OnTakeDamage(damage);
     }
 
@@ -86,23 +90,20 @@ public class PlayerCombat : MonoBehaviour, IDamageable
         Gizmos.DrawWireSphere(transform.position, attackData.AttackRange);
 
         // 돌진 멈춤 거리 (공용)
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, attackData.StopDistance);
 
         // Force 방향 표시 (공용 기본값만 사용)
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + transform.forward * 1f);
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * 1.5f);
 
-        // 타겟이 있으면 연결 선 표시
-        if (Application.isPlaying && player != null && player.Combat != null)
+        // 타겟 연결선
+        Transform target = currentAttackTarget; // 편집 모드에서 연결한 필드 사용
+        if (target != null)
         {
-            Transform target = player.Combat.CurrentAttackTarget;
-            if (target != null)
-            {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawLine(transform.position, target.position);
-                Gizmos.DrawWireSphere(target.position, 0.5f);
-            }
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, target.position);
+            Gizmos.DrawWireSphere(target.position, 0.5f);
         }
     }
 }

@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -352,7 +352,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7254486357295667082}
-  - component: {fileID: 5917185089316850317}
+  - component: {fileID: 5948347949629090281}
   m_Layer: 5
   m_Name: SelectAbilityUI
   m_TagString: Untagged
@@ -382,7 +382,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5917185089316850317
+--- !u!114 &5948347949629090281
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -391,10 +391,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2661795635368645344}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c1c85ecbfa6dc408b9d9b0ec406a7a, type: 3}
+  m_Script: {fileID: 11500000, guid: 1bb3ae77f9e84684f84c03aec09a04d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  statImage: {fileID: 4635889221735232750}
+  skillImage: {fileID: 3049041048736531159}
+  coreImage: {fileID: 3862773447578855383}
+  statDescriptionText: {fileID: 0}
+  skillDescriptionText: {fileID: 0}
+  coreDescriptionText: {fileID: 0}
 --- !u!1 &3711969876990163566
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,8 +656,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5917185089316850317}
-        m_TargetAssemblyTypeName: PopupMain, Assembly-CSharp
+      - m_Target: {fileID: 5948347949629090281}
+        m_TargetAssemblyTypeName: SelectAbilityUI, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 5
         m_Arguments:
@@ -659,7 +665,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: GameStart
+          m_StringArgument: Core
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &4806057765545442086
@@ -854,7 +860,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1126,8 +1132,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5917185089316850317}
-        m_TargetAssemblyTypeName: PopupMain, Assembly-CSharp
+      - m_Target: {fileID: 5948347949629090281}
+        m_TargetAssemblyTypeName: SelectAbilityUI, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 5
         m_Arguments:
@@ -1135,7 +1141,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: GameStart
+          m_StringArgument: Skill
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &5703456993127975241
@@ -1373,8 +1379,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5917185089316850317}
-        m_TargetAssemblyTypeName: PopupMain, Assembly-CSharp
+      - m_Target: {fileID: 5948347949629090281}
+        m_TargetAssemblyTypeName: SelectAbilityUI, Assembly-CSharp
         m_MethodName: OnClickButton
         m_Mode: 5
         m_Arguments:
@@ -1382,7 +1388,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: GameStart
+          m_StringArgument: Stat
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &6834424426634803915
@@ -1616,14 +1622,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -444852403, guid: ad1c31ec07ce8ed4b870632b1a20463b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

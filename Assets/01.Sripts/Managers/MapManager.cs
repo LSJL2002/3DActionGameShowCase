@@ -1,7 +1,11 @@
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.WSA;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.AI;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.WSA;
 
 public class MapManager : Singleton<MapManager>
 {
@@ -12,6 +16,7 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] private int BossZoneId;
 
     [SerializeField] private int round; // 게임매니저로..
+    private NavMeshDataInstance navMeshInstance;
 
     private void OnEnable()
     {
@@ -25,11 +30,33 @@ public class MapManager : Singleton<MapManager>
         BattleManager.OnBattleClear -= HandleZoneClear;
     }
 
-    private void Start()
+    private async void Start()
     {
-        //생성
-        //AddressableManager.Instance.MakeGameObject("Map");
-        //AddressableManager.Instance.MakeGameObject("BattleZone");
+        //GameObject map = await LoadAscync("Map");
+        //if(map != null)
+        //{
+        //    Debug.Log("Map 성공적으로 불러옴!");
+        //}
+        //else
+        //{
+        //    Debug.Log("Map 로드실패");
+        //}
+
+        //    GameObject btZone = await LoadAscync("BattleZone");
+        //if (btZone != null)
+        //{
+        //    Debug.Log("BattleZone 성공적으로 불러옴!");
+        //}
+        //else
+        //{
+        //    Debug.LogError("BattleZone 로드 실패");
+        //}
+
+        //// NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
+        //await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
+        ////생성
+        ////AddressableManager.Instance.MakeGameObject("Map");
+
 
         //배틀존 딕셔너리에 아이디를 키값으로 등록
         var zones = FindObjectsOfType<BattleZone>(); //배틀존을 싹다 찾음
@@ -58,8 +85,8 @@ public class MapManager : Singleton<MapManager>
 
     public void RegisterStage(BattleZone zone)
     {
-        if (!zoneDict.ContainsKey(zone.zoneID)) //아이디가없으면 추가
-            zoneDict.Add(zone.zoneID, zone);
+        if (!zoneDict.ContainsKey(zone.id)) //아이디가없으면 추가
+            zoneDict.Add(zone.id, zone);
     }
 
     private void HandleZoneEnter(BattleZone zone) //입장시
@@ -77,7 +104,7 @@ public class MapManager : Singleton<MapManager>
 
     private void HandleZoneClear(BattleZone zone) // 클리어시
     {
-        if (zone.nextZoneID == null || zone.nextZoneID.Length == 0)
+        if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
             Debug.Log("마지막 스테이지 클리어!");
             round++;
@@ -89,7 +116,7 @@ public class MapManager : Singleton<MapManager>
             return;
         }
 
-        foreach (var nextId in zone.nextZoneID)
+        foreach (var nextId in zone.moveAbleStage)
         {
             if (zoneDict.TryGetValue(nextId, out var nextZone))
             {
@@ -103,12 +130,54 @@ public class MapManager : Singleton<MapManager>
 
         //클리어한 존 지우기
         zone.gameObject.SetActive(false); //Release
-        zoneDict.Remove(zone.zoneID);
+        zoneDict.Remove(zone.id);
         //Addressables.ReleaseInstance(zone.gameObject);
         currentZone = null;
 
     }
 
+    public async Task<GameObject> LoadAscync(string str)
+    {   // 프리팹 비동기 로드 & 인스턴스화
+        var op = Addressables.InstantiateAsync(str, Vector3.zero, Quaternion.identity);
+        await op.Task; // 여기서 먼저 대기
+        Debug.Log(op.PercentComplete);
+        if (op.Status == AsyncOperationStatus.Succeeded)
+        {
+            return op.Result; // 성공적으로 불러온 프리팹 반환
+        }
+        else
+        {
+            Debug.LogError($"BattleZone 로드 실패: {op}");
+            return null; // 실패 시 null 반환
+        }
+
+    }
+
+
+
+    public async Task LoadNavMesh(string navKey, Vector3 position, Quaternion rotation)
+    {
+        // 1. NavMeshData 불러오기
+        var navOp = Addressables.LoadAssetAsync<NavMeshData>(navKey);
+        NavMeshData navData = await navOp.Task;
+
+        if (navData == null)
+        {
+            Debug.LogError($"NavMeshData 로드 실패: {navKey}");
+            return;
+        }
+
+        // 2. NavMeshData 등록
+        navMeshInstance = NavMesh.AddNavMeshData(navData, position, rotation);
+
+        Debug.Log($"NavMeshData 로드 완료: {navKey}");
+    }
+
+    public void UnloadNavMesh()
+    {
+        navMeshInstance.Remove();
+        Debug.Log("NavMeshData 제거 완료");
+    }
 }
 
 //[Header("Stage Flow")]
