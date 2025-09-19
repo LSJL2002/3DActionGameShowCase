@@ -7,6 +7,7 @@ public class MonsterStateMachine : StateMachine
 {
     public BaseMonster Monster { get; }
     public float MovementSpeedModifier { get; set; }
+    public MonsterAIEvents AIEvents => aiEvents;
 
     public MonsterDeathState MonsterDeathState { get; }
     public MonsterIdleState MonsterIdleState { get; }
@@ -103,6 +104,16 @@ public class MonsterStateMachine : StateMachine
                 toilet.PickPatternById(randomValue);
             }
         }
+    }
+    //Enable or Disable the AI events
+    public void DisableAIProcessing()
+    {
+        aiEvents?.Disable();
+    }
+
+    public void EnableAIProcessing()
+    {
+        aiEvents?.Enable();
     }
 
     public float MovementSpeed => Monster.Stats.MoveSpeed * MovementSpeedModifier;

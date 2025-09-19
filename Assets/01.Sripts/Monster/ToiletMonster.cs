@@ -8,10 +8,12 @@ public class ToiletMonster : BaseMonster
     public MonsterAllPatternsSO allPatternsSO;
     private MonsterAllPatternsSO.PatternEntry currentPattern;
     private int currentStepIndex = 0;
+    private bool isRunningPattern = false;
+
 
     public void PickPatternById(int id)
     {
-        if (allPatternsSO == null) return;
+        if (allPatternsSO == null || isRunningPattern) return;
 
         currentPattern = allPatternsSO.GetPatternById(id);
         if (currentPattern == null)
@@ -24,23 +26,38 @@ public class ToiletMonster : BaseMonster
         StartCoroutine(RunPattern());
     }
 
+
     private IEnumerator RunPattern()
     {
+        isRunningPattern = true;
+        stateMachine.isAttacking = true;
+
         while (currentPattern != null && currentStepIndex < currentPattern.states.Count)
         {
+            // 🚫 if dead, stop immediately
+            if (stateMachine.Monster.IsDead)
+            {
+                Debug.Log("Pattern stopped: Monster is dead.");
+                yield break;
+            }
+
             States stateEnum = currentPattern.states[currentStepIndex];
             var state = GetStateFromEnum(stateEnum);
 
             if (state != null)
             {
-                stateMachine.isAttacking = true;
-
-                // Get the skill's range from the state
                 float skillRange = GetSkillRangeFromState(state);
                 float startTime = Time.time;
 
                 while (Vector3.Distance(transform.position, stateMachine.Monster.PlayerTarget.position) > skillRange)
                 {
+                    // 🚫 if dead, stop immediately
+                    if (stateMachine.Monster.IsDead)
+                    {
+                        Debug.Log("Pattern stopped while chasing: Monster is dead.");
+                        yield break;
+                    }
+
                     stateMachine.ChangeState(stateMachine.MonsterChaseState);
 
                     if (Time.time - startTime >= 5f)
@@ -48,14 +65,14 @@ public class ToiletMonster : BaseMonster
                         Debug.Log("Player out of range, abandoning pattern.");
                         stateMachine.isAttacking = false;
                         currentPattern = null;
-                        yield break; // exit coroutine
+                        isRunningPattern = false;
+                        yield break;
                     }
 
                     yield return null;
                 }
 
                 stateMachine.ChangeState(stateMachine.MonsterIdleState);
-                yield return new WaitForEndOfFrame();
                 yield return new WaitForSeconds(1f);
 
                 stateMachine.ChangeState(state);
@@ -70,7 +87,9 @@ public class ToiletMonster : BaseMonster
 
         stateMachine.isAttacking = false;
         currentPattern = null;
+        isRunningPattern = false;
     }
+
 
     private MonsterBaseState GetStateFromEnum(States stateEnum)
     {
