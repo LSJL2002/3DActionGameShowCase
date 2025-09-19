@@ -33,6 +33,8 @@ public class Stat
     public void RemoveModifier(float value) => modifiers.Remove(value);
 }
 
+public enum StatType { MaxHealth, MaxEnergy, Attack, Defense, MoveSpeed, AttackSpeed }
+
 public class PlayerStats : IStats
 {
     public Stat MaxHealth { get; private set; }
@@ -73,4 +75,35 @@ public class PlayerStats : IStats
     {
         CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth.Value);
     }
+
+    public void AddModifier(StatType statType, float value)
+    {
+        switch (statType)
+        {
+            case StatType.MaxHealth: MaxHealth.AddModifier(value); break;
+            case StatType.MaxEnergy: MaxEnergy.AddModifier(value); break;
+            case StatType.Attack: Attack.AddModifier(value); break;
+            case StatType.Defense: Defense.AddModifier(value); break;
+            case StatType.MoveSpeed: MaxEnergy.AddModifier(value); break;
+            case StatType.AttackSpeed: MaxEnergy.AddModifier(value); break;
+        }
+        // 필요 시 이벤트 호출
+        OnStatChanged?.Invoke(statType);
+    }
+
+    public void RemoveModifier(StatType statType, float value)
+    {
+        switch (statType)
+        {
+            case StatType.MaxHealth: MaxHealth.RemoveModifier(value); break;
+            case StatType.MaxEnergy: MaxEnergy.RemoveModifier(value); break;
+            case StatType.Attack: Attack.RemoveModifier(value); break;
+            case StatType.Defense: Defense.RemoveModifier(value); break;
+            case StatType.MoveSpeed: MaxEnergy.RemoveModifier(value); break;
+            case StatType.AttackSpeed: MaxEnergy.RemoveModifier(value); break;
+        }
+        OnStatChanged?.Invoke(statType);
+    }
+
+    public event Action<StatType> OnStatChanged;
 }
