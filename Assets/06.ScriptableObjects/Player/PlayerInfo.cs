@@ -46,11 +46,12 @@ public class PlayerDefenseData
 [Serializable]
 public class PlayerAttackData
 {
-    [field: SerializeField][field: Range(0f, 10f)] public float DashSpeed { get; private set; } = 10f;
-    [field: SerializeField][field: Range(0f, 5f)] public float StopDistance { get; private set; } = 3f;
-    //돌진 거리
     [field: SerializeField][field: Range(0f, 10f)] public float AttackRange { get; private set; } = 5f;
     //공격 범위
+    [field: SerializeField][field: Range(0f, 10f)] public float DashSpeed { get; private set; } = 5f;
+    //돌진 속도
+    [field: SerializeField][field: Range(0f, 10f)] public float StopDistance { get; private set; } = 3f;
+    //돌진 거리
 
     [field: SerializeField] public List<AttackInfoData> AttackInfoDatas { get; private set; }
     public int GetAttackInfoCount() { return AttackInfoDatas.Count; }

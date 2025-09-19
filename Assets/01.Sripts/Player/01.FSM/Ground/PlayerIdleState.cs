@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerIdleState : PlayerGroundState
 {
     private float idleStartTime;
-    private float waitingAnimationDelay = 10f; // 10초 후 대기 모션
+    private float waitingAnimationDelay = 15f; // 10초 후 대기 모션
     private bool isWaitingAnimationTriggered = false;
     private bool isGettingUp = false;
 
