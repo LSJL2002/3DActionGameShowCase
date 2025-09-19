@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class DropItem : MonoBehaviour, IInteractable
 {
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
     public string GetInteractPrompt()
     {
         return $"TakeItem";
