@@ -5,7 +5,7 @@ using UnityEngine;
 public class ToiletMonster : BaseMonster
 {
     [Header("Pattern SO")]
-    public MonsterAllPatternsSO allPatternsSO; // assign in Inspector
+    public MonsterAllPatternsSO allPatternsSO;
     private MonsterAllPatternsSO.PatternEntry currentPattern;
     private int currentStepIndex = 0;
 
@@ -39,7 +39,6 @@ public class ToiletMonster : BaseMonster
                 float skillRange = GetSkillRangeFromState(state);
                 float startTime = Time.time;
 
-                // ✅ Chase until player is in range or timeout
                 while (Vector3.Distance(transform.position, stateMachine.Monster.PlayerTarget.position) > skillRange)
                 {
                     stateMachine.ChangeState(stateMachine.MonsterChaseState);
@@ -55,16 +54,13 @@ public class ToiletMonster : BaseMonster
                     yield return null;
                 }
 
-                // ✅ Force Idle before skill
                 stateMachine.ChangeState(stateMachine.MonsterIdleState);
                 yield return new WaitForEndOfFrame();
                 yield return new WaitForSeconds(1f);
 
-                // ✅ Now actually perform the skill
                 stateMachine.ChangeState(state);
                 yield return new WaitUntil(() => !stateMachine.isAttacking);
 
-                // ✅ Brief idle after skill
                 stateMachine.ChangeState(stateMachine.MonsterIdleState);
                 yield return new WaitForSeconds(0.2f);
             }
