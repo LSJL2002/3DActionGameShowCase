@@ -7,15 +7,20 @@ using static GameUI;
 
 public class BattleManager : Singleton<BattleManager>
 {
-    private GameObject currentMonster; //현재 소환된 몬스터
+    public GameObject currentMonster; //현재 소환된 몬스터
     public MonsterStatHandler monsterStats; //그몬스터 스텟
     public BattleZone currentZone; // 지금 전투하는 방
+    private bool isBattle;
 
     public static event Action<BattleZone> OnBattleStart;
+    public static event Action<BattleZone> OnPlayerDie;
+    public static event Action<BattleZone> OnMonsterDie;
     public static event Action<BattleZone> OnBattleClear;
 
     public async void StartBattle(BattleZone zone)
     {
+        if (isBattle) return;
+        isBattle = true;
         currentZone = zone;
 
 
@@ -23,12 +28,26 @@ public class BattleManager : Singleton<BattleManager>
         currentZone.SetWallsActive(true);
 
         // 2. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
+        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position+Vector3.up);
 
         OnBattleStart?.Invoke(zone);
 
-      
     }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (currentZone == null) return;
+            HandleMonsterDie();
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            if(currentZone != null) 
+            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(3000);
+        }
+    }
+
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
     {
@@ -58,17 +77,22 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
+    public void HandleMonsterDie()
+    {
+        if (monsterStats.CurrentHP > 0) return;
+        OnMonsterDie?.Invoke(currentZone);
+    }
+
 
     public void ClearBattle()
     {
         OnBattleClear?.Invoke(currentZone);
-        if (currentMonster != null)
-        {
-            //currentMonster.gameObject.SetActive(false);
-            Addressables.ReleaseInstance(currentMonster.gameObject); //갈무리하고나서로 수정
-            currentMonster = null;
-            monsterStats = null;
-        }
+
+        Addressables.ReleaseInstance(currentMonster.gameObject); //갈무리하고나서로 수정
+        currentZone = null;
+        currentMonster = null;
+        monsterStats = null;
+        isBattle = false;
     }
 
     public string GetItemInfo(int index)
@@ -85,7 +109,6 @@ public class BattleManager : Singleton<BattleManager>
             return null;
         }
     }
-
 
 
     //    public void LoadMonsterStat(BattleZone zone)
