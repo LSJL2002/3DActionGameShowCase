@@ -28,7 +28,7 @@ public class BattleManager : Singleton<BattleManager>
         currentZone.SetWallsActive(true);
 
         // 2. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
+        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position+Vector3.up);
 
         OnBattleStart?.Invoke(zone);
 
@@ -41,9 +41,10 @@ public class BattleManager : Singleton<BattleManager>
             if (currentZone == null) return;
             HandleMonsterDie();
         }
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetMouseButtonDown(0))
         {
-            monsterStats.CurrentHP = 0;
+            if(currentZone != null) 
+            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(3000);
         }
     }
 
@@ -80,8 +81,6 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (monsterStats.CurrentHP > 0) return;
         OnMonsterDie?.Invoke(currentZone);
-        currentMonster.gameObject.SetActive(false); // 수정
-
     }
 
 
@@ -90,6 +89,7 @@ public class BattleManager : Singleton<BattleManager>
         OnBattleClear?.Invoke(currentZone);
 
         Addressables.ReleaseInstance(currentMonster.gameObject); //갈무리하고나서로 수정
+        currentZone = null;
         currentMonster = null;
         monsterStats = null;
         isBattle = false;
@@ -109,12 +109,6 @@ public class BattleManager : Singleton<BattleManager>
             return null;
         }
     }
-
-    public void SpawnItem()
-    {
-
-    }
-
 
 
     //    public void LoadMonsterStat(BattleZone zone)

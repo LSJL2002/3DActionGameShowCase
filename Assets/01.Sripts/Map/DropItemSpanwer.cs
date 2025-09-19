@@ -6,15 +6,15 @@ public class DropItemSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        BattleManager.OnMonsterDie += HandleZoneClear;
+        BattleManager.OnMonsterDie += SpawnItem;
     }
 
     private void OnDisable()
     {
-        BattleManager.OnMonsterDie -= HandleZoneClear;
+        BattleManager.OnMonsterDie -= SpawnItem;
     }
 
-    private void HandleZoneClear(BattleZone zone)
+    private void SpawnItem(BattleZone zone)
     {
         // 배틀존 클리어 → 아이템 위치 이동 후 켜주기
         Vector3 dropPos = BattleManager.Instance.currentMonster.transform.position; // 몬스터위치

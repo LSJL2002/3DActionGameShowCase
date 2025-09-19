@@ -21,14 +21,14 @@ public class MapManager : Singleton<MapManager>
 
     private void OnEnable()
     {
-        BattleManager.OnBattleStart += HandleZoneEnter;
-        BattleManager.OnBattleClear += HandleZoneClear;
+        BattleManager.OnBattleStart += OpenZone;
+        BattleManager.OnBattleClear += OpenNextZone;
     }
 
     private void OnDisable()
     {
-        BattleManager.OnBattleStart -= HandleZoneEnter;
-        BattleManager.OnBattleClear -= HandleZoneClear;
+        BattleManager.OnBattleStart -= OpenZone;
+        BattleManager.OnBattleClear -= OpenNextZone;
     }
 
     private async void Start()
@@ -83,7 +83,7 @@ public class MapManager : Singleton<MapManager>
             zoneDict.Add(zone.id, zone);
     }
 
-    private void HandleZoneEnter(BattleZone zone) //입장시
+    private void OpenZone(BattleZone zone) //입장시
     {
         currentZone = zone;
 
@@ -96,7 +96,7 @@ public class MapManager : Singleton<MapManager>
         }
     }
 
-    private void HandleZoneClear(BattleZone zone) // 클리어시
+    private void OpenNextZone(BattleZone zone) // 클리어시
     {
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
