@@ -40,7 +40,6 @@ public class MonsterStatHandler : MonoBehaviour
             AttackRange = monsterData.attackRange;
             StatusEffect = new List<string>(monsterData.statusEffect);
 
-            // ✅ Copy skills from SO into runtime list
             MonsterSkills = new List<MonsterSkillSO>(monsterData.useSkill);
 
             skillDict = new Dictionary<string, MonsterSkillSO>();
@@ -79,6 +78,5 @@ public class MonsterStatHandler : MonoBehaviour
     public void Die()
     {
         Debug.Log($"{monsterData.monsterName} 사망!");
-        
     }
 }

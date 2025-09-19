@@ -18,6 +18,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public MonsterStatHandler Stats { get; private set; }
     public MonsterAIEvents aiEvents { get; private set; }
     public Transform PlayerTarget { get; set; }
+    public bool IsDead { get; private set; }
 
     public event Action OnAttackAnimationCompleteEvent;
     private readonly List<GameObject> activeAOEs = new List<GameObject>();
@@ -93,10 +94,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
         // 체력 변동 애니메이션 추가
         if (Stats.CurrentHP <= 0)
         {
+            Stats.Die();
+            IsDead = true;
             Stats.CurrentHP = 0;
             stateMachine.ChangeState(stateMachine.MonsterDeathState);
-
-            //여기서 이벤트 활성씨 파괴
         }
     }
 

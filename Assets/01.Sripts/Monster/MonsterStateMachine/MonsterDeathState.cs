@@ -13,6 +13,7 @@ public class MonsterDeathState : MonsterBaseState
 
         stateMachine.isAttacking = false;
         stateMachine.DisableAIEvents();
+        stateMachine.DisableAIProcessing();
         stateMachine.Monster.ClearAOEs();
         PlayTriggerAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Death));
     }
