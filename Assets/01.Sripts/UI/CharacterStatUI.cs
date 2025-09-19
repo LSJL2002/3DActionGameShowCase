@@ -24,23 +24,25 @@ public class CharacterStatUI : UIBase
 
     private PlayerStats playerStats; // 플레이어의 stats에 접근가능한 변수
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        SetPlayerStat();
+    }
+
     // 플레이어 정보 초기화 함수
     public void SetPlayerStat()
     {
         playerStats = PlayerManager.Instance.Stats;
 
-        healthText.text = $"체력 : {playerStats.CurrentHealth} / {playerStats.MaxHealth.ToString()}";
-        energyText.text = $"마력 : {playerStats.CurrentEnergy} / {playerStats.MaxEnergy.ToString()}";
+        healthText.text = $"체력 : {playerStats.CurrentHealth} / {playerStats.MaxHealth.Value.ToString()}";
+        energyText.text = $"마력 : {playerStats.CurrentEnergy} / {playerStats.MaxEnergy.Value.ToString()}";
 
-        //attackText.text = $"공격력 : {playerStats.Attack.ToString()} + ({})"; // 추가 스탯 아직 없음
-        //defenseText.text = $"방어력 : {playerStats.Defense.ToString()} + ({})"; // 추가 스탯 아직 없음
-        //attackSpeedText.text = $"공격속도 : {playerStats.attackSpeed.ToString()} + ({})"; // 플레이어 스탯에 공격속도 스탯 아직 없음
-        //moveSpeedText.text = $"이동속도 : {playerStats.MoveSpeed.ToString()} + ({})"; // 플레이어 스탯에 이동속도 스탯 아직 없음
-
-        attackText.text = $"공격력 : {playerStats.Attack.ToString()}";
-        defenseText.text = $"방어력 : {playerStats.Defense.ToString()}";
-        attackSpeedText.text = $"공격속도 : {playerStats.AttackSpeed.ToString()}";
-        moveSpeedText.text = $"이동속도 : {playerStats.MoveSpeed.ToString()}";
+        attackText.text = $"공격력 : {playerStats.Attack.BaseValue.ToString()} + ({playerStats.Attack.Value.ToString()})"; // 추가 스탯 아직 없음
+        defenseText.text = $"방어력 : {playerStats.Defense.BaseValue.ToString()} + ({playerStats.Defense.Value.ToString()})"; // 추가 스탯 아직 없음
+        attackSpeedText.text = $"공격속도 : {playerStats.AttackSpeed.BaseValue.ToString()} + ({playerStats.AttackSpeed.Value.ToString()})"; // 플레이어 스탯에 공격속도 스탯 아직 없음
+        moveSpeedText.text = $"이동속도 : {playerStats.MoveSpeed.BaseValue.ToString()} + ({playerStats.MoveSpeed.Value.ToString()})"; // 플레이어 스탯에 이동속도 스탯 아직 없음
     }
 
     public async void OnClickButton(string str)
