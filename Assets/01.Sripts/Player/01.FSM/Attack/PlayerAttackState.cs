@@ -144,9 +144,18 @@ public class PlayerAttackState : PlayerBaseState
         if (attackButtonHeld)
             lastAttackInputTime = Time.time;
 
-        if (attackEnded && Time.time - lastAttackInputTime >= idleTimeout)
+        if (attackEnded)
         {
-            stateMachine.ChangeState(stateMachine.FinishAttackState);
+            // 이동 입력이 있으면 WalkState
+            if (stateMachine.MovementInput.sqrMagnitude > 0.01f)
+            {
+                stateMachine.ChangeState(stateMachine.WalkState);
+            }
+            // 이동 입력이 없고 idleTimeout 경과 시 FinishAttack
+            else if (Time.time - lastAttackInputTime >= idleTimeout)
+            {
+                stateMachine.ChangeState(stateMachine.FinishAttackState);
+            }
         }
     }
     private void SetAttack(int comboIndex)

@@ -15,14 +15,31 @@ public class PlayerWalkState : PlayerGroundState
     {
         base.Enter();
 
-        transitionTimer = 0f;
-        blend = 0f;
+        // 이전 Blend가 있으면 복원, 없으면 0
+        if (stateMachine.LastWalkBlend > 0f)
+        {
+            blend = stateMachine.LastWalkBlend;
+            transitionTimer = stateMachine.LastWalkTimer;
 
-        // 초기 Blend값 (Animator용)
-        stateMachine.MovementSpeedModifier = 0f;
+            // 복원 후 한 번 사용했으니 초기화 (다음 전환 대비)
+            stateMachine.LastWalkBlend = 0f;
+            stateMachine.LastWalkTimer = 0f;
+        }
+        else
+        {
+            blend = 0f;
+            transitionTimer = 0f;
+        }
 
-        // Animator 속도 초기화
-        stateMachine.Player.Animator.speed = stateMachine.GroundData.BaseSpeed * stateMachine.GroundData.WalkSpeedModifier;
+        // Animator 파라미터 갱신
+        stateMachine.MovementSpeedModifier = blend;
+
+        // Animator 속도 세팅
+        stateMachine.Player.Animator.speed =
+            stateMachine.GroundData.BaseSpeed *
+            Mathf.Lerp(stateMachine.GroundData.WalkSpeedModifier,
+                       stateMachine.GroundData.RunSpeedModifier,
+                       blend);
     }
 
     public override void Exit()

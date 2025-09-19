@@ -6786,9 +6786,6 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -2019108628667589528}
     m_Position: {x: 30, y: 210, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: 2406376277315078208}
-    m_Position: {x: 360, y: 120, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -6931,32 +6928,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1102 &2406376277315078208
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: FBT_Crouch_Motion
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 20600000, guid: 409af799f3664544ba8181dcfbc3948f, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1101 &2406819146419536048
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -9258,15 +9229,15 @@ AnimatorStateMachine:
   - {fileID: -6601772961710600335}
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 2879868162714180584}
-    second:
-    - {fileID: -5324601456395453811}
   - first: {fileID: 6887063851152166653}
     second:
     - {fileID: 1315410409378370743}
     - {fileID: 5130730768239442773}
     - {fileID: -3389123690630942993}
     - {fileID: -4091584475875963463}
+  - first: {fileID: 2879868162714180584}
+    second:
+    - {fileID: -5324601456395453811}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: -70, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
