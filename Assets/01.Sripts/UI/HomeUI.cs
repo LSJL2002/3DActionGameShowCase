@@ -10,11 +10,12 @@ public class HomeUI : UIBase
         switch(str)
         {
             case "GameStart":
-                // 게임매니저의 게임시작 메서드를 호출
-                //GameManager.Instance.StartGame();
+                // 게임씬을 로드
+                SceneLoadManager.Instance.LoadScene(3);
 
                 // 타임라인 매니저의 타임라인시작 함수 호출
-                TimeLineManager.Instance.PlayTimeLine();
+                //TimeLineManager.Instance.PlayTimeLine();
+
                 // 오디오매니저의 BGM을 정지
                 break;
 

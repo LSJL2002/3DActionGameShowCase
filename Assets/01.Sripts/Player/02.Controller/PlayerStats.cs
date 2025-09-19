@@ -1,18 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
 public interface IStats
 {
-    float MaxHealth { get; }
-    float CurrentHealth { get; }
-    float MaxEnergy { get; }
-    float CurrentEnergy { get; }
-    int Attack { get; }
-    int Defense { get; }
-
     bool IsDead { get; }
 
     void TakeDamage(int amount);
@@ -21,39 +15,62 @@ public interface IStats
     event Action OnDie;
 }
 
+//버프효과, %증가, 증가/감소이벤트
+
+public class Stat
+{
+    public float BaseValue { get; private set; } //레벨업 시스템은 base증가하면됨
+    private readonly List<float> modifiers = new();
+
+    public float Value => BaseValue + modifiers.Sum();
+
+    public Stat(float baseValue)
+    {
+        BaseValue = baseValue;
+    }
+
+    public void AddModifier(float value) => modifiers.Add(value);
+    public void RemoveModifier(float value) => modifiers.Remove(value);
+}
+
 public class PlayerStats : IStats
 {
-    public float MaxHealth { get; private set; }
+    public Stat MaxHealth { get; private set; }
+    public Stat MaxEnergy { get; private set; }
+    public Stat Attack { get; private set; }
+    public Stat Defense { get; private set; }
+    public Stat MoveSpeed { get; private set; }
+    public Stat AttackSpeed { get; private set; }
     public float CurrentHealth { get; private set; }
-    public float MaxEnergy { get; private set; }
     public float CurrentEnergy { get; private set; }
-    public int Attack { get; private set; }
-    public int Defense { get; private set; }
+
+
 
     public bool IsDead => CurrentHealth <= 0;
-
 
     public event Action OnDie;
 
     public PlayerStats(PlayerStatData data)
     {
-        MaxHealth = data.maxHp;
-        CurrentHealth = MaxHealth;
-        MaxEnergy = data.maxHp;
-        CurrentEnergy = MaxEnergy;
-        Attack = data.attackPower;
-        Defense = data.defense;
+        MaxHealth = new Stat(data.maxHp);
+        MaxEnergy = new Stat(data.maxMp);
+        Attack = new Stat(data.attackPower);
+        Defense = new Stat(data.defense);
+        MoveSpeed = new Stat(data.Speed);
+        AttackSpeed = new Stat(data.attackSpeed);
+
+        CurrentHealth = MaxHealth.Value;
+        CurrentEnergy = MaxEnergy.Value; 
     }
 
     public void TakeDamage(int amount)
     {
         CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
-        if (CurrentHealth == 0) OnDie?.Invoke();
-        Debug.Log(CurrentHealth);
+        if (CurrentHealth <= 0) OnDie?.Invoke();
     }
 
     public void Heal(int amount)
     {
-        CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth);
+        CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth.Value);
     }
 }

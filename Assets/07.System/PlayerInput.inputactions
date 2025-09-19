@@ -60,6 +60,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Camera",
+                    "type": "Button",
+                    "id": "d6be459b-89f8-405a-89a3-c9c8f9b330e8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "7eae478f-d95d-49fe-a55b-fa3efcf9a752",
@@ -81,15 +90,6 @@
                     "name": "Flash",
                     "type": "Button",
                     "id": "0d1f1195-9395-42d8-b2fa-56be90195d2c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CameraToggle",
-                    "type": "Button",
-                    "id": "d6be459b-89f8-405a-89a3-c9c8f9b330e8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -273,17 +273,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Flash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "44dff754-2aac-4bf3-bd05-1f810f8be290",
-                    "path": "<Keyboard>/alt",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "CameraToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -504,6 +493,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44dff754-2aac-4bf3-bd05-1f810f8be290",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Camera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

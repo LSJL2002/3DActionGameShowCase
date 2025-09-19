@@ -71,7 +71,7 @@ public class CharacterInventoryUI : UIBase
                 Hide();
                 break;
 
-            case "Healing_Potion":
+            case "20000000":
                 InventoryManager.Instance.LoadData_Addressables(str, 1);
                 break;
 
@@ -79,7 +79,7 @@ public class CharacterInventoryUI : UIBase
                 InventoryManager.Instance.LoadData_Addressables(str);
                 break;
 
-            case "Blazing_Core":
+            case "20010005":
                 InventoryManager.Instance.LoadData_Addressables(str);
                 break;
         }
