@@ -74,14 +74,7 @@ public class MapManager : Singleton<MapManager>
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (currentZone == null) return;
-            BattleManager.Instance.ClearBattle();
-        }
-    }
+
 
 
     public void RegisterStage(BattleZone zone)

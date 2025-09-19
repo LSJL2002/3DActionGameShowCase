@@ -7,12 +7,14 @@ using static GameUI;
 
 public class BattleManager : Singleton<BattleManager>
 {
-    private GameObject currentMonster; //현재 소환된 몬스터
+    public GameObject currentMonster; //현재 소환된 몬스터
     public MonsterStatHandler monsterStats; //그몬스터 스텟
     public BattleZone currentZone; // 지금 전투하는 방
     private bool isBattle;
 
     public static event Action<BattleZone> OnBattleStart;
+    public static event Action<BattleZone> OnPlayerDie;
+    public static event Action<BattleZone> OnMonsterDie;
     public static event Action<BattleZone> OnBattleClear;
 
     public async void StartBattle(BattleZone zone)
@@ -30,8 +32,21 @@ public class BattleManager : Singleton<BattleManager>
 
         OnBattleStart?.Invoke(zone);
 
-      
     }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (currentZone == null) return;
+            HandleMonsterDie();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            monsterStats.CurrentHP = 0;
+        }
+    }
+
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
     {
@@ -61,18 +76,23 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
+    public void HandleMonsterDie()
+    {
+        if (monsterStats.CurrentHP > 0) return;
+        OnMonsterDie?.Invoke(currentZone);
+        currentMonster.gameObject.SetActive(false); // 수정
+
+    }
+
 
     public void ClearBattle()
     {
         OnBattleClear?.Invoke(currentZone);
-        if (currentMonster != null)
-        {
-            //currentMonster.gameObject.SetActive(false);
-            Addressables.ReleaseInstance(currentMonster.gameObject); //갈무리하고나서로 수정
-            currentMonster = null;
-            monsterStats = null;
-            isBattle = false;
-        }
+
+        Addressables.ReleaseInstance(currentMonster.gameObject); //갈무리하고나서로 수정
+        currentMonster = null;
+        monsterStats = null;
+        isBattle = false;
     }
 
     public string GetItemInfo(int index)
@@ -88,6 +108,11 @@ public class BattleManager : Singleton<BattleManager>
             Debug.LogError($"Invalid index: {index}. The list has only {currentZone.getableItemTable.Count} items.");
             return null;
         }
+    }
+
+    public void SpawnItem()
+    {
+
     }
 
 
