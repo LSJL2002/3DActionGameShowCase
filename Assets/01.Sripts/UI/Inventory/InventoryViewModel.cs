@@ -69,11 +69,9 @@ public class InventoryViewModel
 
             // 이벤트 구독 해제
             decisionUI.OnDecisionMade -= onDecisionMadeCallback;
-            Debug.Log("구독해제");
         };
 
         // 이벤트 구독
         decisionUI.OnDecisionMade += onDecisionMadeCallback;
-        Debug.Log("구독");
     }
 }
