@@ -45,7 +45,7 @@ public class SelectAbilityUI : UIBase
         statPoint_MoveSPD = battleManager.currentZone.extraSpeed;
 
         //statDescriptionText.text = $"최대체력 : {statPoint_MaxHP}\n최대마력 : {statPoint_MaxMP}\n 공격력 : {statPoint_ATK}\n 방어력 : {statPoint_DEF}\n 공격속도 : {statPoint_AttackSPD}\n 이동속도 : {statPoint_MoveSPD} 만큼 증가합니다.";
-        statDescriptionText.text = $"선택장애";
+        statDescriptionText.text = $"This is";
         GetItemInfo(skillItemAdress, "Skill"); // 스킬 아이템 정보 가져오고 UI에 세팅
         GetItemInfo(coreItemAdress, "Core");   // 코어 아이템 정보 가져오고 UI에 세팅
     }
@@ -150,9 +150,11 @@ public class SelectAbilityUI : UIBase
                 // 아이템을 인벤토리에 추가
                 InventoryManager.Instance.LoadData_Addressables(coreItemAdress);
                 Debug.Log($"{coreItemAdress} 획득");
-                break;
-        }
 
+                break;
+
+        }
+        BattleManager.Instance.ClearBattle();
         Hide();
     }
 }

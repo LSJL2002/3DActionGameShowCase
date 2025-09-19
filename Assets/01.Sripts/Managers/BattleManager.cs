@@ -44,7 +44,7 @@ public class BattleManager : Singleton<BattleManager>
         if (Input.GetMouseButtonDown(0))
         {
             if(currentZone != null) 
-            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(3000);
+            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(50000);
         }
     }
 
