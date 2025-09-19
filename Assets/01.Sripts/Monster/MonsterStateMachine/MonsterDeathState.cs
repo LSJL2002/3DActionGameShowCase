@@ -15,8 +15,14 @@ public class MonsterDeathState : MonsterBaseState
         stateMachine.DisableAIEvents();
         stateMachine.DisableAIProcessing();
         stateMachine.Monster.ClearAOEs();
+        var cc = stateMachine.Monster.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = false;
+        }
         PlayTriggerAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Death));
         BattleManager.Instance.HandleMonsterDie();
+
     }
 
     public override void Update()
