@@ -36,6 +36,11 @@ public class CharacterStatUI : UIBase
         //defenseText.text = $"방어력 : {playerStats.Defense.ToString()} + ({})"; // 추가 스탯 아직 없음
         //attackSpeedText.text = $"공격속도 : {playerStats.attackSpeed.ToString()} + ({})"; // 플레이어 스탯에 공격속도 스탯 아직 없음
         //moveSpeedText.text = $"이동속도 : {playerStats.MoveSpeed.ToString()} + ({})"; // 플레이어 스탯에 이동속도 스탯 아직 없음
+
+        attackText.text = $"공격력 : {playerStats.Attack.ToString()}";
+        defenseText.text = $"방어력 : {playerStats.Defense.ToString()}";
+        attackSpeedText.text = $"공격속도 : {playerStats.AttackSpeed.ToString()}";
+        moveSpeedText.text = $"이동속도 : {playerStats.MoveSpeed.ToString()}";
     }
 
     public async void OnClickButton(string str)

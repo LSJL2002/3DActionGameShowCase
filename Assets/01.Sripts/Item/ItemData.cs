@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewItemData", menuName = "Inventory/Item Data")]
 public class ItemData : ScriptableObject
 {
-    public enum ItemType { Consumable, Skill, Core, }
+    public enum ItemType { Consumable, SkillCard, Core, }
 
     public enum EffectType { None, Heal, }
 

@@ -15,9 +15,14 @@ public class SelectAbilityUI : UIBase
     public TextMeshProUGUI coreDescriptionText;
 
     // 배틀매니저가 가지고 있는 아이템을 저장할 변수
-    private int statPoint;
     private string skillItemAdress;
     private string coreItemAdress;
+    private int statPoint_MaxHP;
+    private int statPoint_MaxMP;
+    private int statPoint_ATK;
+    private int statPoint_DEF;
+    private int statPoint_AttackSPD;
+    private int statPoint_MoveSPD;
 
     // AsyncOperationHandle을 저장할 변수 추가
     private AsyncOperationHandle<ItemData> skillLoadHandle;
@@ -28,11 +33,16 @@ public class SelectAbilityUI : UIBase
         base.OnEnable();
 
         // 변수 초기화
-        //statPoint =
-        //skillItemAdress = 
-        //coreItemAdress =
+        skillItemAdress = BattleManager.Instance.GetItemInfo(0); // 0번째정보 : 스킬아이템ID
+        coreItemAdress = BattleManager.Instance.GetItemInfo(1); // 1번째정보 : 코어아이템ID
+        //statPoint_MaxHP = BattleManager.Instance.
+        //statPoint_MaxMP = BattleManager.Instance.
+        //statPoint_ATK = BattleManager.Instance.;
+        //statPoint_DEF = BattleManager.Instance.
+        //statPoint_AttackSPD = BattleManager.Instance.
+        //statPoint_MoveSPD = BattleManager.Instance.
 
-        statDescriptionText.text = $"스탯이 {statPoint}만큼 증가합니다.";
+        statDescriptionText.text = $"최대체력 : {statPoint_MaxHP}\n최대마력 : {statPoint_MaxMP}\n 공격력 : {statPoint_ATK}\n 방어력 : {statPoint_DEF}\n 공격속도 : {statPoint_AttackSPD}\n 이동속도 : {statPoint_MoveSPD} 만큼 증가합니다.";
         GetItemInfo(skillItemAdress, "Skill"); // 스킬 아이템 정보 가져오고 UI에 세팅
         GetItemInfo(coreItemAdress, "Core");   // 코어 아이템 정보 가져오고 UI에 세팅
     }
@@ -118,7 +128,13 @@ public class SelectAbilityUI : UIBase
         {
             case "Stat":
                 // 플레이어 스탯 증가 함수 호출
-                Debug.Log($"플레이어 {statPoint} 스탯증가");
+                PlayerManager.Instance.Stats.AddModifier(StatType.MaxHealth, statPoint_MaxHP);
+                PlayerManager.Instance.Stats.AddModifier(StatType.MaxEnergy, statPoint_MaxMP);
+                PlayerManager.Instance.Stats.AddModifier(StatType.Attack, statPoint_ATK);
+                PlayerManager.Instance.Stats.AddModifier(StatType.Defense, statPoint_DEF);
+                PlayerManager.Instance.Stats.AddModifier(StatType.MoveSpeed, statPoint_AttackSPD);
+                PlayerManager.Instance.Stats.AddModifier(StatType.AttackSpeed, statPoint_MoveSPD);
+                Debug.Log($"플레이어 스탯증가");
                 break;
 
             case "Skill":

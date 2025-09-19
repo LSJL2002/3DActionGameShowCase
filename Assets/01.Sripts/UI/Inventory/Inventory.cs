@@ -23,7 +23,7 @@ public class Inventory
                 AddItemToCollection(consumableItems, itemData, count);
                 OnConsumableItemsChanged?.Invoke();
                 break;
-            case ItemType.Skill:
+            case ItemType.SkillCard:
                 AddItemToCollection(skillItems, itemData, count);
                 OnSkillItemsChanged?.Invoke();
                 break;
