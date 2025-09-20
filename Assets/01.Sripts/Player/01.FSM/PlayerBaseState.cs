@@ -146,7 +146,7 @@ public abstract class PlayerBaseState : Istate
         float zoomSpeed = 3f;
         float zoomAmount = Mathf.Sign(zoomDelta) * zoomSpeed; // 방향만 가져오기
         fov -= zoomAmount; 
-        fov = Mathf.Clamp(fov, 10f, 40f);
+        fov = Mathf.Clamp(fov, 10f, 70f);
         vcam.m_Lens.FieldOfView = fov;
     }
 
