@@ -16,8 +16,7 @@ public class DropItem : MonoBehaviour, IInteractable
 
     public async void OnInteract()
     {
+        if (BattleManager.Instance.currentMonster == null) return;
         await UIManager.Instance.Show<SelectAbilityUI>();
-        gameObject.SetActive(false);
-        BattleManager.Instance.ClearBattle();
     }
 }
