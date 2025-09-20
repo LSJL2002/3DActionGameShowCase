@@ -33,14 +33,21 @@ public class AutoColliderTool
 
         colliderObj.name = "FlatCollider";
 
-        Object.DestroyImmediate(colliderObj.GetComponent<MeshRenderer>());
-        Object.DestroyImmediate(colliderObj.GetComponent<MeshFilter>());
+        // MeshFilter / MeshRenderer는 남겨두고 InvisibleMat 적용
+        Material invisibleMat = Resources.Load<Material>("InvisibleMat");
+        if (invisibleMat != null)
+        {
+            colliderObj.GetComponent<MeshRenderer>().sharedMaterial = invisibleMat;
+        }
+        else
+        {
+            Debug.LogWarning("InvisibleMat을 Resources 폴더에 넣어야 합니다! (Resources/InisibleMat.mat)");
+        }
 
         GameObject root = GameObject.Find("CollisionRoot");
         if (root == null) root = new GameObject("CollisionRoot");
         colliderObj.transform.SetParent(root.transform);
 
-        colliderObj.AddComponent<ColliderGizmo>();
         Selection.activeGameObject = colliderObj;
 
         Debug.Log("FlatCollider 생성 (합치기)");
@@ -74,25 +81,27 @@ public class AutoColliderTool
 
             colliderObj.name = obj.name + "_Collider";
 
-            Object.DestroyImmediate(colliderObj.GetComponent<MeshRenderer>());
-            Object.DestroyImmediate(colliderObj.GetComponent<MeshFilter>());
+            // InvisibleMat 적용
+            Material invisibleMat = Resources.Load<Material>("InvisibleMat");
+            if (invisibleMat != null)
+            {
+                colliderObj.GetComponent<MeshRenderer>().sharedMaterial = invisibleMat;
+            }
 
             GameObject root = GameObject.Find("CollisionRoot");
             if (root == null) root = new GameObject("CollisionRoot");
             colliderObj.transform.SetParent(root.transform);
-
-            colliderObj.AddComponent<ColliderGizmo>();
         }
 
         Debug.Log($"FlatCollider 생성 (개별) → {Selection.gameObjects.Length}개");
     }
 
     // ==============================
-    // 메뉴 등록
+    // 메뉴 등록 (Tools 전용)
     // ==============================
-    [MenuItem("GameObject/Auto/Colliders/Combined", false, 10)]
-    static void MakeColliderCombinedMenu(MenuCommand menuCommand) => MakeColliderCombined();
+    [MenuItem("Tools/Auto Colliders/Combined #x", false, 0)]
+    static void MakeColliderCombinedMenu() => MakeColliderCombined();
 
-    [MenuItem("GameObject/Auto/Colliders/Each", false, 11)]
-    static void MakeCollidersEachMenu(MenuCommand menuCommand) => MakeCollidersEach();
+    [MenuItem("Tools/Auto Colliders/Each #z", false, 1)]
+    static void MakeCollidersEachMenu() => MakeCollidersEach();
 }
