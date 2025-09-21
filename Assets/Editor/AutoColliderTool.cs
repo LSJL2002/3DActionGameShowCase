@@ -1,5 +1,6 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
+using static PlasticGui.PlasticTableColumn;
 
 public class AutoColliderTool
 {
@@ -10,7 +11,8 @@ public class AutoColliderTool
     {
         if (Selection.gameObjects.Length == 0) return;
 
-        MeshRenderer first = Selection.gameObjects[0].GetComponentInChildren<MeshRenderer>();
+        GameObject firstObj = Selection.gameObjects[0];
+        MeshRenderer first = firstObj.GetComponentInChildren<MeshRenderer>();
         if (first == null) return;
 
         Bounds combinedBounds = first.bounds;
@@ -18,7 +20,7 @@ public class AutoColliderTool
         {
             var renderers = obj.GetComponentsInChildren<MeshRenderer>();
             foreach (var r in renderers)
-                combinedBounds.Encapsulate(r.bounds);
+                combinedBounds.Encapsulate(r.localBounds);
         }
 
         Vector3 size = combinedBounds.size;
@@ -29,9 +31,10 @@ public class AutoColliderTool
 
         GameObject colliderObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         colliderObj.transform.position = center;
+        colliderObj.transform.rotation = firstObj.transform.rotation;
         colliderObj.transform.localScale = size;
 
-        colliderObj.name = "FlatCollider";
+        colliderObj.name = Selection.gameObjects[0].gameObject.transform.parent.name + "_Collider";
 
         // MeshFilter / MeshRenderer는 남겨두고 InvisibleMat 적용
         Material invisibleMat = Resources.Load<Material>("InvisibleMat");
@@ -62,22 +65,25 @@ public class AutoColliderTool
 
         foreach (GameObject obj in Selection.gameObjects)
         {
-            var renderers = obj.GetComponentsInChildren<MeshRenderer>();
-            if (renderers.Length == 0) continue;
+            var renderer = obj.GetComponentInChildren<MeshRenderer>();
+            if (renderer == null) continue;
 
-            Bounds combinedBounds = renderers[0].bounds;
-            for (int i = 1; i < renderers.Length; i++)
-                combinedBounds.Encapsulate(renderers[i].bounds);
+            Bounds localBounds = renderer.localBounds;
 
-            Vector3 size = combinedBounds.size;
-            size.y = 1f;
+            // 실제 월드 크기로 변환
+            Vector3 worldSize = Vector3.Scale(localBounds.size, renderer.transform.lossyScale);
+            worldSize.y = 1f;
 
-            Vector3 center = combinedBounds.center;
-            center.y = 1f;
+            // 실제 월드 위치로 변환
+            Vector3 worldCenter = renderer.transform.TransformPoint(localBounds.center);
+            worldCenter.y = 1f;
+
+
 
             GameObject colliderObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            colliderObj.transform.position = center;
-            colliderObj.transform.localScale = size;
+            colliderObj.transform.position = worldCenter;
+            colliderObj.transform.rotation = obj.transform.rotation;
+            colliderObj.transform.localScale = worldSize;
 
             colliderObj.name = obj.name + "_Collider";
 
