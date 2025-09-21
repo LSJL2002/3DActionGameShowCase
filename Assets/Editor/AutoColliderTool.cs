@@ -20,7 +20,8 @@ public class AutoColliderTool
         {
             var renderers = obj.GetComponentsInChildren<MeshRenderer>();
             foreach (var r in renderers)
-                combinedBounds.Encapsulate(r.localBounds);
+                combinedBounds.Encapsulate(r.bounds);
+ 
         }
 
         Vector3 size = combinedBounds.size;
