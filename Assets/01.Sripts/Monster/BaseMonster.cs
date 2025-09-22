@@ -12,6 +12,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 {
     [Header("References")]
     [SerializeField] public MonsterAnimationData animationData;
+    public MonsterPatternSO patternConfig;
 
     public Animator Animator { get; private set; }
     public NavMeshAgent Agent { get; private set; }
@@ -34,8 +35,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
         Agent = GetComponent<NavMeshAgent>();
         Stats = GetComponent<MonsterStatHandler>();
 
-        stateMachine = new MonsterStateMachine(this);
-
         aiEvents = GetComponent<MonsterAIEvents>();
         if (aiEvents == null)
         {
@@ -47,6 +46,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     protected virtual void Start()
     {
+        stateMachine = new MonsterStateMachine(this); //Start에 해야지만, 스킬을 불러올수있다
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
         PlayerTarget = GameObject.FindWithTag("Player").transform;
         if (Agent != null)

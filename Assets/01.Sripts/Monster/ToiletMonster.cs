@@ -4,28 +4,12 @@ using UnityEngine;
 
 public class ToiletMonster : BaseMonster
 {
-    [Header("Pattern SO")]
-    public MonsterAllPatternsSO allPatternsSO;
-    private MonsterAllPatternsSO.PatternEntry currentPattern;
+    private MonsterPatternSO.PatternEntry currentPattern;
     private int currentStepIndex = 0;
     private bool isRunningPattern = false;
 
-
-    public void PickPatternById(int id)
-    {
-        if (allPatternsSO == null || isRunningPattern) return;
-
-        currentPattern = allPatternsSO.GetPatternById(id);
-        if (currentPattern == null)
-        {
-            Debug.LogWarning("Pattern ID not found: " + id);
-            return;
-        }
-
-        currentStepIndex = 0;
-        StartCoroutine(RunPattern());
-    }
-
+    //Colliders for BaseAttacks
+    public Collider baseAttackCollider;
 
     private IEnumerator RunPattern()
     {
@@ -34,14 +18,13 @@ public class ToiletMonster : BaseMonster
 
         while (currentPattern != null && currentStepIndex < currentPattern.states.Count)
         {
-            // 🚫 if dead, stop immediately
-            if (stateMachine.Monster.IsDead)
+            if (IsDead)
             {
-                Debug.Log("Pattern stopped: Monster is dead.");
+                Debug.Log($"{name} - Pattern stopped: Monster is dead.");
                 yield break;
             }
 
-            States stateEnum = currentPattern.states[currentStepIndex];
+            var stateEnum = currentPattern.states[currentStepIndex];
             var state = GetStateFromEnum(stateEnum);
 
             if (state != null)
@@ -49,32 +32,29 @@ public class ToiletMonster : BaseMonster
                 float skillRange = GetSkillRangeFromState(state);
                 float startTime = Time.time;
 
-                while (Vector3.Distance(transform.position, stateMachine.Monster.PlayerTarget.position) > skillRange)
+                // keep chasing until safely inside range
+                while (Vector3.Distance(transform.position, PlayerTarget.position) > skillRange * 0.8f)
                 {
-                    // 🚫 if dead, stop immediately
-                    if (stateMachine.Monster.IsDead)
-                    {
-                        Debug.Log("Pattern stopped while chasing: Monster is dead.");
-                        yield break;
-                    }
+                    if (IsDead) yield break;
 
                     stateMachine.ChangeState(stateMachine.MonsterChaseState);
 
                     if (Time.time - startTime >= 5f)
                     {
-                        Debug.Log("Player out of range, abandoning pattern.");
+                        Debug.Log($"{name} - Abandoning pattern: player out of range.");
                         stateMachine.isAttacking = false;
                         currentPattern = null;
                         isRunningPattern = false;
                         yield break;
                     }
-
                     yield return null;
                 }
 
+                // lock in idle before cast
                 stateMachine.ChangeState(stateMachine.MonsterIdleState);
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.5f);
 
+                // perform attack
                 stateMachine.ChangeState(state);
                 yield return new WaitUntil(() => !stateMachine.isAttacking);
 
@@ -90,24 +70,51 @@ public class ToiletMonster : BaseMonster
         isRunningPattern = false;
     }
 
+    public void PickPatternByCondition()
+    {
+        if (patternConfig == null || isRunningPattern)
+        {
+            return;
+        }
+
+        float hpPercent = (Stats.CurrentHP / Stats.maxHp) * 100f;
+        float distance = PlayerTarget != null ? Vector3.Distance(transform.position, PlayerTarget.position) : Mathf.Infinity;
+
+        var validConditions = patternConfig.GetValidConditions(hpPercent, distance);
+        if (validConditions == null || validConditions.Count == 0)
+        {
+            return;
+        }
+
+        var chosenCondition = validConditions[0]; //제일 높은 우선순위 (1->2->3)
+
+        if (chosenCondition.possiblePatternIds.Count == 0)
+        {
+            return;
+        }
+
+        int patternId = chosenCondition.possiblePatternIds[Random.Range(0, chosenCondition.possiblePatternIds.Count)];
+
+        currentPattern = patternConfig.GetPatternById(patternId);
+        if (currentPattern == null) return;
+
+        //Apply multipliers
+
+        currentStepIndex = 0;
+        StartCoroutine(RunPattern());
+    }
 
     private MonsterBaseState GetStateFromEnum(States stateEnum)
     {
         switch (stateEnum)
         {
-            case States.Skill1:
-                return stateMachine.SmileToiletSmashState;
-            case States.Skill2:
-                return stateMachine.SmileToiletSlamState;
-            case States.Skill3:
-                return stateMachine.SmileToiletChargeState;
-            case States.BaseAttack:
-                return stateMachine.MonsterBaseAttack;
-            case States.BaseAttack2:
-                return stateMachine.MonsterBaseAttackAlt;
-            
+            case States.Skill1: return stateMachine.SmileToiletSmashState;
+            case States.Skill2: return stateMachine.SmileToiletSlamState;
+            case States.Skill3: return stateMachine.SmileToiletChargeState;
+            case States.BaseAttack: return stateMachine.MonsterBaseAttack;
+            case States.BaseAttack2: return stateMachine.MonsterBaseAttackAlt;
             default:
-                Debug.LogWarning("Unknown state enum: " + stateEnum);
+                Debug.LogWarning($"{name} - Unknown state enum: {stateEnum}");
                 return null;
         }
     }
@@ -117,15 +124,14 @@ public class ToiletMonster : BaseMonster
         switch (state)
         {
             case SmileToiletSlamState:
-                return stateMachine.Monster.Stats.GetSkill("SmileMachine_Slam").range / 2;
+                return Stats.GetSkill("SmileMachine_Slam").range / 2f;
             case SmileToiletSmashState:
-                return stateMachine.Monster.Stats.GetSkill("SmileMachine_Smash").range / 2;
+                return Stats.GetSkill("SmileMachine_Smash").range / 2f;
             case SmileToiletChargeState:
-                return stateMachine.Monster.Stats.GetSkill("SmileMachine_Charge").range;
+                return Stats.GetSkill("SmileMachine_Charge").range;
             case MonsterBaseAttack:
-                return stateMachine.Monster.Stats.AttackRange;
             case MonsterBaseAttackAlt:
-                return stateMachine.Monster.Stats.AttackRange;
+                return Stats.AttackRange;
             default:
                 return 0f;
         }

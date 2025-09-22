@@ -39,6 +39,12 @@ public class MonsterStateMachine : StateMachine
         if (monster is ToiletMonster)
         {
             var slamSkill = monster.Stats.GetSkill("SmileMachine_Slam");
+            if (slamSkill == null)
+            {
+                Debug.LogError($"Skill 'SmileMachine_Slam' not found! Monster has {monster.Stats.MonsterSkills.Count} skills:");
+                foreach (var s in monster.Stats.MonsterSkills)
+                    Debug.Log($" - {s.skillName}");
+            }
             SmileToiletSlamState = new SmileToiletSlamState(this, slamSkill);
             var smashSkill = monster.Stats.GetSkill("SmileMachine_Smash");
             SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
@@ -99,9 +105,7 @@ public class MonsterStateMachine : StateMachine
             isAttacking = true;
             if (Monster is ToiletMonster toilet)
             {
-                //Temporary
-                int randomValue = Random.Range(1, 10);
-                toilet.PickPatternById(randomValue);
+                toilet.PickPatternByCondition();
             }
         }
     }

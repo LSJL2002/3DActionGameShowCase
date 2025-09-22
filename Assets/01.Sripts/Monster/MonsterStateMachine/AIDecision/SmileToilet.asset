@@ -31,3 +31,28 @@ MonoBehaviour:
     states: 01000000
   - id: 9
     states: 04000000
+  conditions:
+  - id: 0
+    conditionType: 0
+    minHpPercent: 90
+    maxHpPercent: 100
+    thresholdHpPercent: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 07000000
+    priority: 3
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 1
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 90
+    triggerOnce: 1
+    hasTriggered: 0
+    possiblePatternIds: 07000000
+    priority: 1
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
