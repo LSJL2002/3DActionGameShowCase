@@ -11,6 +11,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI countText;
     [SerializeField] private Outline outline;
+    [SerializeField] private TextMeshProUGUI emptyText;
+    [SerializeField] private Sprite emptyImage;
 
     private InventoryViewModel inventoryViewModel;
 
@@ -38,9 +40,10 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void ClearSlot()
     {
-        iconImage.sprite = null;
         countText.text = null;
         itemData = null;
+        emptyText.text = "Empty";
+        iconImage.sprite = emptyImage;
     }
 
     // 버튼 클릭시 효과 함수
@@ -78,7 +81,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public async void OnPointerEnter(PointerEventData eventData)
     {
         // 아이템 정보가 있다면
-        if (iconImage.sprite != null)
+        if (itemData != null)
         {
             // 아이템정보UI 켜기
             await UIManager.Instance.Show<ItemInformationUI>();

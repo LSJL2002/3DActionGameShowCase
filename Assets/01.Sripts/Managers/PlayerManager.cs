@@ -85,11 +85,13 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         {
             Input.PlayerActions.Enable();
             camera.SetCameraInputEnabled(true);
+            Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
             Input.PlayerActions.Disable();
             camera.SetCameraInputEnabled(false);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

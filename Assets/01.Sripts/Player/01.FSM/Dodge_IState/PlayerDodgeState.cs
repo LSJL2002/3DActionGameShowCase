@@ -8,11 +8,19 @@ public class PlayerDodgeState : Istate
 {
     //Istate로 정의돼 있으면 LogicUpdate, PhysicsUpdate, HandleInput 같은 공통 메서드를 모든 상태에서 동일하게 호출
     //상태머신에서 상태 전환할 때 타입에 상관없이 일관되게 동작하게 하려면 인터페이스가 필요합니다.
-
     private PlayerStateMachine stateMachine;
-    private float dodgeDuration = 0.8f; // 애니메이션 길이만큼 유지
+
+    // ---- 설정 값 ----
+    private const float DodgeDuration = 0.8f;   // 상태 유지 시간(초)
+    private const float DodgeStrength = 6f;     // 밀려나는 힘 크기
+    private const float LayerBlendSpeed = 5f;   // 레이어 페이드 속도
+
+    // ---- 내부 상태 ----
     private float startTime;
     private int dodgeLayerIndex;
+    private float currentLayerWeight = 0f;
+    private bool targetLayerOn = false;
+
 
     public PlayerDodgeState(PlayerStateMachine stateMachine)
     {
@@ -23,35 +31,22 @@ public class PlayerDodgeState : Istate
 
     public void Enter()
     {
-        // 시작 시간 기록
-        startTime = Time.time;
+        startTime = Time.time; // 시작 시간 기록
+        targetLayerOn = true;
 
         var anim = stateMachine.Player.Animator;
-        anim.SetLayerWeight(dodgeLayerIndex, 1f);
         anim.SetTrigger(stateMachine.Player.AnimationData.DodgeParameterHash);
 
-        // 무적
         stateMachine.IsInvincible = true;
 
-        // 루트모션 + 추가 힘
-        Vector2 input = stateMachine.MovementInput;
-        Vector3 dodgeDir;
-
-        if (stateMachine.MovementInput.sqrMagnitude < 0.01f)
-            dodgeDir = -stateMachine.Player.transform.forward; // 뒤로 회피
-        else
-            dodgeDir = stateMachine.Player.transform.forward;  // 바라보는 방향
-
-        // 원하는 거리만큼 힘 추가
-        float dodgeStrength = 5f;
-        stateMachine.Player.ForceReceiver.AddForce(dodgeDir * dodgeStrength, horizontalOnly: true);
+        // 이동 방향 + 힘
+        Vector3 dodgeDir = GetDodgeDirection();
+        stateMachine.Player.ForceReceiver.AddForce(dodgeDir * DodgeStrength, horizontalOnly: true);
     }
 
     public void Exit()
     {
-        var anim = stateMachine.Player.Animator;
-        anim.SetLayerWeight(dodgeLayerIndex, 0f);
-
+        targetLayerOn = false;
         stateMachine.IsInvincible = false;
     }
 
@@ -59,21 +54,54 @@ public class PlayerDodgeState : Istate
 
     public void LogicUpdate()
     {
-        // 단순히 시간만 보고 종료
-        if (Time.time >= startTime + dodgeDuration)
+        // Dodge 지속 시간 체크
+        if (Time.time >= startTime + DodgeDuration)
         {
             Exit();
 
-            if (stateMachine.MovementInput.sqrMagnitude > 0.01f)
+            if (stateMachine.MovementInput.sqrMagnitude > 0.01f) // MovementInput이 있으면 WalkState로
+            {
+                // 현재 SpeedModifier를 저장
+                stateMachine.LastWalkBlend = stateMachine.MovementSpeedModifier;
+                stateMachine.LastWalkTimer = stateMachine.LastWalkBlend *
+                                              stateMachine.GroundData.RunAccelerationTime;
+
                 stateMachine.ChangeState(stateMachine.WalkState);
+            }
             else
                 stateMachine.ChangeState(stateMachine.IdleState);
         }
+
+        UpdateLayerWeight();
     }
 
     public void PhysicsUpdate()
     {
         // ForceReceiver에서 계산된 힘 적용
         stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime); // 실제 이동 적용
+    }
+
+
+    // ---- 헬퍼 메서드 ----
+    private Vector3 GetDodgeDirection()
+    {
+        if (stateMachine.MovementInput.sqrMagnitude < 0.01f)
+            return -stateMachine.Player.transform.forward; // 뒤로 회피
+        else
+            return stateMachine.Player.transform.forward;  // 바라보는 방향
+    }
+
+    private void UpdateLayerWeight()
+    {
+        float target = targetLayerOn ? 1f : 0f;
+
+        // MoveTowards: 목표값까지 일정 속도로 이동
+        currentLayerWeight = Mathf.MoveTowards(
+            currentLayerWeight,
+            target,
+            LayerBlendSpeed * Time.deltaTime
+        );
+
+        stateMachine.Player.Animator.SetLayerWeight(dodgeLayerIndex, currentLayerWeight);
     }
 }
