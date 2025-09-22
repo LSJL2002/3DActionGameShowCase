@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Zenject.SpaceFighter;
 using Cursor = UnityEngine.Cursor;
 
 
@@ -40,6 +41,7 @@ public abstract class PlayerBaseState : Istate
 
         input.PlayerActions.Menu.performed += OnMenuToggle;
         input.PlayerActions.Camera.started += OnLockOnToggle;
+        input.PlayerActions.Inventory.started += OnInvenToggle;
     }
 
     protected virtual void RemoveInputActionCallbacks()
@@ -53,6 +55,7 @@ public abstract class PlayerBaseState : Istate
 
         input.PlayerActions.Menu.performed -= OnMenuToggle;
         input.PlayerActions.Camera.started -= OnLockOnToggle;
+        input.PlayerActions.Inventory.started -= OnInvenToggle;
     }
 
     public virtual void HandleInput()
@@ -120,6 +123,17 @@ public abstract class PlayerBaseState : Istate
             stateMachine.Player.camera.Volume.enabled = false;
         }
     }
+
+    protected virtual void OnInvenToggle(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        if (stateMachine.Player.direction.inventory == null) return;
+
+        var inven = stateMachine.Player.direction.inventory;
+        inven.SetActive(!inven.activeSelf);
+        stateMachine.Player.EnableInput(!inven);
+    }
+
     // ========== 개별 입력 읽기 ==========
     private void ReadMovementInput()
     {
