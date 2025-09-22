@@ -10,37 +10,47 @@ public class CompanionTalkState : ICompanionState
     Coroutine routine;
     bool exited;
 
+    // UI가 나오는 동안 이동을 허용하는 변수
+    float delay = 1.2f;
+    float timer;
+
     public CompanionTalkState(CompanionStateMachine sm) { this.sm = sm; }
 
     public void Enter()
     {
-        // 위치 오프셋 + 입력 잠금
-        if (Ctx.targetObject)
+        exited = false;
+        timer = delay;
+
+        // 오프셋 적용 (조력자를 플레이어 옆으로 이동시키기 위해)
+        if (Ctx.targetObject != null)
         {
             Vector3 offset = new Vector3(1.03f, 0f, 1.2f);
             Ctx.targetObject.localPosition = Ctx.cachedAnchorLocalPos + offset;
         }
+
+        // 입력 잠금
         PlayerManager.Instance?.EnableInput(false);
 
         // 커서 상태 캐시
         Ctx.cachedLockMode = Cursor.lockState;
         Ctx.cachedCursorVisible = Cursor.visible;
 
-        routine = Ctx.StartCoroutine(ShowTalkAfterDelay_Coroutine(1.2f));
+        // UI 지연 호출
+        routine = Ctx.StartCoroutine(ShowTalkAfterDelay(delay));
     }
 
-    IEnumerator ShowTalkAfterDelay_Coroutine(float delay)
+    IEnumerator ShowTalkAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        OpenTalkUIAsync().Forget();
+        if (exited) yield break;
+
+        // UI 열기
+        _ = OpenTalkUIAsync();
     }
 
-    async UniTask OpenTalkUIAsync()
+    private async UniTask OpenTalkUIAsync()
     {
-        // 상태가 이미 종료됐다면 중단
-        if (exited) return;
-
         Ctx.ui = await UIManager.Instance.Show<CompanionUI>();
         if (exited || Ctx.ui == null) return;
 
@@ -52,11 +62,45 @@ public class CompanionTalkState : ICompanionState
 
     public void Exit()
     {
-        if (routine != null) { Ctx.StopCoroutine(routine); routine = null; }
-        // 실제 닫기는 UI 버튼에서 Ctx.ExitTalkMode() 호출
+        exited = true;
+        if (routine != null)
+        {
+            Ctx.StopCoroutine(routine);
+            routine = null;
+        }
     }
 
-    public void HandleInput() { /* 대화 중엔 입력 전환 없음 (버튼으로 종료) */ }
-    public void Update() { }
+    public void HandleInput() { }
+
+    public void Update()
+    {
+        // ★ 추가: UI가 뜨기 전에는 Follow처럼 이동 로직 수행
+        if (timer > 0f && !exited)
+        {
+            timer -= Time.deltaTime;
+
+            if (Ctx.targetObject != null && Ctx.rb != null)
+            {
+                // FollowState의 이동 로직을 그대로 가져옴
+                Vector3 nextMove = Vector3.MoveTowards(
+                    Ctx.rb.position,
+                    Ctx.targetObject.position,
+                    Ctx.moveSpeed * Time.deltaTime);
+
+                Ctx.rb.MovePosition(nextMove);
+
+                Vector3 dir = (Ctx.lookObject.position - Ctx.rb.position).normalized;
+                dir = Vector3.ProjectOnPlane(dir, Vector3.up);
+                if (dir.sqrMagnitude > 0.0001f)
+                {
+                    Quaternion look = Quaternion.LookRotation(dir, Vector3.up);
+                    Quaternion nextRot = Quaternion.RotateTowards(
+                        Ctx.rb.rotation, look, Ctx.rotationSpeed * Time.deltaTime);
+                    Ctx.rb.MoveRotation(nextRot);
+                }
+            }
+        }
+    }
+
     public void PhysicsUpdate() { }
 }
