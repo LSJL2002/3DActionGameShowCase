@@ -14,6 +14,6 @@ public class HomeScene : SceneBase
 
     private async void ShowUI()
     {
-        await UIManager.Instance.Show<HomeUI>();
+        await UIManager.Instance.Show<TitleUI>();
     }
 }

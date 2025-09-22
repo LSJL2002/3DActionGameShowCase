@@ -9,14 +9,13 @@ public class HomeUI : UIBase
     {
         switch(str)
         {
-            case "GameStart":
-                // 게임씬을 로드
+            case "NewGame":
+                // 새 게임 시작
                 SceneLoadManager.Instance.LoadScene(3);
+                break;
 
-                // 타임라인 매니저의 타임라인시작 함수 호출
-                //TimeLineManager.Instance.PlayTimeLine();
-
-                // 오디오매니저의 BGM을 정지
+            case "LoadStart":
+                // 기존 게임을 로드
                 break;
 
             case "OptionUI":
