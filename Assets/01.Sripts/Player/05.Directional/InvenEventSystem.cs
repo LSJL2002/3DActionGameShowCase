@@ -26,33 +26,35 @@ public class InvenEventSystem : MonoBehaviour
         if (thirdSequence.rightPanel != null)
             thirdSequence.rightPanel.gameObject.SetActive(false);
 
+        // -------------------------
         // 1차 시퀀스 실행
-        var firstSeq = firstSequence.PlaySequence(() =>
+        Sequence mainSeq = DOTween.Sequence();
+
+        // 1차 시퀀스
+        mainSeq.Append(firstSequence.PlaySequence());
+
+        // 2차 시퀀스
+        mainSeq.Append(secondSequence.PlaySequence());
+
+        // PanelBSequence 안전하게 Append
+        var panelBSeq = secondSequence.PanelBSequence();
+        if (panelBSeq != null)
+            mainSeq.Append(panelBSeq);
+
+        // PanelB 위치 전달 후 3차 시퀀스
+        mainSeq.AppendCallback(() =>
         {
-            // 1차 끝나면 2차 실행
-            var secondSeq = DOTween.Sequence();
-            secondSeq.Join(secondSequence.PlaySequence());
-            secondSeq.Join(secondSequence.PanelBSequence());
-
-            secondSeq.OnComplete(() =>
+            if (thirdSequence.panelB != null && secondSequence.panelB != null)
             {
-                // 2차 panelB 위치 이어받아 3차 panelB 시작 위치 설정
-                if (thirdSequence.panelB != null && secondSequence.panelB != null)
-                {
-                    thirdSequence.panelB.anchoredPosition = secondSequence.panelB.anchoredPosition;
-                    thirdSequence.panelB.gameObject.SetActive(true);
-                }
-
-                // 3차 시퀀스 실행
-                var thirdSeq = DOTween.Sequence();
-                thirdSeq.Join(thirdSequence.PlaySequence());
-                thirdSeq.Join(thirdSequence.PanelBSequence()); // panelB 천천히 직진
-                thirdSeq.Play();
-            });
-
-            secondSeq.Play();
+                thirdSequence.panelB.anchoredPosition = secondSequence.panelB.anchoredPosition;
+                thirdSequence.panelB.gameObject.SetActive(true);
+            }
         });
 
-        firstSeq.Play();
+        mainSeq.Append(thirdSequence.PlaySequence());
+        mainSeq.Append(thirdSequence.PanelBSequence());
+
+        mainSeq.SetUpdate(true);
+        mainSeq.Play();
     }
 }

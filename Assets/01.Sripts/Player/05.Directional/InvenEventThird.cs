@@ -38,12 +38,14 @@ public class InvenEventThird : MonoBehaviour
             seq.Join(
                         leftPanel1.DOAnchorPosX(original.x, leftDuration)
                                   .SetEase(Ease.OutQuad)
+                                  .SetUpdate(true)   // <--- 여기가 핵심
                                   .OnComplete(() =>
                                   {
                                       // 도착 후 좌우로 계속 왕복
                                       leftPanel1.DOAnchorPosY(original.y + 0.2f, 5f)
                                                 .SetEase(Ease.InOutSine)
-                                                .SetLoops(-1, LoopType.Yoyo);
+                                                .SetLoops(-1, LoopType.Yoyo)
+                                                .SetUpdate(true); // 반복 Yoyo도 unscaled 적용
                                   })
                     );
         }
@@ -60,7 +62,8 @@ public class InvenEventThird : MonoBehaviour
                                   {
                                       leftPanel2.DOAnchorPosX(original.x + 0.2f, 5f)
                                                 .SetEase(Ease.InOutSine)
-                                                .SetLoops(-1, LoopType.Yoyo);
+                                                .SetLoops(-1, LoopType.Yoyo)
+                                                .SetUpdate(true);
                                   })
                     );
         }
@@ -79,7 +82,8 @@ public class InvenEventThird : MonoBehaviour
                                   {
                                       rightPanel.DOAnchorPosX(original.x - 0.05f, 5f)
                                                 .SetEase(Ease.InOutSine)
-                                                .SetLoops(-1, LoopType.Yoyo);
+                                                .SetLoops(-1, LoopType.Yoyo)
+                                                .SetUpdate(true);
                                   })
                     );
         }
@@ -93,10 +97,10 @@ public class InvenEventThird : MonoBehaviour
         {
             seq.Join(panelB.DOAnchorPosX(panelB.anchoredPosition.x + 5f, panelBExitDuration)
                         .SetEase(Ease.Linear)
+                        .SetUpdate(true)
                         .OnComplete(() => panelB.gameObject.SetActive(false)));
         }
 
-        seq.Play();
         return seq;
     }
 
@@ -107,7 +111,9 @@ public class InvenEventThird : MonoBehaviour
 
         var seq = DOTween.Sequence();
         panelB.gameObject.SetActive(true);
-        seq.Join(panelB.DOAnchorPosX(panelB.anchoredPosition.x + panelBFast, panelBFast).SetEase(Ease.OutCubic));
+        seq.Join(panelB.DOAnchorPosX(panelB.anchoredPosition.x + panelBFast, panelBFast)
+                        .SetEase(Ease.OutCubic))
+                        .SetUpdate(true);
         return seq;
     }
 }

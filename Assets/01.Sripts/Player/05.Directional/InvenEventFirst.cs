@@ -18,7 +18,7 @@ public class InvenEventFirst : MonoBehaviour
     private int[] dir; // -1 = 왼쪽에서 들어옴, +1 = 오른쪽에서 들어옴
 
 
-    public Sequence PlaySequence(Action onComplete)
+    public Sequence PlaySequence(Action onComplete = null)
     {
         // 현재 위치 저장
         int n = panels.Length;
@@ -50,23 +50,40 @@ public class InvenEventFirst : MonoBehaviour
         for (int i = 0; i < panels.Length; i++)
         {
             if (i == 0)
-                seq.Append(panels[i].DOAnchorPosX(targetPos[i].x, duration).SetEase(Ease.OutQuad));
+                seq.Append(
+                    panels[i].DOAnchorPosX(targetPos[i].x, duration)
+                             .SetEase(Ease.OutQuad)
+                             .SetUpdate(true) // <--- 여기가 핵심
+                );
             else
-                seq.Join(panels[i].DOAnchorPosX(targetPos[i].x, duration).SetEase(Ease.OutQuad));
+                seq.Join(
+                    panels[i].DOAnchorPosX(targetPos[i].x, duration)
+                             .SetEase(Ease.OutQuad)
+                             .SetUpdate(true)
+                );
         }
 
         // 화면에 잠시 머무르기
-        seq.AppendInterval(stayTime);
+        seq.AppendInterval(stayTime).SetUpdate(true); // Interval도 unscaled 필요
 
         // -------------------------
         // 모든 패널 동시에 나가기
         for (int i = 0; i < panels.Length; i++)
         {
             if (i == 0)
-                seq.Append(panels[i].DOAnchorPosX(endPos[i].x, duration).SetEase(Ease.InQuad));
+                seq.Append(
+                    panels[i].DOAnchorPosX(endPos[i].x, duration)
+                             .SetEase(Ease.InQuad)
+                             .SetUpdate(true)
+                );
             else
-                seq.Join(panels[i].DOAnchorPosX(endPos[i].x, duration).SetEase(Ease.InQuad));
+                seq.Join(
+                    panels[i].DOAnchorPosX(endPos[i].x, duration)
+                             .SetEase(Ease.InQuad)
+                             .SetUpdate(true)
+                );
         }
+
         seq.OnComplete(() => onComplete?.Invoke());
         return seq;
     }

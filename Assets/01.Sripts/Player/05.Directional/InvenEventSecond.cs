@@ -18,8 +18,6 @@ public class InvenEventSecond : MonoBehaviour
     public float panelBDuration = 2f;   // 천천히 이동
     public float panelBFastIn = 1f;     // 빠른 입장 시간
 
-    // 다음 시퀀스 참조 (옵션)
-    public InvenEventSecond nextSequence;
 
     public Sequence PlaySequence(Action onComplete = null)
     {
@@ -27,7 +25,7 @@ public class InvenEventSecond : MonoBehaviour
 
         // -------------------------
         // BG 패널 활성화
-        bgPanel.gameObject.SetActive(true);
+        if (bgPanel != null) bgPanel.gameObject.SetActive(true);
 
         // -------------------------
         // Panel A
@@ -40,8 +38,20 @@ public class InvenEventSecond : MonoBehaviour
             seq.Append(
                 panelA
                     .DOAnchorPosY(original.y, panelADuration)
+                    .SetUpdate(true)  // <--- Time.timeScale 무시
                     .OnComplete(() => panelA.gameObject.SetActive(false))
              );
+        }
+
+        if (panelB != null)
+        {
+            panelB.gameObject.SetActive(true);
+            Vector2 originalB = panelB.anchoredPosition;
+            panelB.anchoredPosition = new Vector2(originalB.x - panelBOffsetX, originalB.y);
+
+            seq.Append(panelB.DOAnchorPosX(originalB.x, panelBFastIn)
+                             .SetEase(Ease.OutCubic)
+                             .SetUpdate(true));
         }
 
         // -------------------------
@@ -50,24 +60,21 @@ public class InvenEventSecond : MonoBehaviour
         return seq;
     }
 
-    
+    // -------------------------
+    // PanelBSequence 안전화
     public Sequence PanelBSequence()
     {
         var seq = DOTween.Sequence();
-        // -------------------------
-        // Panel B (빠르게 들어오고 도착할 때 천천히 멈추기)
+
         if (panelB != null)
         {
             panelB.gameObject.SetActive(true);
-            Vector2 original = panelB.anchoredPosition;
-            panelB.anchoredPosition = new Vector2(original.x - panelBOffsetX, original.y);
-
-            seq.Append(
-                panelB
-                    .DOAnchorPosX(original.x, panelBFastIn)
-                    .SetEase(Ease.OutCubic)
-            );
+            seq.Append(panelB.DOAnchorPosX(panelB.anchoredPosition.x + panelBFastIn, panelBFastIn)
+                              .SetEase(Ease.OutCubic)
+                              .SetUpdate(true));
         }
+
+        // null이더라도 빈 시퀀스 반환 → Append 안전
         return seq;
     }
 }

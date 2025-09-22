@@ -126,12 +126,19 @@ public abstract class PlayerBaseState : Istate
 
     protected virtual void OnInvenToggle(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
+        if (!context.started) return;
         if (stateMachine.Player.direction.inventory == null) return;
 
         var inven = stateMachine.Player.direction.inventory;
-        inven.SetActive(!inven.activeSelf);
-        stateMachine.Player.EnableInput(!inven);
+        bool isActive = !inven.activeSelf;
+        inven.SetActive(isActive);
+
+        // 인벤토리 켜면 시간 멈추기, 끄면 다시 정상
+        Time.timeScale = isActive ? 0f : 1f;
+
+        // 옵션: 커서 락 해제
+        Cursor.lockState = isActive ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = isActive;
     }
 
     // ========== 개별 입력 읽기 ==========

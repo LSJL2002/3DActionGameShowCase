@@ -8,6 +8,7 @@ public class DirectionManager : MonoBehaviour
 
     private void Awake()
     {
+        inventory.SetActive(false);
     }
 
     private void Update()

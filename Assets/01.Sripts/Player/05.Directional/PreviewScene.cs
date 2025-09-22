@@ -73,6 +73,8 @@ public class PreviewScene : MonoBehaviour
     /// <param name="target">Char / Stat / Core / Skill / Inven</param>
     private void OpenPreview(string target)
     {
+        Debug.Log(previewAnimator);
+
         if (previewAnimator == null) return;
 
         switch (target)
