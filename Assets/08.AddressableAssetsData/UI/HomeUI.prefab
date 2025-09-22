@@ -53,6 +53,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  newGameButton: {fileID: 497688364837019225}
+  loadGameButton: {fileID: 3249149698219666697}
+  optionButton: {fileID: 2411238391119965137}
+  quitButton: {fileID: 8351260675759659924}
 --- !u!1 &3743079766321119182
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,6 +69,8 @@ GameObject:
   - component: {fileID: 3415229605379761366}
   - component: {fileID: 7628203485853475742}
   - component: {fileID: 970582064386039315}
+  - component: {fileID: 3249149698219666697}
+  - component: {fileID: 4454791168283199061}
   m_Layer: 0
   m_Name: LoadGameButton (1)
   m_TagString: Untagged
@@ -186,6 +192,31 @@ MonoBehaviour:
           m_StringArgument: GameStart
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &3249149698219666697
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3743079766321119182}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &4454791168283199061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3743079766321119182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4ee977eb747614c8ff7927d019112c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCanvasGroup: {fileID: 3249149698219666697}
 --- !u!1 &4077970406767361667
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +229,8 @@ GameObject:
   - component: {fileID: 7561687237269713281}
   - component: {fileID: 4326087582217434614}
   - component: {fileID: 2973444993668660263}
+  - component: {fileID: 497688364837019225}
+  - component: {fileID: 7805744813635012152}
   m_Layer: 0
   m_Name: NewGameButton
   m_TagString: Untagged
@@ -319,6 +352,31 @@ MonoBehaviour:
           m_StringArgument: NewGame
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &497688364837019225
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4077970406767361667}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &7805744813635012152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4077970406767361667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4ee977eb747614c8ff7927d019112c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCanvasGroup: {fileID: 497688364837019225}
 --- !u!1 &5222723095420201415
 GameObject:
   m_ObjectHideFlags: 0
@@ -867,6 +925,8 @@ GameObject:
   - component: {fileID: 806960794673305158}
   - component: {fileID: 7915608807262866453}
   - component: {fileID: 2108024174948173913}
+  - component: {fileID: 8351260675759659924}
+  - component: {fileID: 5408337795969150003}
   m_Layer: 0
   m_Name: QuitButton
   m_TagString: Untagged
@@ -988,6 +1048,31 @@ MonoBehaviour:
           m_StringArgument: Quit
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &8351260675759659924
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142965214957132072}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &5408337795969150003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142965214957132072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4ee977eb747614c8ff7927d019112c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCanvasGroup: {fileID: 8351260675759659924}
 --- !u!1 &8808612687538981019
 GameObject:
   m_ObjectHideFlags: 0
@@ -1000,6 +1085,8 @@ GameObject:
   - component: {fileID: 2379064780060811323}
   - component: {fileID: 8697016149306065013}
   - component: {fileID: 7614440317632049942}
+  - component: {fileID: 2411238391119965137}
+  - component: {fileID: 3574877896892762269}
   m_Layer: 0
   m_Name: OptionUIButton
   m_TagString: Untagged
@@ -1121,3 +1208,28 @@ MonoBehaviour:
           m_StringArgument: OptionUI
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &2411238391119965137
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8808612687538981019}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &3574877896892762269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8808612687538981019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4ee977eb747614c8ff7927d019112c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCanvasGroup: {fileID: 2411238391119965137}
