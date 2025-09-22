@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class CompanionUI : UIBase
 {
-    [HideInInspector] public ObjectFollow objectFollow;
+    [HideInInspector] public CompanionController controller;
 
     void OnEnable()
     {
         // 이미 세팅돼 있지 않다면 씬에서 찾아서 캐싱
-        if (objectFollow == null)
-            objectFollow = FindObjectOfType<ObjectFollow>();
+        if (controller == null)
+            controller = FindObjectOfType<CompanionController>();
     }
 
     public void OnClickClose()
     {
         // 안전 가드: null이면 로그만 남기고 리턴
-        if (objectFollow == null)
+        if (controller == null)
         {
-            Debug.LogError("[CompanionUI] ObjectFollow 참조가 없습니다. 씬에 ObjectFollow가 있는지 확인하세요.");
+            Debug.LogError("[CompanionUI] controller 참조가 없습니다. 씬에 ObjectFollow가 있는지 확인하세요.");
             return;
         }
 
@@ -27,7 +27,8 @@ public class CompanionUI : UIBase
             PlayerManager.Instance.EnableInput(true);
 
         // 위치/커서/챗UI 복원은 기존 ObjectFollow가 담당
-        objectFollow.ExitTalkMode();
+        controller.ExitTalkMode();
+        controller.Sm?.ChangeState(new CompanionFollowState(controller.Sm));
     }
 
     public async void OnClickButton(string str)

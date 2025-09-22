@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5158981906788112900
 Transform:
   m_ObjectHideFlags: 0
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.14, z: 0.79}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5974102722943521851}
@@ -5250,6 +5250,7 @@ GameObject:
   - component: {fileID: 1261816730138526251}
   - component: {fileID: 3907996684311232973}
   - component: {fileID: 6935021450080010101}
+  - component: {fileID: 4728083590766537062}
   m_Layer: 0
   m_Name: Companion
   m_TagString: Untagged
@@ -5331,7 +5332,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8256886589670269656}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47ae9dd5c82490445a06c3c21a7f37c2, type: 3}
   m_Name: 
@@ -5347,6 +5348,33 @@ MonoBehaviour:
   moveSpeedThreshold: 0.1
   ui: {fileID: 0}
   isAttack: 0
+--- !u!114 &4728083590766537062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8256886589670269656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3011e2d75f22e47948e1003c141d99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObject: {fileID: 0}
+  lookObject: {fileID: 0}
+  rb: {fileID: 3907996684311232973}
+  anim: {fileID: 4272135322808742081}
+  chatUI: {fileID: 3047247285030718760}
+  moveSpeed: 5
+  rotationSpeed: 360
+  moveSpeedThreshold: 0.1
+  moveFx: {fileID: 276127117624638616}
+  isAttack: 0
+  isTalkMode: 0
+  cachedAnchorLocalPos: {x: 0, y: 0, z: 0}
+  cachedLockMode: 0
+  cachedCursorVisible: 0
+  ui: {fileID: 0}
 --- !u!1001 &6153747792780742705
 PrefabInstance:
   m_ObjectHideFlags: 0
