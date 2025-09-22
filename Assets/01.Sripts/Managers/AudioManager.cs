@@ -131,6 +131,8 @@ public class AudioManager : Singleton<AudioManager>
     #region BGM
     public void PlayBGM(string name)
     {
+        bgmSource.Stop();
+
         if (!bgmDict.TryGetValue(name, out var clip)) return;
         if (bgmSource.clip == clip) return;
 
