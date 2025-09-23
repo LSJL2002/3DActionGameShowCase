@@ -31,6 +31,9 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     public PlayerStateMachine stateMachine; //순수 C# 클래스
     public SkillManagers skill;
     public CameraManager camera;
+    public DirectionManager direction;
+    public VFXManager vFX;
+    public HitStopManager hitStop;
 
 
     private void Awake()
@@ -53,6 +56,9 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         stateMachine = new PlayerStateMachine(this);
         skill ??= GetComponentInChildren<SkillManagers>();
         camera ??= GetComponentInChildren<CameraManager>();
+        direction ??= GetComponentInChildren<DirectionManager>();
+        vFX ??= GetComponent<VFXManager>();
+        hitStop ??= GetComponent<HitStopManager>();
 
         Stats.OnDie += OnDie;
     }
@@ -85,11 +91,13 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         {
             Input.PlayerActions.Enable();
             camera.SetCameraInputEnabled(true);
+            Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
             Input.PlayerActions.Disable();
             camera.SetCameraInputEnabled(false);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

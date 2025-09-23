@@ -13,6 +13,7 @@ public class GameScene : SceneBase
     {
         base.Start();
         ShowUI();
+        AudioManager.Instance.PlayBGM("1");
     }
 
     private async void ShowUI()

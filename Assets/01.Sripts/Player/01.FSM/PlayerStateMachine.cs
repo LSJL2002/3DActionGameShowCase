@@ -16,8 +16,10 @@ public class PlayerStateMachine : StateMachine
     public AttackInfoData AttackInfo { get; private set; }
 
     public Vector2 MovementInput { get; set; } // 입력 방향 (WASD, 스틱)
-    public float MovementSpeed { get; private set; } // 현재 이동 속도
     public float RotationDamping { get; set; } // 회전할 때 부드럽게 보정하는 값
+    public float MovementSpeed { get; private set; } // 현재 이동 속도
+    public float LastWalkBlend { get; set; } = 0f;     // 걷기 Blend 유지용
+    public float LastWalkTimer { get; set; } = 0f;
 
     private float _movementSpeedModifier;
     public float MovementSpeedModifier // 속도 보정 계수

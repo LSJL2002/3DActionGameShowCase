@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlyerFinishAttackState : PlayerBaseState
 {
     private float enterTime; // 상태 진입 시각 기록
-    private float finishDelay = 2f; // 2초 대기
+    private float finishDelay = 1f; // 2초 대기
 
     public PlyerFinishAttackState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 

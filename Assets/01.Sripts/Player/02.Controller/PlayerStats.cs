@@ -9,8 +9,8 @@ public interface IStats
 {
     bool IsDead { get; }
 
-    void TakeDamage(int amount);
-    void Heal(int amount);
+    void TakeDamage(float amount);
+    void Heal(float amount);
 
     event Action OnDie;
 }
@@ -65,13 +65,13 @@ public class PlayerStats : IStats
         CurrentEnergy = MaxEnergy.Value; 
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
         if (CurrentHealth <= 0) OnDie?.Invoke();
     }
 
-    public void Heal(int amount)
+    public void Heal(float amount)
     {
         CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth.Value);
     }
