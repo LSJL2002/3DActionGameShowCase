@@ -1,54 +1,71 @@
-using System.Collections;
 using UnityEngine;
 
 public class MonsterBaseAttackAlt : MonsterBaseState
 {
-    private float attackRange;
     private int damage;
-    private Vector3 attackCenter;
-    private float sphereRadius;
+    private BoxCollider attackCollider;
     private MonsterAnimationData.MonsterAnimationType animationType;
 
     public MonsterBaseAttackAlt(MonsterStateMachine stateMachine, MonsterAnimationData.MonsterAnimationType animType) : base(stateMachine)
     {
-        attackRange = stateMachine.Monster.Stats.AttackRange;
         damage = stateMachine.Monster.Stats.AttackPower;
-        sphereRadius = attackRange / 2f;
+        animationType = animType;
 
-        animationType = animType; // store custom animation type
+        if (stateMachine.Monster is ToiletMonster toilet && toilet.baseAttackCollider != null)
+        {
+            attackCollider = toilet.baseAttackCollider as BoxCollider;
+            if (attackCollider != null)
+            {
+                attackCollider.isTrigger = true;
+                attackCollider.enabled = false;
+            }
+        }
     }
 
     public override void Enter()
     {
         StopMoving();
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
+
+        stateMachine.isAttacking = true;
+
         StartAnimation(stateMachine.Monster.animationData.GetHash(animationType));
-        stateMachine.Monster.StartCoroutine(DoBaseAttack());
-    }
-
-    private IEnumerator DoBaseAttack()
-    {
-        yield return new WaitForSeconds(0.3f);
-        attackCenter = stateMachine.Monster.transform.position + stateMachine.Monster.transform.forward * (attackRange / 2f);
-
-        Collider[] hitColliders = Physics.OverlapSphere(attackCenter, sphereRadius);
-        foreach (var hit in hitColliders)
-        {
-            if (hit.CompareTag("Player") && hit.TryGetComponent<IDamageable>(out var dmg))
-            {
-                dmg.OnTakeDamage(damage);
-            }
-        }
-
-        yield return new WaitForSeconds(1.2f);
-
-        stateMachine.isAttacking = false;
-
-        stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
     public override void Exit()
     {
         stateMachine.isAttacking = false;
+
         StopAnimation(stateMachine.Monster.animationData.GetHash(animationType));
+
+        if (attackCollider != null)
+            attackCollider.enabled = false;
+    }
+
+    public override void OnAttackHit()
+    {
+        if (attackCollider != null)
+        {
+            // Set the damage
+            AttackTrigger trigger = attackCollider.GetComponent<AttackTrigger>();
+            if (trigger != null)
+            {
+                trigger.damage = damage;
+            }
+
+            attackCollider.enabled = true;
+            Debug.Log("Alt attack collider enabled!");
+        }
+    }
+
+    public override void OnAnimationComplete()
+    {
+        if (attackCollider != null)
+            attackCollider.enabled = false;
+
+        Debug.Log($"{stateMachine.Monster.name} finished alt base attack.");
+        stateMachine.isAttacking = false;
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 }
