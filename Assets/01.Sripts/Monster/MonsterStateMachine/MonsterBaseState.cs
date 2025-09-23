@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using Unity.VisualScripting;
@@ -26,6 +26,7 @@ public class MonsterBaseState : Istate
         ApplyForcesOnly();
     }
     public virtual void OnAttackHit() { }
+    public virtual void OnAnimationComplete() { }
 
     protected void StartAnimation(int animationHash)
     {

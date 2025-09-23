@@ -16,6 +16,7 @@ public class SmileToiletSlamState : MonsterBaseState
     public override void Enter()
     {
         StopMoving();
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         if (skillData == null)
         {
             Debug.LogError("SmileToiletSlamState: skillData is null!");
@@ -44,6 +45,7 @@ public class SmileToiletSlamState : MonsterBaseState
 
     private void OnTelegraphComplete()
     {
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
     }
 

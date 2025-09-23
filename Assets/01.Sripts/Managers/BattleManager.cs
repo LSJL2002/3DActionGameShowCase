@@ -34,21 +34,6 @@ public class BattleManager : Singleton<BattleManager>
 
     }
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            if (currentZone == null) return;
-            HandleMonsterDie();
-        }
-        if (Input.GetMouseButtonDown(0))
-        {
-            if(currentZone != null) 
-            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(50000);
-        }
-    }
-
-
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
     {
         string monsterKey = monsterId.ToString(); // Addressables 키 (등록한 이름이랑 일치해야 함)
