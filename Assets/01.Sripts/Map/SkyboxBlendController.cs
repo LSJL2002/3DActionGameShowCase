@@ -14,6 +14,9 @@ public class SkyboxBlendController : MonoBehaviour
     [SerializeField] private bool flipY = false;
     [SerializeField][Range(0f, 360f)] private float rotationOffset = 0f;
 
+    [Header("Directional Light (Sun)")]
+    public Light mainLight = GameObject.FindGameObjectWithTag("MainLight").GetComponent<Light>();
+
     private void Start()
     {
         // Skybox 적용
@@ -24,6 +27,10 @@ public class SkyboxBlendController : MonoBehaviour
         blendSkybox.SetFloat("_FlipX", flipX ? 1f : 0f);
         blendSkybox.SetFloat("_FlipY", flipY ? 1f : 0f);
         blendSkybox.SetFloat("_Rotation", rotationOffset);
+
+        // 씬에 Directional Light 하나만 있으면 자동으로 찾아오기
+        if (mainLight == null)
+            mainLight = FindObjectOfType<Light>();
     }
 
     private void OnEnable()
@@ -42,12 +49,21 @@ public class SkyboxBlendController : MonoBehaviour
     {
         // 낮 → 밤 전환
         blendSkybox.DOFloat(1f, "_Blend", transitionTime).SetEase(Ease.InOutSine);
+        blendSkybox.DOFloat(270f, "_Rotation",transitionTime).SetEase(Ease.InOutSine);
+
+        if (mainLight != null)
+        {
+            // 빛도 같이 회전
+            mainLight.transform.DORotate(new Vector3(0f, 270f, 0f), transitionTime)
+                             .SetEase(Ease.InOutSine);
+        }
     }
 
     private void HandleBattleClear(BattleZone zone)
     {
         // 밤 → 낮 전환
         blendSkybox.DOFloat(0f, "_Blend", transitionTime).SetEase(Ease.InOutSine);
+        blendSkybox.DOFloat(0f, "_Rotation", transitionTime).SetEase(Ease.InOutSine);
     }
 
     // 필요하면 런타임 중 Rotation도 Tween 가능
