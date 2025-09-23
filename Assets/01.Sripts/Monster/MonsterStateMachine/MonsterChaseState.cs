@@ -14,7 +14,8 @@ public class MonsterChaseState : MonsterBaseState
 
     public override void Update()
     {
-
+        if (stateMachine.Monster.PlayerTarget == null) return;
+        MoveTo(stateMachine.Monster.PlayerTarget.position);
     }
 
     public override void Exit()

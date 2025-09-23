@@ -25,6 +25,9 @@ public class MonsterBaseAttackAlt : MonsterBaseState
     public override void Enter()
     {
         StopMoving();
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
+
         stateMachine.isAttacking = true;
 
         StartAnimation(stateMachine.Monster.animationData.GetHash(animationType));

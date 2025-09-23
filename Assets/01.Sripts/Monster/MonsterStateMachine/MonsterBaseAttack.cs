@@ -25,7 +25,7 @@ public class MonsterBaseAttack : MonsterBaseState
     {
         StopMoving();
         stateMachine.isAttacking = true;
-
+        // Start attack animation
         StartAnimation(stateMachine.Monster.animationData.GetHash(
             MonsterAnimationData.MonsterAnimationType.BaseAttack));
     }
