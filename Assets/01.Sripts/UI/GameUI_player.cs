@@ -33,7 +33,7 @@ public partial class GameUI : UIBase
         playerHPSlider.maxValue = 1f;
         playerMPSlider.maxValue = 1f;
 
-        SelectAbilityUI.OnStatChange += UpdateStat;
+        PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
     }
 
     public void UpdatePlayer()
@@ -58,7 +58,7 @@ public partial class GameUI : UIBase
     }
 
     // 플레이어 스탯이 변화했을때 호출 할 함수
-    public void UpdateStat()
+    public void UpdateStat(StatType statType)
     {
         // 플레이어 맥스체력,마력을 업데이트
         playerMaxHP = playerStats.MaxHealth.Value;

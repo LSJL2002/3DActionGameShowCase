@@ -29,9 +29,6 @@ public class SelectAbilityUI : UIBase
     private AsyncOperationHandle<ItemData> skillLoadHandle;
     private AsyncOperationHandle<ItemData> coreLoadHandle;
 
-    // 플레이어 스탯의 변화를 알리는 이벤트
-    public static event Action OnStatChange;
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -143,8 +140,6 @@ public class SelectAbilityUI : UIBase
                 PlayerManager.Instance.Stats.AddModifier(StatType.Defense, statPoint_DEF);
                 PlayerManager.Instance.Stats.AddModifier(StatType.MoveSpeed, statPoint_AttackSPD);
                 PlayerManager.Instance.Stats.AddModifier(StatType.AttackSpeed, statPoint_MoveSPD);
-
-                OnStatChange?.Invoke(); // 스탯변화 이벤트 발생
 
                 Debug.Log($"플레이어 스탯증가");
                 break;
