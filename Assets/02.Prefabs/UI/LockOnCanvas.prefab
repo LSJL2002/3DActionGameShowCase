@@ -84,12 +84,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1143494156953415141}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01deb2de265a4714eaf9e9f8c1b948a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetDistance: 1
 --- !u!895512359 &2418450553012926700
 AimConstraint:
   m_ObjectHideFlags: 0
@@ -144,7 +143,7 @@ RectTransform:
   m_GameObject: {fileID: 3218191845544919062}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1165492628276805373}
@@ -200,7 +199,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &7231901724067247961
 MonoBehaviour:
   m_ObjectHideFlags: 0
