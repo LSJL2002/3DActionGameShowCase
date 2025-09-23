@@ -27,7 +27,7 @@ public class HomeUI : UIBase
 
             case "OptionUI":
                 // IU매니저의 Show 메서드를 호출하여 OptionUI를 화면에 표시
-                await UIManager.Instance.Show<OptionUI>();
+                await UIManager.Instance.Show<SoundSettingUI>();
                 break;
 
             case "Quit":
