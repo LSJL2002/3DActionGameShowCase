@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ public class ItemData : ScriptableObject
     public EffectType2 effectType2;
     public float effectValue;
     public float duration; // 효과 지속시간
+    public List<int> colors;
 
     // 능력 배열
     public List<ItemAbility> abilities;

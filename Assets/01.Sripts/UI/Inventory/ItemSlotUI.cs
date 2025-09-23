@@ -28,6 +28,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         itemData = data;
         iconImage.sprite = data.sprite;
+        iconImage.color = new Color(data.colors[0] / 255.0f, data.colors[1] / 255.0f, data.colors[2] / 255.0f); // data의 color 리스트의 0,1,2 번째 수를 가져와서 할당
         itemName = data.inGameName;
         itemType = data.itemType.ToString();
         itemDescription = data.scriptText;
