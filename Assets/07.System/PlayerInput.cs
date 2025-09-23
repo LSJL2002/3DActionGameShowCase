@@ -147,9 +147,18 @@ namespace UnityEngine.InputSystem
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""PotalGun"",
+                    ""name"": ""DashL"",
                     ""type"": ""Button"",
-                    ""id"": ""80ee5400-ca5e-410d-9b15-0facd82a3488"",
+                    ""id"": ""069f2a90-3337-4ff0-80d0-41ca6a86119b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DashR"",
+                    ""type"": ""Button"",
+                    ""id"": ""b6a95ab4-beee-4266-9d58-c9cb0baf950f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -297,28 +306,6 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Flash"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e6d7e9b4-4f06-4181-ad82-d7f2a14a6152"",
-                    ""path"": ""<Keyboard>/z"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Action"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""617ca304-64e7-4bea-8cbf-95f427590061"",
-                    ""path"": ""<Keyboard>/leftCtrl"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""PotalGun"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -528,6 +515,28 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""82db1414-650f-405b-9baa-860e5a363d70"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DashL"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""045eacd4-d706-432b-8212-84472bb8a666"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""DashR"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1128,7 +1137,8 @@ namespace UnityEngine.InputSystem
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Flash = m_Player.FindAction("Flash", throwIfNotFound: true);
             m_Player_Action = m_Player.FindAction("Action", throwIfNotFound: true);
-            m_Player_PotalGun = m_Player.FindAction("PotalGun", throwIfNotFound: true);
+            m_Player_DashL = m_Player.FindAction("DashL", throwIfNotFound: true);
+            m_Player_DashR = m_Player.FindAction("DashR", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1215,7 +1225,8 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Flash;
         private readonly InputAction m_Player_Action;
-        private readonly InputAction m_Player_PotalGun;
+        private readonly InputAction m_Player_DashL;
+        private readonly InputAction m_Player_DashR;
         public struct PlayerActions
         {
             private @PlayerInput m_Wrapper;
@@ -1233,7 +1244,8 @@ namespace UnityEngine.InputSystem
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Flash => m_Wrapper.m_Player_Flash;
             public InputAction @Action => m_Wrapper.m_Player_Action;
-            public InputAction @PotalGun => m_Wrapper.m_Player_PotalGun;
+            public InputAction @DashL => m_Wrapper.m_Player_DashL;
+            public InputAction @DashR => m_Wrapper.m_Player_DashR;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1282,9 +1294,12 @@ namespace UnityEngine.InputSystem
                 @Action.started += instance.OnAction;
                 @Action.performed += instance.OnAction;
                 @Action.canceled += instance.OnAction;
-                @PotalGun.started += instance.OnPotalGun;
-                @PotalGun.performed += instance.OnPotalGun;
-                @PotalGun.canceled += instance.OnPotalGun;
+                @DashL.started += instance.OnDashL;
+                @DashL.performed += instance.OnDashL;
+                @DashL.canceled += instance.OnDashL;
+                @DashR.started += instance.OnDashR;
+                @DashR.performed += instance.OnDashR;
+                @DashR.canceled += instance.OnDashR;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -1328,9 +1343,12 @@ namespace UnityEngine.InputSystem
                 @Action.started -= instance.OnAction;
                 @Action.performed -= instance.OnAction;
                 @Action.canceled -= instance.OnAction;
-                @PotalGun.started -= instance.OnPotalGun;
-                @PotalGun.performed -= instance.OnPotalGun;
-                @PotalGun.canceled -= instance.OnPotalGun;
+                @DashL.started -= instance.OnDashL;
+                @DashL.performed -= instance.OnDashL;
+                @DashL.canceled -= instance.OnDashL;
+                @DashR.started -= instance.OnDashR;
+                @DashR.performed -= instance.OnDashR;
+                @DashR.canceled -= instance.OnDashR;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -1526,7 +1544,8 @@ namespace UnityEngine.InputSystem
             void OnJump(InputAction.CallbackContext context);
             void OnFlash(InputAction.CallbackContext context);
             void OnAction(InputAction.CallbackContext context);
-            void OnPotalGun(InputAction.CallbackContext context);
+            void OnDashL(InputAction.CallbackContext context);
+            void OnDashR(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
