@@ -11,9 +11,9 @@ public class PlayerDodgeState : Istate
     private PlayerStateMachine stateMachine;
 
     // ---- 설정 값 ----
-    private const float DodgeDuration = 0.8f;   // 상태 유지 시간(초)
-    private const float DodgeStrength = 6f;     // 밀려나는 힘 크기
-    private const float LayerBlendSpeed = 5f;   // 레이어 페이드 속도
+    private readonly float DodgeDuration;   // 상태 유지 시간(초)
+    private readonly float DodgeStrength;     // 밀려나는 힘 크기
+    private readonly float LayerBlendSpeed;   // 레이어 페이드 속도
 
     // ---- 내부 상태 ----
     private float startTime;
@@ -27,6 +27,11 @@ public class PlayerDodgeState : Istate
         this.stateMachine = stateMachine;
         // Layer 이름으로 인덱스 가져오기
         dodgeLayerIndex = stateMachine.Player.Animator.GetLayerIndex("Overall/Toggle_DodgeLayer");
+
+        // GroundData에서 값 가져오기
+        DodgeDuration = stateMachine.Player.InfoData.GroundData.DodgeDuration;
+        DodgeStrength = stateMachine.Player.InfoData.GroundData.DodgeStrength;
+        LayerBlendSpeed = stateMachine.Player.InfoData.GroundData.DodgeLayerBlendSpeed;
     }
 
     public void Enter()
