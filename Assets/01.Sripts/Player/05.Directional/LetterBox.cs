@@ -7,9 +7,6 @@ using UnityEngine.Video;
 
 public class LetterBox : MonoBehaviour
 {
-    [Header("Video Components")]
-    [SerializeField] private VideoPlayer[] videoPlayers;
-
     [Header("UI Components")]
     [SerializeField] private RectTransform topBar;
     [SerializeField] private RectTransform bottomBar;
@@ -28,49 +25,11 @@ public class LetterBox : MonoBehaviour
         topInitialPos = topBar.anchoredPosition;
         bottomInitialPos = bottomBar.anchoredPosition;
 
-        // VideoPlayer 이벤트 등록
-        foreach (var vp in videoPlayers)
-        {
-            vp.prepareCompleted -= OnVideoPrepared;
-            vp.prepareCompleted += OnVideoPrepared;
-        }
     }
 
     private void OnEnable()
     {
         preparedCount = 0;
-
-        // 영상 준비 시작
-        foreach (var vp in videoPlayers)
-        {
-            if (!vp.isPrepared)
-                vp.Prepare();
-            else
-            {
-                vp.Play();
-                preparedCount++;
-            }
-        }
-
-        // 만약 모든 영상 이미 준비 완료라면 바로 등장
-        if (preparedCount >= videoPlayers.Length)
-        {
-            LetterBoxIn();
-            preparedCount = 0;
-        }
-    }
-
-    private void OnVideoPrepared(VideoPlayer vp)
-    {
-        vp.Play();
-        preparedCount++;
-
-        // 모든 영상 준비 완료 후 슬라이드 인
-        if (preparedCount >= videoPlayers.Length)
-        {
-            LetterBoxIn();
-            preparedCount = 0;
-        }
     }
 
     private void LetterBoxIn()
@@ -97,9 +56,6 @@ public class LetterBox : MonoBehaviour
         bottomBar.DOAnchorPos(bottomInitialPos - new Vector2(0, bottomHeight), slideDuration).SetEase(slideEase)
             .OnComplete(() =>
             {
-                // 영상 정지
-                foreach (var vp in videoPlayers)
-                    vp.Stop();
 
                 // GameObject 비활성화
                 gameObject.SetActive(false);
@@ -108,8 +64,5 @@ public class LetterBox : MonoBehaviour
 
     private void OnDisable()
     {
-        // 비활성화 시 영상 일시정지
-        foreach (var vp in videoPlayers)
-            vp.Pause();
     }
 }
