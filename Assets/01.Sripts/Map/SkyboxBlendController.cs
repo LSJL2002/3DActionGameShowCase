@@ -1,0 +1,65 @@
+using UnityEngine;
+using DG.Tweening;
+
+public class SkyboxBlendController : MonoBehaviour
+{
+    [Header("Blend Skybox Material (Shader = Skybox/PanoramicBlend)")]
+    [SerializeField] private Material blendSkybox;
+
+    [Header("Transition Settings")]
+    [SerializeField] private float transitionTime = 3f;
+
+    [Header("Flip & Rotation")]
+    [SerializeField] private bool flipX = false;
+    [SerializeField] private bool flipY = false;
+    [SerializeField][Range(0f, 360f)] private float rotationOffset = 0f;
+
+    private void Start()
+    {
+        // Skybox 적용
+        RenderSettings.skybox = blendSkybox;
+
+        // 초기 세팅
+        blendSkybox.SetFloat("_Blend", 0f); // 낮 시작
+        blendSkybox.SetFloat("_FlipX", flipX ? 1f : 0f);
+        blendSkybox.SetFloat("_FlipY", flipY ? 1f : 0f);
+        blendSkybox.SetFloat("_Rotation", rotationOffset);
+    }
+
+    private void OnEnable()
+    {
+        BattleManager.OnBattleStart += HandleBattleStart;
+        BattleManager.OnBattleClear += HandleBattleClear;
+    }
+
+    private void OnDisable()
+    {
+        BattleManager.OnBattleStart -= HandleBattleStart;
+        BattleManager.OnBattleClear -= HandleBattleClear;
+    }
+
+    private void HandleBattleStart(BattleZone zone)
+    {
+        // 낮 → 밤 전환
+        blendSkybox.DOFloat(1f, "_Blend", transitionTime).SetEase(Ease.InOutSine);
+    }
+
+    private void HandleBattleClear(BattleZone zone)
+    {
+        // 밤 → 낮 전환
+        blendSkybox.DOFloat(0f, "_Blend", transitionTime).SetEase(Ease.InOutSine);
+    }
+
+    // 필요하면 런타임 중 Rotation도 Tween 가능
+    public void SetRotation(float targetRotation, float duration = 1f)
+    {
+        blendSkybox.DOFloat(targetRotation, "_Rotation", duration).SetEase(Ease.InOutSine);
+    }
+
+    // Flip 값 런타임 변경
+    public void SetFlip(bool flipXValue, bool flipYValue)
+    {
+        blendSkybox.SetFloat("_FlipX", flipXValue ? 1f : 0f);
+        blendSkybox.SetFloat("_FlipY", flipYValue ? 1f : 0f);
+    }
+}
