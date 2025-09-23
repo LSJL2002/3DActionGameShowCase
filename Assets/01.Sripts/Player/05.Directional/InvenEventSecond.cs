@@ -14,10 +14,22 @@ public class InvenEventSecond : MonoBehaviour
     public float panelADuration = 1f;   // Fade + 이동 총 시간
 
     public RectTransform panelB;
-    public float panelBOffsetX = 2.5f;  // 왼쪽에서 시작할 거리
-    public float panelBDuration = 2f;   // 천천히 이동
-    public float panelBFastIn = 1f;     // 빠른 입장 시간
+    public float panelBOffsetX = 2.5f;       // 왼쪽에서 시작
+    public float panelBFastIn = 1f;          // 빠른 입장 시간
+    public float panelBSlowDuration = 1f;    // 천천히 이동
+    public float panelBExitDistance = 0.5f;    // 퇴장 거리
+    public float panelBExitDuration = 1f;    // 퇴장 시간
+    public float panelBStayTime = 0.5f;        // 화면 머무는 시간
 
+    private Vector2 panelBOriginalPos;   // 원래 자리 저장용
+    public Vector2 PanelBOriginalPos => panelBOriginalPos; // 읽기 전용 공개 프로퍼티
+
+
+    void Awake()   // 게임 시작 시 한 번만 실행
+    {
+        if (panelB != null)
+            panelBOriginalPos = panelB.anchoredPosition;
+    }
 
     public Sequence PlaySequence(Action onComplete = null)
     {
@@ -35,23 +47,11 @@ public class InvenEventSecond : MonoBehaviour
             Vector2 original = panelA.anchoredPosition;
             panelA.anchoredPosition = new Vector2(original.x, original.y + panelAOffsetY);
 
-            seq.Append(
-                panelA
-                    .DOAnchorPosY(original.y, panelADuration)
-                    .SetUpdate(true)  // <--- Time.timeScale 무시
-                    .OnComplete(() => panelA.gameObject.SetActive(false))
-             );
-        }
-
-        if (panelB != null)
-        {
-            panelB.gameObject.SetActive(true);
-            Vector2 originalB = panelB.anchoredPosition;
-            panelB.anchoredPosition = new Vector2(originalB.x - panelBOffsetX, originalB.y);
-
-            seq.Append(panelB.DOAnchorPosX(originalB.x, panelBFastIn)
-                             .SetEase(Ease.OutCubic)
-                             .SetUpdate(true));
+            seq.Append(panelA
+                            .DOAnchorPosY(original.y, panelADuration)
+                            .SetUpdate(true)
+                            .OnComplete(() => panelA.gameObject.SetActive(false))
+                        );
         }
 
         // -------------------------
@@ -61,20 +61,40 @@ public class InvenEventSecond : MonoBehaviour
     }
 
     // -------------------------
-    // PanelBSequence 안전화
+    // Panel B 독립적 제어
     public Sequence PanelBSequence()
     {
         var seq = DOTween.Sequence();
+        if (panelB == null) return seq;
 
-        if (panelB != null)
-        {
-            panelB.gameObject.SetActive(true);
-            seq.Append(panelB.DOAnchorPosX(panelB.anchoredPosition.x + panelBFastIn, panelBFastIn)
-                              .SetEase(Ease.OutCubic)
-                              .SetUpdate(true));
-        }
+        panelB.gameObject.SetActive(true);
 
-        // null이더라도 빈 시퀀스 반환 → Append 안전
+        // 1. 빠른 등장
+        panelB.anchoredPosition = new Vector2(panelBOriginalPos.x - panelBOffsetX, panelBOriginalPos.y);
+        seq.Append(panelB
+            .DOAnchorPosX(panelBOriginalPos.x, panelBFastIn)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+        );
+
+        // 2. 천천히 이동
+        seq.Append(panelB
+            .DOAnchorPosX(panelBOriginalPos.x + panelBSlowDuration, panelBSlowDuration)
+            .SetEase(Ease.Linear)
+            .SetUpdate(true)
+        );
+
+        // 3. 화면에 잠시 머무르기
+        seq.AppendInterval(panelBStayTime);
+
+        // 4. 퇴장 (3차 시점에서 호출)
+        seq.Append(panelB
+            .DOAnchorPosX(panelBOriginalPos.x + panelBExitDistance, panelBExitDuration)
+            .SetEase(Ease.Linear)
+            .SetUpdate(true)
+            .OnComplete(() => panelB.gameObject.SetActive(false))
+        );
+
         return seq;
     }
 }

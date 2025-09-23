@@ -57,7 +57,7 @@ public class PreviewScene : MonoBehaviour
     {
         if (scene.name != previewSceneName) return;
 
-        previewAnimator = FindObjectOfType<Animator>();
+        previewAnimator = GameObject.Find("PreviewCharacter")?.GetComponent<Animator>();
         SceneManager.sceneLoaded -= OnPreviewSceneLoaded;
 
         // 인벤토리 활성화 시 기본 캐릭터 포즈 재생
@@ -73,17 +73,23 @@ public class PreviewScene : MonoBehaviour
     /// <param name="target">Char / Stat / Core / Skill / Inven</param>
     private void OpenPreview(string target)
     {
-        Debug.Log(previewAnimator);
-
         if (previewAnimator == null) return;
 
+        // 먼저 모든 Pose bool 초기화
+        previewAnimator.SetBool("Base/Switch_Char", false);
+        previewAnimator.SetBool("Base/Switch_Stat", false);
+        previewAnimator.SetBool("Base/Switch_Core", false);
+        previewAnimator.SetBool("Base/Switch_Skill", false);
+        previewAnimator.SetBool("Base/Switch_Inven", false);
+
+        // 선택한 Pose만 true
         switch (target)
         {
-            case "Char": previewAnimator.Play("CharacterPose"); break;
-            case "Stat": previewAnimator.Play("StatPose"); break;
-            case "Core": previewAnimator.Play("CorePose"); break;
-            case "Skill": previewAnimator.Play("SkillPose"); break;
-            case "Inven": previewAnimator.Play("InventoryPose"); break;
+            case "Char": previewAnimator.SetBool("Base/Switch_Char", true); break;
+            case "Stat": previewAnimator.SetBool("Base/Switch_Stat", true); break;
+            case "Core": previewAnimator.SetBool("Base/Switch_Core", true); break;
+            case "Skill": previewAnimator.SetBool("Base/Switch_Skill", true); break;
+            case "Inven": previewAnimator.SetBool("Base/Switch_Inven", true); break;
         }
     }
 }

@@ -95,7 +95,8 @@ public class InvenEventThird : MonoBehaviour
         // panelB 직진 후 사라지기
         if (panelB != null)
         {
-            seq.Join(panelB.DOAnchorPosX(panelB.anchoredPosition.x + 5f, panelBExitDuration)
+            seq.Join(
+                panelB.DOAnchorPosX(panelB.anchoredPosition.x + 5f, panelBExitDuration)
                         .SetEase(Ease.Linear)
                         .SetUpdate(true)
                         .OnComplete(() => panelB.gameObject.SetActive(false)));

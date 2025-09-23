@@ -33,20 +33,24 @@ public class InvenEventSystem : MonoBehaviour
         // 1차 시퀀스
         mainSeq.Append(firstSequence.PlaySequence());
 
-        // 2차 시퀀스
-        mainSeq.Append(secondSequence.PlaySequence());
+        // 2차 시퀀스 + PanelB 동시에 시작
+        var secondSeq = secondSequence.PlaySequence();
+        mainSeq.Append(secondSeq);
 
-        // PanelBSequence 안전하게 Append
+        // PanelBSequence를 동시에 실행
         var panelBSeq = secondSequence.PanelBSequence();
         if (panelBSeq != null)
-            mainSeq.Append(panelBSeq);
+        {
+            // Append 후 Join하면 secondSeq와 동시에 시작
+            mainSeq.Join(panelBSeq);
+        }
 
         // PanelB 위치 전달 후 3차 시퀀스
         mainSeq.AppendCallback(() =>
         {
-            if (thirdSequence.panelB != null && secondSequence.panelB != null)
+            if (thirdSequence.panelB != null && secondSequence != null)
             {
-                thirdSequence.panelB.anchoredPosition = secondSequence.panelB.anchoredPosition;
+                thirdSequence.panelB.anchoredPosition = secondSequence.PanelBOriginalPos;
                 thirdSequence.panelB.gameObject.SetActive(true);
             }
         });
