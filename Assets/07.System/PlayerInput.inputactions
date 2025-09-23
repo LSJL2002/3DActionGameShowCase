@@ -60,6 +60,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "13088985-771f-4df9-b9ae-c0b474e1846e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Camera",
                     "type": "Button",
                     "id": "d6be459b-89f8-405a-89a3-c9c8f9b330e8",
@@ -69,18 +78,27 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Jump",
+                    "name": "Inventory",
                     "type": "Button",
-                    "id": "7eae478f-d95d-49fe-a55b-fa3efcf9a752",
+                    "id": "4eadf7cd-77da-459b-821f-72ea6f5d280c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Menu",
+                    "name": "Interaction",
                     "type": "Button",
-                    "id": "13088985-771f-4df9-b9ae-c0b474e1846e",
+                    "id": "72bd4b27-0b1e-41ea-95c4-46d6fb84f6db",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "7eae478f-d95d-49fe-a55b-fa3efcf9a752",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -105,27 +123,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interaction",
+                    "name": "DashL",
                     "type": "Button",
-                    "id": "72bd4b27-0b1e-41ea-95c4-46d6fb84f6db",
+                    "id": "069f2a90-3337-4ff0-80d0-41ca6a86119b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Inventory",
+                    "name": "DashR",
                     "type": "Button",
-                    "id": "4eadf7cd-77da-459b-821f-72ea6f5d280c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "PotalGun",
-                    "type": "Button",
-                    "id": "80ee5400-ca5e-410d-9b15-0facd82a3488",
+                    "id": "b6a95ab4-beee-4266-9d58-c9cb0baf950f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -273,50 +282,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Flash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "55d3000c-6b3e-43bf-9ad1-4963a642e865",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Interaction",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e6d7e9b4-4f06-4181-ad82-d7f2a14a6152",
-                    "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Action",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f0815b3d-74d9-4b84-adb9-1a278ab42ac7",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Inventory",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "617ca304-64e7-4bea-8cbf-95f427590061",
-                    "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PotalGun",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -476,17 +441,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e1d1c7cf-0b71-400e-ac0c-458ce88d9a6d",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Menu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "42712185-e7b9-4010-a490-5d393948ccd1",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",
@@ -504,6 +458,61 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Camera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1d1c7cf-0b71-400e-ac0c-458ce88d9a6d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "55d3000c-6b3e-43bf-9ad1-4963a642e865",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Interaction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f0815b3d-74d9-4b84-adb9-1a278ab42ac7",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "82db1414-650f-405b-9baa-860e5a363d70",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "DashL",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "045eacd4-d706-432b-8212-84472bb8a666",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "DashR",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

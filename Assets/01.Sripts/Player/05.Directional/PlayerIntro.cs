@@ -17,6 +17,8 @@ public class PlayerIntro : MonoBehaviour
 
     private void Start()
     {
+        PlayerManager.Instance.EnableInput(false);
+        Cursor.lockState = CursorLockMode.Locked;
         // 카메라 우선순위 설정
         introCam.Priority = 20;
 
@@ -36,5 +38,7 @@ public class PlayerIntro : MonoBehaviour
 
         // 카메라 원래 우선순위로 복귀
         introCam.Priority = 0;
+
+        PlayerManager.Instance.EnableInput(true);
     }
 }
