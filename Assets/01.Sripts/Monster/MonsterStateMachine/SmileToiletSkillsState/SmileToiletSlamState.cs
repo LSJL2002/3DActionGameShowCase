@@ -16,6 +16,7 @@ public class SmileToiletSlamState : MonsterBaseState
     public override void Enter()
     {
         StopMoving();
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         if (skillData == null)
         {
             Debug.LogError("SmileToiletSlamState: skillData is null!");
@@ -39,11 +40,16 @@ public class SmileToiletSlamState : MonsterBaseState
             return;
         }
         aoeController.OnTelegraphFinished += OnTelegraphComplete;
-        aoeController.CircleInitialize(skillData.preCastTime, skillData.range, stateMachine.Monster.Stats.AttackPower);
+        aoeController.CircleInitialize(
+            skillData.preCastTime * stateMachine.PreCastTimeMultiplier,
+            skillData.range * stateMachine.RangeMultiplier,
+            (int)(stateMachine.Monster.Stats.AttackPower * stateMachine.EffectValueMultiplier)
+        );
     }
 
     private void OnTelegraphComplete()
     {
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
     }
 

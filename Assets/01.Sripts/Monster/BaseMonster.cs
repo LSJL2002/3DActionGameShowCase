@@ -12,6 +12,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 {
     [Header("References")]
     [SerializeField] public MonsterAnimationData animationData;
+    public MonsterPatternSO patternConfig;
 
     public Animator Animator { get; private set; }
     public NavMeshAgent Agent { get; private set; }
@@ -23,8 +24,11 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public event Action OnAttackAnimationCompleteEvent;
     private readonly List<GameObject> activeAOEs = new List<GameObject>();
 
-
     public MonsterStateMachine stateMachine;
+
+    protected MonsterPatternSO.PatternEntry currentPattern;
+    protected int currentStepIndex = 0;
+    protected bool isRunningPattern = false;
 
     protected virtual void Awake()
     {
@@ -34,25 +38,16 @@ public class BaseMonster : MonoBehaviour, IDamageable
         Agent = GetComponent<NavMeshAgent>();
         Stats = GetComponent<MonsterStatHandler>();
 
-        stateMachine = new MonsterStateMachine(this);
-
-        aiEvents = GetComponent<MonsterAIEvents>();
-        if (aiEvents == null)
-        {
-            aiEvents = gameObject.AddComponent<MonsterAIEvents>();
-        }
-
+        aiEvents = GetComponent<MonsterAIEvents>() ?? gameObject.AddComponent<MonsterAIEvents>();
         aiEvents.SetStateMachine(stateMachine);
     }
 
     protected virtual void Start()
     {
+        stateMachine = new MonsterStateMachine(this); 
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
         PlayerTarget = GameObject.FindWithTag("Player").transform;
-        if (Agent != null)
-        {
-            Agent.speed = stateMachine.MovementSpeed;
-        }
+        if (Agent != null) Agent.speed = stateMachine.MovementSpeed;
     }
 
     protected virtual void Update()
@@ -61,38 +56,147 @@ public class BaseMonster : MonoBehaviour, IDamageable
         stateMachine.LogicUpdate();
     }
 
-    protected virtual void FixedUpdate()
+    protected virtual void FixedUpdate() => stateMachine.Physicsupdate();
+    protected virtual void OnEnable() => stateMachine?.EnableAIEvents();
+    protected virtual void OnDisable() => stateMachine?.DisableAIEvents();
+
+
+    //패턴 로직
+    public bool IsPatternRunning() => isRunningPattern;
+
+    public void PickPatternByCondition()
     {
-        stateMachine.Physicsupdate();
+        if (patternConfig == null || isRunningPattern) return;
+
+        float hpPercent = (Stats.CurrentHP / Stats.maxHp) * 100f;
+        float distance = PlayerTarget != null ? Vector3.Distance(transform.position, PlayerTarget.position) : Mathf.Infinity;
+
+        var validConditions = patternConfig.GetValidConditions(hpPercent, distance);
+        if (validConditions == null || validConditions.Count == 0) return;
+
+        var chosenCondition = validConditions[0];
+        if (chosenCondition.possiblePatternIds.Count == 0) return;
+
+        int patternId = chosenCondition.possiblePatternIds[UnityEngine.Random.Range(0, chosenCondition.possiblePatternIds.Count)];
+        currentPattern = patternConfig.GetPatternById(patternId);
+        if (currentPattern == null) return;
+        stateMachine.RangeMultiplier = chosenCondition.rangeMultiplier;
+        stateMachine.PreCastTimeMultiplier = chosenCondition.preCastTimeMultiplier;
+        stateMachine.EffectValueMultiplier = chosenCondition.effectValueMultiplier;
+        Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
+
+        currentStepIndex = 0;
+        StartCoroutine(RunPattern());
     }
 
-    protected virtual void OnEnable()
+    public void ForceRunPattern(MonsterPatternSO.PatternEntry pattern, MonsterPatternSO.PatternCondition conditions)
     {
-        stateMachine?.EnableAIEvents();
+        //미래용
+        if (pattern == null)
+        {
+            return;
+        }
+
+        StopAllCoroutines();
+        currentPattern = pattern;
+        currentStepIndex = 0;
+        isRunningPattern = false;
+
+        stateMachine.RangeMultiplier = conditions.rangeMultiplier;
+        stateMachine.PreCastTimeMultiplier = conditions.preCastTimeMultiplier;
+        stateMachine.EffectValueMultiplier = conditions.effectValueMultiplier;
+
+        StartCoroutine(RunPattern());
     }
 
-    protected virtual void OnDisable()
+    private IEnumerator RunPattern()
     {
-        stateMachine?.DisableAIEvents();
+        isRunningPattern = true;
+
+        while (currentPattern != null && currentStepIndex < currentPattern.states.Count)
+        {
+            if (IsDead) yield break;
+
+            var stateEnum = currentPattern.states[currentStepIndex];
+            var attackState = GetStateFromEnum(stateEnum);
+            if (attackState == null)
+            {
+                currentStepIndex++;
+                continue;
+            }
+
+            float skillRange = GetSkillRangeFromState(attackState);
+
+            // --- Wait until player is in attack range (AI handles movement) ---
+            yield return new WaitUntil(() =>
+                PlayerTarget != null &&
+                Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange * 0.8f
+            );
+
+            // --- Perform attack ---
+            stateMachine.isAttacking = true;
+            stateMachine.ChangeState(attackState);
+
+            // Wait until attack finishes
+            yield return new WaitUntil(() => !stateMachine.isAttacking);
+
+            // --- Return to Idle after attack ---
+            if (!(stateMachine.CurrentState is MonsterIdleState))
+                stateMachine.ChangeState(stateMachine.MonsterIdleState);
+
+            currentStepIndex++;
+            yield return new WaitForSeconds(0.2f); // small delay between steps
+        }
+        float cooldown = UnityEngine.Random.Range(1f, 3f);
+        yield return new WaitForSeconds(cooldown);
+        currentPattern = null;
+        isRunningPattern = false;
     }
 
-    public void OnAttackAnimationComplete() //나중에 삭제
+    public float GetCurrentSkillRange()
     {
-        Debug.Log("Finished");
+        if (currentPattern != null && currentStepIndex < currentPattern.states.Count)
+        {
+            var stateEnum = currentPattern.states[currentStepIndex];
+            var state = GetStateFromEnum(stateEnum);
+            if (state != null)
+            {
+                return GetSkillRangeFromState(state);
+            }
+        }
+        Debug.LogError("Cannot Find Skill Range");
+        return Stats.AttackRange;
+    }
+
+
+    //Virtual, 각 몬스터에게 스킬을 연결할떄
+    protected virtual MonsterBaseState GetStateFromEnum(States stateEnum)
+    {
+        Debug.LogWarning($"{name} - BaseMonster.GetStateFromEnum not overridden!");
+        return null;
+    }
+
+    protected virtual float GetSkillRangeFromState(MonsterBaseState state)
+    {
+        return Stats.AttackRange; // 없다면, 몬스터의 기본 사거리 사용
+    }
+
+
+    public void OnAttackAnimationComplete()
+    {
         stateMachine.isAttacking = false;
+        OnAttackAnimationCompleteEvent?.Invoke();
     }
 
     public void OnAttackHitEvent()
     {
-        Debug.Log("OnHit");
         (stateMachine.CurrentState as MonsterBaseState)?.OnAttackHit();
     }
 
     public virtual void OnTakeDamage(int amount)
     {
         Stats.CurrentHP -= amount - Stats.Defense;
-        // 체력 변동 애니메이션 추가
-        if (Stats.CurrentHP <= 0)
+        if (Stats.CurrentHP <= 0 && !IsDead)
         {
             Stats.Die();
             IsDead = true;
@@ -103,29 +207,18 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void RegisterAOE(GameObject aoe)
     {
-        if (aoe != null && !activeAOEs.Contains(aoe))
-        {
-            activeAOEs.Add(aoe);
-        }
+        if (aoe != null && !activeAOEs.Contains(aoe)) activeAOEs.Add(aoe);
     }
 
     public void UnregisterAOE(GameObject aoe)
     {
-        if (aoe != null && activeAOEs.Contains(aoe))
-        {
-            activeAOEs.Remove(aoe);
-        }
+        if (aoe != null && activeAOEs.Contains(aoe)) activeAOEs.Remove(aoe);
     }
 
     public void ClearAOEs()
     {
         foreach (var aoe in activeAOEs)
-        {
-            if (aoe != null)
-            {
-                Destroy(aoe);
-            }
-            activeAOEs.Clear();
-        }
+            if (aoe != null) Destroy(aoe);
+        activeAOEs.Clear();
     }
 }

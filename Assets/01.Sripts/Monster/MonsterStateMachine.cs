@@ -7,6 +7,9 @@ public class MonsterStateMachine : StateMachine
 {
     public BaseMonster Monster { get; }
     public float MovementSpeedModifier { get; set; }
+    public float RangeMultiplier = 1f;
+    public float PreCastTimeMultiplier = 1f;
+    public float EffectValueMultiplier = 1f;
     public MonsterAIEvents AIEvents => aiEvents;
 
     public MonsterDeathState MonsterDeathState { get; }
@@ -39,6 +42,12 @@ public class MonsterStateMachine : StateMachine
         if (monster is ToiletMonster)
         {
             var slamSkill = monster.Stats.GetSkill("SmileMachine_Slam");
+            if (slamSkill == null)
+            {
+                Debug.LogError($"Skill 'SmileMachine_Slam' not found! Monster has {monster.Stats.MonsterSkills.Count} skills:");
+                foreach (var s in monster.Stats.MonsterSkills)
+                    Debug.Log($" - {s.skillName}");
+            }
             SmileToiletSlamState = new SmileToiletSlamState(this, slamSkill);
             var smashSkill = monster.Stats.GetSkill("SmileMachine_Smash");
             SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
@@ -99,9 +108,7 @@ public class MonsterStateMachine : StateMachine
             isAttacking = true;
             if (Monster is ToiletMonster toilet)
             {
-                //Temporary
-                int randomValue = Random.Range(1, 10);
-                toilet.PickPatternById(randomValue);
+                toilet.PickPatternByCondition();
             }
         }
     }

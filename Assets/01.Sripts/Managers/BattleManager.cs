@@ -36,15 +36,15 @@ public class BattleManager : Singleton<BattleManager>
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             if (currentZone == null) return;
             HandleMonsterDie();
         }
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            if(currentZone != null) 
-            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(50000);
+            if (currentZone != null)
+                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(50000);
         }
     }
 
