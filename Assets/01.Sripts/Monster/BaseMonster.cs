@@ -205,6 +205,11 @@ public class BaseMonster : MonoBehaviour, IDamageable
         }
     }
 
+    public void ApplyEffect(MonsterEffectType effectType, Vector3 sourcePosition, float effectValue = 0f, float duration = 0f)
+    {
+        // 플레이어게만 적용
+    }
+
     public void RegisterAOE(GameObject aoe)
     {
         if (aoe != null && !activeAOEs.Contains(aoe)) activeAOEs.Add(aoe);
