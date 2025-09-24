@@ -86,6 +86,10 @@ public class MonsterPatternSO : ScriptableObject
 
         // sort by priority (lowest number = higher priority)
         valid.Sort((a, b) => a.priority.CompareTo(b.priority));
+        foreach (var cond in valid)
+        {
+            Debug.Log($"Valid condition ID={cond.id}, priority={cond.priority}");
+        }
         return valid;
     }
 }

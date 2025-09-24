@@ -7,6 +7,9 @@ public class MonsterStateMachine : StateMachine
 {
     public BaseMonster Monster { get; }
     public float MovementSpeedModifier { get; set; }
+    public float RangeMultiplier = 1f;
+    public float PreCastTimeMultiplier = 1f;
+    public float EffectValueMultiplier = 1f;
     public MonsterAIEvents AIEvents => aiEvents;
 
     public MonsterDeathState MonsterDeathState { get; }
