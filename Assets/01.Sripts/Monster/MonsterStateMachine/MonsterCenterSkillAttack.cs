@@ -1,4 +1,5 @@
 using System.Collections;
+using Cysharp.Threading.Tasks.Triggers;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -60,7 +61,7 @@ public class MonsterCenterSkillAttack : MonsterBaseState
     // Called by Animation Event
     public void EnableDamage()
     {
-        aoeController?.EnableDamage();
+        aoeController?.EnableDamage(stateMachine.Monster.transform);
 
         // Destroy prefab right after damage triggers
         if (aoeInstance != null)

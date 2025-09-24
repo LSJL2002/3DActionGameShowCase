@@ -41,8 +41,6 @@ public class PlayerIdleState : PlayerGroundState
 
     public override void LogicUpdate()
     {
-        Debug.Log(1);
-
         base.LogicUpdate();
 
         // LogicUpdate에서는 트리거 재호출 방지
@@ -51,8 +49,6 @@ public class PlayerIdleState : PlayerGroundState
             float normTime = GetNormalizeTime(stateMachine.Player.Animator, "GetUp");
             if (normTime >= 0.99f)
             {
-                Debug.Log(2);
-
                 OnCompleteGettingUp();
                 stateMachine.ChangeState(stateMachine.WalkState);
             }
@@ -64,9 +60,6 @@ public class PlayerIdleState : PlayerGroundState
         // 10초 이상 입력 없으면 눕기 모션 트리거
         if (!isWaitingAnimationTriggered && Time.time - idleStartTime >= waitingAnimationDelay)
         {
-            Debug.Log(3);
-
-
             stateMachine.Player.Animator.SetTrigger(stateMachine.Player.AnimationData.WaitingAnimationTriggerHash);
             isWaitingAnimationTriggered = true;
             return;
@@ -75,14 +68,8 @@ public class PlayerIdleState : PlayerGroundState
         // Idle 상태에서 입력 발생 → Walk 전환
         if (!isWaitingAnimationTriggered && moveInput.sqrMagnitude > 0.01f)
         {
-            Debug.Log(4);
-
-
             stateMachine.ChangeState(stateMachine.WalkState);
         }
-
-        Debug.Log(5);
-
     }
 
     private void OnCompleteGettingUp()

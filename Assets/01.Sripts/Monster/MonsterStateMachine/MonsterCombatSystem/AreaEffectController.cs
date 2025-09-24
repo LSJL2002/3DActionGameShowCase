@@ -8,6 +8,7 @@ public class AreaEffectController : MonoBehaviour
     [SerializeField] private Transform filler;
     [SerializeField] private Transform border;
     [SerializeField] private Collider damageCollider;
+    private MonsterSkillSO skillData;
 
     public event System.Action OnTelegraphStarted;
     public event System.Action OnTelegraphFinished;
@@ -66,17 +67,19 @@ public class AreaEffectController : MonoBehaviour
         OnTelegraphFinished?.Invoke();
     }
     // ------------------- Half-Circle Method -------------------
-    public void HalfCircleInitialize(float castDuration, float radius, int damageAmount, Transform origin, float angle = 180f)
+    public void HalfCircleInitialize(float castDuration, float radius, int damageAmount, Transform origin, MonsterSkillSO skill, float angle = 180f)
     {
+        skillData = skill; // store reference
         castTime = castDuration;
         damage = damageAmount;
-        transform.localScale = new Vector3(radius, 1, radius);
 
+        transform.localScale = new Vector3(radius, 1, radius);
         transform.position = origin.position;
         transform.rotation = Quaternion.LookRotation(origin.forward);
 
         StartCoroutine(HalfCircleRoutine(origin, radius, angle));
     }
+
 
     private IEnumerator HalfCircleRoutine(Transform origin, float radius, float angle)
     {
@@ -114,12 +117,22 @@ public class AreaEffectController : MonoBehaviour
             {
                 IDamageable damageable = hit.GetComponent<IDamageable>();
                 damageable?.OnTakeDamage(damage);
+
+                if (skillData != null)
+                {
+                    damageable?.ApplyEffect(
+                        skillData.monsterEffectType,
+                        origin.position,
+                        skillData.effectValue,
+                        skillData.duration
+                    );
+                }
             }
         }
     }
 
 
-    public void EnableDamage()
+    public void EnableDamage(Transform monsterTransform)
     {
         damageCollider.enabled = true;
 
@@ -136,6 +149,16 @@ public class AreaEffectController : MonoBehaviour
             {
                 IDamageable damageable = col.GetComponent<IDamageable>();
                 damageable?.OnTakeDamage(damage);
+
+                if (skillData != null)
+                {
+                    damageable?.ApplyEffect(
+                        skillData.monsterEffectType,
+                        monsterTransform.position,
+                        skillData.effectValue,
+                        skillData.duration
+                    );
+                }
             }
         }
     }
