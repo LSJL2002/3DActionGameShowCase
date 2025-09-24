@@ -17,8 +17,6 @@ public abstract class PlayerBaseState : Istate
         this.stateMachine = stateMachine;
     }
 
-
-    public abstract PlayerStateID StateID { get; }
     // 상태별 행동 훅
     public virtual bool AllowRotation => true;
     public virtual bool AllowMovement => true;

@@ -15,7 +15,6 @@ public abstract class StateMachine
 {
     protected Istate currentState;
 
-
     public void ChangeState(Istate state)
     {
         currentState?.Exit();
@@ -26,18 +25,4 @@ public abstract class StateMachine
     public void HandleInput() => currentState?.HandleInput();
     public void LogicUpdate() => currentState?.LogicUpdate();
     public void Physicsupdate() => currentState?.PhysicsUpdate();
-}
-
-
-public enum PlayerStateID
-{
-    None,
-    Idle,
-    Walk,
-    Run,
-    Jump,
-    Fall,
-    Attack,
-    ComboAttack,
-    Dodge
 }
