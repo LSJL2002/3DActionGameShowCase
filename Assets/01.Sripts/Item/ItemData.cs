@@ -6,7 +6,9 @@ public class ItemData : ScriptableObject
 {
     public enum ItemType { Consumable, SkillCard, Core, }
 
-    public enum EffectType { None, Heal, }
+    public enum EffectType1 { None, Heal, StatUP, SkillATKUP, DebuffUP, CooldownUP}
+
+    public enum EffectType2 { None, HP, MP, Attack, Defense, MoveSpeed, AttackSpeed, }
 
     public int id;
     public string inGameName;
@@ -16,7 +18,8 @@ public class ItemData : ScriptableObject
     public string scriptText;
     public int maxEa;
     public ItemType itemType;
-    public EffectType effectType;
+    public EffectType1 effectType1;
+    public EffectType2 effectType2;
     public float effectValue;
     public float duration; // 효과 지속시간
 

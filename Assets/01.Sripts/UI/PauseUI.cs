@@ -23,7 +23,7 @@ public class PauseUI : UIBase
 
             // IU매니저의 Show 메서드를 호출하여 OptionUI를 화면에 표시
             case "Option":
-                await UIManager.Instance.Show<OptionUI>();
+                await UIManager.Instance.Show<SoundSettingUI>();
                 break;
 
             // 홈씬으로 돌아가기

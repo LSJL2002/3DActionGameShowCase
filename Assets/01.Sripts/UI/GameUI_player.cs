@@ -32,6 +32,8 @@ public partial class GameUI : UIBase
         // 플레이어 슬라이더를 초기화
         playerHPSlider.maxValue = 1f;
         playerMPSlider.maxValue = 1f;
+
+        PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
     }
 
     public void UpdatePlayer()
@@ -53,5 +55,13 @@ public partial class GameUI : UIBase
 
         // 플레이어 마력 슬라이더 업데이트
         playerMPSlider.value = playerCurrentMP / playerMaxMP;
+    }
+
+    // 플레이어 스탯이 변화했을때 호출 할 함수
+    public void UpdateStat(StatType statType)
+    {
+        // 플레이어 맥스체력,마력을 업데이트
+        playerMaxHP = playerStats.MaxHealth.Value;
+        playerMaxMP = playerStats.MaxEnergy.Value;
     }
 }

@@ -223,7 +223,7 @@ public class CSVtoSOConverter : EditorWindow
         string spriteFolderPath = null;
         if (spriteIdField != null && spriteField != null)
         {
-            spriteFolderPath = "Assets/99.Externals/Images/Sprite"; // 스프라이트 경로 직접 지정
+            spriteFolderPath = "Assets/10.Resources/Images/Sprite"; // 스프라이트 경로 직접 지정
         }
 
         for (int i = 1; i < firstLines.Length; i++)
