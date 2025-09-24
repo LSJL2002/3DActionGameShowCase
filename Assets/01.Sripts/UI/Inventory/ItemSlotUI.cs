@@ -22,13 +22,16 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public string itemDescription;
     private ItemInformationUI itemInformationUI;
 
-    public void SetData(ItemData data, InventoryViewModel viewModel = null,  int count = default)
+    public void OnEnable()
     {
         if (inventoryViewModel == null)
         {
-            inventoryViewModel = viewModel;
+            inventoryViewModel = InventoryManager.Instance.inventoryViewModel;
         }
+    }
 
+    public void SetData(ItemData data,  int count = default)
+    {
         itemData = data;
         iconImage.sprite = data.sprite;
         iconImage.color = new Color(data.colors[0] / 255.0f, data.colors[1] / 255.0f, data.colors[2] / 255.0f); // data의 color 리스트의 0,1,2 번째 수를 가져와서 할당
@@ -54,30 +57,40 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 버튼 클릭시 효과 함수
     public void OnClickButton()
     {
-        if (itemData != null)
+        switch (InventoryManager.Instance.currentDecisionState)
         {
-            // 소비아이템이라면
-            if (itemData.itemType == ItemData.ItemType.Consumable)
-            {
+            // 아이템 사용 상황
+            case DecisionState.UseItem:
+
+                switch (itemData.itemType)
+                {
+                    // 소비아이템이라면
+                    case ItemData.ItemType.Consumable:
+                        // ViewModel의 함수 호출
+                        inventoryViewModel.SelectItem(itemData);
+                        break;
+
+                    // 코어라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
+                    case ItemData.ItemType.Core:
+                        // 아웃라인 컴포넌트 On / Off
+                        // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)
+                        outline.enabled = !outline.enabled;
+                        break;
+
+                    // 스킬이라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
+                    case ItemData.ItemType.SkillCard:
+                        // 아웃라인 컴포넌트 On / Off
+                        // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)
+                        outline.enabled = !outline.enabled;
+                        break;
+                }    
+                break;
+
+            // 능력 선택 상황
+            case DecisionState.SelectAbility:
                 // ViewModel의 함수 호출
-                inventoryViewModel.SelectItem(itemData, GuideState.UseItem);
-            }
-
-            // 코어라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
-            else if (itemData.itemType == ItemData.ItemType.Core)
-            {
-                // 아웃라인 컴포넌트 On / Off
-                // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)
-                outline.enabled = !outline.enabled;
-            }
-
-            // 스킬이라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
-            else if (itemData.itemType == ItemData.ItemType.SkillCard)
-            {
-                // 아웃라인 컴포넌트 On / Off
-                // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)
-                outline.enabled = !outline.enabled;
-            }
+                inventoryViewModel.SelectItem(itemData);
+                break;
         }
     }
 

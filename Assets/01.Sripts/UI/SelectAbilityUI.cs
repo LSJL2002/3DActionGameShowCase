@@ -23,9 +23,14 @@ public class SelectAbilityUI : UIBase
 
     [SerializeField] private List<ItemSlotUI> itemSlots;
 
+    // (구독:인벤토리매니저)
+    public static event Action OnSelectAbilityUI;
+    
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        OnSelectAbilityUI?.Invoke();
 
         // 마우스 커서 보이게
         PlayerManager.Instance.EnableInput(false);
@@ -48,6 +53,11 @@ public class SelectAbilityUI : UIBase
 
         // 로드했던 데이터 해제
         ReleaseHandles();
+
+        BattleManager.Instance.ClearBattle();
+
+        // 마우스 커서 다시 락
+        PlayerManager.Instance.EnableInput(true);
     }
 
     public async void GetItemInfo(string adress, string type)
@@ -150,22 +160,6 @@ public class SelectAbilityUI : UIBase
 
                 Debug.Log($"플레이어 스탯증가");
                 break;
-
-            case "Core":
-                // ViewModel의 함수 호출
-                InventoryManager.Instance.inventoryViewModel.SelectItem(skillHandle, GuideState.SelectAbility);
-                break;
-
-            case "Skill":
-                // 아이템을 인벤토리에 추가
-                InventoryManager.Instance.LoadData_Addressables(skillItemAdress);
-                Debug.Log($"{skillItemAdress} 획득");
-                break;
         }
-        BattleManager.Instance.ClearBattle();
-
-        // 마우스 커서 다시 락
-        PlayerManager.Instance.EnableInput(true);
-        Hide();
     }
 }
