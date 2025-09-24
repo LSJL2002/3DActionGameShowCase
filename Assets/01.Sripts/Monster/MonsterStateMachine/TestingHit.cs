@@ -8,4 +8,8 @@ public class TestingHit : MonoBehaviour, IDamageable
     {
         Debug.Log("object is hit");
     }
+    public void ApplyEffect(MonsterEffectType effectType, Vector3 sourcePosition, float effectValue = 0f, float duration = 0f)
+    {
+        // 플레이어게만 적용
+    }
 }

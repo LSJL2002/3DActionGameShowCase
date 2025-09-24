@@ -80,8 +80,32 @@ public class BaseMonster : MonoBehaviour, IDamageable
         int patternId = chosenCondition.possiblePatternIds[UnityEngine.Random.Range(0, chosenCondition.possiblePatternIds.Count)];
         currentPattern = patternConfig.GetPatternById(patternId);
         if (currentPattern == null) return;
+        stateMachine.RangeMultiplier = chosenCondition.rangeMultiplier;
+        stateMachine.PreCastTimeMultiplier = chosenCondition.preCastTimeMultiplier;
+        stateMachine.EffectValueMultiplier = chosenCondition.effectValueMultiplier;
+        Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
 
         currentStepIndex = 0;
+        StartCoroutine(RunPattern());
+    }
+
+    public void ForceRunPattern(MonsterPatternSO.PatternEntry pattern, MonsterPatternSO.PatternCondition conditions)
+    {
+        //미래용
+        if (pattern == null)
+        {
+            return;
+        }
+
+        StopAllCoroutines();
+        currentPattern = pattern;
+        currentStepIndex = 0;
+        isRunningPattern = false;
+
+        stateMachine.RangeMultiplier = conditions.rangeMultiplier;
+        stateMachine.PreCastTimeMultiplier = conditions.preCastTimeMultiplier;
+        stateMachine.EffectValueMultiplier = conditions.effectValueMultiplier;
+
         StartCoroutine(RunPattern());
     }
 
@@ -128,9 +152,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
         currentPattern = null;
         isRunningPattern = false;
     }
-
-
-
 
     public float GetCurrentSkillRange()
     {
@@ -182,6 +203,11 @@ public class BaseMonster : MonoBehaviour, IDamageable
             Stats.CurrentHP = 0;
             stateMachine.ChangeState(stateMachine.MonsterDeathState);
         }
+    }
+
+    public void ApplyEffect(MonsterEffectType effectType, Vector3 sourcePosition, float effectValue = 0f, float duration = 0f)
+    {
+        // 플레이어게만 적용
     }
 
     public void RegisterAOE(GameObject aoe)
