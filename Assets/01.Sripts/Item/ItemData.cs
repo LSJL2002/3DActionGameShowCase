@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewItemData", menuName = "Inventory/Item Data")]
 public class ItemData : ScriptableObject
 {
-    public enum ItemType { Consumable, SkillCard, Core, }
+    public enum ItemType { Consumable, SkillCard, Core, StatUP, }
 
     public enum EffectType1 { None, Heal, StatUP, SkillATKUP, DebuffUP, CooldownUP}
 
@@ -24,6 +24,14 @@ public class ItemData : ScriptableObject
     public float effectValue;
     public float duration; // 효과 지속시간
     public List<int> colors;
+
+    // 스탯증가아이템용
+    public int MaxHP;
+    public int MaxMP;
+    public int Attack;
+    public int Defence;
+    public int MoveSpeed;
+    public int AttackSpeed;
 
     // 능력 배열
     public List<ItemAbility> abilities;

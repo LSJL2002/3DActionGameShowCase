@@ -16,7 +16,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private InventoryViewModel inventoryViewModel;
 
-    private ItemData itemData;
+    public ItemData itemData;
     public string itemName;
     public string itemType;
     public string itemDescription;
@@ -78,7 +78,6 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 outline.enabled = !outline.enabled;
             }
         }
-        
     }
 
     // 마우스 커서가 올라왔을때 효과
