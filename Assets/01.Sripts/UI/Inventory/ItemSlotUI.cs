@@ -16,18 +16,22 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private InventoryViewModel inventoryViewModel;
 
-    private ItemData itemData;
+    public ItemData itemData;
     public string itemName;
     public string itemType;
     public string itemDescription;
     private ItemInformationUI itemInformationUI;
 
-    public void SetData(InventoryViewModel viewModel, ItemData data, int count)
+    public void SetData(ItemData data, InventoryViewModel viewModel = null,  int count = default)
     {
-        inventoryViewModel = viewModel;
+        if (inventoryViewModel == null)
+        {
+            inventoryViewModel = viewModel;
+        }
 
         itemData = data;
         iconImage.sprite = data.sprite;
+        iconImage.color = new Color(data.colors[0] / 255.0f, data.colors[1] / 255.0f, data.colors[2] / 255.0f); // data의 color 리스트의 0,1,2 번째 수를 가져와서 할당
         itemName = data.inGameName;
         itemType = data.itemType.ToString();
         itemDescription = data.scriptText;
@@ -44,6 +48,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         itemData = null;
         emptyText.text = "Empty";
         iconImage.sprite = emptyImage;
+        iconImage.color = new Color(1,1,1); // 이미지 컬러를 다시 흰색으로 되돌림
     }
 
     // 버튼 클릭시 효과 함수
@@ -55,7 +60,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             if (itemData.itemType == ItemData.ItemType.Consumable)
             {
                 // ViewModel의 함수 호출
-                inventoryViewModel.UseItem(itemData);
+                inventoryViewModel.SelectItem(itemData, GuideState.UseItem);
             }
 
             // 코어라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )
@@ -74,7 +79,6 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 outline.enabled = !outline.enabled;
             }
         }
-        
     }
 
     // 마우스 커서가 올라왔을때 효과
@@ -96,8 +100,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
             // 정보창을 마우스 커서 위치로 옮기기
             RectTransform rectTransform = itemInformationUI.GetComponent<RectTransform>();
-            Vector3 offset = new Vector3(rectTransform.sizeDelta.x / 5, rectTransform.sizeDelta.y / 5, 0);
-            itemInformationUI.transform.position = (Vector3)eventData.position + offset;
+            Vector3 offset = new Vector3(rectTransform.sizeDelta.x/2f, rectTransform.sizeDelta.y/2f, 0);
+            itemInformationUI.transform.position = (Vector3)eventData.position - offset;
         }
     }
 

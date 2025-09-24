@@ -16,7 +16,7 @@ public class CharacterInventoryUI : UIBase
     {
         base.Awake();
 
-        InventoryManager.Instance.CharacterInventoryUI = this;
+        InventoryManager.Instance.characterInventoryUI = this;
 
         InventoryManager.Instance.SetInventoryUI();
     }
@@ -39,7 +39,7 @@ public class CharacterInventoryUI : UIBase
             if (i < itemCount)
             {
                 // 아이템이 있는 경우 데이터 할당
-                itemSlots[i].SetData(inventoryViewModel, items[i].data, items[i].stackCount);
+                itemSlots[i].SetData(items[i].data, inventoryViewModel, items[i].stackCount);
             }
             else
             {

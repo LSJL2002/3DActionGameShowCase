@@ -54,17 +54,33 @@ public class InventoryViewModel
     }
 
     // 아이템 사용 (아이템슬롯UI(View)에서 호출)
-    public async void UseItem(ItemData itemData)
+    public async void SelectItem(ItemData itemData, GuideState state)
     {
         DecisionButtonUI decisionUI = await UIManager.Instance.Show<DecisionButtonUI>();
+        decisionUI.ChangeState(state);
 
         // 이벤트 구독을 위한 델리게이트 변수 생성
         Action<bool> onDecisionMadeCallback = null;
         onDecisionMadeCallback = (isConfirmed) =>
         {
+            // 확인UI에서 허가를 받았다면,
             if (isConfirmed)
             {
-                InventoryManager.Instance.UseConsumableItem(itemData);
+                // 현재 허가 내용에 따라 스위치
+                switch (decisionUI.currentGuideState)
+                {
+                    // 아이템 사용에 대한 내용이라면,
+                    case GuideState.UseItem:
+                        // 인벤토리 매니저의 아이템 사용 함수 호출
+                        InventoryManager.Instance.UseConsumableItem(itemData);
+                        break;
+
+                    // 능력선택에 대한 내용이라면,
+                    case GuideState.SelectAbility:
+                        // 인벤토리 매니저의 아이템 추가 함수 호출
+                        InventoryManager.Instance.LoadData_Addressables(itemData.name);
+                        break;
+                }
             }
 
             // 이벤트 구독 해제

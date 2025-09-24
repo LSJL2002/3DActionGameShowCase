@@ -13,7 +13,7 @@ public class CharacterSkillUI : UIBase
     {
         base.Awake();
 
-        InventoryManager.Instance.CharacterSkillUI = this;
+        InventoryManager.Instance.characterSkillUI = this;
 
         InventoryManager.Instance.SetSkillUI();
     }
@@ -36,7 +36,7 @@ public class CharacterSkillUI : UIBase
             if (i < itemCount)
             {
                 // 아이템이 있는 경우 데이터 할당
-                itemSlots[i].SetData(_viewModel, items[i].data, items[i].stackCount);
+                itemSlots[i].SetData(items[i].data, _viewModel, items[i].stackCount);
             }
             else
             {

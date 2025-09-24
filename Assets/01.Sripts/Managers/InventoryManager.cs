@@ -8,10 +8,10 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
-    private InventoryViewModel inventoryViewModel;
-    public CharacterInventoryUI CharacterInventoryUI;
-    public CharacterSkillUI CharacterSkillUI;
-    public CharacterCoreUI CharacterCoreUI;
+    public InventoryViewModel inventoryViewModel;
+    public CharacterInventoryUI characterInventoryUI;
+    public CharacterSkillUI characterSkillUI;
+    public CharacterCoreUI characterCoreUI;
 
     protected override void Start()
     {
@@ -24,17 +24,17 @@ public class InventoryManager : Singleton<InventoryManager>
     // 인벤토리 시스템 최초 초기화시 호출될 함수 (각 UI에서 호출)
     public void SetInventoryUI()
     {
-        CharacterInventoryUI.Setup(inventoryViewModel);
+        characterInventoryUI.Setup(inventoryViewModel);
     }
 
     public void SetSkillUI()
     {
-        CharacterSkillUI.Setup(inventoryViewModel);
+        characterSkillUI.Setup(inventoryViewModel);
     }
 
     public void SetCoreUI()
     {
-        CharacterCoreUI.Setup(inventoryViewModel);
+        characterCoreUI.Setup(inventoryViewModel);
     }
 
     // 아이템 추가 함수
