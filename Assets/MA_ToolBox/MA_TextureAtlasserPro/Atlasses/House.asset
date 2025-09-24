@@ -1,5 +1,63 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7242100122661643614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
+  m_Name: Garage_Door_03
+  m_EditorClassIdentifier: 
+  isSelected: 1
+  rect:
+    serializedVersion: 2
+    x: 1529.0908
+    y: 1533.6362
+    width: 518.9092
+    height: 514.3638
+  guiRect:
+    serializedVersion: 2
+    x: 1536
+    y: 1536
+    width: 512
+    height: 512
+  debugMode: 0
+  dragRectHeight:
+    serializedVersion: 2
+    x: 2735.4355
+    y: 2423.891
+    width: 64
+    height: 16
+  dragRectWidth:
+    serializedVersion: 2
+    x: 3007.4355
+    y: 2151.891
+    width: 16
+    height: 64
+  dragRectPos:
+    serializedVersion: 2
+    x: 2751.4355
+    y: 2167.891
+    width: 32
+    height: 32
+  textureGroups:
+  - name: Albedo
+    texture: {fileID: 2800000, guid: 6e2867247608ebf4b97d9795b0020570, type: 3}
+  - name: Metallic
+    texture: {fileID: 2800000, guid: 8952f89927891aa46b67b2d169e910fc, type: 3}
+  - name: Normal
+    texture: {fileID: 2800000, guid: c84d4a5e1bd8ffd4ca18906603dd2055, type: 3}
+  modelGroups:
+  - name: Garage_Door_03
+    meshes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
 --- !u!114 &-5801031409556020952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,20 +138,20 @@ MonoBehaviour:
   debugMode: 0
   dragRectHeight:
     serializedVersion: 2
-    x: 2556.0642
-    y: 1302.2449
+    x: 2765.5786
+    y: 1389.6812
     width: 64
     height: 16
   dragRectWidth:
     serializedVersion: 2
-    x: 2828.0642
-    y: 1030.2449
+    x: 3037.5786
+    y: 1117.6812
     width: 16
     height: 64
   dragRectPos:
     serializedVersion: 2
-    x: 2572.0642
-    y: 1046.2449
+    x: 2781.5786
+    y: 1133.6812
     width: 32
     height: 32
   textureGroups:
@@ -108,6 +166,72 @@ MonoBehaviour:
     meshes:
     - {fileID: -3153924967562514385, guid: e9de0f9022135684aa94d8eafaa60f5a, type: 3}
     - {fileID: 608344716698587212, guid: e9de0f9022135684aa94d8eafaa60f5a, type: 3}
+--- !u!114 &-2789453956669384802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
+  m_Name: Trim_Sheet_01
+  m_EditorClassIdentifier: 
+  isSelected: 0
+  rect:
+    serializedVersion: 2
+    x: 1032.0001
+    y: 1024.0002
+    width: 516
+    height: 520
+  guiRect:
+    serializedVersion: 2
+    x: 1024
+    y: 1024
+    width: 512
+    height: 512
+  debugMode: 0
+  dragRectHeight:
+    serializedVersion: 2
+    x: 1621.091
+    y: 1606.6991
+    width: 64
+    height: 16
+  dragRectWidth:
+    serializedVersion: 2
+    x: 1893.091
+    y: 1334.6991
+    width: 16
+    height: 64
+  dragRectPos:
+    serializedVersion: 2
+    x: 1637.091
+    y: 1350.6991
+    width: 32
+    height: 32
+  textureGroups:
+  - name: Albedo
+    texture: {fileID: 2800000, guid: 2e0747e264758574483df70207cf5ff0, type: 3}
+  - name: Metallic
+    texture: {fileID: 2800000, guid: 0264368ae9553474daf81fc7879a6100, type: 3}
+  - name: Normal
+    texture: {fileID: 2800000, guid: 8cfcb0c86bc60c447bed6bbda6f28e57, type: 3}
+  modelGroups:
+  - name: Trim_Sheet_01
+    meshes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
 --- !u!114 &-2325315283471901154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,7 +367,13 @@ MonoBehaviour:
   - {fileID: -5570643644193687577}
   - {fileID: 4176241874570082563}
   - {fileID: 2051034469955877944}
-  selectedTextureQuad: {fileID: 4176241874570082563}
+  - {fileID: -2789453956669384802}
+  - {fileID: 8969807275790563748}
+  - {fileID: 4670266224490546680}
+  - {fileID: 372691856768332003}
+  - {fileID: 8043239068859819665}
+  - {fileID: -7242100122661643614}
+  selectedTextureQuad: {fileID: -7242100122661643614}
   showTextures: 1
   exportSettings: {fileID: 11400000, guid: 0ef5ca54b5cc08d4a85f9001befb1339, type: 2}
   textureAtlasSize: {x: 2048, y: 2048}
@@ -251,6 +381,66 @@ MonoBehaviour:
   - name: Albedo
   - name: Metallic
   - name: Normal
+--- !u!114 &372691856768332003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
+  m_Name: Garage_Door
+  m_EditorClassIdentifier: 
+  isSelected: 0
+  rect:
+    serializedVersion: 2
+    x: 514.70605
+    y: 1543.5295
+    width: 507.41174
+    height: 504.47046
+  guiRect:
+    serializedVersion: 2
+    x: 512
+    y: 1536
+    width: 512
+    height: 512
+  debugMode: 0
+  dragRectHeight:
+    serializedVersion: 2
+    x: 1715.981
+    y: 2664.8003
+    width: 64
+    height: 16
+  dragRectWidth:
+    serializedVersion: 2
+    x: 1987.981
+    y: 2392.8003
+    width: 16
+    height: 64
+  dragRectPos:
+    serializedVersion: 2
+    x: 1731.981
+    y: 2408.8003
+    width: 32
+    height: 32
+  textureGroups:
+  - name: Albedo
+    texture: {fileID: 2800000, guid: 125457fb9d0152c498a138743dce4c8c, type: 3}
+  - name: Metallic
+    texture: {fileID: 2800000, guid: 3f739f88901d1364f8066e12c165a2a4, type: 3}
+  - name: Normal
+    texture: {fileID: 2800000, guid: 5312a581ea4988842af7938e59b331d8, type: 3}
+  modelGroups:
+  - name: Garage_Door
+    meshes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
 --- !u!114 &834608925954935738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,20 +469,20 @@ MonoBehaviour:
   debugMode: 0
   dragRectHeight:
     serializedVersion: 2
-    x: 2044.0642
-    y: 1302.2449
+    x: 1621.091
+    y: 1094.6991
     width: 64
     height: 16
   dragRectWidth:
     serializedVersion: 2
-    x: 2316.0642
-    y: 1030.2449
+    x: 1893.091
+    y: 822.6991
     width: 16
     height: 64
   dragRectPos:
     serializedVersion: 2
-    x: 2060.0642
-    y: 1046.2449
+    x: 1637.091
+    y: 838.6991
     width: 32
     height: 32
   textureGroups:
@@ -317,48 +507,58 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
-  m_Name: new Quad
+  m_Name: Front_Door_02
   m_EditorClassIdentifier: 
   isSelected: 0
   rect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 128
-    height: 128
+    x: 515.99976
+    y: 1011.99927
+    width: 503.99988
+    height: 499.99988
   guiRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
+    x: 512
+    y: 1024
+    width: 512
+    height: 512
   debugMode: 0
   dragRectHeight:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
+    x: 1109.091
+    y: 1606.6991
+    width: 64
+    height: 16
   dragRectWidth:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
+    x: 1381.091
+    y: 1334.6991
+    width: 16
+    height: 64
   dragRectPos:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 0
-    height: 0
+    x: 1125.091
+    y: 1350.6991
+    width: 32
+    height: 32
   textureGroups:
   - name: Albedo
-    texture: {fileID: 0}
+    texture: {fileID: 2800000, guid: 34d71d8bc200859419583c5133ae6690, type: 3}
   - name: Metallic
-    texture: {fileID: 0}
+    texture: {fileID: 2800000, guid: d64466707f796f742bee46e43282619f, type: 3}
   - name: Normal
-    texture: {fileID: 0}
-  modelGroups: []
+    texture: {fileID: 2800000, guid: 7dabe286f53963245bea4499d242dd47, type: 3}
+  modelGroups:
+  - name: Front_Door_02
+    meshes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
 --- !u!114 &4176241874570082563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,7 +571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
   m_Name: Front_Door_01
   m_EditorClassIdentifier: 
-  isSelected: 1
+  isSelected: 0
   rect:
     serializedVersion: 2
     x: 0
@@ -387,20 +587,20 @@ MonoBehaviour:
   debugMode: 0
   dragRectHeight:
     serializedVersion: 2
-    x: 1192.4878
-    y: 1465.6815
+    x: 597.09094
+    y: 1606.6991
     width: 64
     height: 16
   dragRectWidth:
     serializedVersion: 2
-    x: 1464.4878
-    y: 1193.6815
+    x: 869.09094
+    y: 1334.6991
     width: 16
     height: 64
   dragRectPos:
     serializedVersion: 2
-    x: 1208.4878
-    y: 1209.6815
+    x: 613.09094
+    y: 1350.6991
     width: 32
     height: 32
   textureGroups:
@@ -410,7 +610,15 @@ MonoBehaviour:
     texture: {fileID: 2800000, guid: af68102c69a047540a829238969b69e5, type: 3}
   - name: Normal
     texture: {fileID: 2800000, guid: d16d9acc2846f5e41b4676e0695e4d0e, type: 3}
-  modelGroups: []
+  modelGroups:
+  - name: Front_Door_01
+    meshes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
 --- !u!114 &4202472460687731706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,6 +671,68 @@ MonoBehaviour:
   - name: Normal
     texture: {fileID: 2800000, guid: d503ffbdf3be0e243a2d643080ed3cc3, type: 3}
   modelGroups: []
+--- !u!114 &4670266224490546680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
+  m_Name: Concrete_01_A
+  m_EditorClassIdentifier: 
+  isSelected: 0
+  rect:
+    serializedVersion: 2
+    x: 10.526367
+    y: 1535.7893
+    width: 501.68433
+    height: 501.68433
+  guiRect:
+    serializedVersion: 2
+    x: 0
+    y: 1536
+    width: 512
+    height: 512
+  debugMode: 0
+  dragRectHeight:
+    serializedVersion: 2
+    x: 2356.0889
+    y: 2703.5469
+    width: 64
+    height: 16
+  dragRectWidth:
+    serializedVersion: 2
+    x: 2628.0889
+    y: 2431.5469
+    width: 16
+    height: 64
+  dragRectPos:
+    serializedVersion: 2
+    x: 2372.0889
+    y: 2447.5469
+    width: 32
+    height: 32
+  textureGroups:
+  - name: Albedo
+    texture: {fileID: 2800000, guid: 6f8bdab5c5d60d94eb1cf153ff50953d, type: 3}
+  - name: Metallic
+    texture: {fileID: 2800000, guid: e205bb1ea26acd540b70215b1484d3e9, type: 3}
+  - name: Normal
+    texture: {fileID: 2800000, guid: cce2f6b56f550f54cac116cb0d5b3eb7, type: 3}
+  modelGroups:
+  - name: Concrete
+    meshes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
 --- !u!114 &5685544153664125864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,20 +761,20 @@ MonoBehaviour:
   debugMode: 0
   dragRectHeight:
     serializedVersion: 2
-    x: 1532.0642
-    y: 1302.2449
+    x: 1741.5785
+    y: 1389.6812
     width: 64
     height: 16
   dragRectWidth:
     serializedVersion: 2
-    x: 1804.0642
-    y: 1030.2449
+    x: 2013.5785
+    y: 1117.6812
     width: 16
     height: 64
   dragRectPos:
     serializedVersion: 2
-    x: 1548.0642
-    y: 1046.2449
+    x: 1757.5785
+    y: 1133.6812
     width: 32
     height: 32
   textureGroups:
@@ -547,20 +817,20 @@ MonoBehaviour:
   debugMode: 0
   dragRectHeight:
     serializedVersion: 2
-    x: 1020.0642
-    y: 1302.2449
+    x: 1229.5785
+    y: 1389.6812
     width: 64
     height: 16
   dragRectWidth:
     serializedVersion: 2
-    x: 1292.0642
-    y: 1030.2449
+    x: 1501.5785
+    y: 1117.6812
     width: 16
     height: 64
   dragRectPos:
     serializedVersion: 2
-    x: 1036.0642
-    y: 1046.2449
+    x: 1245.5785
+    y: 1133.6812
     width: 32
     height: 32
   textureGroups:
@@ -575,3 +845,123 @@ MonoBehaviour:
     meshes:
     - {fileID: 3048254441365225773, guid: f70075b4a11a7a045bc942e9520b7f90, type: 3}
     - {fileID: 9125091579582140879, guid: f70075b4a11a7a045bc942e9520b7f90, type: 3}
+--- !u!114 &8043239068859819665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
+  m_Name: Garage_Door_02
+  m_EditorClassIdentifier: 
+  isSelected: 0
+  rect:
+    serializedVersion: 2
+    x: 1027.2727
+    y: 1540.909
+    width: 509.81836
+    height: 496.18164
+  guiRect:
+    serializedVersion: 2
+    x: 1024
+    y: 1536
+    width: 512
+    height: 512
+  debugMode: 0
+  dragRectHeight:
+    serializedVersion: 2
+    x: 2223.4355
+    y: 2423.891
+    width: 64
+    height: 16
+  dragRectWidth:
+    serializedVersion: 2
+    x: 2495.4355
+    y: 2151.891
+    width: 16
+    height: 64
+  dragRectPos:
+    serializedVersion: 2
+    x: 2239.4355
+    y: 2167.891
+    width: 32
+    height: 32
+  textureGroups:
+  - name: Albedo
+    texture: {fileID: 2800000, guid: 7a0acb8e9002ec34caeeb246503b61db, type: 3}
+  - name: Metallic
+    texture: {fileID: 2800000, guid: 71c669458e288b643bf6ad889a073477, type: 3}
+  - name: Normal
+    texture: {fileID: 2800000, guid: 311677431defc924698d330f9f19e83e, type: 3}
+  modelGroups:
+  - name: Garage_Door_02
+    meshes:
+    - {fileID: 0}
+    - {fileID: 0}
+--- !u!114 &8969807275790563748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ad07a78750c7644b710e19e1a23d4a, type: 3}
+  m_Name: Ruberoid_Roof_A
+  m_EditorClassIdentifier: 
+  isSelected: 0
+  rect:
+    serializedVersion: 2
+    x: 1532
+    y: 1016.00024
+    width: 516
+    height: 524
+  guiRect:
+    serializedVersion: 2
+    x: 1536
+    y: 1024
+    width: 512
+    height: 512
+  debugMode: 0
+  dragRectHeight:
+    serializedVersion: 2
+    x: 3413.4705
+    y: 2009.968
+    width: 64
+    height: 16
+  dragRectWidth:
+    serializedVersion: 2
+    x: 3685.4705
+    y: 1737.968
+    width: 16
+    height: 64
+  dragRectPos:
+    serializedVersion: 2
+    x: 3429.4705
+    y: 1753.968
+    width: 32
+    height: 32
+  textureGroups:
+  - name: Albedo
+    texture: {fileID: 2800000, guid: 7dd3c393df1320a4cbe2a8707137f66d, type: 3}
+  - name: Metallic
+    texture: {fileID: 2800000, guid: 7ffbed02ea0770545a3744a0952866b9, type: 3}
+  - name: Normal
+    texture: {fileID: 2800000, guid: 73f24212f153fa54baaa48fc31235bf1, type: 3}
+  modelGroups:
+  - name: Ruberoid_Roof_A
+    meshes:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
