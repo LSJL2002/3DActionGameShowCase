@@ -11,10 +11,11 @@ using Zenject;
 // GameUI의 Player Part
 public partial class GameUI : UIBase
 {
+    [SerializeField] private Image playerHPImage;
+    [SerializeField] private Image playerMPImage;
+
     public TextMeshProUGUI playerHPText;   // UI : 플레이어 체력 텍스트
-    public Slider playerHPSlider;          // UI : 플레이어 체력 슬라이더바
     public TextMeshProUGUI playerMPText;   // UI : 플레이어 마력 텍스트
-    public Slider playerMPSlider;          // UI : 플레이어 마력 슬라이더바
 
     private float playerMaxHP;             // 플레이어 최대 체력
     private float playerMaxMP;             // 플레이어 최대 마력
@@ -29,9 +30,9 @@ public partial class GameUI : UIBase
         playerMaxHP = playerStats.MaxHealth.Value;
         playerMaxMP = playerStats.MaxEnergy.Value;
 
-        // 플레이어 슬라이더를 초기화
-        playerHPSlider.maxValue = 1f;
-        playerMPSlider.maxValue = 1f;
+        // 플레이어 이미지 fillAmount를 초기화
+        playerHPImage.fillAmount = 1f;
+        playerMPImage.fillAmount = 1f;
 
         PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
     }
@@ -45,7 +46,7 @@ public partial class GameUI : UIBase
         playerHPText.text = Mathf.FloorToInt(playerCurrentHP / playerMaxHP * 100).ToString() + "%";
 
         // 플레이어 체력 슬라이더 업데이트
-        playerHPSlider.value = playerCurrentHP / playerMaxHP;
+        playerHPImage.fillAmount = playerCurrentHP / playerMaxHP;
 
         // 플레이어 현재마력
         float playerCurrentMP = playerStats.CurrentEnergy;
@@ -54,7 +55,7 @@ public partial class GameUI : UIBase
         playerMPText.text = Mathf.FloorToInt(playerCurrentMP / playerMaxMP * 100).ToString() + "%";
 
         // 플레이어 마력 슬라이더 업데이트
-        playerMPSlider.value = playerCurrentMP / playerMaxMP;
+        playerMPImage.fillAmount = playerCurrentMP / playerMaxMP;
     }
 
     // 플레이어 스탯이 변화했을때 호출 할 함수

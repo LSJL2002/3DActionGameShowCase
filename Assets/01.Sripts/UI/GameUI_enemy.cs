@@ -14,9 +14,9 @@ public partial class GameUI : UIBase
 {
     public GameObject enemyInfoUI;         // 적UI 최상위 오브젝트 (활성화 컨트롤용 변수)
 
+    [SerializeField] private Image enermyHPImage;
     public TextMeshProUGUI enemyNameText;  // UI : 적 이름 텍스트
     public TextMeshProUGUI enemyHPText; // UI : 적 체력 텍스트
-    public Slider enemyHPSlider;           // UI : 적 체력 슬라이더바
 
     MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
 
@@ -32,7 +32,7 @@ public partial class GameUI : UIBase
             // 적 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
             enemyHPText.text = Mathf.FloorToInt(enemyCurrentHP / enemyMaxHP * 100).ToString() + "%";
 
-            enemyHPSlider.value = enemyCurrentHP / enemyMaxHP; // 적 체력 슬라이더 업데이트
+            enermyHPImage.fillAmount = enemyCurrentHP / enemyMaxHP; // 적 체력 슬라이더 업데이트
         }
         else if (currentBattleState == eBattleState.Battle)
         {
@@ -51,7 +51,7 @@ public partial class GameUI : UIBase
 
                 enemyHPText.text = default; // 적 최대체력 변수 클리어
 
-                enemyHPSlider.maxValue = 1f; // 적 체력 슬라이더를 100%
+                enermyHPImage.fillAmount = 1f; // 적 체력 슬라이더를 100%
 
                 enemyInfoUI.SetActive(false); // 적 정보UI 오브젝트를 비활성화
 
@@ -67,7 +67,7 @@ public partial class GameUI : UIBase
 
                 enemyHPText.text = monsterStats.monsterData.maxHp.ToString(); // 적 최대체력 변수 초기화
 
-                enemyHPSlider.maxValue = 1f; // 적 체력 슬라이더를 초기화
+                enermyHPImage.fillAmount = 1f; // 적 체력 슬라이더를 초기화
 
                 break;
         }

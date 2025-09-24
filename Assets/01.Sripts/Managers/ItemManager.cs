@@ -48,7 +48,7 @@ public class ItemManager : Singleton<ItemManager>
                 // 지속시간동안 나눈 값만큼 회복
                 for (int i = 0; i <= duration; i++)
                 {
-                    //PlayerManager.Instance.Stats.HPHeal(amountPerDuration);
+                    PlayerManager.Instance.Stats.RecoverHealth(amountPerDuration);
                 }
                 break;
 
@@ -61,7 +61,7 @@ public class ItemManager : Singleton<ItemManager>
                 // 지속시간동안 나눈 값만큼 회복
                 for (int i = 0; i <= duration; i++)
                 {
-                    //PlayerManager.Instance.Stats.MPHeal(amountPerDuration);
+                    PlayerManager.Instance.Stats.RecoverEnergy(amountPerDuration);
                 }
                 break;
         }
