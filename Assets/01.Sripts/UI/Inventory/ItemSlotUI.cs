@@ -22,9 +22,12 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public string itemDescription;
     private ItemInformationUI itemInformationUI;
 
-    public void SetData(InventoryViewModel viewModel, ItemData data, int count)
+    public void SetData(ItemData data, InventoryViewModel viewModel = null,  int count = default)
     {
-        inventoryViewModel = viewModel;
+        if (inventoryViewModel == null)
+        {
+            inventoryViewModel = viewModel;
+        }
 
         itemData = data;
         iconImage.sprite = data.sprite;
@@ -97,8 +100,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
             // 정보창을 마우스 커서 위치로 옮기기
             RectTransform rectTransform = itemInformationUI.GetComponent<RectTransform>();
-            Vector3 offset = new Vector3(rectTransform.sizeDelta.x / 5, rectTransform.sizeDelta.y / 5, 0);
-            itemInformationUI.transform.position = (Vector3)eventData.position + offset;
+            Vector3 offset = new Vector3(rectTransform.sizeDelta.x/2f, rectTransform.sizeDelta.y/2f, 0);
+            itemInformationUI.transform.position = (Vector3)eventData.position - offset;
         }
     }
 

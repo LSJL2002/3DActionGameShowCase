@@ -13,7 +13,7 @@ public class CharacterCoreUI : UIBase
     {
         base.Awake();
 
-        InventoryManager.Instance.CharacterCoreUI = this;
+        InventoryManager.Instance.characterCoreUI = this;
 
         InventoryManager.Instance.SetCoreUI();
     }
@@ -36,7 +36,7 @@ public class CharacterCoreUI : UIBase
             if (i < itemCount)
             {
                 // 아이템이 있는 경우 데이터 할당
-                itemSlots[i].SetData(_viewModel, items[i].data, items[i].stackCount);
+                itemSlots[i].SetData(items[i].data, _viewModel, items[i].stackCount);
             }
             else
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -28,6 +29,8 @@ public class SelectAbilityUI : UIBase
     // AsyncOperationHandle을 저장할 변수 추가
     private AsyncOperationHandle<ItemData> skillLoadHandle;
     private AsyncOperationHandle<ItemData> coreLoadHandle;
+
+    [SerializeField] private List<ItemSlotUI> itemSlots;
 
     protected override void OnEnable()
     {
@@ -95,13 +98,13 @@ public class SelectAbilityUI : UIBase
 
             if (type == "Skill")
             {
-                skillDescriptionText.text = loadedItem.scriptText;
-                skillImage.sprite = loadedItem.sprite;
+                // 아이템슬롯 리스트의 [n]번째 슬롯에 불러온 아이템을 할당
+                itemSlots[1].SetData(loadedItem);
             }
             else if (type == "Core")
             {
-                coreDescriptionText.text = loadedItem.scriptText;
-                coreImage.sprite = loadedItem.sprite;
+                // 아이템슬롯 리스트의 [n]번째 슬롯에 불러온 아이템을 할당
+                itemSlots[2].SetData(loadedItem);
             }
         }
         else
