@@ -41,7 +41,7 @@ public class SmileToiletSmashState : MonsterBaseState
         }
 
         aoeController.OnTelegraphFinished += OnTelegraphComplete;
-        aoeController.HalfCircleInitialize(skillData.preCastTime, skillData.range, stateMachine.Monster.Stats.AttackPower, stateMachine.Monster.transform, 180f);    }
+        aoeController.HalfCircleInitialize(skillData.preCastTime, skillData.range, stateMachine.Monster.Stats.AttackPower, stateMachine.Monster.transform, skillData, 180f);    }
 
     private void OnTelegraphComplete()
     {
