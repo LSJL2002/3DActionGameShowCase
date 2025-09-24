@@ -17,7 +17,6 @@ public class PlayerAttackState : PlayerBaseState
     private float lastAttackInputTime;
     private readonly float idleTimeout = 1f;
 
-    public override PlayerStateID StateID => PlayerStateID.Attack;
     public override bool AllowRotation => false; // 공격 중 캐릭터 회전은 ApplyAttackMovement에서 처리
 
     public PlayerAttackState(PlayerStateMachine sm) : base(sm) { }

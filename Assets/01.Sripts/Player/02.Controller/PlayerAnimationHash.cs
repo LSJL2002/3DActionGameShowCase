@@ -12,9 +12,6 @@ public class PlayerAnimationHash
     private string getUpTriggerName = "Base/Toggle_GetUp"; //Trigger
 
     private string moveSpeedFloatName = "Base/Blend_MovementSpeed"; //Blend
-    private string horizontalFloatName = "Horizontal";  //Blend
-    private string verticalFloatName = "Vertical"; //Blend
-
 
     [Header("Air / Jump / Fall")]
     private string airBoolName = "Base/Switch_AirState";
@@ -28,23 +25,30 @@ public class PlayerAnimationHash
     private string comboAttackName = "Base/Toggle_ComboAttack"; // Trigger (콤보 공격)
     private string comboIntName = "Base/Index_ComboIndex"; // Int (콤보 상태)
 
+    [Header("Dodge")]
     private string dodgeParameterName = "Dodge/Switch_DodgeState";
     private string dodgeDirParameterName = "Dodge/Direction_DodgeDir";
+    [Header("HitStop")]
+    private string knockbackParameterName = "HitStop/Switch_KnockbackState";
+    private string stunParameterName = "HitStop/Switch_StunState";
+
 
     private string dieParameterName = "Base/Toggle_DieState";
 
+    [Header("Parameter")]
+    private string horizontalFloatName = "Horizontal";  //Blend
+    private string verticalFloatName = "Vertical";      //Blend
+    private string velocity_XName = "Velocity_X";       //Blend
+    private string velocity_YName = "Velocity_Y";       //Blend
+    private string velocity_ZName = "Velocity_Z";       //Blend
 
 
-
-    // ===== 해시 값 =====
+    // ============= 해시 값 ==============
     public int GroundBoolHash { get; private set; }
     public int IdleBoolHash { get; private set; }
     public int WaitingAnimationTriggerHash { get; private set; }
     public int GetUpTriggerHash { get; private set; }
     public int MoveSpeedHash { get; private set; }
-    public int HorizontalHash { get; private set; }
-    public int VerticalHash { get; private set; }
-
 
     public int AirBoolHash { get; private set; }
     public int JumpTriggerHash { get; private set; }
@@ -58,8 +62,17 @@ public class PlayerAnimationHash
 
     public int DodgeParameterHash { get; private set; }
     public int DodgeDirParameterHash { get; private set; }
+    public int KnockbackParameterHash { get; private set; }
+    public int StunParameterHash { get; private set; }
 
     public int DieParameterHash { get; private set; }
+
+    public int HorizontalHash { get; private set; }
+    public int VerticalHash { get; private set; }
+    public int Velocity_XHash { get; private set; }
+    public int Velocity_YHash { get; private set; }
+    public int Velocity_ZHash { get; private set; }
+
 
 
 
@@ -72,8 +85,6 @@ public class PlayerAnimationHash
         WaitingAnimationTriggerHash = Animator.StringToHash(waitingAnimationTriggerName);
         GetUpTriggerHash = Animator.StringToHash(getUpTriggerName);
         MoveSpeedHash = Animator.StringToHash(moveSpeedFloatName);
-        HorizontalHash = Animator.StringToHash(horizontalFloatName);
-        VerticalHash = Animator.StringToHash(verticalFloatName);
 
         AirBoolHash = Animator.StringToHash(airBoolName);
         JumpTriggerHash = Animator.StringToHash(jumpTriggerName);
@@ -87,7 +98,15 @@ public class PlayerAnimationHash
 
         DodgeParameterHash = Animator.StringToHash(dodgeParameterName);
         DodgeDirParameterHash = Animator.StringToHash(dodgeDirParameterName);
+        KnockbackParameterHash = Animator.StringToHash(knockbackParameterName);
+        StunParameterHash = Animator.StringToHash(stunParameterName);
 
         DieParameterHash = Animator.StringToHash(dieParameterName);
+
+        HorizontalHash = Animator.StringToHash(horizontalFloatName);
+        VerticalHash = Animator.StringToHash(verticalFloatName);
+        Velocity_XHash = Animator.StringToHash(velocity_XName);
+        Velocity_YHash = Animator.StringToHash(velocity_YName);
+        Velocity_ZHash = Animator.StringToHash(velocity_ZName);
     }
 }
