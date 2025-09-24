@@ -96,7 +96,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
             // 정보창을 마우스 커서 위치로 옮기기
             RectTransform rectTransform = itemInformationUI.GetComponent<RectTransform>();
-            Vector3 offset = new Vector3(rectTransform.sizeDelta.x / 3, rectTransform.sizeDelta.y / 3, 0);
+            Vector3 offset = new Vector3(rectTransform.sizeDelta.x / 5, rectTransform.sizeDelta.y / 5, 0);
             itemInformationUI.transform.position = (Vector3)eventData.position + offset;
         }
     }

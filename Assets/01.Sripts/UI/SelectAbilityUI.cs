@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -31,6 +32,9 @@ public class SelectAbilityUI : UIBase
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        // 마우스 커서 보이게
+        PlayerManager.Instance.EnableInput(false);
 
         BattleManager battleManager = BattleManager.Instance;
 
@@ -123,7 +127,7 @@ public class SelectAbilityUI : UIBase
 
     public void OnClickButton(string str)
     {
-        InventoryManager.Instance.LoadData_Addressables("Healing_Potion");
+        InventoryManager.Instance.LoadData_Addressables("20000000");
         Debug.Log("회복약 획득");
 
         switch (str)
@@ -136,6 +140,7 @@ public class SelectAbilityUI : UIBase
                 PlayerManager.Instance.Stats.AddModifier(StatType.Defense, statPoint_DEF);
                 PlayerManager.Instance.Stats.AddModifier(StatType.MoveSpeed, statPoint_AttackSPD);
                 PlayerManager.Instance.Stats.AddModifier(StatType.AttackSpeed, statPoint_MoveSPD);
+
                 Debug.Log($"플레이어 스탯증가");
                 break;
 
@@ -154,6 +159,9 @@ public class SelectAbilityUI : UIBase
 
         }
         BattleManager.Instance.ClearBattle();
+
+        // 마우스 커서 다시 락
+        PlayerManager.Instance.EnableInput(true);
         Hide();
     }
 }
