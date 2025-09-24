@@ -30,7 +30,7 @@ public class TownUI : UIBase
 
             // 설정UI 활성화
             case "Option":
-                await UIManager.Instance.Show<OptionUI>();
+                await UIManager.Instance.Show<SoundSettingUI>();
                 break;
         }
 

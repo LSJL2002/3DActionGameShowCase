@@ -10,12 +10,14 @@ public class TitleUI : UIBase
     [SerializeField] private TextMeshProUGUI gameTitleText;
     [SerializeField] private TextMeshProUGUI clickToGameText;
     [SerializeField] private Image blackEffectPanelImage;
+    [SerializeField] private AudioSource audioSource;
 
     public async void OnClickButton(string str)
     {
         switch (str)
         {
             case "GameStart":
+                audioSource.PlayOneShot(audioSource.clip);
                 await UIManager.Instance.Show<HomeUI>();
                 break;
         }

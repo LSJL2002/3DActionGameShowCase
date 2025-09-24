@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     // DOTween으로 페이드인/아웃을 제어할 Canvas Group 컴포넌트
-    [SerializeField]
-    private CanvasGroup targetCanvasGroup;
+    [SerializeField] private CanvasGroup targetCanvasGroup;
+    [SerializeField] private AudioSource audioSource;
 
     // 마우스가 버튼에 진입했을 때 호출
     public void OnPointerEnter(PointerEventData eventData)
@@ -17,6 +17,8 @@ public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             targetCanvasGroup.DOFade(0.2f, 0.2f);
         }
+
+        audioSource.PlayOneShot(audioSource.clip);
     }
 
     // 마우스가 버튼에서 벗어났을 때 호출
