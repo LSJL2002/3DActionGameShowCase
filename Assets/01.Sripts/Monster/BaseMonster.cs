@@ -20,7 +20,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public MonsterAIEvents aiEvents { get; private set; }
     public Transform PlayerTarget { get; set; }
     public bool IsDead { get; private set; }
-
+    [HideInInspector] public bool hasStartedCombat = false;
     public event Action OnAttackAnimationCompleteEvent;
     private readonly List<GameObject> activeAOEs = new List<GameObject>();
 
@@ -71,7 +71,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         float hpPercent = (Stats.CurrentHP / Stats.maxHp) * 100f;
         float distance = PlayerTarget != null ? Vector3.Distance(transform.position, PlayerTarget.position) : Mathf.Infinity;
 
-        var validConditions = patternConfig.GetValidConditions(hpPercent, distance);
+        var validConditions = patternConfig.GetValidConditions(hpPercent, distance, hasStartedCombat);
         if (validConditions == null || validConditions.Count == 0) return;
 
         var chosenCondition = validConditions[0];
@@ -136,6 +136,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
             // --- Perform attack ---
             stateMachine.isAttacking = true;
             stateMachine.ChangeState(attackState);
+            if (!hasStartedCombat)
+            {
+                hasStartedCombat = true;
+            }
 
             // Wait until attack finishes
             yield return new WaitUntil(() => !stateMachine.isAttacking);

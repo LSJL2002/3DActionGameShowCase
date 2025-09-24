@@ -117,20 +117,22 @@ public class AreaEffectController : MonoBehaviour
             {
                 IDamageable damageable = hit.GetComponent<IDamageable>();
                 damageable?.OnTakeDamage(damage);
-                PlayerController player = hit.GetComponent<PlayerController>();
-                if (player != null && skillData != null)
+
+                if (skillData != null)
                 {
-                    if (skillData.monsterEffectType == MonsterEffectType.Knockback)
-                    {
-                        
-                    }
+                    damageable?.ApplyEffect(
+                        skillData.monsterEffectType,
+                        origin.position,
+                        skillData.effectValue,
+                        skillData.duration
+                    );
                 }
             }
         }
     }
 
 
-    public void EnableDamage()
+    public void EnableDamage(Transform monsterTransform)
     {
         damageCollider.enabled = true;
 
@@ -147,6 +149,16 @@ public class AreaEffectController : MonoBehaviour
             {
                 IDamageable damageable = col.GetComponent<IDamageable>();
                 damageable?.OnTakeDamage(damage);
+
+                if (skillData != null)
+                {
+                    damageable?.ApplyEffect(
+                        skillData.monsterEffectType,
+                        monsterTransform.position,
+                        skillData.effectValue,
+                        skillData.duration
+                    );
+                }
             }
         }
     }

@@ -40,6 +40,7 @@ public class MonsterPatternSO : ScriptableObject
         [Range(0, 100)] public float thresholdHpPercent; 
         public bool triggerOnce;
         [HideInInspector] public bool hasTriggered = false;
+        public float requiredDistance;
 
         public List<int> possiblePatternIds;
         public int priority;
@@ -55,7 +56,7 @@ public class MonsterPatternSO : ScriptableObject
     public PatternEntry GetPatternById(int id) =>
         patterns.Find(p => p.id == id);
 
-    public List<PatternCondition> GetValidConditions(float currentHpPercent, float distanceToPlayer)
+    public List<PatternCondition> GetValidConditions(float currentHpPercent, float distanceToPlayer, bool hasStartedCombat)
     {
         var valid = new List<PatternCondition>();
 
@@ -78,7 +79,7 @@ public class MonsterPatternSO : ScriptableObject
                     break;
 
                 case ConditionType.DistanceCheck:
-                    if (distanceToPlayer >= 5f)
+                    if (hasStartedCombat && distanceToPlayer >= cond.requiredDistance)
                         valid.Add(cond);
                     break;
             }
