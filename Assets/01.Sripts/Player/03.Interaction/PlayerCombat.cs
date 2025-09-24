@@ -1,6 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+using Zenject.SpaceFighter;
+using static SkillSO;
+using static UnityEngine.Rendering.DebugUI;
 
 //전투관련 로직만
 public class PlayerCombat : MonoBehaviour, IDamageable
@@ -75,6 +79,25 @@ public class PlayerCombat : MonoBehaviour, IDamageable
         player?.Stats.TakeDamage(amount); // HP 변경은 Stats에서만
         // 피격 애니메이션, 넉백 등도 여기서 처리 가능
     }
+
+    public void ApplyEffect(MonsterEffectType Type, Vector3 sourcePos, float value = 0, float duration = 0)
+    {
+        switch (Type)
+        {
+            case MonsterEffectType.Knockback:
+                var dir = (transform.position - sourcePos).normalized;
+                player.stateMachine.KnockbackState.Setup(dir, value, duration);
+                player.stateMachine.ChangeState(player.stateMachine.KnockbackState);
+                break;
+
+            case MonsterEffectType.Groggy:
+                player.stateMachine.StunState.Setup(duration);
+                player.stateMachine.ChangeState(player.stateMachine.StunState);
+                break;
+        }
+    }
+
+
 
     // -------------------------------
     // 기즈모 시각화 (씬뷰에서 공격 범위/Force 확인용)
