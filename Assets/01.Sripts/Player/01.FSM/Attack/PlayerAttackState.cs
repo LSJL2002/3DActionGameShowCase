@@ -55,7 +55,7 @@ public class PlayerAttackState : PlayerBaseState
         attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange);
         stateMachine.Player.Combat.SetAttackTarget(attackTarget);
         // 공격 진입 시 Lock-On 강제 적용
-        if (attackTarget != null)  stateMachine.Player.camera.SetLockOnTarget(attackTarget);
+        if (attackTarget != null)  stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
 
         var anim = stateMachine.Player.Animator;
         //anim.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
