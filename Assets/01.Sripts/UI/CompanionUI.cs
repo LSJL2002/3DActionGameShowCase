@@ -44,7 +44,7 @@ public class CompanionUI : UIBase
                 break;
 
             case "Talk":
-                //await UIManager.Instance.Show<CompanionTalkUI>();
+                await UIManager.Instance.Show<TutorialUI>();
                 break;
         }
 
