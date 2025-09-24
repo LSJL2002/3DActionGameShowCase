@@ -48,6 +48,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         itemData = null;
         emptyText.text = "Empty";
         iconImage.sprite = emptyImage;
+        iconImage.color = new Color(1,1,1); // 이미지 컬러를 다시 흰색으로 되돌림
     }
 
     // 버튼 클릭시 효과 함수
@@ -59,7 +60,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             if (itemData.itemType == ItemData.ItemType.Consumable)
             {
                 // ViewModel의 함수 호출
-                inventoryViewModel.UseItem(itemData);
+                inventoryViewModel.SelectItem(itemData, GuideState.UseItem);
             }
 
             // 코어라면 장착 효과 ( 플레이어의 함수를 호출 (장비효과를 On하는 함수) )

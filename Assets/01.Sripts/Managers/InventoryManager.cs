@@ -8,7 +8,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
-    private InventoryViewModel inventoryViewModel;
+    public InventoryViewModel inventoryViewModel;
     public CharacterInventoryUI characterInventoryUI;
     public CharacterSkillUI characterSkillUI;
     public CharacterCoreUI characterCoreUI;

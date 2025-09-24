@@ -58,6 +58,7 @@ public class ObjectFollow : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
+            Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaa");
             OnClickTarget();
         }
     }
