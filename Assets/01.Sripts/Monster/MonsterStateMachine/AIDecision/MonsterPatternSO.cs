@@ -37,11 +37,10 @@ public class MonsterPatternSO : ScriptableObject
         [Range(0, 100)] public float minHpPercent;
         [Range(0, 100)] public float maxHpPercent;
 
-        [Range(0, 100)] public float thresholdHpPercent; 
+        [Range(0, 100)] public float thresholdHpPercent;
+        public float requiredDistance;
         public bool triggerOnce;
         [HideInInspector] public bool hasTriggered = false;
-        public float requiredDistance;
-
         public List<int> possiblePatternIds;
         public int priority;
 
