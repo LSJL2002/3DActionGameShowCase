@@ -9,7 +9,8 @@ public class TutorialUI : UIBase
 {
     public TMP_Text talkText;
 
-
+    public List<TextSO> dialogues = new List<TextSO>();
+    
     // 창이 켜질 때 자동으로 실행됨
     protected override void OnEnable()
     {
