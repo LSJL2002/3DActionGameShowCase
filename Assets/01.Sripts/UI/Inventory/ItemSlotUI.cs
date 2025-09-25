@@ -99,6 +99,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 inventoryViewModel.SelectItem(itemData);
                 break;
         }
+
+        UIManager.Instance.Get<ItemInformationUI>().Hide();
     }
 
     // 마우스 커서가 올라왔을때 효과
@@ -108,6 +110,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (itemData != null)
         {
             AudioManager.Instance.PlaySFX("ButtonSoundEffect3");
+            this.transform.DOScale(1.1f, 0.2f);
 
             // 아이템정보UI 켜기
             await UIManager.Instance.Show<ItemInformationUI>();
@@ -133,6 +136,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // itemDescriptionUI 변수가 null이 아닐 때만 실행
         if (itemInformationUI != null && itemInformationUI.isActiveAndEnabled)
         {
+            this.transform.DOScale(1.0f, 0.2f);
+
             // 아이템정보UI 끄기
             itemInformationUI.Hide();
         }

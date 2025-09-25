@@ -33,7 +33,7 @@ public class SelectAbilityUI : UIBase
     {
         base.OnEnable();
 
-        canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 2f); });
+        canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1.5f); });
 
         OnSelectAbilityUI?.Invoke();
 
@@ -150,7 +150,6 @@ public class SelectAbilityUI : UIBase
     public void OnClickButton(string str)
     {
         AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-        DOVirtual.DelayedCall(0.2f, () => { }); // 아무것도 없이 n초간 대기
 
         InventoryManager.Instance.LoadData_Addressables("20000000");
         Debug.Log("회복약 획득");
