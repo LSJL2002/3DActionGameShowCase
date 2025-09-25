@@ -15,16 +15,22 @@ public partial class GameUI : UIBase
 {
     [SerializeField] private Image playerHPImage;
     [SerializeField] private Image playerMPImage;
+    [SerializeField] private CanvasGroup playerInfoCanvasGroup;
 
     public TextMeshProUGUI playerHPText;   // UI : 플레이어 체력 텍스트
-    public TextMeshProUGUI playerMPText;   // UI : 플레이어 마력 텍스트
 
     private float playerMaxHP;             // 플레이어 최대 체력
 
     PlayerStats playerStats;               // 플레이어의 stats에 접근가능한 변수
 
+    [SerializeField] private AudioSource audioSource;
+
+    float duration = 0.2f; // 닷트윈 효과들에서 사용할 시간
+
     public void OnEnablePlayer()
     {
+        playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f).SetDelay(6f); });
+        
         playerStats = PlayerManager.Instance.Stats;
 
         // 플레이어 변수 초기화
@@ -39,51 +45,33 @@ public partial class GameUI : UIBase
         PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
     }
 
-    //public void UpdatePlayer()
-    //{
-    //    // 플레이어 현재체력
-    //    float playerCurrentHP = playerStats.CurrentHealth;
-
-    //    // 플레이어 현재 체력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
-    //    playerHPText.text = Mathf.FloorToInt(playerCurrentHP / playerMaxHP * 100).ToString() + "%";
-
-    //    // 플레이어 체력 슬라이더 업데이트
-    //    playerHPImage.fillAmount = playerCurrentHP / playerMaxHP;
-
-    //    // 플레이어 현재마력
-    //    float playerCurrentMP = playerStats.CurrentEnergy;
-
-    //    // 플레이어 현재 마력텍스트 업데이트 (백분율, 소수점이하 버림, 형변환)
-    //    playerMPText.text = Mathf.FloorToInt(playerCurrentMP / playerMaxMP * 100).ToString() + "%";
-
-    //    // 플레이어 마력 슬라이더 업데이트
-    //    playerMPImage.fillAmount = playerCurrentMP / playerMaxMP;
-    //}
-
     // 플레이어 체력 변경 이벤트 발생 시 호출
     private void OnPlayerHealthChanged()
     {
-        float duration = 0.2f;
-
-        // 기존 닷트윈 애니메이션 중지
-        playerHPImage.DOKill(); 
-        
-        // 닷트윈 체력바 fillAmount를 부드럽게 변경
-        playerHPImage.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 1.0f) // 0.5초 동안 부드럽게 변경
-                       .SetEase(Ease.OutQuad); // 애니메이션 가속/감속 방식
-
-        // 닷트윈 쉐이크 효과
-        playerHPImage.rectTransform.DOShakePosition(duration, 10, 10, 90, true, true);
-        playerHPText.rectTransform.DOShakePosition(duration, 10, 10, 90, true, true);
-
-        // 닷트윈 색상 변경했다 돌아오기 효과
-        Color originalColor = playerHPText.color;                         // 현재 색상 값을 저장
-        Sequence mySequence = DOTween.Sequence();                         // 새로운 시퀀스 생성
-        mySequence.Append(playerHPText.DOColor(Color.red, duration));     // 시퀀스에 첫 번째 트윈 추가 (빨간색으로 변경)
-        mySequence.Append(playerHPText.DOColor(originalColor, duration)); // 시퀀스에 두 번째 트윈 추가 (원래 색상으로 돌아오기)
-
-        // 체력 텍스트도 업데이트
+        // 체력 텍스트 업데이트
         playerHPText.text = Mathf.FloorToInt(playerStats.CurrentHealth / playerMaxHP * 100).ToString() + "%";
+        float playerHPpercentage = playerStats.CurrentHealth / playerMaxHP;
+
+        // 플레이어 체력이 40% 이하가 되면 닷트윈 효과(지속)
+        if (playerHPpercentage <= 0.4)
+        {
+            playerHPImage.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
+            playerHPText.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
+            audioSource.PlayOneShot(audioSource.clip);
+        }
+        else
+        {
+            audioSource.Stop();
+
+            // 체력 텍스트 붉게 변했다가 돌아오기
+            Color originalColor = playerHPText.color;
+            playerHPText.DOColor(Color.red, duration).OnComplete(() => { playerHPText.DOColor(originalColor, duration); });
+        }
+
+        Sequence mySequence = DOTween.Sequence(); // 새로운 시퀀스 생성
+        mySequence.Append(playerHPImage.rectTransform.DOShakePosition(duration, 10, 10, 90, true, true)); // 시퀀스에 트윈 추가 (체력바 : 흔들림)
+        mySequence.Append(playerHPText.rectTransform.DOShakePosition(duration, 10, 10, 90, true, true)); // 시퀀스에 트윈 추가 (체력텍스트 : 흔들림)
+        mySequence.Append(playerHPImage.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 1.0f).SetEase(Ease.OutQuad)); // 시퀀스에 트윈 추가 (체력바 : 부드럽게 감소)
     }
 
     // 플레이어 스탯이 변화했을때 호출 할 함수

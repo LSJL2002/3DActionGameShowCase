@@ -54,7 +54,7 @@ public class PlayerStats : IStats
     public event Action OnDie;
 
     // 체력이 변경될 때 호출될 이벤트
-    public event System.Action OnPlayerHealthChanged;
+    public event Action OnPlayerHealthChanged;
 
     public PlayerStats(PlayerStatData data)
     {

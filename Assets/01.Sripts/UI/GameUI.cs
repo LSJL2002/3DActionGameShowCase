@@ -26,11 +26,11 @@ public partial class GameUI : UIBase
 
         ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
 
-        OnEnablePlayer();
-        OnEnableEnemy();
-
         BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯불러오기
         BattleManager.OnBattleClear += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
+        
+        OnEnablePlayer();
+        OnEanableEnemy();
     }
 
     protected override void OnDisable()
@@ -42,20 +42,12 @@ public partial class GameUI : UIBase
         BattleManager.OnBattleClear -= ReleaseMonsterStat; //해제
     }
 
-    protected override void Update()
-    {
-        base.Update();
-
-        //UpdatePlayer();
-
-        //UpdateEnemy();
-    }
-
     public void LoadMonsterStat(BattleZone zone)                     //몬스터 스텟 불러오기
     {
         monsterStats = BattleManager.Instance.monsterStats;
         ChangeState(eBattleState.Battle);
         SetEnemyInfo(1);
+        monsterStats.OnHealthChanged += OnEnemyHealthChanged;
     }
 
     public void ReleaseMonsterStat(BattleZone zone)                  //몬스터 스텟 해제
@@ -63,6 +55,7 @@ public partial class GameUI : UIBase
         monsterStats = null;
         ChangeState(eBattleState.Idle);
         SetEnemyInfo(0);
+        monsterStats.OnHealthChanged -= OnEnemyHealthChanged;
     }
 
     // 전투종료시 Idle로 호출할 함수
