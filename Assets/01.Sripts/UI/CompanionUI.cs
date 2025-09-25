@@ -38,7 +38,7 @@ public class CompanionUI : UIBase
         switch (str)
         {
             case "Stat":
-                await UIManager.Instance.Show<SoundSettingUI>();
+                await UIManager.Instance.Show<CharacterStatUI>();
                 break;
 
             case "Inventory":

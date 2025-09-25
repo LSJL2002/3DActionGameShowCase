@@ -56,6 +56,6 @@ public class TitleUI : UIBase
         // '까만화면'을 0f(알파값0)까지 1초에 걸쳐 동작하고, 완료되면 '게임타이틀' 텍스트를 1f(알파값255)까지 5초에 걸쳐 동작
         blackEffectPanelImage.DOFade(0f, 1f).OnComplete(() => { gameTitleText.DOFade(1f, 5f); });
         
-        clickToGameText.DOFade(1f, 2.5f).SetLoops(-1, LoopType.Yoyo);
+        clickToGameText.DOFade(1f, 2.5f).SetLoops(-1, LoopType.Yoyo).SetDelay(3f);
     }
 }

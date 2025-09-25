@@ -13,14 +13,14 @@ using Zenject;
 // GameUI의 Enemy Part
 public partial class GameUI : UIBase
 {
-    public GameObject enemyInfoUI;         // 적UI 최상위 오브젝트 (활성화 컨트롤용 변수)
-
     [SerializeField] private Image enemyHPImage;
     [SerializeField] public TextMeshProUGUI enemyNameText;  // UI : 적 이름 텍스트
     [SerializeField] public TextMeshProUGUI enemyHPText; // UI : 적 체력 텍스트
     [SerializeField] private CanvasGroup enemyInfoCanvasGroup;
-
-    MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
+    [SerializeField] private Image enemyIcon;
+    [SerializeField] private Sprite enemyDefaultIcon;
+    [SerializeField] private Sprite enemyClearIcon;
+    private MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
     
     public void OnEanableEnemy()
     {
@@ -40,7 +40,7 @@ public partial class GameUI : UIBase
 
                 enemyHPImage.fillAmount = 1f; // 적 체력 슬라이더를 100%
 
-                //enemyInfoUI.SetActive(false); // 적 정보UI 오브젝트를 비활성화
+                enemyIcon.sprite = enemyDefaultIcon;
 
                 enemyInfoCanvasGroup.DOFade(0f, 0f);
 
@@ -50,9 +50,9 @@ public partial class GameUI : UIBase
 
             case 1:
 
-                enemyInfoCanvasGroup.DOFade(1f, 1.5f);
+                enemyIcon.sprite = enemyDefaultIcon;
 
-                //enemyInfoUI.SetActive(true); // 적 정보UI 오브젝트를 활성화
+                enemyInfoCanvasGroup.DOFade(1f, 1.5f);
 
                 enemyNameText.text = monsterStats.monsterData.monsterName; // 적 이름 변수 초기화
 
@@ -79,11 +79,16 @@ public partial class GameUI : UIBase
 
         // 닷트윈 색상 변경했다 돌아오기 효과
         Color originalColor = enemyHPText.color;                         // 현재 색상 값을 저장
-        Sequence mySequence = DOTween.Sequence();                         // 새로운 시퀀스 생성
+        Sequence mySequence = DOTween.Sequence();                        // 새로운 시퀀스 생성
         mySequence.Append(enemyHPText.DOColor(Color.red, duration));     // 시퀀스에 첫 번째 트윈 추가 (빨간색으로 변경)
         mySequence.Append(enemyHPText.DOColor(originalColor, duration)); // 시퀀스에 두 번째 트윈 추가 (원래 색상으로 돌아오기)
 
         // 체력 텍스트도 업데이트
         enemyHPText.text = monsterStats.CurrentHP.ToString("#,##0");
+
+        if (enemyHPText.text == "0")
+        {
+            enemyIcon.sprite = enemyClearIcon;
+        }
     }
 }
