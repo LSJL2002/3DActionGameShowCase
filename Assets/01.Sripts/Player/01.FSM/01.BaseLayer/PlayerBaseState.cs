@@ -36,6 +36,7 @@ public abstract class PlayerBaseState : Istate
         input.PlayerActions.Attack.started += OnAttackStarted;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
         input.PlayerActions.HeavyAttack.started += OnHeavyAttackStarted;
+        input.PlayerActions.HeavyAttack.canceled += OnHeavyAttackCanceled;
 
         input.PlayerActions.Menu.performed += OnMenuToggle;
         input.PlayerActions.Camera.started += OnLockOnToggle;
@@ -50,6 +51,7 @@ public abstract class PlayerBaseState : Istate
         input.PlayerActions.Attack.started -= OnAttackStarted;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
         input.PlayerActions.HeavyAttack.started -= OnHeavyAttackStarted;
+        input.PlayerActions.HeavyAttack.canceled -= OnHeavyAttackCanceled;
 
         input.PlayerActions.Menu.performed -= OnMenuToggle;
         input.PlayerActions.Camera.started -= OnLockOnToggle;
@@ -83,6 +85,7 @@ public abstract class PlayerBaseState : Istate
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
         => stateMachine.IsAttacking = false;
     protected virtual void OnHeavyAttackStarted(InputAction.CallbackContext context) { }
+    protected virtual void OnHeavyAttackCanceled(InputAction.CallbackContext context) { }
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
 
@@ -242,5 +245,33 @@ public abstract class PlayerBaseState : Istate
         // 태그랑 맞는 애니메이션이 없다면 0 반환
         else
             return 0f;
+    }
+
+    // ===================== 타겟 탐지 =====================
+    protected Transform FindNearestMonster(float radius)
+    {
+        Collider[] hits = Physics.OverlapSphere(
+                    stateMachine.Player.transform.position,
+                    radius,
+                    LayerMask.GetMask("Enemy")
+                );
+
+        Transform nearest = null;
+        float minDist = float.MaxValue;
+
+        foreach (var hit in hits)
+        {
+            float dist = Vector3.Distance(
+                stateMachine.Player.transform.position,
+                hit.transform.position
+            );
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = hit.transform;
+            }
+        }
+
+        return nearest;
     }
 }

@@ -18,12 +18,16 @@ public class PlayerAnimationHash
     private string jumpTriggerName = "Base/Toggle_Jump"; //Trigger로 바꿔야함
     private string fallBoolName = "Base/Toggle_Fall";
 
-    [Header("Combat")]
+    [Header("Attack")]
     private string attackBoolName = "Base/Switch_AttackState";
     private string attackTriggerName = "Base/Toggle_Attack"; // Trigger (AnyState 공격)
     private string finishAttackName = "Base/Toggle_FinishAttack"; // Trigger
     private string comboAttackName = "Base/Toggle_ComboAttack"; // Trigger (콤보 공격)
     private string comboIntName = "Base/Index_ComboIndex"; // Int (콤보 상태)
+    [Header("Skill")]
+    private string skillBoolName = "Base/Switch_SkillState";
+    private string skillTriggerName = "Base/Toggle_Skill"; // Trigger (AnyState 공격)
+    private string skillIntName = "Base/Index_SkillIndex"; // Int (콤보 상태)
 
     [Header("Dodge")]
     private string dodgeParameterName = "Dodge/Switch_DodgeState";
@@ -60,6 +64,10 @@ public class PlayerAnimationHash
     public int ComboIntHash { get; private set; }
     public int FinishAttackHash { get; private set; }
 
+    public int SkillBoolHash { get; private set; }
+    public int SkillTriggerHash { get; private set; }
+    public int SkillIntHash { get; private set; }
+
     public int DodgeParameterHash { get; private set; }
     public int DodgeDirParameterHash { get; private set; }
     public int KnockbackParameterHash { get; private set; }
@@ -95,6 +103,10 @@ public class PlayerAnimationHash
         ComboTriggerHash = Animator.StringToHash(comboAttackName);
         ComboIntHash = Animator.StringToHash(comboIntName);
         FinishAttackHash = Animator.StringToHash(finishAttackName);
+
+        SkillBoolHash = Animator.StringToHash(skillBoolName);
+        SkillTriggerHash = Animator.StringToHash(skillTriggerName);
+        SkillIntHash = Animator.StringToHash(skillIntName);
 
         DodgeParameterHash = Animator.StringToHash(dodgeParameterName);
         DodgeDirParameterHash = Animator.StringToHash(dodgeDirParameterName);

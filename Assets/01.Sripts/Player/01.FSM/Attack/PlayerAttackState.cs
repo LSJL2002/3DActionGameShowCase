@@ -195,26 +195,4 @@ public class PlayerAttackState : PlayerBaseState
             stateMachine.ChangeState(stateMachine.DodgeState);
         }
     }
-
-
-    // ===================== 타겟 탐지 =====================
-    private Transform FindNearestMonster(float radius)
-    {
-        Collider[] hits = Physics.OverlapSphere(stateMachine.Player.transform.position, radius, LayerMask.GetMask("Enemy"));
-        if (hits.Length == 0) return null;
-
-        Transform nearest = null;
-        float minDist = float.MaxValue;
-
-        foreach (var hit in hits)
-        {
-            float dist = Vector3.Distance(stateMachine.Player.transform.position, hit.transform.position);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                nearest = hit.transform;
-            }
-        }
-        return nearest;
-    }
 }
