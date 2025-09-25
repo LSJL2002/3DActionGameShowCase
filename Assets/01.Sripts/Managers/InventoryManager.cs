@@ -5,36 +5,65 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
+public enum DecisionState { UseItem, SelectAbility, }
+
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
-    private InventoryViewModel inventoryViewModel;
-    public CharacterInventoryUI CharacterInventoryUI;
-    public CharacterSkillUI CharacterSkillUI;
-    public CharacterCoreUI CharacterCoreUI;
+    public InventoryViewModel inventoryViewModel;
+    public CharacterInventoryUI characterInventoryUI;
+    public CharacterSkillUI characterSkillUI;
+    public CharacterCoreUI characterCoreUI;
+
+    public DecisionState currentDecisionState;
 
     protected override void Start()
     {
         base.Start();
 
+        SelectAbilityUI.OnSelectAbilityUI += ChangeSelectAbilityState;
+        CharacterInventoryUI.OnUseItemUI += ChangeUseItemState;
+        CharacterCoreUI.OnUseItemUI += ChangeUseItemState;
+        CharacterSkillUI.OnUseItemUI += ChangeUseItemState;
+
         inventoryModel = new Inventory();
         inventoryViewModel = new InventoryViewModel(inventoryModel);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        SelectAbilityUI.OnSelectAbilityUI -= ChangeSelectAbilityState;
+        CharacterInventoryUI.OnUseItemUI -= ChangeUseItemState;
+        CharacterCoreUI.OnUseItemUI -= ChangeUseItemState;
+        CharacterSkillUI.OnUseItemUI -= ChangeUseItemState;
+    }
+
+    private void ChangeSelectAbilityState()
+    {
+        currentDecisionState = DecisionState.SelectAbility;
+    }
+
+    private void ChangeUseItemState()
+    {
+        currentDecisionState = DecisionState.UseItem;
     }
 
     // 인벤토리 시스템 최초 초기화시 호출될 함수 (각 UI에서 호출)
     public void SetInventoryUI()
     {
-        CharacterInventoryUI.Setup(inventoryViewModel);
+        characterInventoryUI.Setup(inventoryViewModel);
     }
 
     public void SetSkillUI()
     {
-        CharacterSkillUI.Setup(inventoryViewModel);
+        characterSkillUI.Setup(inventoryViewModel);
     }
 
     public void SetCoreUI()
     {
-        CharacterCoreUI.Setup(inventoryViewModel);
+        characterCoreUI.Setup(inventoryViewModel);
     }
 
     // 아이템 추가 함수
@@ -68,5 +97,17 @@ public class InventoryManager : Singleton<InventoryManager>
 
         // Model에게 아이템 수량 감소를 요청
         inventoryModel.DecreaseItemCount(itemData, 1);
+    }
+
+    // 플레이어 스탯 추가 함수 (능력선택시 호출)
+    public void StatUPAbility(ItemData itemData)
+    {
+        // 플레이어 스탯 증가 함수 호출
+        PlayerManager.Instance.Stats.AddModifier(StatType.MaxHealth, itemData.MaxHP);
+        PlayerManager.Instance.Stats.AddModifier(StatType.MaxEnergy, itemData.MaxMP);
+        PlayerManager.Instance.Stats.AddModifier(StatType.Attack, itemData.Attack);
+        PlayerManager.Instance.Stats.AddModifier(StatType.Defense, itemData.Defence);
+        PlayerManager.Instance.Stats.AddModifier(StatType.MoveSpeed, itemData.MoveSpeed);
+        PlayerManager.Instance.Stats.AddModifier(StatType.AttackSpeed, itemData.AttackSpeed);
     }
 }

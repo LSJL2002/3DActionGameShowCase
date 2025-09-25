@@ -37,9 +37,10 @@ public class PlayerStateMachine : StateMachine
     public float JumpForce { get; set; } //점프력
     public bool IsInvincible { get; set; } //무적상태
     public bool IsDodge { get; set; } //회피상태
-    public bool IsAttacking {  get; set; } //공격중인지
-    public int ComboIndex {  get; set; } //콤보인덱스
-
+    public bool IsAttacking { get; set; } //공격중인지
+    public int ComboIndex { get; set; } //콤보인덱스
+    public bool IsKnockback { get; set; }
+    public bool IsStun { get; set; }
 
     //Ground 로직
     public PlayerIdleState IdleState { get;}
@@ -54,6 +55,8 @@ public class PlayerStateMachine : StateMachine
     public PlyerFinishAttackState FinishAttackState { get; set; }
     // 독립적인 Sub-State Dodge 로직
     public PlayerDodgeState DodgeState { get; }
+    public PlayerKnockbackState KnockbackState { get;}
+    public PlayerStunState StunState { get;}
 
 
 
@@ -70,6 +73,8 @@ public class PlayerStateMachine : StateMachine
         AttackState = new PlayerAttackState(this);
         ComboAttackState = new PlayerComboAttackState(this);
         FinishAttackState = new PlyerFinishAttackState(this);
+        KnockbackState = new PlayerKnockbackState(this);
+        StunState = new PlayerStunState(this);
 
         MovementSpeed = player.InfoData.GroundData.BaseSpeed;
         RotationDamping = player.InfoData.GroundData.BaseRotationDamping;

@@ -36,6 +36,7 @@ public class PlayerIdleState : PlayerGroundState
         StopAnimation(stateMachine.Player.AnimationData.IdleBoolHash);
 
         stateMachine.Player.Input.PlayerActions.Move.started -= OnMoveStarted;
+        OnCompleteGettingUp();
     }
 
     public override void LogicUpdate()
@@ -48,9 +49,7 @@ public class PlayerIdleState : PlayerGroundState
             float normTime = GetNormalizeTime(stateMachine.Player.Animator, "GetUp");
             if (normTime >= 0.99f)
             {
-                isGettingUp = false;
-                isWaitingAnimationTriggered = false;
-                idleStartTime = Time.time;
+                OnCompleteGettingUp();
                 stateMachine.ChangeState(stateMachine.WalkState);
             }
             return;
@@ -71,6 +70,13 @@ public class PlayerIdleState : PlayerGroundState
         {
             stateMachine.ChangeState(stateMachine.WalkState);
         }
+    }
+
+    private void OnCompleteGettingUp()
+    {
+        isGettingUp = false;
+        isWaitingAnimationTriggered = false;
+        idleStartTime = Time.time;
     }
 
     private void OnMoveStarted(InputAction.CallbackContext context)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,11 +13,16 @@ public class CharacterInventoryUI : UIBase
 
     private InventoryViewModel inventoryViewModel;
 
+    // (구독:인벤토리매니저)
+    public static event Action OnUseItemUI;
+
     protected override void Awake()
     {
         base.Awake();
 
-        InventoryManager.Instance.CharacterInventoryUI = this;
+        OnUseItemUI?.Invoke();
+
+        InventoryManager.Instance.characterInventoryUI = this;
 
         InventoryManager.Instance.SetInventoryUI();
     }
@@ -39,7 +45,7 @@ public class CharacterInventoryUI : UIBase
             if (i < itemCount)
             {
                 // 아이템이 있는 경우 데이터 할당
-                itemSlots[i].SetData(inventoryViewModel, items[i].data, items[i].stackCount);
+                itemSlots[i].SetData(items[i].data, items[i].stackCount);
             }
             else
             {

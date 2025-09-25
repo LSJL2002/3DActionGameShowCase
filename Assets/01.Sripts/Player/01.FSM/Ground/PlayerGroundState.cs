@@ -7,8 +7,6 @@ public class PlayerGroundState : PlayerBaseState
 {
     public PlayerGroundState(PlayerStateMachine sm) : base(sm) { }
 
-    public override PlayerStateID StateID => PlayerStateID.Idle;
-
 
 
     public override void Enter()

@@ -54,7 +54,7 @@ public class InventoryViewModel
     }
 
     // 아이템 사용 (아이템슬롯UI(View)에서 호출)
-    public async void UseItem(ItemData itemData)
+    public async void SelectItem(ItemData itemData)
     {
         DecisionButtonUI decisionUI = await UIManager.Instance.Show<DecisionButtonUI>();
 
@@ -62,9 +62,36 @@ public class InventoryViewModel
         Action<bool> onDecisionMadeCallback = null;
         onDecisionMadeCallback = (isConfirmed) =>
         {
+            // 확인UI에서 허가를 받았다면,
             if (isConfirmed)
             {
-                InventoryManager.Instance.UseConsumableItem(itemData);
+                // 현재 허가 내용에 따라 스위치
+                switch (InventoryManager.Instance.currentDecisionState)
+                {
+                    // 아이템 사용에 대한 내용이라면,
+                    case DecisionState.UseItem:
+                        // 인벤토리 매니저의 아이템 사용 함수 호출
+                        InventoryManager.Instance.UseConsumableItem(itemData);
+                        break;
+
+                    // 능력선택에 대한 내용이라면,
+                    case DecisionState.SelectAbility:
+                        
+                        // 스탯업이라면,
+                        if (itemData.itemType == ItemData.ItemType.StatUP)
+                        {
+                            InventoryManager.Instance.StatUPAbility(itemData);
+                        }                        
+                        else
+                        {
+                            // 인벤토리 매니저의 아이템 추가 함수 호출
+                            InventoryManager.Instance.LoadData_Addressables(itemData.name);
+                        }
+                        
+                        //UI매니저에서 '능력선택UI'를 가져와서 끄기
+                        UIManager.Instance.Get<SelectAbilityUI>().Hide();
+                        break;
+                }
             }
 
             // 이벤트 구독 해제

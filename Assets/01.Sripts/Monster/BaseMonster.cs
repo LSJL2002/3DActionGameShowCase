@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,6 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.XR;
 using System;
 using Unity.VisualScripting;
+using Unity.Mathematics;
 
 public class BaseMonster : MonoBehaviour, IDamageable
 {
@@ -20,7 +21,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public MonsterAIEvents aiEvents { get; private set; }
     public Transform PlayerTarget { get; set; }
     public bool IsDead { get; private set; }
-
+    [HideInInspector] public bool hasStartedCombat = false;
     public event Action OnAttackAnimationCompleteEvent;
     private readonly List<GameObject> activeAOEs = new List<GameObject>();
 
@@ -29,6 +30,9 @@ public class BaseMonster : MonoBehaviour, IDamageable
     protected MonsterPatternSO.PatternEntry currentPattern;
     protected int currentStepIndex = 0;
     protected bool isRunningPattern = false;
+
+    // 체력이 변경될 때 호출될 이벤트
+    public static event System.Action OnEnemyHealthChanged;
 
     protected virtual void Awake()
     {
@@ -71,7 +75,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         float hpPercent = (Stats.CurrentHP / Stats.maxHp) * 100f;
         float distance = PlayerTarget != null ? Vector3.Distance(transform.position, PlayerTarget.position) : Mathf.Infinity;
 
-        var validConditions = patternConfig.GetValidConditions(hpPercent, distance);
+        var validConditions = patternConfig.GetValidConditions(hpPercent, distance, hasStartedCombat);
         if (validConditions == null || validConditions.Count == 0) return;
 
         var chosenCondition = validConditions[0];
@@ -80,8 +84,32 @@ public class BaseMonster : MonoBehaviour, IDamageable
         int patternId = chosenCondition.possiblePatternIds[UnityEngine.Random.Range(0, chosenCondition.possiblePatternIds.Count)];
         currentPattern = patternConfig.GetPatternById(patternId);
         if (currentPattern == null) return;
+        stateMachine.RangeMultiplier = chosenCondition.rangeMultiplier;
+        stateMachine.PreCastTimeMultiplier = chosenCondition.preCastTimeMultiplier;
+        stateMachine.EffectValueMultiplier = chosenCondition.effectValueMultiplier;
+        Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
 
         currentStepIndex = 0;
+        StartCoroutine(RunPattern());
+    }
+
+    public void ForceRunPattern(MonsterPatternSO.PatternEntry pattern, MonsterPatternSO.PatternCondition conditions)
+    {
+        //미래용
+        if (pattern == null)
+        {
+            return;
+        }
+
+        StopAllCoroutines();
+        currentPattern = pattern;
+        currentStepIndex = 0;
+        isRunningPattern = false;
+
+        stateMachine.RangeMultiplier = conditions.rangeMultiplier;
+        stateMachine.PreCastTimeMultiplier = conditions.preCastTimeMultiplier;
+        stateMachine.EffectValueMultiplier = conditions.effectValueMultiplier;
+
         StartCoroutine(RunPattern());
     }
 
@@ -112,6 +140,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
             // --- Perform attack ---
             stateMachine.isAttacking = true;
             stateMachine.ChangeState(attackState);
+            if (!hasStartedCombat)
+            {
+                hasStartedCombat = true;
+            }
 
             // Wait until attack finishes
             yield return new WaitUntil(() => !stateMachine.isAttacking);
@@ -128,9 +160,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
         currentPattern = null;
         isRunningPattern = false;
     }
-
-
-
 
     public float GetCurrentSkillRange()
     {
@@ -174,7 +203,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public virtual void OnTakeDamage(int amount)
     {
-        Stats.CurrentHP -= amount - Stats.Defense;
+        float damage = Mathf.Max(1, amount - Stats.Defense);
+        Stats.CurrentHP -= damage;
+        Stats.ApplyDamage(amount);
+
         if (Stats.CurrentHP <= 0 && !IsDead)
         {
             Stats.Die();
@@ -182,6 +214,13 @@ public class BaseMonster : MonoBehaviour, IDamageable
             Stats.CurrentHP = 0;
             stateMachine.ChangeState(stateMachine.MonsterDeathState);
         }
+
+        OnEnemyHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
+    }
+
+    public void ApplyEffect(MonsterEffectType effectType, Vector3 sourcePosition, float effectValue = 0f, float duration = 0f)
+    {
+        // 플레이어게만 적용
     }
 
     public void RegisterAOE(GameObject aoe)

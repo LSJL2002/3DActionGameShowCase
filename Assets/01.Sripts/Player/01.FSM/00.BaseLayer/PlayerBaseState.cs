@@ -17,8 +17,6 @@ public abstract class PlayerBaseState : Istate
         this.stateMachine = stateMachine;
     }
 
-
-    public abstract PlayerStateID StateID { get; }
     // 상태별 행동 훅
     public virtual bool AllowRotation => true;
     public virtual bool AllowMovement => true;
@@ -94,13 +92,13 @@ public abstract class PlayerBaseState : Istate
 
         if (cam.HasTarget())
         {
-            cam.SetLockOnTarget(null); // 해제
+            cam.ToggleLockOnTarget(null); // 해제
         }
         else
         {
             // 가까운 몬스터 자동 탐색 후 락온
             //var nearest = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange);
-            //camManager.SetLockOnTarget(nearest);
+            //cam.SetLockOnTarget(nearest);
         }
     }
 
@@ -160,7 +158,7 @@ public abstract class PlayerBaseState : Istate
     // ========== Zoom 처리 ==========
     private void OnZoom(float zoomDelta)
     {
-        var vcam = stateMachine.Player.camera.FreeLook;
+        var vcam = stateMachine.Player.camera.FreeLookCam;
         if (vcam == null) return;
 
         float fov = vcam.m_Lens.FieldOfView;
@@ -214,12 +212,12 @@ public abstract class PlayerBaseState : Istate
     {
         Vector3 forward = stateMachine.Player.camera.MainCamera.forward;
         Vector3 right = stateMachine.Player.camera.MainCamera.right;
-
+        
         forward.y = 0;
         right.y = 0;
         forward.Normalize();
         right.Normalize();
-
+        
         return forward * stateMachine.MovementInput.y + right * stateMachine.MovementInput.x;
     }
 

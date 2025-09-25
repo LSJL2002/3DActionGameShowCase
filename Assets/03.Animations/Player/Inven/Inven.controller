@@ -582,7 +582,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 0
+    m_DefaultBool: 1
     m_Controller: {fileID: 0}
   - m_Name: Base/Switch_Stat
     m_Type: 4
@@ -594,7 +594,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 1
+    m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: Base/Switch_Skill
     m_Type: 4
@@ -707,12 +707,6 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 3541818369684331629}
-    second:
-    - {fileID: 1939848810674021688}
-  - first: {fileID: 7792510087985161089}
-    second:
-    - {fileID: -1473683456784834334}
   - first: {fileID: -8772242994941603480}
     second: []
   - first: {fileID: 7109630154067544653}
@@ -724,6 +718,12 @@ AnimatorStateMachine:
   - first: {fileID: -7616495912454877421}
     second:
     - {fileID: -41292811866159357}
+  - first: {fileID: 7792510087985161089}
+    second:
+    - {fileID: -1473683456784834334}
+  - first: {fileID: 3541818369684331629}
+    second:
+    - {fileID: 1939848810674021688}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -260, y: 10, z: 0}
   m_EntryPosition: {x: -260, y: 110, z: 0}

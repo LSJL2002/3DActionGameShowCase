@@ -37,10 +37,10 @@ public class MonsterPatternSO : ScriptableObject
         [Range(0, 100)] public float minHpPercent;
         [Range(0, 100)] public float maxHpPercent;
 
-        [Range(0, 100)] public float thresholdHpPercent; 
+        [Range(0, 100)] public float thresholdHpPercent;
+        public float requiredDistance;
         public bool triggerOnce;
         [HideInInspector] public bool hasTriggered = false;
-
         public List<int> possiblePatternIds;
         public int priority;
 
@@ -55,7 +55,7 @@ public class MonsterPatternSO : ScriptableObject
     public PatternEntry GetPatternById(int id) =>
         patterns.Find(p => p.id == id);
 
-    public List<PatternCondition> GetValidConditions(float currentHpPercent, float distanceToPlayer)
+    public List<PatternCondition> GetValidConditions(float currentHpPercent, float distanceToPlayer, bool hasStartedCombat)
     {
         var valid = new List<PatternCondition>();
 
@@ -78,7 +78,7 @@ public class MonsterPatternSO : ScriptableObject
                     break;
 
                 case ConditionType.DistanceCheck:
-                    if (distanceToPlayer >= 5f)
+                    if (hasStartedCombat && distanceToPlayer >= cond.requiredDistance)
                         valid.Add(cond);
                     break;
             }
@@ -86,6 +86,10 @@ public class MonsterPatternSO : ScriptableObject
 
         // sort by priority (lowest number = higher priority)
         valid.Sort((a, b) => a.priority.CompareTo(b.priority));
+        foreach (var cond in valid)
+        {
+            Debug.Log($"Valid condition ID={cond.id}, priority={cond.priority}");
+        }
         return valid;
     }
 }

@@ -26,7 +26,7 @@ public class MonsterSkillSO : ScriptableObject
     public AttackType monsterAttackType; // enum instead of string
 
     [Header("Effect Info")]
-    public EffectType monsterEffectType; // enum instead of string
+    public MonsterEffectType monsterEffectType; // enum instead of string
     public float effectValue;   // 효과 수치
     public float duration;      // 지속 시간
 

@@ -40,7 +40,11 @@ public class SmileToiletSlamState : MonsterBaseState
             return;
         }
         aoeController.OnTelegraphFinished += OnTelegraphComplete;
-        aoeController.CircleInitialize(skillData.preCastTime, skillData.range, stateMachine.Monster.Stats.AttackPower);
+        aoeController.CircleInitialize(
+            skillData.preCastTime * stateMachine.PreCastTimeMultiplier,
+            skillData.range * stateMachine.RangeMultiplier,
+            (int)(stateMachine.Monster.Stats.AttackPower * stateMachine.EffectValueMultiplier)
+        );
     }
 
     private void OnTelegraphComplete()
@@ -54,7 +58,7 @@ public class SmileToiletSlamState : MonsterBaseState
         if (aoeController == null) return;
 
         Debug.Log("OnAttackHitSlam");
-        aoeController.EnableDamage();
+        aoeController.EnableDamage(stateMachine.Monster.transform);
         stateMachine.Monster.StartCoroutine(DisableColliderNextFrame());
     }
 

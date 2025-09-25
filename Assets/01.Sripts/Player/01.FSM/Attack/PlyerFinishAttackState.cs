@@ -10,7 +10,6 @@ public class PlyerFinishAttackState : PlayerBaseState
 
     public PlyerFinishAttackState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
-    public override PlayerStateID StateID => throw new System.NotImplementedException();
 
     public override bool AllowRotation => false;
 

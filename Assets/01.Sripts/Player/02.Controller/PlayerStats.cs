@@ -10,7 +10,8 @@ public interface IStats
     bool IsDead { get; }
 
     void TakeDamage(float amount);
-    void Heal(float amount);
+    void RecoverHealth(float amount);
+    void RecoverEnergy(float amount);
 
     event Action OnDie;
 }
@@ -52,6 +53,9 @@ public class PlayerStats : IStats
 
     public event Action OnDie;
 
+    // 체력이 변경될 때 호출될 이벤트
+    public event Action OnPlayerHealthChanged;
+
     public PlayerStats(PlayerStatData data)
     {
         MaxHealth = new Stat(data.maxHp);
@@ -69,11 +73,25 @@ public class PlayerStats : IStats
     {
         CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
         if (CurrentHealth <= 0) OnDie?.Invoke();
+
+        OnPlayerHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
     }
 
-    public void Heal(float amount)
+    public bool UseEnergy(float amount)
+    {
+        if (CurrentEnergy < amount) return false;
+        CurrentEnergy -= amount;
+        return true;
+    }
+
+    public void RecoverHealth(float amount)
     {
         CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth.Value);
+    }
+
+    public void RecoverEnergy(float amount)
+    {
+        CurrentEnergy = Mathf.Min(CurrentEnergy + amount, MaxEnergy.Value);
     }
 
     public void AddModifier(StatType statType, float value)
@@ -84,8 +102,8 @@ public class PlayerStats : IStats
             case StatType.MaxEnergy: MaxEnergy.AddModifier(value); break;
             case StatType.Attack: Attack.AddModifier(value); break;
             case StatType.Defense: Defense.AddModifier(value); break;
-            case StatType.MoveSpeed: MaxEnergy.AddModifier(value); break;
-            case StatType.AttackSpeed: MaxEnergy.AddModifier(value); break;
+            case StatType.MoveSpeed: MoveSpeed.AddModifier(value); break;
+            case StatType.AttackSpeed: AttackSpeed.AddModifier(value); break;
         }
         // 필요 시 이벤트 호출
         OnStatChanged?.Invoke(statType);
@@ -99,8 +117,8 @@ public class PlayerStats : IStats
             case StatType.MaxEnergy: MaxEnergy.RemoveModifier(value); break;
             case StatType.Attack: Attack.RemoveModifier(value); break;
             case StatType.Defense: Defense.RemoveModifier(value); break;
-            case StatType.MoveSpeed: MaxEnergy.RemoveModifier(value); break;
-            case StatType.AttackSpeed: MaxEnergy.RemoveModifier(value); break;
+            case StatType.MoveSpeed: MoveSpeed.AddModifier(value); break;
+            case StatType.AttackSpeed: AttackSpeed.AddModifier(value); break;
         }
         OnStatChanged?.Invoke(statType);
     }
