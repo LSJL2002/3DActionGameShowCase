@@ -26,9 +26,8 @@ public class SelectAbilityUI : UIBase
 
     [SerializeField] private List<ItemSlotUI> itemSlots;
 
-    // (구독:인벤토리매니저)
-    public static event Action OnSelectAbilityUI;
-    
+    public static event Action OnSelectAbilityUI; // (구독:인벤토리매니저)
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -36,6 +35,8 @@ public class SelectAbilityUI : UIBase
         canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1.5f); });
 
         OnSelectAbilityUI?.Invoke();
+
+        AudioManager.Instance.PlaySFX("OpenSelectAbilityUISound");
 
         // 마우스 커서 보이게
         PlayerManager.Instance.EnableInput(false);

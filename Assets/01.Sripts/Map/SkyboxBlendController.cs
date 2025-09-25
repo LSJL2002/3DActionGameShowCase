@@ -13,6 +13,7 @@ public class SkyboxBlendController : MonoBehaviour
     [SerializeField] private bool flipX = false;
     [SerializeField] private bool flipY = false;
     [SerializeField][Range(0f, 360f)] private float rotationOffset = 0f;
+    [SerializeField][Range(0f, 1f)] private float blendOffset = 0f;
 
     [Header("Directional Light (Sun)")]
     public Light mainLight;
