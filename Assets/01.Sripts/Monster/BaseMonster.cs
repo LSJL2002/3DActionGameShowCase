@@ -28,8 +28,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public MonsterStateMachine stateMachine;
 
     protected MonsterPatternSO.PatternEntry currentPattern;
+    protected int currentPatternPriority = -1; //아직 선택된 패턴이 없음
     protected int currentStepIndex = 0;
     protected bool isRunningPattern = false;
+    private bool ignoreDistanceCheck = false;
 
     protected virtual void Awake()
     {
@@ -78,12 +80,26 @@ public class BaseMonster : MonoBehaviour, IDamageable
         var chosenCondition = validConditions[0];
         if (chosenCondition.possiblePatternIds.Count == 0) return;
 
+        if (isRunningPattern && chosenCondition.priority <= currentPatternPriority)
+        {
+            return;
+        }
+
+        if (isRunningPattern)
+        {
+            StopAllCoroutines();
+            isRunningPattern = false;
+            currentPattern = null;
+            currentStepIndex = 0;
+        }
+
         int patternId = chosenCondition.possiblePatternIds[UnityEngine.Random.Range(0, chosenCondition.possiblePatternIds.Count)];
         currentPattern = patternConfig.GetPatternById(patternId);
         if (currentPattern == null) return;
         stateMachine.RangeMultiplier = chosenCondition.rangeMultiplier;
         stateMachine.PreCastTimeMultiplier = chosenCondition.preCastTimeMultiplier;
         stateMachine.EffectValueMultiplier = chosenCondition.effectValueMultiplier;
+        ignoreDistanceCheck = chosenCondition.ignoreDistanceCheck;
         Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
 
         currentStepIndex = 0;
@@ -127,13 +143,14 @@ public class BaseMonster : MonoBehaviour, IDamageable
             }
 
             float skillRange = GetSkillRangeFromState(attackState);
-
-            // --- Wait until player is in attack range (AI handles movement) ---
-            yield return new WaitUntil(() =>
-                PlayerTarget != null &&
-                Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange * 0.8f
-            );
-
+            if (!ignoreDistanceCheck) // If ignore distance check is true, then just perform the attack
+            {
+                // --- Wait until player is in attack range (AI handles movement) ---
+                yield return new WaitUntil(() =>
+                    PlayerTarget != null &&
+                    Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange * 0.8f
+                );
+            }
             // --- Perform attack ---
             stateMachine.isAttacking = true;
             stateMachine.ChangeState(attackState);
@@ -155,6 +172,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         float cooldown = UnityEngine.Random.Range(1f, 3f);
         yield return new WaitForSeconds(cooldown);
         currentPattern = null;
+        currentPatternPriority = -1;
         isRunningPattern = false;
     }
 
@@ -169,7 +187,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
                 return GetSkillRangeFromState(state);
             }
         }
-        Debug.LogError("Cannot Find Skill Range");
+        //쿨 다운인 상태에는 몬스터 기본 공격 사거리를 사용
         return Stats.AttackRange;
     }
 

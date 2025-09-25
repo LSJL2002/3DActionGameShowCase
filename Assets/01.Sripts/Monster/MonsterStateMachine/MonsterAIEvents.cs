@@ -34,15 +34,10 @@ public class MonsterAIEvents : MonoBehaviour
     {
         if (!processingEnabled || player == null || stateMachine == null) return;
 
+        stateMachine.Monster.PickPatternByCondition(); //매 프레임마다 선정
         float distance = Vector3.Distance(transform.position, player.position);
         float detectRange = stateMachine.Monster.Stats.DetectRange;
         float attackRange = stateMachine.Monster.GetCurrentSkillRange();
-
-        // Only pick a pattern if none is running
-        if (!stateMachine.Monster.IsPatternRunning())
-        {
-            stateMachine.Monster.PickPatternByCondition();
-        }
 
         AIMode newMode = currentmode;
 
