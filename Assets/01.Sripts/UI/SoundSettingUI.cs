@@ -10,6 +10,20 @@ public class SoundSettingUI : UIBase
     [SerializeField] private Slider bgmVolumeSlider;
     [SerializeField] private Slider sfxVolumeSlider;
 
+    [SerializeField] private GameObject quitButton;
+
+    protected override void OnEnable()
+    {
+        if (SceneLoadManager.Instance.nowSceneIndex == 2)
+        {
+            quitButton.SetActive(false);
+        }
+        else
+        {
+            quitButton.SetActive(true);
+        }
+    }
+
     protected override void Start()
     {
         base.Start();

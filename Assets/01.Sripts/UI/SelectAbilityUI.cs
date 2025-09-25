@@ -33,7 +33,7 @@ public class SelectAbilityUI : UIBase
     {
         base.OnEnable();
 
-        canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1f); });
+        canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 2f); });
 
         OnSelectAbilityUI?.Invoke();
 

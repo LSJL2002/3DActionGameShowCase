@@ -5,6 +5,20 @@ using UnityEngine;
 
 public class KeySettingUI : UIBase
 {
+    [SerializeField] private GameObject quitButton;
+
+    protected override void OnEnable()
+    {
+        if (SceneLoadManager.Instance.nowSceneIndex == 2)
+        {
+            quitButton.SetActive(false);
+        }
+        else
+        {
+            quitButton.SetActive(true);
+        }
+    }
+
     public async void OnClickButton(string str)
     {
         AudioManager.Instance.PlaySFX("ButtonSoundEffect");
