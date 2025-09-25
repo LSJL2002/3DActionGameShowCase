@@ -10,7 +10,6 @@ public class TitleUI : UIBase
     [SerializeField] private TextMeshProUGUI gameTitleText;
     [SerializeField] private TextMeshProUGUI clickToGameText;
     [SerializeField] private Image blackEffectPanelImage;
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private Button startButton;
 
     public void OnClickButton(string str)
@@ -19,7 +18,7 @@ public class TitleUI : UIBase
         {
             case "GameStart":
                 startButton.gameObject.SetActive(false); // 버튼 다시 안눌리게 비활성화
-                audioSource.PlayOneShot(audioSource.clip);
+                AudioManager.Instance.PlaySFX("ButtonSoundEffect");
 
                 // 실행되고 있던 닷트윈 정지 및 세팅
                 blackEffectPanelImage.DOKill();

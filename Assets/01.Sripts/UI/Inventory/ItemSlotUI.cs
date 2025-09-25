@@ -22,6 +22,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public string itemDescription;
     private ItemInformationUI itemInformationUI;
 
+    // 기본 컬러값 설정
+    private Color defaultColor = new Color(210 / 255f, 210 / 255f, 210 / 255f, 255 / 255f);
+
     public void OnEnable()
     {
         if (inventoryViewModel == null)
@@ -51,7 +54,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         itemData = null;
         emptyText.text = "Empty";
         iconImage.sprite = emptyImage;
-        iconImage.color = new Color(1,1,1); // 이미지 컬러를 다시 흰색으로 되돌림
+        iconImage.color = defaultColor; // 이미지 컬러를 다시 기본으로 되돌림
     }
 
     // 버튼 클릭시 효과 함수
@@ -100,6 +103,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // 아이템 정보가 있다면
         if (itemData != null)
         {
+            AudioManager.Instance.PlaySFX("ButtonSoundEffect3");
+
             // 아이템정보UI 켜기
             await UIManager.Instance.Show<ItemInformationUI>();
 

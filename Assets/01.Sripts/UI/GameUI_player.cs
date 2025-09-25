@@ -57,7 +57,7 @@ public partial class GameUI : UIBase
         {
             playerHPImage.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
             playerHPText.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
-            audioSource.PlayOneShot(audioSource.clip);
+            audioSource.Play();
         }
         else
         {

@@ -52,10 +52,10 @@ public partial class GameUI : UIBase
 
     public void ReleaseMonsterStat(BattleZone zone)                  //몬스터 스텟 해제
     {
+        monsterStats.OnHealthChanged -= OnEnemyHealthChanged;
         monsterStats = null;
         ChangeState(eBattleState.Idle);
         SetEnemyInfo(0);
-        monsterStats.OnHealthChanged -= OnEnemyHealthChanged;
     }
 
     // 전투종료시 Idle로 호출할 함수

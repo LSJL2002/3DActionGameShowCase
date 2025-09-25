@@ -601,6 +601,7 @@ GameObject:
   - component: {fileID: 6672824540736452265}
   - component: {fileID: 2705387091946897724}
   - component: {fileID: 8821342084332826041}
+  - component: {fileID: 6757109163091329633}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -649,7 +650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.8235294, g: 0.8235294, b: 0.8235294, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -722,6 +723,19 @@ MonoBehaviour:
           m_StringArgument: Quit
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6757109163091329633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453876108741344486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonObject: {fileID: 1453876108741344486}
 --- !u!1 &2058193840122538795
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,6 +882,7 @@ GameObject:
   - component: {fileID: 518387972569531839}
   - component: {fileID: 652963988363455246}
   - component: {fileID: 4271017067321439182}
+  - component: {fileID: 7758091957201021041}
   m_Layer: 5
   m_Name: ReturnButton
   m_TagString: Untagged
@@ -916,7 +931,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.8207547, g: 0.8207547, b: 0.8207547, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -989,6 +1004,19 @@ MonoBehaviour:
           m_StringArgument: Return
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7758091957201021041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068438366259471327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonObject: {fileID: 2068438366259471327}
 --- !u!1 &2105539370687356472
 GameObject:
   m_ObjectHideFlags: 0
@@ -2098,6 +2126,7 @@ GameObject:
   - component: {fileID: 1502130570478805157}
   - component: {fileID: 4149877242274998450}
   - component: {fileID: 3913726388024452813}
+  - component: {fileID: 1214572338149959416}
   m_Layer: 5
   m_Name: SoundSettingButton
   m_TagString: Untagged
@@ -2219,6 +2248,19 @@ MonoBehaviour:
           m_StringArgument: SoundSetting
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1214572338149959416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3608181966964900431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonObject: {fileID: 3608181966964900431}
 --- !u!1 &3621607629002951534
 GameObject:
   m_ObjectHideFlags: 0
@@ -3465,6 +3507,7 @@ GameObject:
   - component: {fileID: 8361967439712636947}
   - component: {fileID: 5256330461590806207}
   - component: {fileID: 640967495762579789}
+  - component: {fileID: 7981723305221592682}
   m_Layer: 5
   m_Name: SaveButton
   m_TagString: Untagged
@@ -3574,6 +3617,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7981723305221592682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5919948655882058716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonObject: {fileID: 5919948655882058716}
 --- !u!1 &6161691589703863910
 GameObject:
   m_ObjectHideFlags: 0
@@ -3648,6 +3704,7 @@ GameObject:
   - component: {fileID: 6878428549698916634}
   - component: {fileID: 5940354165631697433}
   - component: {fileID: 2111377345013178736}
+  - component: {fileID: 5424798886739155799}
   m_Layer: 5
   m_Name: ResetButton
   m_TagString: Untagged
@@ -3757,6 +3814,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5424798886739155799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6267023076884700728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonObject: {fileID: 6267023076884700728}
 --- !u!1 &6623547082020048726
 GameObject:
   m_ObjectHideFlags: 0

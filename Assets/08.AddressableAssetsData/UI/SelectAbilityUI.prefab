@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7254486357295667082}
   - component: {fileID: 5948347949629090281}
+  - component: {fileID: 435175138926083033}
   m_Layer: 5
   m_Name: SelectAbilityUI
   m_TagString: Untagged
@@ -50,10 +51,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  canvasGroup: {fileID: 0}
   itemSlots:
   - {fileID: 7576989084643572798}
   - {fileID: 8941318056374314160}
   - {fileID: 4012782433935662193}
+--- !u!225 &435175138926083033
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2661795635368645344}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 1
 --- !u!1 &4510963576269866485
 GameObject:
   m_ObjectHideFlags: 0

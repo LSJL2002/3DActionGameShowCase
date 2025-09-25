@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -8,6 +9,8 @@ using UnityEngine.UI;
 
 public class SelectAbilityUI : UIBase
 {
+    [SerializeField] private CanvasGroup canvasGroup;
+
     // 배틀매니저가 가지고 있는 아이템을 저장할 변수
     private string statUPItemAdress;
     private string skillItemAdress;
@@ -29,6 +32,8 @@ public class SelectAbilityUI : UIBase
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1f); });
 
         OnSelectAbilityUI?.Invoke();
 
