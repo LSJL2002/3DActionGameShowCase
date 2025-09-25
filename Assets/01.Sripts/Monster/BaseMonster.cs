@@ -7,6 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.XR;
 using System;
 using Unity.VisualScripting;
+using Unity.Mathematics;
 
 public class BaseMonster : MonoBehaviour, IDamageable
 {
@@ -202,7 +203,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public virtual void OnTakeDamage(int amount)
     {
-        Stats.CurrentHP -= amount - Stats.Defense;
+        float damage = Mathf.Max(1, amount - Stats.Defense);
+        Stats.CurrentHP -= damage;
+        Stats.ApplyDamage(amount);
+
         if (Stats.CurrentHP <= 0 && !IsDead)
         {
             Stats.Die();
