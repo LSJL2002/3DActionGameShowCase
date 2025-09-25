@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -21,6 +22,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public string itemType;
     public string itemDescription;
     private ItemInformationUI itemInformationUI;
+
+    // 기본 컬러값 설정
+    private Color defaultColor = new Color(210 / 255f, 210 / 255f, 210 / 255f, 255 / 255f);
 
     public void OnEnable()
     {
@@ -51,12 +55,15 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         itemData = null;
         emptyText.text = "Empty";
         iconImage.sprite = emptyImage;
-        iconImage.color = new Color(1,1,1); // 이미지 컬러를 다시 흰색으로 되돌림
+        iconImage.color = defaultColor; // 이미지 컬러를 다시 기본으로 되돌림
     }
 
     // 버튼 클릭시 효과 함수
     public void OnClickButton()
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+        DOVirtual.DelayedCall(0.2f, () => { }); // 아무것도 없이 n초간 대기
+
         switch (InventoryManager.Instance.currentDecisionState)
         {
             // 아이템 사용 상황
@@ -92,6 +99,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 inventoryViewModel.SelectItem(itemData);
                 break;
         }
+
+        UIManager.Instance.Get<ItemInformationUI>().Hide();
     }
 
     // 마우스 커서가 올라왔을때 효과
@@ -100,6 +109,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // 아이템 정보가 있다면
         if (itemData != null)
         {
+            AudioManager.Instance.PlaySFX("ButtonSoundEffect3");
+            this.transform.DOScale(1.1f, 0.2f);
+
             // 아이템정보UI 켜기
             await UIManager.Instance.Show<ItemInformationUI>();
 
@@ -124,6 +136,8 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // itemDescriptionUI 변수가 null이 아닐 때만 실행
         if (itemInformationUI != null && itemInformationUI.isActiveAndEnabled)
         {
+            this.transform.DOScale(1.0f, 0.2f);
+
             // 아이템정보UI 끄기
             itemInformationUI.Hide();
         }

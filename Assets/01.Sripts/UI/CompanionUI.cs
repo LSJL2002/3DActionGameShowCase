@@ -33,7 +33,9 @@ public class CompanionUI : UIBase
 
     public async void OnClickButton(string str)
     {
-        switch(str)
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
+        switch (str)
         {
             case "Stat":
                 await UIManager.Instance.Show<CharacterStatUI>();

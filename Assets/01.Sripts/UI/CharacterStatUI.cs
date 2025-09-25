@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 
 public class CharacterStatUI : UIBase
@@ -47,6 +48,8 @@ public class CharacterStatUI : UIBase
 
     public async void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             // 게임UI로 돌아가기

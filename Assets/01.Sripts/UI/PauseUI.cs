@@ -6,6 +6,8 @@ public class PauseUI : UIBase
 {
     public async void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             // 이전 UI로 돌아가기
@@ -16,18 +18,13 @@ public class PauseUI : UIBase
                 UIManager.Instance.currentUI = UIManager.Instance.previousUI;
                 break;
 
-            // 현재 게임씬 다시 시작
-            case "ReStart":
-                SceneLoadManager.Instance.LoadScene(SceneLoadManager.Instance.nowSceneIndex);
-                break;
-
             // IU매니저의 Show 메서드를 호출하여 OptionUI를 화면에 표시
             case "Option":
                 await UIManager.Instance.Show<SoundSettingUI>();
                 break;
 
-            // 홈씬으로 돌아가기
-            case "BackHome":
+            // Home씬으로 돌아가기 (거기서 종료가능)
+            case "Quit":
                 SceneLoadManager.Instance.LoadScene(2);
                 break;
         }

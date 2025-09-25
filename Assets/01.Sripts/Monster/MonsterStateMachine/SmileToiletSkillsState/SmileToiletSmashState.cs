@@ -54,7 +54,7 @@ public class SmileToiletSmashState : MonsterBaseState
         if (aoeController == null) return;
 
         Debug.Log("OnAttackHitSmash");
-        aoeController.EnableDamage();
+        aoeController.EnableDamage(stateMachine.Monster.transform);
         stateMachine.Monster.StartCoroutine(DisableColliderNextFrame());
     }
 

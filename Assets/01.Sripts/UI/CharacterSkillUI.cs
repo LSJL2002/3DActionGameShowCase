@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class CharacterSkillUI : UIBase
@@ -54,6 +55,8 @@ public class CharacterSkillUI : UIBase
 
     public async void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             // 게임UI로 돌아가기
