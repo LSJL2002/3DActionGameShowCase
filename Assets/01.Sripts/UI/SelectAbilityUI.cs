@@ -21,8 +21,8 @@ public class SelectAbilityUI : UIBase
     private AsyncOperationHandle<ItemData> skillLoadHandle;
     private AsyncOperationHandle<ItemData> coreLoadHandle;
 
-    private ItemData skillHandle; // 테스트
-    private ItemData coreHandle; // 테스트
+    //private ItemData skillHandle; // 테스트
+    //private ItemData coreHandle; // 테스트
 
     [SerializeField] private List<ItemSlotUI> itemSlots;
 
@@ -59,10 +59,10 @@ public class SelectAbilityUI : UIBase
         // 로드했던 데이터 해제
         ReleaseHandles();
 
-        BattleManager.Instance.ClearBattle();
-
         // 마우스 커서 다시 락
         PlayerManager.Instance.EnableInput(true);
+        
+        BattleManager.Instance.ClearBattle();
     }
 
     public async void GetItemInfo(string adress, string type)
