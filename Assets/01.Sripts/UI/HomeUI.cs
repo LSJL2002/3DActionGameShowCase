@@ -14,7 +14,9 @@ public class HomeUI : UIBase
 
     public async void OnClickButton(string str)
     {
-        switch(str)
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
+        switch (str)
         {
             case "NewGame":
                 // 새 게임 시작
@@ -35,7 +37,6 @@ public class HomeUI : UIBase
                 Application.Quit();
                 break;
         }
-
         // 현재 팝업창 닫기
         Hide();
     }
