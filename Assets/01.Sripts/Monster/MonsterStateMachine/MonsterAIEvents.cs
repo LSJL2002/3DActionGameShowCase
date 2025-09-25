@@ -70,6 +70,7 @@ public class MonsterAIEvents : MonoBehaviour
                 newMode = AIMode.Chase;
         }
 
+        Debug.Log($"{newMode}");
         if (newMode != currentmode)
         {
             currentmode = newMode;
