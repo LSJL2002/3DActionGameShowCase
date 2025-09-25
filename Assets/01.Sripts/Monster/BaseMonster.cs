@@ -148,7 +148,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
                 // --- Wait until player is in attack range (AI handles movement) ---
                 yield return new WaitUntil(() =>
                     PlayerTarget != null &&
-                    Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange * 0.8f
+                    Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange
                 );
             }
             // --- Perform attack ---
