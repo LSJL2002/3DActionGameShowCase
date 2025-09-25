@@ -23,6 +23,7 @@ public class MonsterStatHandler : MonoBehaviour
     public List<MonsterSkillSO> MonsterSkills;
 
     private Dictionary<string, MonsterSkillSO> skillDict;
+    public event Action OnHealthChanged;
 
     void Awake()
     {
@@ -73,6 +74,14 @@ public class MonsterStatHandler : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void ApplyDamage(int amount)
+    {
+        int damage = amount - Defense;
+        CurrentHP -= damage;
+        CurrentHP = Mathf.Max(0, CurrentHP);
+        OnHealthChanged?.Invoke();
     }
 
     public void Die()
