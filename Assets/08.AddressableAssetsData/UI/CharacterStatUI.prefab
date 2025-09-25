@@ -489,6 +489,7 @@ GameObject:
   - component: {fileID: 518387972569531839}
   - component: {fileID: 652963988363455246}
   - component: {fileID: 4271017067321439182}
+  - component: {fileID: 6755920561949572556}
   m_Layer: 5
   m_Name: ReturnButton
   m_TagString: Untagged
@@ -610,6 +611,19 @@ MonoBehaviour:
           m_StringArgument: Return
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6755920561949572556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068438366259471327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonObject: {fileID: 2068438366259471327}
 --- !u!1 &2337931079856156213
 GameObject:
   m_ObjectHideFlags: 0
@@ -1830,7 +1844,7 @@ GameObject:
   - component: {fileID: 1293084765381243057}
   - component: {fileID: 8246470608387985416}
   m_Layer: 5
-  m_Name: StatBox
+  m_Name: ContainerBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

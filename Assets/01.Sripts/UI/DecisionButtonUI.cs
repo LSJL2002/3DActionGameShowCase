@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -23,7 +24,6 @@ public class DecisionButtonUI : UIBase
 
     public void SetGuideText()
     {
-        Debug.Log("2222222222222");
         switch(InventoryManager.Instance.currentDecisionState)
         {
             case DecisionState.UseItem:
@@ -38,6 +38,9 @@ public class DecisionButtonUI : UIBase
 
     public void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+        DOVirtual.DelayedCall(0.2f, () => { }); // 아무것도 없이 n초간 대기
+
         switch (str)
         {
             case "Yes":

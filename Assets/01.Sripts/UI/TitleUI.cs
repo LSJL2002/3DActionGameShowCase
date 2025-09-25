@@ -10,16 +10,16 @@ public class TitleUI : UIBase
     [SerializeField] private TextMeshProUGUI gameTitleText;
     [SerializeField] private TextMeshProUGUI clickToGameText;
     [SerializeField] private Image blackEffectPanelImage;
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private Button startButton;
 
     public void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             case "GameStart":
                 startButton.gameObject.SetActive(false); // 버튼 다시 안눌리게 비활성화
-                audioSource.PlayOneShot(audioSource.clip);
 
                 // 실행되고 있던 닷트윈 정지 및 세팅
                 blackEffectPanelImage.DOKill();
@@ -56,6 +56,6 @@ public class TitleUI : UIBase
         // '까만화면'을 0f(알파값0)까지 1초에 걸쳐 동작하고, 완료되면 '게임타이틀' 텍스트를 1f(알파값255)까지 5초에 걸쳐 동작
         blackEffectPanelImage.DOFade(0f, 1f).OnComplete(() => { gameTitleText.DOFade(1f, 5f); });
         
-        clickToGameText.DOFade(1f, 2.5f).SetLoops(-1, LoopType.Yoyo);
+        clickToGameText.DOFade(1f, 2.5f).SetLoops(-1, LoopType.Yoyo).SetDelay(3f);
     }
 }

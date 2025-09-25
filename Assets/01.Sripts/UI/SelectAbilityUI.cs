@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -8,6 +9,8 @@ using UnityEngine.UI;
 
 public class SelectAbilityUI : UIBase
 {
+    [SerializeField] private CanvasGroup canvasGroup;
+
     // 배틀매니저가 가지고 있는 아이템을 저장할 변수
     private string statUPItemAdress;
     private string skillItemAdress;
@@ -18,8 +21,8 @@ public class SelectAbilityUI : UIBase
     private AsyncOperationHandle<ItemData> skillLoadHandle;
     private AsyncOperationHandle<ItemData> coreLoadHandle;
 
-    private ItemData skillHandle; // 테스트
-    private ItemData coreHandle; // 테스트
+    //private ItemData skillHandle; // 테스트
+    //private ItemData coreHandle; // 테스트
 
     [SerializeField] private List<ItemSlotUI> itemSlots;
 
@@ -29,6 +32,8 @@ public class SelectAbilityUI : UIBase
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1.5f); });
 
         OnSelectAbilityUI?.Invoke();
 
@@ -54,10 +59,10 @@ public class SelectAbilityUI : UIBase
         // 로드했던 데이터 해제
         ReleaseHandles();
 
-        BattleManager.Instance.ClearBattle();
-
         // 마우스 커서 다시 락
         PlayerManager.Instance.EnableInput(true);
+        
+        BattleManager.Instance.ClearBattle();
     }
 
     public async void GetItemInfo(string adress, string type)
@@ -144,6 +149,8 @@ public class SelectAbilityUI : UIBase
 
     public void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         InventoryManager.Instance.LoadData_Addressables("20000000");
         Debug.Log("회복약 획득");
 

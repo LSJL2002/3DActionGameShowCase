@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,20 @@ public class SoundSettingUI : UIBase
     [SerializeField] private Slider masterVolumeSlider;
     [SerializeField] private Slider bgmVolumeSlider;
     [SerializeField] private Slider sfxVolumeSlider;
+
+    [SerializeField] private GameObject quitButton;
+
+    protected override void OnEnable()
+    {
+        if (SceneLoadManager.Instance.nowSceneIndex == 2)
+        {
+            quitButton.SetActive(false);
+        }
+        else
+        {
+            quitButton.SetActive(true);
+        }
+    }
 
     protected override void Start()
     {
@@ -27,6 +42,8 @@ public class SoundSettingUI : UIBase
 
     public async void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             // 이전 UI로 돌아가기
