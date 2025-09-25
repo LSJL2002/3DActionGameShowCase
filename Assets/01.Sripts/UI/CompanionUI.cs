@@ -45,6 +45,7 @@ public class CompanionUI : UIBase
 
             case "Talk":
                 await UIManager.Instance.Show<TutorialUI>();
+                UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
                 break;
         }
 

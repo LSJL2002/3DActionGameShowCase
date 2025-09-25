@@ -4,19 +4,51 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
+public enum SceneType
+{
+    Tutorial,
+}
 public class TutorialUI : UIBase
 {
     public TMP_Text talkText;
 
+    public GameObject playerCamera;
+    public GameObject companionCamera;
+
+    private bool playText;
+
     public List<TextSO> dialogues = new List<TextSO>();
-    
-    // 창이 켜질 때 자동으로 실행됨
+
     protected override void OnEnable()
     {
-        base.OnEnable(); // UIBase의 OnEnable 호출 (없어도 되지만 안전하게 남겨두기)
+        // playText = true;
+    }
 
-        if (talkText != null)
-            talkText.text = "안녕 나는 vixi야 잘 부탁해";
+    IEnumerator ShowText(List<string> scene, float time)
+    {
+        foreach (string text in scene)
+        {
+            talkText.text = text;
+            yield return new WaitForSeconds(time);
+
+        }
+
+        // playText = false;
+    }
+
+    public void PlayDialogue(SceneType type)
+    {
+        
+        List<string> scene = new List<string>();
+
+        foreach (TextSO text in dialogues)
+        {
+            if (text.scenes == type.ToString())
+            {
+                scene.Add(text.textContent);
+            }
+        }
+
+        StartCoroutine(ShowText(scene, 2));
     }
 }
