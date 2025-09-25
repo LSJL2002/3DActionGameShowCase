@@ -8,6 +8,9 @@ public class PlayerDodgeState : Istate
 {
     //Istate로 정의돼 있으면 LogicUpdate, PhysicsUpdate, HandleInput 같은 공통 메서드를 모든 상태에서 동일하게 호출
     //상태머신에서 상태 전환할 때 타입에 상관없이 일관되게 동작하게 하려면 인터페이스가 필요합니다.
+
+    //Base를 상속받으면 입력 처리나 공통 이동 로직을 그대로 쓸수있음
+    //하지만 입력 이동 로직이 아예 필요 없는 특수 상태.
     private PlayerStateMachine stateMachine;
 
     // ---- 설정 값 ----
