@@ -4022,9 +4022,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_TransitionDuration: 0.24999997
+  m_TransitionOffset: 0.022105265
+  m_ExitTime: 0.51383257
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -5515,13 +5515,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Base/Toggle_FinishAttack
+  - m_Name: Base/Toggle_ComboAttack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Base/Toggle_ComboAttack
+  - m_Name: Base/Toggle_FinishAttack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -6697,7 +6697,10 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions: []
+  m_Conditions:
+  - m_ConditionMode: 3
+    m_ConditionEvent: Base/Blend_MovementSpeed
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 0}
   m_Solo: 0
@@ -6707,7 +6710,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
   m_ExitTime: 1
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -7290,7 +7293,7 @@ AnimatorStateMachine:
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 840, y: 390, z: 0}
-  m_ParentStateMachinePosition: {x: 20, y: -120, z: 0}
+  m_ParentStateMachinePosition: {x: 440, y: 0, z: 0}
   m_DefaultState: {fileID: 9088848740820189091}
 --- !u!206 &2955782854598810085
 BlendTree:
@@ -9365,15 +9368,15 @@ AnimatorStateMachine:
   - {fileID: -6601772961710600335}
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: 2879868162714180584}
+    second:
+    - {fileID: 3075053801038682842}
   - first: {fileID: 6887063851152166653}
     second:
     - {fileID: 1315410409378370743}
     - {fileID: 5130730768239442773}
     - {fileID: -3389123690630942993}
     - {fileID: -4091584475875963463}
-  - first: {fileID: 2879868162714180584}
-    second:
-    - {fileID: 3075053801038682842}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: -70, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
