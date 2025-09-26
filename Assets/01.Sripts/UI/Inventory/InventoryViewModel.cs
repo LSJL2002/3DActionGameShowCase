@@ -92,10 +92,10 @@ public class InventoryViewModel
                         
                         //UI매니저에서 '능력선택UI'를 가져와서 끄기
                         UIManager.Instance.Hide<SelectAbilityUI>();
+
+                        await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_DrainAbility");
                         break;
                 }
-
-                await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_DrainAbility");
             }
 
             // 이벤트 구독 해제

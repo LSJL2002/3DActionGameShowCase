@@ -13,7 +13,11 @@ public enum MonsterEffectType
 {
     None,
     Knockback,
-    Groggy
+    Groggy,
+    Burn,
+    Freeze,
+    Slow,
+    Poison
 }
 
 [CreateAssetMenu(fileName = "NewSkill", menuName = "Game Data/Skill")]

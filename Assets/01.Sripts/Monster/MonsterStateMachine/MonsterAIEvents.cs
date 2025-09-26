@@ -9,11 +9,13 @@ public class MonsterAIEvents : MonoBehaviour
 
     private MonsterStateMachine stateMachine;
     private Transform player;
-    [SerializeField] private float attackBuffer = 2f;
-
+    [SerializeField] private float chaseBuffer = 0.5f; 
+    [SerializeField] private float idleBuffer = 0.5f;
     [Header("Attack Cooldown")]
     public float attackCooldown = 10f;
     private float lastAttackTime;
+
+
 
     private enum AIMode
     {
@@ -34,22 +36,16 @@ public class MonsterAIEvents : MonoBehaviour
     {
         if (!processingEnabled || player == null || stateMachine == null) return;
 
+        stateMachine.Monster.PickPatternByCondition(); //매 프레임마다 선정
         float distance = Vector3.Distance(transform.position, player.position);
         float detectRange = stateMachine.Monster.Stats.DetectRange;
-        float attackRange = stateMachine.Monster.GetCurrentSkillRange();
-
-        // Only pick a pattern if none is running
-        if (!stateMachine.Monster.IsPatternRunning())
-        {
-            stateMachine.Monster.PickPatternByCondition();
-        }
+        float attackRange = stateMachine.Monster.GetCurrentSkillRange(); //버그 있음
 
         AIMode newMode = currentmode;
 
-        // Only block attack decisions if already attacking
         if (!stateMachine.isAttacking)
         {
-            if (distance <= attackRange - attackBuffer)
+            if (distance <= attackRange) 
             {
                 if (Time.time >= lastAttackTime + attackCooldown)
                 {
@@ -60,21 +56,21 @@ public class MonsterAIEvents : MonoBehaviour
                     newMode = AIMode.Idle;
                 }
             }
-            else if (distance <= detectRange)
+            
+            else if (distance <= detectRange - chaseBuffer)
             {
                 newMode = AIMode.Chase;
             }
-            else
+            else if (distance > detectRange + idleBuffer)
             {
                 newMode = AIMode.Idle;
             }
         }
         else
         {
-            if (distance <= detectRange && distance > attackRange * 0.8f)
+            if (distance <= detectRange && distance > attackRange * 1.2f)
                 newMode = AIMode.Chase;
         }
-
         if (newMode != currentmode)
         {
             currentmode = newMode;
@@ -87,7 +83,6 @@ public class MonsterAIEvents : MonoBehaviour
                     break;
                 case AIMode.Chase:
                     stateMachine.Monster.PlayerTarget = player;
-                    OnPlayerDetected?.Invoke();
                     break;
                 case AIMode.Idle:
                     RestingPhase?.Invoke();

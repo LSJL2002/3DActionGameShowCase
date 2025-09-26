@@ -18,9 +18,13 @@ public class MonsterStateMachine : StateMachine
     public MonsterBaseAttack MonsterBaseAttack { get; private set; }
     public MonsterBaseAttackAlt MonsterBaseAttackAlt { get; private set; }
 
+    //SmileToilet 스킬
     public SmileToiletSlamState SmileToiletSlamState { get; private set; }
     public SmileToiletSmashState SmileToiletSmashState { get; private set; }
     public SmileToiletChargeState SmileToiletChargeState { get; private set; }
+
+    //SmileMachine_UseFire 스킬
+    public SmileMachineShootState SmileMachineShootState { get; private set; }
 
     private MonsterAIEvents aiEvents;
     public bool isAttacking = false;
@@ -53,6 +57,18 @@ public class MonsterStateMachine : StateMachine
             SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
             var chargeSkill = monster.Stats.GetSkill("SmileMachine_Charge");
             SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
+        }
+        else if (monster is SmileMachine_UseFire)
+        {
+            var slamSkill = monster.Stats.GetSkill("SmileMachine_Slam");
+            SmileToiletSlamState = new SmileToiletSlamState(this, slamSkill);
+            var smashSkill = monster.Stats.GetSkill("SmileMachine_Smash");
+            SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
+            var chargeSkill = monster.Stats.GetSkill("SmileMachine_Charge");
+            SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
+            var shootSkill = monster.Stats.GetSkill("SmileMachine_Shoot");
+            SmileMachineShootState = new SmileMachineShootState(this,shootSkill);
+
         }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();

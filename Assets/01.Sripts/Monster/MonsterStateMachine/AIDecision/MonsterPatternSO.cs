@@ -43,6 +43,7 @@ public class MonsterPatternSO : ScriptableObject
         [HideInInspector] public bool hasTriggered = false;
         public List<int> possiblePatternIds;
         public int priority;
+        public bool ignoreDistanceCheck;
 
         public float effectValueMultiplier = 1f;
         public float rangeMultiplier = 1f;
