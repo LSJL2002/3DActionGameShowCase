@@ -71,7 +71,7 @@ public class PreviewScene : MonoBehaviour
     /// 버튼 클릭 또는 InputAction 호출용
     /// </summary>
     /// <param name="target">Char / Stat / Core / Skill / Inven</param>
-    private void OpenPreview(string target)
+    private async void OpenPreview(string target)
     {
         if (previewAnimator == null) return;
 
@@ -88,17 +88,22 @@ public class PreviewScene : MonoBehaviour
             case "Char": previewAnimator.SetBool("Base/Switch_Char", true);
                 break;
             case "Stat": previewAnimator.SetBool("Base/Switch_Stat", true);
-                UIManager.Instance.Show<CharacterInfomationUI>();
+                await UIManager.Instance.Show<CharacterInfomationUI>();
                 break;
             case "Core": previewAnimator.SetBool("Base/Switch_Core", true);
-                UIManager.Instance.Show<CharacterCoreUI>();
+                await UIManager.Instance.Show<CharacterCoreUI>();
                 break;
             case "Skill": previewAnimator.SetBool("Base/Switch_Skill", true);
-                UIManager.Instance.Show<CharacterSkillUI>();
+                await UIManager.Instance.Show<CharacterSkillUI>();
                 break;
             case "Inven": previewAnimator.SetBool("Base/Switch_Inven", true);
-                UIManager.Instance.Show<SoundSettingUI>();
+                await UIManager.Instance.Show<SoundSettingUI>();
                 break;
+        }
+
+        if (UIManager.Instance.previousUI != null)
+        {
+            UIManager.Instance.previousUI.Hide();
         }
     }
 }

@@ -52,7 +52,7 @@ public partial class GameUI : UIBase
 
     public void OnEnablePlayer()
     {
-        playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f).SetDelay(6f); });
+        playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출
