@@ -79,7 +79,7 @@ public class TimeLineManager : Singleton<TimeLineManager>
         }
     }
 
-    // 타임라인을 숨길 때 호출
+    // 타임라인을 릴리즈 할 때 호출
     public void Release<T>() where T : PlayableDirector
     {
         string timelineName = typeof(T).ToString();

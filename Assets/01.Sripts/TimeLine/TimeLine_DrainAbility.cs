@@ -5,8 +5,6 @@ using UnityEngine.Playables;
 
 public class TimeLine_DrainAbility : TimeLineBase
 {
-    [SerializeField] private PlayableDirector playableDirector;
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -18,10 +16,12 @@ public class TimeLine_DrainAbility : TimeLineBase
         Vector3 playerPosition = PlayerManager.Instance.transform.position;
         Vector3 newposition = new Vector3(playerPosition.x, playerPosition.y + height, playerPosition.z);
         this.transform.position = newposition;
-
+        
         playableDirector.Play();
     }
 
+    // 타임라인 정지시 호출 될 함수 (타임라인 정지 이벤트에 구독)
+    // 이 타임라인은 재사용되기 때문에 릴리즈하지 않고 비활성화 하도록 함수를 override 함.
     protected override void OnTimeLineStop(PlayableDirector director)
     {
         TimeLineManager.Instance.Hide(gameObject.name);
