@@ -51,7 +51,7 @@ public class PlayerAttackState : PlayerBaseState
         currentAttack = stateMachine.Player.InfoData.AttackData.GetAttackInfoData(stateMachine.ComboIndex);
 
         // 가장 가까운 몬스터 탐색
-        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange);
+        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
         stateMachine.Player.Combat.SetAttackTarget(attackTarget);
         // 공격 진입 시 Lock-On 강제 적용
         if (attackTarget != null)  stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
@@ -89,14 +89,7 @@ public class PlayerAttackState : PlayerBaseState
     {
         if (attackTarget == null) return;
 
-        //몬스터 바라보기만 적용
-        Vector3 dir = (attackTarget.position - stateMachine.Player.transform.position).normalized;
-        dir.y = 0;
-        dir.Normalize();
-
-        stateMachine.Player.transform.forward = dir;
-        // Force 제거: 제자리 공격
-        // ApplyForce() 호출하지 않음
+        // 이제 바라보기는 이미 FindAndFaceNearestMonster에서 처리됨
     }
 
     // ApplyForce()도 사용하지 않으므로 빈 메서드로 두거나 삭제 가능
@@ -194,27 +187,5 @@ public class PlayerAttackState : PlayerBaseState
         {
             stateMachine.ChangeState(stateMachine.DodgeState);
         }
-    }
-
-
-    // ===================== 타겟 탐지 =====================
-    private Transform FindNearestMonster(float radius)
-    {
-        Collider[] hits = Physics.OverlapSphere(stateMachine.Player.transform.position, radius, LayerMask.GetMask("Enemy"));
-        if (hits.Length == 0) return null;
-
-        Transform nearest = null;
-        float minDist = float.MaxValue;
-
-        foreach (var hit in hits)
-        {
-            float dist = Vector3.Distance(stateMachine.Player.transform.position, hit.transform.position);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                nearest = hit.transform;
-            }
-        }
-        return nearest;
     }
 }

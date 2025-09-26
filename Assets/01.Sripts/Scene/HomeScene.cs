@@ -9,6 +9,7 @@ public class HomeScene : SceneBase
     {
         base.Start();
         ShowUI();
+        AudioManager.Instance.StopBGM();
         AudioManager.Instance.PlayBGM("2");
     }
 

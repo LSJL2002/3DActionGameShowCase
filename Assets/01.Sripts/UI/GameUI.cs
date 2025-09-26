@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using TMPro;
 using UnityEditor.Rendering;
 using UnityEngine;
@@ -19,60 +20,36 @@ public partial class GameUI : UIBase
 
     private eBattleState currentBattleState;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯 불러오기
+        BattleManager.OnBattleClear += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
+
+        ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
+
+        OnAwakePlayer();
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
-
         OnEnablePlayer();
-
-        // 몬스터 소환
-        //try { LoadEnemy("Test_Monster"); }
-        //catch { Debug.Log($"{"Test_Monster"} 소환 실패"); }
-        BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯불러오기
-        BattleManager.OnBattleClear += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
+        OnEnableEnemy();
     }
 
-    protected override void OnDisable()
+    protected override void OnDestroy()
     {
-        base.OnDisable();
+        base.OnDestroy();
 
-        ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
         BattleManager.OnBattleStart -= LoadMonsterStat;    //해제    
         BattleManager.OnBattleClear -= ReleaseMonsterStat; //해제
-    }
+        
+        ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
 
-    protected override void Update()
-    {
-        base.Update();
-
-        UpdatePlayer();
-
-        UpdateEnemy();
-    }
-
-    public async void OnClickButton(string str)
-    {
-        switch (str)
-        {
-            case "Pause":
-
-                // 게임매니저의 게임 일시정지 메서드를 호출
-                GameManager.Instance.PauseGame(true);
-                // 일시정지 UI 팝업
-                await UIManager.Instance.Show<PauseUI>();
-
-                break;
-
-            // Enemy 소환 (프로토타입 테스트용1)
-            case "Test_Monster":
-
-                // 몬스터 소환
-                try { LoadEnemy("Test_Monster"); }
-                catch { Debug.Log($"{"Test_Monster"} 소환 실패"); }
-                break;
-        }
+        OnPlayerDestroy();
     }
 
     public void LoadMonsterStat(BattleZone zone)                     //몬스터 스텟 불러오기
@@ -80,10 +57,12 @@ public partial class GameUI : UIBase
         monsterStats = BattleManager.Instance.monsterStats;
         ChangeState(eBattleState.Battle);
         SetEnemyInfo(1);
+        monsterStats.OnHealthChanged += OnEnemyHealthChanged;
     }
 
     public void ReleaseMonsterStat(BattleZone zone)                  //몬스터 스텟 해제
     {
+        monsterStats.OnHealthChanged -= OnEnemyHealthChanged;
         monsterStats = null;
         ChangeState(eBattleState.Idle);
         SetEnemyInfo(0);

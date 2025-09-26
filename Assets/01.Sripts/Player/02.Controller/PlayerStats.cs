@@ -53,6 +53,9 @@ public class PlayerStats : IStats
 
     public event Action OnDie;
 
+    // 체력이 변경될 때 호출될 이벤트
+    public event Action OnPlayerHealthChanged;
+
     public PlayerStats(PlayerStatData data)
     {
         MaxHealth = new Stat(data.maxHp);
@@ -70,6 +73,8 @@ public class PlayerStats : IStats
     {
         CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
         if (CurrentHealth <= 0) OnDie?.Invoke();
+
+        OnPlayerHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
     }
 
     public bool UseEnergy(float amount)

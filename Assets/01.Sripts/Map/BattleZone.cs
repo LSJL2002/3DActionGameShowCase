@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class BattleZone : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class BattleZone : MonoBehaviour
     [SerializeField]
     private BattleZoneSO ZoneData;
 
+    //public PlayableDirector PlayableDirector;
 
     private void Awake()
     {
@@ -47,6 +49,8 @@ public class BattleZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             BattleManager.Instance.StartBattle(this);
+
+            //PlayableDirector.Play();
         }
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class CharacterCoreUI : UIBase
@@ -52,23 +53,14 @@ public class CharacterCoreUI : UIBase
         }
     }
 
-    public async void OnClickButton(string str)
+    public void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             // 게임UI로 돌아가기
             case "Return":
-                await UIManager.Instance.Show<CompanionUI>();
-                break;
-
-            // 스킬UI로 이동
-            case "Left":
-                await UIManager.Instance.Show<CharacterSkillUI>();
-                break;
-
-            // 인벤토리UI로 이동
-            case "Right":
-                await UIManager.Instance.Show<CharacterInventoryUI>();
                 break;
         }
         

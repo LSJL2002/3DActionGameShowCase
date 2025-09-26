@@ -33,18 +33,22 @@ public class CompanionUI : UIBase
 
     public async void OnClickButton(string str)
     {
-        switch(str)
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
+        switch (str)
         {
             case "Stat":
-                await UIManager.Instance.Show<CharacterStatUI>();
+                await UIManager.Instance.Show<CharacterCoreUI>();
                 break;
 
             case "Inventory":
-                await UIManager.Instance.Show<CharacterInventoryUI>();
+                await UIManager.Instance.Show<CharacterInfomationUI>();
                 break;
 
             case "Talk":
                 await UIManager.Instance.Show<TutorialUI>();
+                UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
+                // PlayerManager.Instance?.EnableInput(true);
                 break;
         }
 

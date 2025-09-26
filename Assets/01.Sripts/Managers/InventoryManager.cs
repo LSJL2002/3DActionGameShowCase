@@ -11,7 +11,7 @@ public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
     public InventoryViewModel inventoryViewModel;
-    public CharacterInventoryUI characterInventoryUI;
+    public CharacterInfomationUI characterInventoryUI;
     public CharacterSkillUI characterSkillUI;
     public CharacterCoreUI characterCoreUI;
 
@@ -22,7 +22,7 @@ public class InventoryManager : Singleton<InventoryManager>
         base.Start();
 
         SelectAbilityUI.OnSelectAbilityUI += ChangeSelectAbilityState;
-        CharacterInventoryUI.OnUseItemUI += ChangeUseItemState;
+        CharacterInfomationUI.OnUseItemUI += ChangeUseItemState;
         CharacterCoreUI.OnUseItemUI += ChangeUseItemState;
         CharacterSkillUI.OnUseItemUI += ChangeUseItemState;
 
@@ -35,7 +35,7 @@ public class InventoryManager : Singleton<InventoryManager>
         base.OnDestroy();
 
         SelectAbilityUI.OnSelectAbilityUI -= ChangeSelectAbilityState;
-        CharacterInventoryUI.OnUseItemUI -= ChangeUseItemState;
+        CharacterInfomationUI.OnUseItemUI -= ChangeUseItemState;
         CharacterCoreUI.OnUseItemUI -= ChangeUseItemState;
         CharacterSkillUI.OnUseItemUI -= ChangeUseItemState;
     }

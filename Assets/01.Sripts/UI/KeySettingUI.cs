@@ -1,11 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class KeySettingUI : UIBase
 {
+    [SerializeField] private GameObject quitButton;
+    [SerializeField] private GameObject returnButton;
+
+    protected override void OnEnable()
+    {
+        if (SceneLoadManager.Instance.nowSceneIndex == 2)
+        {
+            quitButton.SetActive(false);
+            returnButton.SetActive(false);
+        }
+        else
+        {
+            quitButton.SetActive(true);
+            returnButton.SetActive(true);
+        }
+    }
+
     public async void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             // 이전 UI로 돌아가기
@@ -18,7 +38,7 @@ public class KeySettingUI : UIBase
                 }
                 else
                 {
-                    await UIManager.Instance.Show<PauseUI>();
+                    await UIManager.Instance.Show<GameUI>();
                 }
                 Hide();
                 break;

@@ -14,7 +14,9 @@ public class HomeUI : UIBase
 
     public async void OnClickButton(string str)
     {
-        switch(str)
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
+        switch (str)
         {
             case "NewGame":
                 // 새 게임 시작
@@ -35,25 +37,7 @@ public class HomeUI : UIBase
                 Application.Quit();
                 break;
         }
-
         // 현재 팝업창 닫기
         Hide();
-    }
-
-    protected override void Awake()
-    {
-        newGameButton.alpha = 0f;
-        loadGameButton.alpha = 0f;
-        optionButton.alpha = 0f;
-        quitButton.alpha = 0f;
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-        newGameButton.DOFade(1f, 1.0f);
-        loadGameButton.DOFade(1f, 2.0f);
-        optionButton.DOFade(1f, 3.0f);
-        quitButton.DOFade(1f, 4.0f);
     }
 }

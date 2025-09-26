@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.Playables;
 
 // Inventory(Model)의 데이터를 받아서 InventoryUI(View)가 쉽게 표시할 수 있도록 가공하고,
 // InventoryUI(View)의 사용자 입력을 받아서 Inventory(Model) 모델에 전달
@@ -60,7 +62,7 @@ public class InventoryViewModel
 
         // 이벤트 구독을 위한 델리게이트 변수 생성
         Action<bool> onDecisionMadeCallback = null;
-        onDecisionMadeCallback = (isConfirmed) =>
+        onDecisionMadeCallback = async (isConfirmed) =>
         {
             // 확인UI에서 허가를 받았다면,
             if (isConfirmed)
@@ -89,7 +91,9 @@ public class InventoryViewModel
                         }
                         
                         //UI매니저에서 '능력선택UI'를 가져와서 끄기
-                        UIManager.Instance.Get<SelectAbilityUI>().Hide();
+                        UIManager.Instance.Hide<SelectAbilityUI>();
+
+                        await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_DrainAbility");
                         break;
                 }
             }
