@@ -24,7 +24,7 @@ public class BattleZone : MonoBehaviour
     [SerializeField]
     private BattleZoneSO ZoneData;
 
-    public PlayableDirector PlayableDirector;
+    //public PlayableDirector PlayableDirector;
 
     private void Awake()
     {
@@ -50,7 +50,7 @@ public class BattleZone : MonoBehaviour
         {
             BattleManager.Instance.StartBattle(this);
 
-            PlayableDirector.Play();
+            //PlayableDirector.Play();
         }
     }
 
