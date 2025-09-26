@@ -13,7 +13,7 @@ public class TimeLineManager : Singleton<TimeLineManager>
     // 한번 생성한 핸들을 다시 생성하지 않도록 Dictionary로 관리
     private Dictionary<string, AsyncOperationHandle<GameObject>> timelineHandles = new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
-    public async UniTask<T> OnTimeLine<T>(string addressableKey, Vector3 loadPosition = default) where T : PlayableDirector
+    public async UniTask<T> OnTimeLine<T>(string addressableKey) where T : PlayableDirector
     {
         string timelineName = addressableKey;
 
@@ -24,26 +24,18 @@ public class TimeLineManager : Singleton<TimeLineManager>
         {
             T timeline = handle.Result.GetComponent<T>();
             timeline.gameObject.SetActive(!timeline.gameObject.activeSelf);
-            if (loadPosition != null) // 포지션을 받았다면 포지션위치로 이동
-            {
-                timeline.gameObject.transform.position = loadPosition;
-            }
             return timeline;
         }
 
         // 없으면 새로 로드
         else
         {
-            T timeline = await Load<T>(timelineName, loadPosition);
-            if (loadPosition != null) // 포지션을 받았다면 포지션위치로 이동
-            {
-                timeline.gameObject.transform.position = loadPosition;
-            }
+            T timeline = await Load<T>(timelineName);
             return timeline;
         }
     }
 
-    public async UniTask<T> Load<T>(string timelineName, Vector3 loadPosition = default) where T : PlayableDirector
+    public async UniTask<T> Load<T>(string timelineName) where T : PlayableDirector
     {
         var newHandle = Addressables.InstantiateAsync(timelineName);
         var obj = await newHandle.Task;

@@ -103,7 +103,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 break;
         }
 
-        UIManager.Instance.Get<ItemInformationUI>().Hide();
+        UIManager.Instance.Hide<ItemInformationUI>();
     }
 
     // 마우스 커서가 올라왔을때 효과

@@ -95,10 +95,7 @@ public class InventoryViewModel
                         break;
                 }
 
-                float height = PlayerManager.Instance.GetComponent<CharacterController>().height;
-                Vector3 playerPosition = PlayerManager.Instance.transform.position;
-                Vector3 newposition = new Vector3(playerPosition.x, playerPosition.y + height, playerPosition.z);
-                await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_DrainAbility", newposition);
+                await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_DrainAbility");
             }
 
             // 이벤트 구독 해제
