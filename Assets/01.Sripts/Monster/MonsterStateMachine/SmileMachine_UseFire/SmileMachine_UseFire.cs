@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class SmileMachine_UseFire : BaseMonster
 {
+    public GameObject rifleParticleEffect;
     public Collider baseAttackCollider;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (rifleParticleEffect != null)
+            rifleParticleEffect.SetActive(false);
+    }
     protected override MonsterBaseState GetStateFromEnum(States stateEnum)
     {
         switch (stateEnum)

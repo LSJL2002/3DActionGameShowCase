@@ -26,6 +26,11 @@ public class SmileMachineShootState : MonsterBaseState
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Ready));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
+        if (stateMachine.Monster is SmileMachine_UseFire machine)
+        {
+            machine.rifleParticleEffect.SetActive(true);
+        }
+
         float shootDuration = 4f;
         float timer = 0f;
 
@@ -41,6 +46,10 @@ public class SmileMachineShootState : MonsterBaseState
         // --- Finish shooting ---
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
+        if (stateMachine.Monster is SmileMachine_UseFire machineEnd)
+        {
+            machineEnd.rifleParticleEffect.SetActive(false);
+        }
         // Release attack lock so pattern system continues
         stateMachine.isAttacking = false;
 

@@ -14,30 +14,150 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patterns:
   - id: 1
-    states: 05000000
+    states: 0000000000000000
   - id: 2
     states: 000000000000000005000000
   - id: 3
     states: 020000000000000005000000
   - id: 4
     states: 0100000003000000
-  - id: 6
+  - id: 5
     states: 0200000003000000
   - id: 6
     states: 040000000400000004000000
   - id: 11
-    states: 05000000
+    states: 000000000000000001000000050000000500000005000000
+  - id: 12
+    states: 0500000005000000
+  - id: 13
+    states: 04000000
+  - id: 14
+    states: 010000000500000005000000
+  - id: 15
+    states: 03000000
   conditions:
-  - id: 0
+  - id: 1
     conditionType: 0
-    minHpPercent: 0
+    minHpPercent: 90
     maxHpPercent: 100
     thresholdHpPercent: 0
     requiredDistance: 0
     triggerOnce: 0
     hasTriggered: 0
     possiblePatternIds: 01000000
+    priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 2
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 90
+    requiredDistance: 0
+    triggerOnce: 1
+    hasTriggered: 0
+    possiblePatternIds: 0b000000
     priority: 1
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 3
+    conditionType: 0
+    minHpPercent: 60
+    maxHpPercent: 90
+    thresholdHpPercent: 0
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 010000000200000003000000
+    priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 4
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 60
+    requiredDistance: 0
+    triggerOnce: 1
+    hasTriggered: 0
+    possiblePatternIds: 0f000000
+    priority: 1
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 2
+    rangeMultiplier: 2
+    preCastTimeMultiplier: 2
+  - id: 5
+    conditionType: 0
+    minHpPercent: 30
+    maxHpPercent: 60
+    thresholdHpPercent: 0
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 03000000050000000b000000
+    priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 6
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 30
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 01000000
+    priority: 1
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 7
+    conditionType: 0
+    minHpPercent: 10
+    maxHpPercent: 30
+    thresholdHpPercent: 0
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 01000000020000000300000004000000050000000b0000000c000000
+    priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 8
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 10
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 06000000
+    priority: 1
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 9
+    conditionType: 0
+    minHpPercent: 0
+    maxHpPercent: 10
+    thresholdHpPercent: 10
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 030000000400000005000000060000000b0000000c000000
+    priority: 3
     ignoreDistanceCheck: 0
     effectValueMultiplier: 1
     rangeMultiplier: 1
