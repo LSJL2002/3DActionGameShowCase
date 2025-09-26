@@ -66,8 +66,8 @@ public class MonsterStateMachine : StateMachine
             SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
             var chargeSkill = monster.Stats.GetSkill("SmileMachine_Charge");
             SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
-            var shootSkill = monster.Stats.GetSkill("");
-            SmileMachineShootState = new SmileMachineShootState(this, shootSkill);
+            var shootSkill = monster.Stats.GetSkill("SmileMachine_Shoot");
+            SmileMachineShootState = new SmileMachineShootState(this,shootSkill);
 
         }
 

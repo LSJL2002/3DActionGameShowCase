@@ -164,12 +164,15 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
             // --- Return to Idle after attack ---
             if (!(stateMachine.CurrentState is MonsterIdleState))
+            {
                 stateMachine.ChangeState(stateMachine.MonsterIdleState);
+                yield return new WaitForSeconds(0.3f); // lock in Idle for a bit
+            }
 
             currentStepIndex++;
             yield return new WaitForSeconds(0.2f); // small delay between steps
         }
-        float cooldown = UnityEngine.Random.Range(10f, 20f);
+        float cooldown = UnityEngine.Random.Range(1f, 3f);
         yield return new WaitForSeconds(cooldown);
         currentPattern = null;
         currentPatternPriority = -1;

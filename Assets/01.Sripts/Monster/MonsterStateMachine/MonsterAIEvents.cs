@@ -68,11 +68,9 @@ public class MonsterAIEvents : MonoBehaviour
         }
         else
         {
-            if (distance <= detectRange && distance > attackRange * 1.1f)
+            if (distance <= detectRange && distance > attackRange * 1.2f)
                 newMode = AIMode.Chase;
         }
-
-        Debug.Log($"{newMode} distance: {distance} attackRange: {attackRange}");
         if (newMode != currentmode)
         {
             currentmode = newMode;
@@ -85,7 +83,6 @@ public class MonsterAIEvents : MonoBehaviour
                     break;
                 case AIMode.Chase:
                     stateMachine.Monster.PlayerTarget = player;
-                    OnPlayerDetected?.Invoke();
                     break;
                 case AIMode.Idle:
                     RestingPhase?.Invoke();

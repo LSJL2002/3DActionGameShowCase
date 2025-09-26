@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class SmileMachine_UseFire : BaseMonster
 {
-
+    public Collider baseAttackCollider;
     protected override MonsterBaseState GetStateFromEnum(States stateEnum)
     {
         switch (stateEnum)
         {
+            case States.Skill1: return stateMachine.SmileToiletSmashState;
+            case States.Skill2: return stateMachine.SmileToiletSlamState;
+            case States.Skill3: return stateMachine.SmileToiletChargeState;
+            case States.Skill4: return stateMachine.SmileMachineShootState;
+            case States.BaseAttack: return stateMachine.MonsterBaseAttack;
+            case States.BaseAttack2: return stateMachine.MonsterBaseAttackAlt;
             default: return null;
         }
     }
