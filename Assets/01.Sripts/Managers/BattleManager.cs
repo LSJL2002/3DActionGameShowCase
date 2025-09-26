@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Playables;
 using static GameUI;
 
 public class BattleManager : Singleton<BattleManager>
@@ -17,20 +18,31 @@ public class BattleManager : Singleton<BattleManager>
     public static event Action<BattleZone> OnMonsterDie;
     public static event Action<BattleZone> OnBattleClear;
 
+
     public async void StartBattle(BattleZone zone)
     {
         if (isBattle) return;
         isBattle = true;
         currentZone = zone;
-
+        var cutScene = currentZone.PlayableDirector;
 
         // 1. 벽 켜기
         currentZone.SetWallsActive(true);
-
-        // 2. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position+Vector3.up);
-
         OnBattleStart?.Invoke(zone);
+        // 2. 연출 시작
+        cutScene.Play();
+
+        // 비동기로 몬스터 로드 시작
+        var monster = await LoadMonsterPrefab(zone.summonMonsterId);
+
+        // Timeline이 끝날 때까지 대기
+        await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
+
+        // 3.몬스터 소환 완료 대기
+        if (monster != null)
+            currentMonster = SpawnMonster(monster, zone.transform.position + Vector3.up);
+
+        
 
     }
 
@@ -49,32 +61,28 @@ public class BattleManager : Singleton<BattleManager>
     }
 
 
-    public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
+    public async Task<GameObject> LoadMonsterPrefab(int monsterId)
     {
-        string monsterKey = monsterId.ToString(); // Addressables 키 (등록한 이름이랑 일치해야 함)
+        string monsterKey = monsterId.ToString();
+        var handle = Addressables.LoadAssetAsync<GameObject>(monsterKey);
+        GameObject prefab = await handle.Task;
 
-        // 프리팹 비동기 로드 & 인스턴스화
-        var handle = Addressables.InstantiateAsync(monsterKey, spawnPos, Quaternion.identity);
-        GameObject monsterInstance = await handle.Task;
-
-        if (monsterInstance != null)
+        if (prefab == null)
         {
-            currentMonster = monsterInstance;
-            Debug.Log($"몬스터 [{monsterId}] 소환 완료!");
-
-            BaseMonster baseMonsterComponent = currentMonster.GetComponent<BaseMonster>();
-            monsterStats = baseMonsterComponent.Stats;
-
-            string enemyName = monsterStats.monsterData.monsterName;
-            float enemyMaxHP = monsterStats.monsterData.maxHp;
-
-            return monsterInstance; // 호출부에서 받을 수 있음
-        }
-        else
-        {
-            Debug.LogError($"몬스터 {monsterId} Addressable 프리팹을 찾을 수 없음! (Key 확인 필요)");
+            Debug.LogError($"몬스터 {monsterId} 프리팹을 찾을 수 없음!");
             return null;
         }
+        return prefab;
+    }
+
+    public GameObject SpawnMonster(GameObject prefab, Vector3 spawnPos)
+    {
+        var instance = GameObject.Instantiate(prefab, spawnPos, Quaternion.identity);
+
+        currentMonster = instance;
+        monsterStats = instance.GetComponent<BaseMonster>().Stats;
+
+        return instance;
     }
 
     public void HandleMonsterDie()
