@@ -7,6 +7,7 @@ using TMPro;
 public enum SceneType
 {
     Tutorial,
+    Boss_1,
 }
 
 public enum Speaker
@@ -22,7 +23,10 @@ public class TutorialUI : UIBase
     public GameObject playerCamera;
     public GameObject CompanionCamera;
 
-    private bool playText;
+    // private bool playText;
+    private bool bossOneIntroPlayed = false;
+    // 목스터 생명 수치
+    private bool bossOneAt90Played, bossOneAt60Played, bossOneAt30Played, bossOneAt10Played;
 
     public List<TextSO> dialogues = new List<TextSO>();
 
@@ -31,6 +35,7 @@ public class TutorialUI : UIBase
         // playText = true;
     }
 
+    #region Tutorial
     IEnumerator ShowText(List<TextSO> scene, float time)
     {
         foreach (TextSO text in scene)
@@ -53,7 +58,7 @@ public class TutorialUI : UIBase
                 talkText.text += text.textContent[i];
                 yield return new WaitForSeconds(0.05f); // 글자 사이 텀 (0.05초 예시)
             }
-            
+
             yield return new WaitForSeconds(time);
         }
 
@@ -65,7 +70,7 @@ public class TutorialUI : UIBase
 
     public void PlayDialogue(SceneType type)
     {
-        
+
         List<TextSO> scene = new List<TextSO>();
 
         foreach (TextSO text in dialogues)
@@ -78,4 +83,64 @@ public class TutorialUI : UIBase
 
         StartCoroutine(ShowText(scene, 3));
     }
+    #endregion
+
+    #region Boss_1
+    public void PlayBossDialogue(SceneType type)
+    {
+        if (type != SceneType.Boss_1 || bossOneIntroPlayed) return;
+        
+        List<TextSO> scene = new List<TextSO>();
+
+        foreach (TextSO text in dialogues)
+        {
+            if (text.scenes == type.ToString() && text.id >= 50010019 && text.id <= 50010023)
+            {
+                scene.Add(text);
+            }
+        }
+
+        // id 오름차순 정렬(19 → 23 순서 보장)
+        scene.Sort((a, b) => a.id.CompareTo(b.id));
+
+        // 다시 재생되지 않도록 플래그 세팅
+        bossOneIntroPlayed = true;
+
+        StartCoroutine(ShowText(scene, 2.5f));
+    }
+
+    public void TryPlayBossThresholdDialogue(SceneType type, float hpPercent)
+    {
+        if (type != SceneType.Boss_1) return;
+
+        if (!bossOneAt90Played && hpPercent <= 0.90f)
+        {
+            bossOneAt90Played = true;
+            TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010024);
+            if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
+        }
+
+        if (!bossOneAt60Played && hpPercent <= 0.60f)
+        {
+            bossOneAt90Played = true;
+            TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010025);
+            if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
+        }
+
+        if (!bossOneAt30Played && hpPercent <= 0.30f)
+        {
+            bossOneAt90Played = true;
+            TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010026);
+            if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
+        }
+
+        if (!bossOneAt10Played && hpPercent <= 0.10f)
+        {
+            bossOneAt90Played = true;
+            TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010027);
+            if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
+        }
+    }
+    #endregion
 }
+
