@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GameScene : SceneBase
 {
+    [SerializeField] private bool tutorialEnabled = true; // 튜토리얼 재생여부
+
     protected override void Awake()
     {
         base.Awake();
@@ -15,15 +17,20 @@ public class GameScene : SceneBase
         base.Start();
 
         // n초 대기 후 실행
-        DOVirtual.DelayedCall(6f, async () => { await UIManager.Instance.Show<GameUI>(); });
-        DOVirtual.DelayedCall(7f, async () => 
+        DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
+
+        AudioManager.Instance.PlayBGM("1");
+    }
+
+    public async void DelayMethod()
+    {
+        await UIManager.Instance.Show<GameUI>();
+
+        if (tutorialEnabled)
         {
             await UIManager.Instance.Show<TutorialUI>();
-        }).OnComplete(() =>
-            {
-                UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);}
-            );
-        
-        AudioManager.Instance.PlayBGM("1");
+            UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
+            tutorialEnabled = false;
+        }
     }
 }
