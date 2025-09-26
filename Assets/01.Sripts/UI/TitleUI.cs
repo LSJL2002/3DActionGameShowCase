@@ -10,34 +10,52 @@ public class TitleUI : UIBase
     [SerializeField] private TextMeshProUGUI gameTitleText;
     [SerializeField] private TextMeshProUGUI clickToGameText;
     [SerializeField] private Image blackEffectPanelImage;
-    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private Button startButton;
 
-    public async void OnClickButton(string str)
+    public void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             case "GameStart":
-                audioSource.PlayOneShot(audioSource.clip);
-                await UIManager.Instance.Show<HomeUI>();
+                startButton.gameObject.SetActive(false); // 버튼 다시 안눌리게 비활성화
+
+                // 실행되고 있던 닷트윈 정지 및 세팅
+                blackEffectPanelImage.DOKill();
+                gameTitleText.DOKill();
+                clickToGameText.DOKill();
+                blackEffectPanelImage.DOFade(0f, 0f);
+                clickToGameText.DOFade(0f,0f);
+
+                // 첫 번째 DOFade가 완료된 후 두 번째 DOFade가 시작
+                gameTitleText.DOFade(1f, 0f).OnComplete(() =>
+                {
+                    gameTitleText.DOFade(0f, 1.5f).OnComplete(async () =>
+                    {
+                        await UIManager.Instance.Show<HomeUI>();
+                        Hide();
+                    });
+                });
                 break;
         }
-
-        // 현재 팝업창 닫기
-        Hide();
     }
 
     protected override void Awake()
     {
-        gameTitleText.color = new Color(gameTitleText.color.r, gameTitleText.color.g, gameTitleText.color.b, 0f);
-        clickToGameText.color = new Color(clickToGameText.color.r, clickToGameText.color.g, clickToGameText.color.b, 0f);
-        blackEffectPanelImage.color = new Color(blackEffectPanelImage.color.r, blackEffectPanelImage.color.g, blackEffectPanelImage.color.b, 1f);
+        // 초기 이미지 및 텍스트 투명도 세팅 (알파값, 시간)
+        gameTitleText.DOFade(0f, 0f);
+        clickToGameText.DOFade(0f, 0f);
+        blackEffectPanelImage.DOFade(1f, 0f);
     }
 
     protected override void Start()
     {
         base.Start();
+
+        // '까만화면'을 0f(알파값0)까지 1초에 걸쳐 동작하고, 완료되면 '게임타이틀' 텍스트를 1f(알파값255)까지 5초에 걸쳐 동작
         blackEffectPanelImage.DOFade(0f, 1f).OnComplete(() => { gameTitleText.DOFade(1f, 5f); });
         
-        clickToGameText.DOFade(1f, 2.5f).SetLoops(-1, LoopType.Yoyo);
+        clickToGameText.DOFade(1f, 2.5f).SetLoops(-1, LoopType.Yoyo).SetDelay(3f);
     }
 }

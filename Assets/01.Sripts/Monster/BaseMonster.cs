@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -30,6 +30,9 @@ public class BaseMonster : MonoBehaviour, IDamageable
     protected MonsterPatternSO.PatternEntry currentPattern;
     protected int currentStepIndex = 0;
     protected bool isRunningPattern = false;
+
+    // 체력이 변경될 때 호출될 이벤트
+    public static event System.Action OnEnemyHealthChanged;
 
     protected virtual void Awake()
     {
@@ -211,6 +214,8 @@ public class BaseMonster : MonoBehaviour, IDamageable
             Stats.CurrentHP = 0;
             stateMachine.ChangeState(stateMachine.MonsterDeathState);
         }
+
+        OnEnemyHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
     }
 
     public void ApplyEffect(MonsterEffectType effectType, Vector3 sourcePosition, float effectValue = 0f, float duration = 0f)

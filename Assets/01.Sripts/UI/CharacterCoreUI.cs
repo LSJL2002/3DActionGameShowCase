@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class CharacterCoreUI : UIBase
@@ -54,6 +55,8 @@ public class CharacterCoreUI : UIBase
 
     public async void OnClickButton(string str)
     {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
         switch (str)
         {
             // 게임UI로 돌아가기
@@ -68,7 +71,7 @@ public class CharacterCoreUI : UIBase
 
             // 인벤토리UI로 이동
             case "Right":
-                await UIManager.Instance.Show<CharacterInventoryUI>();
+                await UIManager.Instance.Show<CharacterInfomationUI>();
                 break;
         }
         
