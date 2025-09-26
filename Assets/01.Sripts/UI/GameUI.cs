@@ -24,7 +24,7 @@ public partial class GameUI : UIBase
     {
         base.Awake();
 
-        BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯불러오기
+        BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯 불러오기
         BattleManager.OnBattleClear += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
 
         ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
