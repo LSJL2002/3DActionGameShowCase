@@ -53,6 +53,8 @@ public class PlayerStateMachine : StateMachine
     public PlayerAttackState AttackState { get;}
     public PlayerComboAttackState ComboAttackState { get; set; }
     public PlyerFinishAttackState FinishAttackState { get; set; }
+    //Skill 로직
+    public PlayerSkillState SkillState { get; set; }
     // 독립적인 Sub-State Dodge 로직
     public PlayerDodgeState DodgeState { get; }
     public PlayerKnockbackState KnockbackState { get;}
@@ -73,6 +75,7 @@ public class PlayerStateMachine : StateMachine
         AttackState = new PlayerAttackState(this);
         ComboAttackState = new PlayerComboAttackState(this);
         FinishAttackState = new PlyerFinishAttackState(this);
+        SkillState = new PlayerSkillState(this);
         KnockbackState = new PlayerKnockbackState(this);
         StunState = new PlayerStunState(this);
 

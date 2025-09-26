@@ -67,6 +67,11 @@ public class PlayerGroundState : PlayerBaseState
         stateMachine.ChangeState(stateMachine.AttackState);
     }
 
+    protected override void OnHeavyAttackStarted(InputAction.CallbackContext context)
+    {
+        stateMachine.ChangeState(stateMachine.SkillState);
+    }
+
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
     {
         stateMachine.ChangeState(stateMachine.DodgeState);

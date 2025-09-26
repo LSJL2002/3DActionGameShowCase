@@ -26,7 +26,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     private void Awake()
     {
         player ??= GetComponent<PlayerManager>();
-        skillManager = GetComponentInChildren<SkillManagers>();
+        skillManager = player.skill;
         playerInfo = player.InfoData;
     }
 
