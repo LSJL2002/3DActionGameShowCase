@@ -210,7 +210,11 @@ public class BaseMonster : MonoBehaviour, IDamageable
         return Stats.AttackRange; // 없다면, 몬스터의 기본 사거리 사용
     }
 
-
+    public void OnDeathAnimationComplete()
+    {
+        BattleManager.Instance.HandleMonsterDie();
+    }
+    
     public void OnAttackAnimationComplete()
     {
         stateMachine.isAttacking = false;
