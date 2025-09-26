@@ -59,10 +59,15 @@ public class UIManager : Singleton<UIManager>
     {
         // 캔버스 오브젝트 생성
         var newCanvasObject = new GameObject(uiName + "Canvas");
+        
+        // 메인 카메라를 찾기
+        Camera mainCamera = PlayerManager.Instance.GetComponentInChildren<Camera>();
 
         // 'Canvas' 컴포넌트 추가 후 변수에 저장 및 renderMode 설정
         var canvas = newCanvasObject.gameObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        canvas.worldCamera = mainCamera;
+        canvas.planeDistance = 1;
 
         // 'CanvasScaler' 컴포넌트 추가 후 변수에 저장 및 uiScaleMode, referenceResolution 설정
         var canvasScaler = newCanvasObject.gameObject.AddComponent<CanvasScaler>();

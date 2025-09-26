@@ -1,56 +1,134 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Playables;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.Timeline;
 
 // 해당 씬에만 존재할 타임라인 매니저
 public class TimeLineManager : Singleton<TimeLineManager>
 {
-    private static TimeLineManager _instance;
+    // 한번 생성한 핸들을 다시 생성하지 않도록 Dictionary로 관리
+    private Dictionary<string, AsyncOperationHandle<GameObject>> timelineHandles = new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
-    public PlayableDirector timelineDirector;
-
-    // 인스턴스를 가져오는 프로퍼티
-    public static new TimeLineManager Instance
+    public async UniTask<T> OnTimeLine<T>(string addressableKey, Vector3 loadPosition = default) where T : PlayableDirector
     {
-        get
+        string timelineName = addressableKey;
+
+        // 딕셔너리에 있는지 확인
+        // TryGetValue : 딕셔너리에서 값을 가져오는것을 시도 (반환값이 bool이기 때문에 if에 사용가능)
+        // IsValid() : 어드레서블 핸들이 유효한 상태인지 확인하는 함수 (메모리에 있는지)
+        if (timelineHandles.TryGetValue(timelineName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
         {
-            // 인스턴스가 없으면 씬에서 찾기
-            if (_instance == null)
+            T timeline = handle.Result.GetComponent<T>();
+            timeline.gameObject.SetActive(!timeline.gameObject.activeSelf);
+            if (loadPosition != null) // 포지션을 받았다면 포지션위치로 이동
             {
-                _instance = FindObjectOfType<TimeLineManager>();
+                timeline.gameObject.transform.position = loadPosition;
             }
-            return _instance;
+            return timeline;
+        }
+
+        // 없으면 새로 로드
+        else
+        {
+            T timeline = await Load<T>(timelineName, loadPosition);
+            if (loadPosition != null) // 포지션을 받았다면 포지션위치로 이동
+            {
+                timeline.gameObject.transform.position = loadPosition;
+            }
+            return timeline;
         }
     }
 
-    protected override void Awake()
+    public async UniTask<T> Load<T>(string timelineName, Vector3 loadPosition = default) where T : PlayableDirector
     {
-        // 씬 내에 이미 인스턴스가 존재하면 현재 오브젝트 파괴
-        if (_instance != null)
-        {
-            // 현재 인스턴스와 기존 인스턴스가 다르면 경고 로그와 함께 파괴
-            if (_instance != this)
-            {
-                Debug.LogWarning("씬에 이미 다른 TimeLineManager 인스턴스가 존재. 중복 인스턴스를 파괴.");
-                Destroy(gameObject);
-                return;
-            }
-        }
-
-        // 싱글톤 인스턴스 설정
-        _instance = this;
-
-        try
-        {
-            timelineDirector = FindObjectOfType<PlayableDirector>();
-        }
-        catch { Debug.Log("실패"); };
+        var newHandle = Addressables.InstantiateAsync(timelineName);
+        var obj = await newHandle.Task;
+        obj.name = timelineName;
+        timelineHandles.Add(timelineName, newHandle);
+        var result = obj.GetComponent<T>();
+        return result;
     }
 
-    public void PlayTimeLine()
+    // 다른 클래스에서 쉽게 가져갈 수 있도록 제네릭 메서드 제공
+    public T Get<T>() where T : PlayableDirector
     {
-        timelineDirector.Play();
+        string timelineName = typeof(T).ToString();
+
+        // 핸들을 통해 UIBase 인스턴스를 반환
+        if (timelineHandles.TryGetValue(timelineName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
+        {
+            return handle.Result.GetComponent<T>();
+        }
+
+        Debug.LogError($"'{timelineName}'이 없음");
+        return default;
+    }
+
+    // 타임라인을 숨길 때 호출
+    public void Hide<T>() where T : PlayableDirector
+    {
+        string timelineName = typeof(T).ToString();
+
+        if (timelineHandles.TryGetValue(timelineName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
+        {
+            handle.Result.GetComponent<PlayableDirector>().gameObject.SetActive(false);
+        }
+    }
+
+    public void Hide(string timelineName)
+    {
+        if (timelineHandles.TryGetValue(timelineName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
+        {
+            handle.Result.GetComponent<PlayableDirector>().gameObject.SetActive(false);
+        }
+    }
+
+    // 타임라인을 숨길 때 호출
+    public void Release<T>() where T : PlayableDirector
+    {
+        string timelineName = typeof(T).ToString();
+
+        if (timelineHandles.TryGetValue(timelineName, out var handle))
+        {
+            if (handle.IsValid())
+            {
+                Addressables.ReleaseInstance(handle);
+            }
+            else
+            {
+                Debug.LogWarning($"'{timelineName}' 핸들은 유효하지 않음");
+            }
+            // 딕셔너리에서도 제거
+            timelineHandles.Remove(timelineName);
+        }
+        else
+        {
+            Debug.LogWarning($"'{timelineName}'가 딕셔너리에 없음");
+        }
+    }
+
+    public void Release(string timelineName)
+    {
+        if (timelineHandles.TryGetValue(timelineName, out var handle))
+        {
+            if (handle.IsValid())
+            {
+                Addressables.ReleaseInstance(handle);
+            }
+            else
+            {
+                Debug.LogWarning($"'{timelineName}' 핸들은 유효하지 않음");
+            }
+            // 딕셔너리에서도 제거
+            timelineHandles.Remove(timelineName);
+        }
+        else
+        {
+            Debug.LogWarning($"'{timelineName}'가 딕셔너리에 없음");
+        }
     }
 }
