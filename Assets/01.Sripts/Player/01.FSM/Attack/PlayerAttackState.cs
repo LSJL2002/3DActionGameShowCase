@@ -51,7 +51,7 @@ public class PlayerAttackState : PlayerBaseState
         currentAttack = stateMachine.Player.InfoData.AttackData.GetAttackInfoData(stateMachine.ComboIndex);
 
         // 가장 가까운 몬스터 탐색
-        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange);
+        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
         stateMachine.Player.Combat.SetAttackTarget(attackTarget);
         // 공격 진입 시 Lock-On 강제 적용
         if (attackTarget != null)  stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
@@ -89,14 +89,7 @@ public class PlayerAttackState : PlayerBaseState
     {
         if (attackTarget == null) return;
 
-        //몬스터 바라보기만 적용
-        Vector3 dir = (attackTarget.position - stateMachine.Player.transform.position).normalized;
-        dir.y = 0;
-        dir.Normalize();
-
-        stateMachine.Player.transform.forward = dir;
-        // Force 제거: 제자리 공격
-        // ApplyForce() 호출하지 않음
+        // 이제 바라보기는 이미 FindAndFaceNearestMonster에서 처리됨
     }
 
     // ApplyForce()도 사용하지 않으므로 빈 메서드로 두거나 삭제 가능

@@ -225,13 +225,14 @@ public abstract class PlayerBaseState : Istate
     }
 
 
-    //ForceReceiver에 쌓인 힘을 실제 캐릭터에 적용하는 역할
+    // ==========ForceReceiver에 쌓인 힘을 실제 캐릭터에 적용하는 역할===============
     protected void ForceMove()
     {
         stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime);
     }
 
-    protected float GetNormalizeTime(Animator animator, string tag) //에니메이션 특정 태그
+    // ====================== 에니메이션 특정 태그 =============================
+    protected float GetNormalizeTime(Animator animator, string tag)
     {
         AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
         AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
@@ -247,18 +248,22 @@ public abstract class PlayerBaseState : Istate
             return 0f;
     }
 
-    // ===================== 타겟 탐지 =====================
-    protected Transform FindNearestMonster(float radius)
+    // ===================== 타겟 탐지 (공통) =====================
+    /// <summary>
+    /// 반경 내 가장 가까운 Enemy 탐색
+    /// </summary>
+    /// <param name="radius">탐색 반경</param>
+    /// <param name="faceTarget">찾은 타겟을 바라볼지 여부</param>
+    /// <returns>가장 가까운 Enemy Transform</returns>
+    protected Transform FindNearestMonster(float radius, bool faceTarget = false)
     {
         Collider[] hits = Physics.OverlapSphere(
-                    stateMachine.Player.transform.position,
-                    radius,
-                    LayerMask.GetMask("Enemy")
-                );
-
+            stateMachine.Player.transform.position,
+            radius,
+            LayerMask.GetMask("Enemy")
+        );
         Transform nearest = null;
         float minDist = float.MaxValue;
-
         foreach (var hit in hits)
         {
             float dist = Vector3.Distance(
@@ -271,7 +276,12 @@ public abstract class PlayerBaseState : Istate
                 nearest = hit.transform;
             }
         }
-
+        if (faceTarget && nearest != null)
+        {
+            Vector3 dir = (nearest.position - stateMachine.Player.transform.position).normalized;
+            dir.y = 0;
+            stateMachine.Player.transform.forward = dir;
+        }
         return nearest;
     }
 }
