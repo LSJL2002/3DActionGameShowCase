@@ -40,7 +40,7 @@ public class UIManager : Singleton<UIManager>
         if (uiHandles.TryGetValue(uiName, out AsyncOperationHandle<GameObject> handle) && handle.IsValid())
         {
             T uiBase = handle.Result.GetComponent<T>();
-            uiBase.canvas.gameObject.SetActive(!uiBase.canvas.gameObject.activeSelf);
+            uiBase.canvas.gameObject.SetActive(true);
             currentUI = uiBase;
             return uiBase;
         }

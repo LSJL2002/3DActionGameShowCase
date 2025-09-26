@@ -101,7 +101,8 @@ public class PreviewScene : MonoBehaviour
                 break;
         }
 
-        if (UIManager.Instance.previousUI != null)
+        // 이전UI가 null이 아니고, 현재UI와 이전UI가 같지 않다면 이전UI는 끄기
+        if (UIManager.Instance.previousUI != null && UIManager.Instance.currentUI != UIManager.Instance.previousUI)
         {
             UIManager.Instance.previousUI.Hide();
         }
