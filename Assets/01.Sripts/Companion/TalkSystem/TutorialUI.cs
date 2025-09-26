@@ -20,6 +20,7 @@ public class TutorialUI : UIBase
     public TMP_Text talkText;
 
     public GameObject playerCamera;
+    public GameObject CompanionCamera;
 
     private bool playText;
 
@@ -37,9 +38,11 @@ public class TutorialUI : UIBase
             if (text.abc == Speaker.Player.ToString())
             {
                 playerCamera.SetActive(true);
+                CompanionCamera.SetActive(false);
             }
             else if (text.abc == Speaker.Vix.ToString())
             {
+                CompanionCamera.SetActive(true);
                 playerCamera.SetActive(false);
             }
 
@@ -55,6 +58,8 @@ public class TutorialUI : UIBase
         }
 
         Hide();
+        playerCamera.SetActive(false);
+        CompanionCamera.SetActive(false);
         // playText = false;
     }
 
