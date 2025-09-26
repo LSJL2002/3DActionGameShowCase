@@ -46,24 +46,24 @@ public class SkyboxBlendController : MonoBehaviour
 
     private void OnEnable()
     {
-        BattleManager.OnBattleStart += HandleBattleStart;
-        BattleManager.OnBattleClear += HandleBattleClear;
+        //BattleManager.OnBattleStart += HandleBattleStart;
+        //BattleManager.OnBattleClear += HandleBattleClear;
     }
 
     private void OnDisable()
     {
-        BattleManager.OnBattleStart -= HandleBattleStart;
-        BattleManager.OnBattleClear -= HandleBattleClear;
+        //BattleManager.OnBattleStart -= HandleBattleStart;
+        //BattleManager.OnBattleClear -= HandleBattleClear;
     }
 
-    private void HandleBattleStart(BattleZone zone)
+    public void HandleBattleStart()
     {
         rotateSky();
         ToggleSky();
         
     }
 
-    private void HandleBattleClear(BattleZone zone)
+    public void HandleBattleClear()
     {
         rotateSky();
         ToggleSky();

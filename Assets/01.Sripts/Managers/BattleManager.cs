@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Playables;
@@ -18,6 +19,39 @@ public class BattleManager : Singleton<BattleManager>
     public static event Action<BattleZone> OnMonsterDie;
     public static event Action<BattleZone> OnBattleClear;
 
+    [SerializeField] private Material warningMaterial;
+    private Tween emissionTween;
+    private static readonly Color baseEmission = Color.black;
+    private static readonly Color warningEmission = new Color(100f / 255f, 100f / 255f, 0f / 255f);
+    private static readonly Color safeEmission = new Color(18f / 255f, 1f, 0f / 255f);
+
+    private void StartWarning()
+    {
+        if (warningMaterial == null) return;
+        warningMaterial.EnableKeyword("_EMISSION");
+
+        // 시작 전에 반드시 기본값으로 세팅
+        warningMaterial.SetColor("_EmissionColor", baseEmission);
+
+        emissionTween?.Kill();
+        emissionTween = DOTween.To(
+            () => warningMaterial.GetColor("_EmissionColor"),
+            x => warningMaterial.SetColor("_EmissionColor", x),
+            warningEmission,
+            0.8f
+        ).SetLoops(-1, LoopType.Yoyo)
+         .SetUpdate(true)
+         .SetTarget(warningMaterial);
+    }
+
+
+    private void StopWarning()
+    {
+        emissionTween?.Kill();
+        emissionTween = null;
+        warningMaterial.SetColor("_EmissionColor", safeEmission);
+    }
+
 
     public async void StartBattle(BattleZone zone)
     {
@@ -28,7 +62,8 @@ public class BattleManager : Singleton<BattleManager>
 
         // 1. 벽 켜기
         currentZone.SetWallsActive(true);
-        OnBattleStart?.Invoke(zone);
+        StartWarning();
+
         // 2. 연출 시작
         cutScene.Play();
 
@@ -40,9 +75,14 @@ public class BattleManager : Singleton<BattleManager>
 
         // 3.몬스터 소환 완료 대기
         if (monster != null)
-            currentMonster = SpawnMonster(monster, zone.transform.position + Vector3.up);
+        {
+            //currentMonster = SpawnMonster(monster, zone.PlayableDirector.transform.position + Vector3.up);
+            currentMonster = SpawnMonster(monster, zone.spawnPoint.position);
+            currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
+        }
 
-        
+        OnBattleStart?.Invoke(zone);
+
 
     }
 
@@ -89,6 +129,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (monsterStats.CurrentHP > 0) return;
         OnMonsterDie?.Invoke(currentZone);
+        StopWarning();
     }
 
 

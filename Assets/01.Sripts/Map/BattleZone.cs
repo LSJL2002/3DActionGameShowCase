@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using DG.Tweening;
 
 public class BattleZone : MonoBehaviour
 {
@@ -24,8 +25,9 @@ public class BattleZone : MonoBehaviour
     [SerializeField]
     private BattleZoneSO ZoneData;
     public PlayableDirector PlayableDirector;
+    public Transform spawnPoint;
 
-
+  
     private void Awake()
     {
         if (ZoneData != null)
@@ -55,4 +57,8 @@ public class BattleZone : MonoBehaviour
     public void SetWallsActive(bool active) => walls?.SetActive(active);
 
 }
+
+
+
+
 
