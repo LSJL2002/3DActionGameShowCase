@@ -7,7 +7,8 @@ using UnityEngine.Rendering.PostProcessing;
 
 // 아이템 슬롯부분을 제외한 인벤토리 전체의 UI를 보여주는 View 계층의 클래스
 // 아이템에 직접 접근할 수는 없고 ViewModel과 이벤트를 통해 아이템이 변경 될 수 있도록 신호를 보내는 역할
-public class CharacterInventoryUI : UIBase
+// CharacterInfomationUI의 Inventory Part
+public partial class CharacterInfomationUI : UIBase
 {
     // 인스펙터에서 직접 할당할 아이템 슬롯 목록
     [SerializeField] private List<ItemSlotUI> itemSlots;
@@ -17,10 +18,8 @@ public class CharacterInventoryUI : UIBase
     // (구독:인벤토리매니저)
     public static event Action OnUseItemUI;
 
-    protected override void Awake()
+    public void InventoryAwake()
     {
-        base.Awake();
-
         OnUseItemUI?.Invoke();
 
         InventoryManager.Instance.characterInventoryUI = this;
@@ -54,46 +53,5 @@ public class CharacterInventoryUI : UIBase
                 itemSlots[i].ClearSlot();
             }
         }
-    }
-
-    public async void OnClickButton(string str)
-    {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
-        switch (str)
-        {
-            // 게임UI로 돌아가기
-            case "Return":
-                await UIManager.Instance.Show<CompanionUI>();
-                Hide();
-                break;
-
-            // CoreUI로 이동
-            case "Left":
-                await UIManager.Instance.Show<CharacterCoreUI>();
-                Hide();
-                break;
-
-            // StatUI로 이동
-            case "Right":
-                await UIManager.Instance.Show<CharacterStatUI>();
-                Hide();
-                break;
-
-            case "20000000":
-                InventoryManager.Instance.LoadData_Addressables(str, 1);
-                break;
-
-            case "20010008":
-                InventoryManager.Instance.LoadData_Addressables(str);
-                break;
-
-            case "20010005":
-                InventoryManager.Instance.LoadData_Addressables(str);
-                break;
-        }
-
-        // 현재 팝업창 닫기
-        //Hide();
     }
 }

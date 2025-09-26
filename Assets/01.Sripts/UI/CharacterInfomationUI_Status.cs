@@ -1,7 +1,13 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
-public class CharacterStatUI : UIBase
+// CharacterInfomationUI의 Status Part
+public partial class CharacterInfomationUI : UIBase
 {
     public TextMeshProUGUI nameText;
 
@@ -25,13 +31,6 @@ public class CharacterStatUI : UIBase
 
     private PlayerStats playerStats; // 플레이어의 stats에 접근가능한 변수
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        SetPlayerStat();
-    }
-
     // 플레이어 정보 초기화 함수
     public void SetPlayerStat()
     {
@@ -44,31 +43,5 @@ public class CharacterStatUI : UIBase
         defenseText.text = $"방어력 : {playerStats.Defense.BaseValue.ToString()} + ({playerStats.Defense.Value.ToString()})"; // 추가 스탯 아직 없음
         attackSpeedText.text = $"공격속도 : {playerStats.AttackSpeed.BaseValue.ToString()} + ({playerStats.AttackSpeed.Value.ToString()})"; // 플레이어 스탯에 공격속도 스탯 아직 없음
         moveSpeedText.text = $"이동속도 : {playerStats.MoveSpeed.BaseValue.ToString()} + ({playerStats.MoveSpeed.Value.ToString()})"; // 플레이어 스탯에 이동속도 스탯 아직 없음
-    }
-
-    public async void OnClickButton(string str)
-    {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
-        switch (str)
-        {
-            // 게임UI로 돌아가기
-            case "Return":
-                await UIManager.Instance.Show<CompanionUI>();
-                break;
-
-            // 인벤토리 UI 켜기
-            case "Left":
-                await UIManager.Instance.Show<CharacterInventoryUI>();
-                break;
-
-            // 캐릭터 스킬 UI 켜기
-            case "Right":
-                await UIManager.Instance.Show<CharacterSkillUI>();
-                break;
-        }
-
-        // 현재 팝업창 닫기
-        Hide();
     }
 }

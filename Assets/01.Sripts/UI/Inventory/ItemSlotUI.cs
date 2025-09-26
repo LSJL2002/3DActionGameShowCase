@@ -61,8 +61,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 버튼 클릭시 효과 함수
     public void OnClickButton()
     {
+        if (itemData == null) return;
+
         AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-        DOVirtual.DelayedCall(0.2f, () => { }); // 아무것도 없이 n초간 대기
 
         switch (InventoryManager.Instance.currentDecisionState)
         {

@@ -71,7 +71,7 @@ public class CharacterCoreUI : UIBase
 
             // 인벤토리UI로 이동
             case "Right":
-                await UIManager.Instance.Show<CharacterInventoryUI>();
+                await UIManager.Instance.Show<CharacterInfomationUI>();
                 break;
         }
         
