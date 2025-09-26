@@ -85,11 +85,20 @@ public class PreviewScene : MonoBehaviour
         // 선택한 Pose만 true
         switch (target)
         {
-            case "Char": previewAnimator.SetBool("Base/Switch_Char", true); break;
-            case "Stat": previewAnimator.SetBool("Base/Switch_Stat", true); break;
-            case "Core": previewAnimator.SetBool("Base/Switch_Core", true); break;
-            case "Skill": previewAnimator.SetBool("Base/Switch_Skill", true); break;
-            case "Inven": previewAnimator.SetBool("Base/Switch_Inven", true); break;
+            case "Char": previewAnimator.SetBool("Base/Switch_Char", true);
+                break;
+            case "Stat": previewAnimator.SetBool("Base/Switch_Stat", true);
+                UIManager.Instance.Show<CharacterInfomationUI>();
+                break;
+            case "Core": previewAnimator.SetBool("Base/Switch_Core", true);
+                UIManager.Instance.Show<CharacterCoreUI>();
+                break;
+            case "Skill": previewAnimator.SetBool("Base/Switch_Skill", true);
+                UIManager.Instance.Show<CharacterSkillUI>();
+                break;
+            case "Inven": previewAnimator.SetBool("Base/Switch_Inven", true);
+                UIManager.Instance.Show<SoundSettingUI>();
+                break;
         }
     }
 }
