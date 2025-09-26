@@ -38,11 +38,11 @@ public class CompanionUI : UIBase
         switch (str)
         {
             case "Stat":
-                await UIManager.Instance.Show<CharacterStatUI>();
+                await UIManager.Instance.Show<CharacterCoreUI>();
                 break;
 
             case "Inventory":
-                await UIManager.Instance.Show<CharacterInventoryUI>();
+                await UIManager.Instance.Show<CharacterInfomationUI>();
                 break;
 
             case "Talk":

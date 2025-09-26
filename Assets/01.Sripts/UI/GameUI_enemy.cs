@@ -22,7 +22,7 @@ public partial class GameUI : UIBase
     [SerializeField] private Sprite enemyClearIcon;
     private MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
     
-    public void OnEanableEnemy()
+    public void OnEnableEnemy()
     {
         enemyInfoCanvasGroup.DOFade(0f, 0f);
     }

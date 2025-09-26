@@ -2,7 +2,9 @@ using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 using static UnityEditor.Profiling.HierarchyFrameDataView;
 
@@ -61,8 +63,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 버튼 클릭시 효과 함수
     public void OnClickButton()
     {
+        if (itemData == null) return;
+
         AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-        DOVirtual.DelayedCall(0.2f, () => { }); // 아무것도 없이 n초간 대기
 
         switch (InventoryManager.Instance.currentDecisionState)
         {
@@ -100,7 +103,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 break;
         }
 
-        UIManager.Instance.Get<ItemInformationUI>().Hide();
+        UIManager.Instance.Hide<ItemInformationUI>();
     }
 
     // 마우스 커서가 올라왔을때 효과

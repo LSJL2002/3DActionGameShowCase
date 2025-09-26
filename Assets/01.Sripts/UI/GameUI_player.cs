@@ -27,10 +27,8 @@ public partial class GameUI : UIBase
 
     float duration = 0.2f; // 닷트윈 효과들에서 사용할 시간
 
-    public void OnEnablePlayer()
+    public void OnAwakePlayer()
     {
-        playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f).SetDelay(6f); });
-        
         playerStats = PlayerManager.Instance.Stats;
 
         // 플레이어 변수 초기화
@@ -43,6 +41,18 @@ public partial class GameUI : UIBase
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
         PlayerManager.Instance.Stats.OnPlayerHealthChanged += OnPlayerHealthChanged;
         PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
+    }
+
+    public void OnPlayerDestroy()
+    {
+        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독 해제
+        PlayerManager.Instance.Stats.OnPlayerHealthChanged -= OnPlayerHealthChanged;
+        PlayerManager.Instance.Stats.OnStatChanged -= UpdateStat;
+    }
+
+    public void OnEnablePlayer()
+    {
+        playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f).SetDelay(6f); });
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출
