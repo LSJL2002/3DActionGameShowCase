@@ -22,6 +22,13 @@ public class UIManager : Singleton<UIManager>
     // 한번 생성한 UI를 다시 생성하지 않도록 Dictionary로 관리
     private Dictionary<string, AsyncOperationHandle<GameObject>> uiHandles = new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
+    private @PlayerInput playerInput;
+
+    protected override void Awake()
+    {
+        playerInput = new @PlayerInput();
+    }
+
     // UI호출시 사용하는 함수
     // 리소스매니저의 LoadAsset 메서드가 비동기 메서드이므로 Show 메서드도 비동기 메서드로 변경 (반환타입 async Task<T>)
     public async UniTask<T> Show<T>() where T : UIBase
@@ -143,6 +150,9 @@ public class UIManager : Singleton<UIManager>
         base.OnEnable();
         // 씬 언로드 이벤트 구독
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+
+        playerInput.Player.Inventory.performed += GameUIToggle; // 인벤토리 입력(TAB)에 OnGameUI 함수 구독
+        playerInput.Player.Enable(); // Player 액션 맵 활성화 (다시 TAB 입력을 알 수 있도록 켜둠)
     }
 
     protected override void OnDisable()
@@ -150,6 +160,9 @@ public class UIManager : Singleton<UIManager>
         base.OnDisable();
         // 씬 언로드 이벤트 구독 해제
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
+
+        playerInput.Player.Inventory.performed -= GameUIToggle; // 인벤토리 입력(TAB)에 OnGameUI 함수 구독해제
+        
     }
 
     // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬 언로드시 호출할것)
@@ -167,5 +180,20 @@ public class UIManager : Singleton<UIManager>
         }
 
         uiHandles.Clear();
+    }
+
+    private async void GameUIToggle(InputAction.CallbackContext context)
+    {
+        GameUI gameUIInstance = UIManager.Instance.Get<GameUI>();
+        bool isCurrentlyActive = gameUIInstance.canvas.gameObject.activeSelf;
+
+        // 꺼져있었다면
+        if (!isCurrentlyActive)
+        {
+            AllHide(); // Menu를 닫을 때 일단 모든 UI를 비활성화
+            await UIManager.Instance.Show<GameUI>(); // GameUI를 켜줌
+            return;
+        }
+        AllHide(); // Menu를 열 때 일단 모든 UI를 비활성화
     }
 }

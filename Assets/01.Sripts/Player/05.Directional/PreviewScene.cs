@@ -32,14 +32,10 @@ public class PreviewScene : MonoBehaviour
     private void OnEnable()
     {
         LoadPreviewScene();
-
-        UIManager.Instance.AllHide();
     }
 
-    private async void OnDisable()
+    private void OnDisable()
     {
-        UIManager.Instance.AllHide();
-        await UIManager.Instance.Show<GameUI>();
         UnloadPreviewScene();
     }
 
