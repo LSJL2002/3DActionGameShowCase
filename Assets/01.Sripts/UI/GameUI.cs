@@ -30,13 +30,15 @@ public partial class GameUI : UIBase
         ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
 
         OnAwakePlayer();
+
+        PreviewScene.OnMenu += OnEnablePlayer;
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        OnEnablePlayer();
+        OnEnablePlayer(true);
         OnEnableEnemy();
     }
 
@@ -46,6 +48,7 @@ public partial class GameUI : UIBase
 
         BattleManager.OnBattleStart -= LoadMonsterStat;    //해제    
         BattleManager.OnBattleClear -= ReleaseMonsterStat; //해제
+        PreviewScene.OnMenu -= OnEnablePlayer;
         
         ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
 

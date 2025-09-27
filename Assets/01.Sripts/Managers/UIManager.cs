@@ -119,11 +119,31 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    // 현재 UI 빼고 딕셔너리 목록 전부 Hide 하는 함수
+    public void AllHide()
+    {
+        foreach (var handle in uiHandles.Values)
+        {
+            // 핸들이 유효하고 결과 오브젝트가 있는지 확인
+            if (handle.IsValid() && handle.Result != null)
+            {
+                UIBase uiBase = handle.Result.GetComponent<UIBase>();
+
+                // 현재 UI(currentUI)와 다르다면 비활성화
+                if (uiBase != currentUI)
+                {
+                    uiBase.canvas.gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
         // 씬 언로드 이벤트 구독
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+        PreviewScene.OnMenu += OnGameUI;
     }
 
     protected override void OnDisable()
@@ -131,6 +151,7 @@ public class UIManager : Singleton<UIManager>
         base.OnDisable();
         // 씬 언로드 이벤트 구독 해제
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        PreviewScene.OnMenu -= OnGameUI;
     }
 
     // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬 언로드시 호출할것)
@@ -145,5 +166,17 @@ public class UIManager : Singleton<UIManager>
         }
 
         uiHandles.Clear();
+    }
+
+    private async void OnGameUI(bool isOpened)
+    {
+        if (!isOpened)
+        {
+            await Show<GameUI>();
+        }
+        else
+        {
+            Hide<GameUI>();
+        }
     }
 }

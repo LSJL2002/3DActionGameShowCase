@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,8 @@ public class PreviewScene : MonoBehaviour
     [SerializeField] private Button btnSkill;
     [SerializeField] private Button btnInventory;
 
+    public static event Action<bool> OnMenu; // Menu가 열고 닫힘을 알리는 이벤트
+
     private void Awake()
     {
         // 버튼 리스너 등록
@@ -31,10 +34,20 @@ public class PreviewScene : MonoBehaviour
     private void OnEnable()
     {
         LoadPreviewScene();
+
+        UIManager.Instance.Hide<TutorialUI>();
+
+        OnMenu?.Invoke(true); // Menu 열림 이벤트 알림
+        Debug.Log("Menu 켜짐");
     }
 
-    private void OnDisable()
+    private async void OnDisable()
     {
+        await UIManager.Instance.Show<GameUI>();
+
+        OnMenu?.Invoke(false); // Menu 닫힘 이벤트 알림
+        Debug.Log("Menu 꺼짐");
+
         UnloadPreviewScene();
     }
 
@@ -101,10 +114,6 @@ public class PreviewScene : MonoBehaviour
                 break;
         }
 
-        // 이전UI가 null이 아니고, 현재UI와 이전UI가 같지 않다면 이전UI는 끄기
-        if (UIManager.Instance.previousUI != null && UIManager.Instance.currentUI != UIManager.Instance.previousUI)
-        {
-            UIManager.Instance.previousUI.Hide();
-        }
+        //UIManager.Instance.AllHide();
     }
 }

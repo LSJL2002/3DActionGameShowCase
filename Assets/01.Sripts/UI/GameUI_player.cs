@@ -50,9 +50,17 @@ public partial class GameUI : UIBase
         PlayerManager.Instance.Stats.OnStatChanged -= UpdateStat;
     }
 
-    public void OnEnablePlayer()
+    public void OnEnablePlayer(bool isOpened)
     {
-        playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
+        // Menu가 닫힐때 (GameUI는 켜져야함)
+        if (!isOpened)
+        {
+            playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
+        }
+        else
+        {
+            Hide();
+        }
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출
