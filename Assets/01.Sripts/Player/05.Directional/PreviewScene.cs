@@ -19,8 +19,6 @@ public class PreviewScene : MonoBehaviour
     [SerializeField] private Button btnSkill;
     [SerializeField] private Button btnInventory;
 
-    public static event Action<bool> OnMenu; // Menu가 열고 닫힘을 알리는 이벤트
-
     private void Awake()
     {
         // 버튼 리스너 등록
@@ -35,19 +33,13 @@ public class PreviewScene : MonoBehaviour
     {
         LoadPreviewScene();
 
-        UIManager.Instance.Hide<TutorialUI>();
-
-        OnMenu?.Invoke(true); // Menu 열림 이벤트 알림
-        Debug.Log("Menu 켜짐");
+        UIManager.Instance.AllHide();
     }
 
     private async void OnDisable()
     {
+        UIManager.Instance.AllHide();
         await UIManager.Instance.Show<GameUI>();
-
-        OnMenu?.Invoke(false); // Menu 닫힘 이벤트 알림
-        Debug.Log("Menu 꺼짐");
-
         UnloadPreviewScene();
     }
 
@@ -114,6 +106,6 @@ public class PreviewScene : MonoBehaviour
                 break;
         }
 
-        //UIManager.Instance.AllHide();
+        UIManager.Instance.AllHide(UIManager.Instance.currentUI);
     }
 }
