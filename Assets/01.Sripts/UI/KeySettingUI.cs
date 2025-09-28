@@ -10,7 +10,7 @@ public class KeySettingUI : UIBase
 
     protected override void OnEnable()
     {
-        if (SceneLoadManager.Instance.nowSceneIndex == 2)
+        if (SceneLoadManager.Instance.nowSceneIndex == 3)
         {
             quitButton.SetActive(false);
             returnButton.SetActive(false);
