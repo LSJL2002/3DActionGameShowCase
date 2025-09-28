@@ -117,6 +117,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public GameObject SpawnMonster(GameObject prefab, Vector3 spawnPos)
     {
+        spawnPos.y = 0;
         var instance = GameObject.Instantiate(prefab, spawnPos, Quaternion.identity);
 
         currentMonster = instance;
