@@ -246,6 +246,63 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &346704447
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.2574635
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0000009536743
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.9828434
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2438753231752441817, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3087992750233758416, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
+      propertyPath: m_Name
+      value: DamnTractor
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5f205f1b0e2ef144da8b010b4bcf9f1f, type: 3}
 --- !u!1 &573545348
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,7 +777,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3177182589720266420, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3822254260468104781, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -839,3 +896,4 @@ SceneRoots:
   - {fileID: 573545351}
   - {fileID: 1805476665673271562}
   - {fileID: 7224429415945886389}
+  - {fileID: 346704447}

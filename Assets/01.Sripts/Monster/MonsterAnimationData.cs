@@ -22,7 +22,10 @@ public class MonsterAnimationData
         Skill5,
         Skill6,
         Death,
-        Ready
+        Ready,
+        //Misc
+        TurnLeft,
+        TurnRight
     }
 
     [Serializable]
