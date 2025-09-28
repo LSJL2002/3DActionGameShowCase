@@ -13,6 +13,26 @@ public class TimeLineManager : Singleton<TimeLineManager>
     // 한번 생성한 핸들을 다시 생성하지 않도록 Dictionary로 관리
     private Dictionary<string, AsyncOperationHandle<GameObject>> timelineHandles = new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
+    protected override void Start()
+    {
+        base.Start();
+
+        PlayerManager.Instance.Stats.OnDie += OnGameOverTimeLine; // 플레이어 사망이벤트에 구독
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        PlayerManager.Instance.Stats.OnDie -= OnGameOverTimeLine; // 플레이어 사망이벤트에 구독해제
+    }
+
+    // 게임오버 타임라인 호출하는 함수
+    private async void OnGameOverTimeLine()
+    {
+        await OnTimeLine<PlayableDirector>("TimeLine_GameOver");
+    }
+
     public async UniTask<T> OnTimeLine<T>(string addressableKey) where T : PlayableDirector
     {
         string timelineName = addressableKey;

@@ -27,10 +27,8 @@ public partial class GameUI : UIBase
 
     float duration = 0.2f; // 닷트윈 효과들에서 사용할 시간
 
-    public async void OnAwakePlayer()
+    public void OnAwakePlayer()
     {
-        await UIManager.Instance.Show<DamageEffectUI>();
-
         playerStats = PlayerManager.Instance.Stats;
 
         // 플레이어 변수 초기화
