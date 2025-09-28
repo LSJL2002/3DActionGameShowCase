@@ -8,13 +8,14 @@ using UnityEngine.XR;
 using System;
 using Unity.VisualScripting;
 using Unity.Mathematics;
+using UnityEngine.TextCore.Text;
 
 public class BaseMonster : MonoBehaviour, IDamageable
 {
     [Header("References")]
     [SerializeField] public MonsterAnimationData animationData;
     public MonsterPatternSO patternConfig;
-
+    public CharacterController Controller { get; private set; }
     public Animator Animator { get; private set; }
     public NavMeshAgent Agent { get; private set; }
     public MonsterStatHandler Stats { get; private set; }
@@ -43,6 +44,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         Animator = GetComponentInChildren<Animator>();
         Agent = GetComponent<NavMeshAgent>();
         Stats = GetComponent<MonsterStatHandler>();
+        Controller = GetComponent<CharacterController>();
 
         aiEvents = GetComponent<MonsterAIEvents>() ?? gameObject.AddComponent<MonsterAIEvents>();
         aiEvents.SetStateMachine(stateMachine);
@@ -50,7 +52,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     protected virtual void Start()
     {
-        stateMachine = new MonsterStateMachine(this); 
+        stateMachine = new MonsterStateMachine(this);
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
         PlayerTarget = GameObject.FindWithTag("Player").transform;
         if (Agent != null) Agent.speed = stateMachine.MovementSpeed;
@@ -103,7 +105,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         stateMachine.PreCastTimeMultiplier = chosenCondition.preCastTimeMultiplier;
         stateMachine.EffectValueMultiplier = chosenCondition.effectValueMultiplier;
         ignoreDistanceCheck = chosenCondition.ignoreDistanceCheck;
-        Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
+        //Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
 
         currentStepIndex = 0;
         StartCoroutine(RunPattern());
@@ -214,7 +216,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     {
         BattleManager.Instance.HandleMonsterDie();
     }
-    
+
     public void OnAttackAnimationComplete()
     {
         stateMachine.isAttacking = false;
@@ -263,5 +265,12 @@ public class BaseMonster : MonoBehaviour, IDamageable
         foreach (var aoe in activeAOEs)
             if (aoe != null) Destroy(aoe);
         activeAOEs.Clear();
+    }
+    
+    protected virtual void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (IsDead) return;
+
+        (stateMachine.CurrentState as MonsterBaseState)?.OnControllerColliderHit(hit);
     }
 }

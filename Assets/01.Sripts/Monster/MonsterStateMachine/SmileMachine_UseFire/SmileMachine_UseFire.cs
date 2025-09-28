@@ -32,6 +32,14 @@ public class SmileMachine_UseFire : BaseMonster
     {
         switch (state)
         {
+            case SmileToiletSlamState:
+                return Stats.GetSkill("SmileMachine_Slam").range / 2f;
+            case SmileToiletSmashState:
+                return Stats.GetSkill("SmileMachine_Smash").range / 2f;
+            case SmileToiletChargeState:
+                return Stats.GetSkill("SmileMachine_Charge").range;
+            case SmileMachineShootState:
+                return Stats.GetSkill("SmileMachine_Shoot").range;
             default:
                 return Stats.AttackRange;
         }

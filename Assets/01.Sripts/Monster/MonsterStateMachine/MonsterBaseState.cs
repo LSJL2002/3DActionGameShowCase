@@ -21,6 +21,7 @@ public class MonsterBaseState : Istate
     public virtual void HandleInput() { }
     public virtual void LogicUpdate() { }
     public virtual void PhysicsUpdate() { }
+    public virtual void OnControllerColliderHit(ControllerColliderHit hit) { }
     public virtual void Update()
     {
         ApplyForcesOnly();
