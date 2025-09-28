@@ -27,8 +27,10 @@ public partial class GameUI : UIBase
 
     float duration = 0.2f; // 닷트윈 효과들에서 사용할 시간
 
-    public void OnAwakePlayer()
+    public async void OnAwakePlayer()
     {
+        await UIManager.Instance.Show<DamageEffectUI>();
+
         playerStats = PlayerManager.Instance.Stats;
 
         // 플레이어 변수 초기화
@@ -56,8 +58,10 @@ public partial class GameUI : UIBase
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출
-    private void OnPlayerHealthChanged()
+    private async void OnPlayerHealthChanged()
     {
+        await UIManager.Instance.Show<DamageEffectUI>();
+
         // 체력 텍스트 업데이트
         playerHPText.text = Mathf.FloorToInt(playerStats.CurrentHealth / playerMaxHP * 100).ToString() + "%";
         float playerHPpercentage = playerStats.CurrentHealth / playerMaxHP;
