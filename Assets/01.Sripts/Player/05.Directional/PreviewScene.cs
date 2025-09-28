@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -101,9 +102,6 @@ public class PreviewScene : MonoBehaviour
                 break;
         }
 
-        if (UIManager.Instance.previousUI != null)
-        {
-            UIManager.Instance.previousUI.Hide();
-        }
+        UIManager.Instance.AllHide(UIManager.Instance.currentUI);
     }
 }

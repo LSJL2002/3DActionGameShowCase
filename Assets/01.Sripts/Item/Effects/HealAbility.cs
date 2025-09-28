@@ -14,7 +14,7 @@ public class HealAbility : ItemAbility
         //float duration = itemData.duration; // 효과 시간 (s)
         //float totalHealAmount = 0;
         //float amountPerDuration = totalHealAmount / duration; // 회복 총량을 지속시간으로 나누기
-        //float healamount = PlayerManager.Instance.Stats.MaxHealth.Value * itemData.effectValue/100; // 단위시간당 회복량
+        //float healamount = PlayerManager.Instance.Stats.MaxHealth.Value * itemData.effectValue / 100; // 단위시간당 회복량
 
         //// DOTween.To를 사용하여 currentHealth 변수를 targetHealth까지 10초 동안 변화시킵니다.
         //DOTween.To(() => currentHealth, // Getter: 트윈 시작 시 현재 체력
