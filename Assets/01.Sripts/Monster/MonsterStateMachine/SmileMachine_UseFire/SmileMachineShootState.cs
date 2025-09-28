@@ -26,7 +26,7 @@ public class SmileMachineShootState : MonsterBaseState
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Ready));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
-        if (stateMachine.Monster is SmileMachine_UseFire machine)
+        if (stateMachine.Monster is SmileMachine_UseGun machine)
         {
             machine.rifleParticleEffect.SetActive(true);
         }
@@ -46,7 +46,7 @@ public class SmileMachineShootState : MonsterBaseState
         // --- Finish shooting ---
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
-        if (stateMachine.Monster is SmileMachine_UseFire machineEnd)
+        if (stateMachine.Monster is SmileMachine_UseGun machineEnd)
         {
             machineEnd.rifleParticleEffect.SetActive(false);
         }

@@ -58,7 +58,7 @@ public class MonsterStateMachine : StateMachine
             var chargeSkill = monster.Stats.GetSkill("SmileMachine_Charge");
             SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
         }
-        else if (monster is SmileMachine_UseFire)
+        else if (monster is SmileMachine_UseGun)
         {
             var slamSkill = monster.Stats.GetSkill("SmileMachine_Slam");
             SmileToiletSlamState = new SmileToiletSlamState(this, slamSkill);

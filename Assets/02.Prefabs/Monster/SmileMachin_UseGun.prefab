@@ -4876,14 +4876,14 @@ GameObject:
   - component: {fileID: 7091687856046425219}
   - component: {fileID: 5796734335753366356}
   - component: {fileID: 5537974382895312408}
-  - component: {fileID: 6492560326314531883}
+  - component: {fileID: 8216796299372910515}
   m_Layer: 6
   m_Name: SmileMachin_UseGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2547818601450622632
 Transform:
   m_ObjectHideFlags: 0
@@ -5011,7 +5011,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6492560326314531883
+--- !u!114 &8216796299372910515
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5020,7 +5020,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4096753740676932879}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab97829d4ac40864aa937a495e62cc1c, type: 3}
+  m_Script: {fileID: 11500000, guid: a7ce77b914fbdef4682b850087088126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animationData:
@@ -5049,6 +5049,8 @@ MonoBehaviour:
       parameterName: Shoot
     - type: 11
       parameterName: GroggyShoot
+    - type: 12
+      parameterName: 
     - type: 13
       parameterName: Death
     - type: 14
