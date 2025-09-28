@@ -6,7 +6,6 @@ using static UnityEngine.UI.Image;
 public class SlashProjectile : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;  // 이동 속도
-    [SerializeField] private float lifeTime = 2f; // 사라질 시간
     [SerializeField] private Transform player;    // 플레이어 오브젝트를 인스펙터/코드로 세팅
 
     private Vector3 moveDir;
@@ -14,11 +13,11 @@ public class SlashProjectile : MonoBehaviour
     private Quaternion spawnRotation;
 
 
+
     private void OnEnable()
     {
         spawnPosition = transform.position;
         spawnRotation = transform.rotation;
-
 
         if (player != null)
             moveDir = player.forward.normalized; // 항상 현재 플레이어 방향
@@ -26,7 +25,6 @@ public class SlashProjectile : MonoBehaviour
             moveDir = transform.forward; // fallback
 
         CancelInvoke(); // 혹시 이전 Invoke 남아있다면 제거
-        Invoke(nameof(DisableSelf), lifeTime);
     }
 
     private void Update()
@@ -41,10 +39,5 @@ public class SlashProjectile : MonoBehaviour
         transform.position = spawnPosition;
         transform.rotation = spawnRotation;
         moveDir = Vector3.zero; // 이전 방향 초기화
-    }
-
-    private void DisableSelf()
-    {
-        gameObject.SetActive(false);
     }
 }
