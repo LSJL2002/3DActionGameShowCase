@@ -24,6 +24,6 @@ public class TimeLine_GameOver : TimeLineBase
     {
         TimeLineManager.Instance.Release(gameObject.name);
         
-        SceneLoadManager.Instance.LoadScene(2); // Home씬으로 전환
+        SceneLoadManager.Instance.LoadScene(0); // Home씬으로 전환
     }
 }
