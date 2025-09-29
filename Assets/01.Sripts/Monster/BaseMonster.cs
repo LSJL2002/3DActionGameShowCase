@@ -266,7 +266,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
             if (aoe != null) Destroy(aoe);
         activeAOEs.Clear();
     }
-    
+
     protected virtual void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (IsDead) return;
