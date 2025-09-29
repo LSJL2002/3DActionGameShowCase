@@ -19,6 +19,7 @@ public class PlayerSkillState : PlayerBaseState
     private Vector3 returnDir;
     private float phaseTimer = 0f;
 
+
     private enum Phase { Dash, Wait, Return }
     private Phase phase;
 
@@ -31,6 +32,7 @@ public class PlayerSkillState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
+
 
         // 가장 가까운 몬스터 탐색
         attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
@@ -84,6 +86,7 @@ public class PlayerSkillState : PlayerBaseState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
 
         phaseTimer += Time.deltaTime;
 

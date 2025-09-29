@@ -48,13 +48,13 @@ public class PlayerAttackState : PlayerBaseState
     // ===================== 공격 초기화 =====================
     private void InitializeAttack()
     {
-        currentAttack = stateMachine.Player.InfoData.AttackData.GetAttackInfoData(stateMachine.ComboIndex);
-
         // 가장 가까운 몬스터 탐색
         attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
         stateMachine.Player.Combat.SetAttackTarget(attackTarget);
         // 공격 진입 시 Lock-On 강제 적용
-        if (attackTarget != null)  stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
+        if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
+
+        currentAttack = stateMachine.Player.InfoData.AttackData.GetAttackInfoData(stateMachine.ComboIndex);
 
         var anim = stateMachine.Player.Animator;
         //anim.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
@@ -112,6 +112,12 @@ public class PlayerAttackState : PlayerBaseState
             stateMachine.Player.Animator.SetTrigger(stateMachine.Player.AnimationData.ComboTriggerHash);
             SetAttack(bufferedComboIndex);
             bufferedComboIndex = -1;
+
+            // 가장 가까운 몬스터 탐색
+            attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
+            stateMachine.Player.Combat.SetAttackTarget(attackTarget);
+            // 공격 진입 시 Lock-On 강제 적용
+            if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
         }
 
         // 마지막 공격(-1) 처리
