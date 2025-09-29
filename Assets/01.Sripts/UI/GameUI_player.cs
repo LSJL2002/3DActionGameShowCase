@@ -37,15 +37,15 @@ public partial class GameUI : UIBase
         // 플레이어 이미지 fillAmount를 초기화
         playerHPImage.fillAmount = 1f;
         playerMPImage.fillAmount = 1f;
-
-        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
-        PlayerManager.Instance.Stats.OnPlayerHealthChanged += OnPlayerHealthChanged;
-        PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
     }
 
     public void OnEnablePlayer()
     {
         playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
+
+        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
+        PlayerManager.Instance.Stats.OnPlayerHealthChanged += OnPlayerHealthChanged;
+        PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
     }
 
     public void OnDisablePlayer()
