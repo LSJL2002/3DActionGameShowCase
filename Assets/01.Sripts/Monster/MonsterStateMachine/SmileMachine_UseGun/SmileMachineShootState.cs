@@ -13,17 +13,13 @@ public class SmileMachineShootState : MonsterBaseState
 
     public override void Enter()
     {
-        stateMachine.isAttacking = true; // Lock pattern system
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Ready));
+        stateMachine.isAttacking = true;
         shootRoutine = stateMachine.Monster.StartCoroutine(ShootRoutine());
     }
 
     private IEnumerator ShootRoutine()
     {
-        // --- Ready phase ---
-        yield return new WaitForSeconds(skillData.preCastTime);
-
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Ready));
+        // --- Play shoot animation immediately ---
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
         if (stateMachine.Monster is SmileMachine_UseGun machine)
@@ -31,29 +27,22 @@ public class SmileMachineShootState : MonsterBaseState
             machine.rifleParticleEffect.SetActive(true);
         }
 
-        float shootDuration = 4f;
-        float timer = 0f;
+        // --- Fire one shot ---
+        RotateTowardsPlayer();
+        DealDamageInFront();
 
-        // --- Shooting loop ---
-        while (timer < shootDuration)
-        {
-            timer += Time.deltaTime;
-            RotateTowardsPlayer();
-            DealDamageInFront();
-            yield return null;
-        }
+        // Small delay so the animation/particle can play
+        yield return new WaitForSeconds(0.5f);
 
-        // --- Finish shooting ---
+        // --- End skill ---
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
         if (stateMachine.Monster is SmileMachine_UseGun machineEnd)
         {
             machineEnd.rifleParticleEffect.SetActive(false);
         }
-        // Release attack lock so pattern system continues
-        stateMachine.isAttacking = false;
 
-        // Return to Idle
+        stateMachine.isAttacking = false;
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
@@ -66,7 +55,7 @@ public class SmileMachineShootState : MonsterBaseState
         if (dir != Vector3.zero)
         {
             Quaternion targetRot = Quaternion.LookRotation(dir);
-            float rotateSpeed = 5f; // smoother rotation
+            float rotateSpeed = 10f;
             stateMachine.Monster.transform.rotation = Quaternion.Slerp(
                 stateMachine.Monster.transform.rotation,
                 targetRot,
@@ -84,7 +73,7 @@ public class SmileMachineShootState : MonsterBaseState
         {
             if (hit.collider.TryGetComponent<IDamageable>(out var target))
             {
-                target.OnTakeDamage(stateMachine.Monster.Stats.AttackPower);
+                target.OnTakeDamage(stateMachine.Monster.Stats.AttackPower * skillData.effectValue);
             }
         }
     }
@@ -92,17 +81,14 @@ public class SmileMachineShootState : MonsterBaseState
     public override void Exit()
     {
         Debug.Log("Exit SmileMachineShootState");
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Ready));
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
-        // Stop only this coroutine to avoid breaking other patterns
         if (shootRoutine != null)
         {
             stateMachine.Monster.StopCoroutine(shootRoutine);
             shootRoutine = null;
         }
 
-        // Ensure isAttacking is reset (failsafe)
         stateMachine.isAttacking = false;
     }
 }

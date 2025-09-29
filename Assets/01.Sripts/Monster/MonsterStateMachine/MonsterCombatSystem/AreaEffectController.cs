@@ -117,7 +117,7 @@ public class AreaEffectController : MonoBehaviour
             if (angleToTarget <= angle / 2f)
             {
                 IDamageable damageable = hit.GetComponent<IDamageable>();
-                damageable?.OnTakeDamage(damage);
+                damageable?.OnTakeDamage(damage * skillData.effectValue);
 
                 if (skillData != null)
                 {
@@ -149,7 +149,7 @@ public class AreaEffectController : MonoBehaviour
             if (col.CompareTag("Player"))
             {
                 IDamageable damageable = col.GetComponent<IDamageable>();
-                damageable?.OnTakeDamage(damage);
+                damageable?.OnTakeDamage(damage * skillData.effectValue);
 
                 if (skillData != null)
                 {
@@ -177,7 +177,7 @@ public class AreaEffectController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             IDamageable damageable = other.GetComponent<IDamageable>();
-            damageable?.OnTakeDamage(damage);
+            damageable?.OnTakeDamage(damage * skillData.effectValue);
         }
     }
 }
