@@ -43,7 +43,8 @@ public class SmileToiletSlamState : MonsterBaseState
         aoeController.CircleInitialize(
             skillData.preCastTime * stateMachine.PreCastTimeMultiplier,
             skillData.range * stateMachine.RangeMultiplier,
-            (int)(stateMachine.Monster.Stats.AttackPower * stateMachine.EffectValueMultiplier)
+            (int)(stateMachine.Monster.Stats.AttackPower * stateMachine.EffectValueMultiplier),
+            skillData
         );
     }
 

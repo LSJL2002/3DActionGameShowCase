@@ -4,17 +4,13 @@ using UnityEngine.Animations;
 
 public class LookAtCamera : MonoBehaviour
 {
-    private Transform mainCameraTransform;
 
     private AimConstraint aimConstraint;
 
     void Start()
     {
         // 메인 카메라를 플레이어에서 가져옴
-        Camera cam = PlayerManager.Instance.camera.GetComponentInChildren<Camera>();
-
-        // 카메라의 트랜스폼을 변수에 저장
-        mainCameraTransform = cam.transform;
+        Transform cam = PlayerManager.Instance.camera.MainCamera;
 
         // 에임컨스트레인트 컴포넌트 가져오기
         aimConstraint = GetComponent<AimConstraint>();
@@ -23,7 +19,7 @@ public class LookAtCamera : MonoBehaviour
         ConstraintSource source = new ConstraintSource();
 
         // 소스 정보 할당
-        source.sourceTransform = mainCameraTransform;
+        source.sourceTransform = cam;
         source.weight = 1.0f;
 
         // 완성된 소스를 세팅

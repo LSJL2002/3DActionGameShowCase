@@ -96,6 +96,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     public void OnTakeDamage(int amount)
     {
         player?.Stats.TakeDamage(amount); // HP 변경은 Stats에서만
+        Debug.Log(amount + "의 데미지");
         // 피격 애니메이션, 넉백 등도 여기서 처리 가능
     }
 
