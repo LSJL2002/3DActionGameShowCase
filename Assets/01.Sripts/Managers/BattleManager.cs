@@ -58,26 +58,23 @@ public class BattleManager : Singleton<BattleManager>
         if (isBattle) return;
         isBattle = true;
         currentZone = zone;
-        var cutScene = currentZone.PlayableDirector;
 
         // 1. 벽 켜기
         currentZone.SetWallsActive(true);
         StartWarning();
 
-        // 2. 연출 시작
-        cutScene.Play();
 
         // 플레이 상태 체크 (연출 시작 직후)
         if (!Application.isPlaying || this == null) return;
 
         // Timeline 끝날 때까지 대기
-        await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
+        //await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
 
         // 플레이 상태 체크 (대기 후)
         if (!Application.isPlaying || this == null) return;
 
         // 3. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.spawnPoint.position);
+        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
 
         // 플레이 상태 체크 (몬스터 로드 끝난 뒤)
         if (!Application.isPlaying || this == null || currentMonster == null) return;
