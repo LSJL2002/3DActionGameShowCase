@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patterns:
   - id: 1
-    states: 0000000000000000
+    states: 0500000000000000
   - id: 2
     states: 000000000000000005000000
   - id: 3
@@ -26,13 +26,13 @@ MonoBehaviour:
   - id: 6
     states: 040000000400000004000000
   - id: 11
-    states: 000000000000000001000000050000000500000005000000
+    states: 000000000000000001000000050000000500000006000000
   - id: 12
-    states: 0500000005000000
+    states: 050000000500000006000000
   - id: 13
     states: 04000000
   - id: 14
-    states: 010000000500000005000000
+    states: 0100000005000000
   - id: 15
     states: 03000000
   conditions:
@@ -152,7 +152,7 @@ MonoBehaviour:
     conditionType: 0
     minHpPercent: 0
     maxHpPercent: 10
-    thresholdHpPercent: 10
+    thresholdHpPercent: 0
     requiredDistance: 0
     triggerOnce: 0
     hasTriggered: 0
