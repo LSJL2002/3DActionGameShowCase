@@ -39,10 +39,6 @@ public class PlayerKnockbackState : Istate
         anim.SetTrigger(stateMachine.Player.AnimationData.KnockbackParameterHash);
         anim.SetLayerWeight(knockLayerIndex, 1);
 
-
-        // 캐릭터를 넉백 방향으로 바라보게 회전 고정
-        stateMachine.Player.transform.forward = knockDirection;
-
         // 제어 불가 상태 → 이동/회전 입력 무시
         stateMachine.IsKnockback = true;
     }
@@ -60,6 +56,14 @@ public class PlayerKnockbackState : Istate
     public void LogicUpdate()
     {
         elapsed += Time.deltaTime;
+
+        // 넉백 중 맞은 몬스터 바라보기 대신 넉백 반대 방향 바라보기
+        if (knockDirection.sqrMagnitude > 0.01f)
+        {
+            Vector3 lookDir = -knockDirection; // 넉백 방향 반대로
+            lookDir.y = 0f;                    // 수직 회전 제거
+            stateMachine.Player.transform.forward = lookDir.normalized;
+        }
 
         if (elapsed >= duration)
         {
