@@ -25,6 +25,7 @@ public class MonsterStateMachine : StateMachine
 
     //SmileMachine_UseFire 스킬
     public SmileMachineShootState SmileMachineShootState { get; private set; }
+    public SmileMachineGroggyShoot SmileMachineGroggyShoot { get; private set; }
 
     private MonsterAIEvents aiEvents;
     public bool isAttacking = false;
@@ -46,12 +47,6 @@ public class MonsterStateMachine : StateMachine
         if (monster is ToiletMonster)
         {
             var slamSkill = monster.Stats.GetSkill("SmileMachine_Slam");
-            // if (slamSkill == null)
-            // {
-            //     Debug.LogError($"Skill 'SmileMachine_Slam' not found! Monster has {monster.Stats.MonsterSkills.Count} skills:");
-            //     foreach (var s in monster.Stats.MonsterSkills)
-            //         Debug.Log($" - {s.skillName}");
-            // }
             SmileToiletSlamState = new SmileToiletSlamState(this, slamSkill);
             var smashSkill = monster.Stats.GetSkill("SmileMachine_Smash");
             SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
@@ -67,7 +62,9 @@ public class MonsterStateMachine : StateMachine
             var chargeSkill = monster.Stats.GetSkill("SmileMachine_Charge");
             SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
             var shootSkill = monster.Stats.GetSkill("SmileMachine_Shoot");
-            SmileMachineShootState = new SmileMachineShootState(this,shootSkill);
+            SmileMachineShootState = new SmileMachineShootState(this, shootSkill);
+            var groggyShootSkill = monster.Stats.GetSkill("SmileMachine_GroggyShoot");
+            SmileMachineGroggyShoot = new SmileMachineGroggyShoot(this, groggyShootSkill);
         }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();
