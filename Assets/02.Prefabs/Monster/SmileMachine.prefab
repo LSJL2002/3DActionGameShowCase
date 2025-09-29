@@ -3766,6 +3766,7 @@ GameObject:
   - component: {fileID: 1518149972915075037}
   - component: {fileID: 378540195965098670}
   - component: {fileID: 6942012498410592670}
+  - component: {fileID: 3003058952669767503}
   m_Layer: 6
   m_Name: SmileMachine
   m_TagString: Untagged
@@ -3937,6 +3938,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 378540195965098670}
   drag: 0.3
+--- !u!136 &3003058952669767503
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3177182589720266420}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1.9183959
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.98864037, z: 0}
 --- !u!1 &3186133775840382300
 GameObject:
   m_ObjectHideFlags: 0

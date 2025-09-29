@@ -137,6 +137,10 @@ public class MonsterStateMachine : StateMachine
     {
         aiEvents?.Enable();
     }
+    void FixedUpdate()
+    {
+        Physicsupdate();
+    }
 
     public float MovementSpeed => Monster.Stats.MoveSpeed * MovementSpeedModifier;
 }
