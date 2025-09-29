@@ -16,7 +16,8 @@ public partial class GameUI : UIBase
 {
     [SerializeField] private CanvasGroup skillInfoCanvasGroup;
     [SerializeField] private Image skill1Image; // 스킬1 이미지
-    
+    [SerializeField] private TextMeshProUGUI skill1Text; // 스킬1 스택 텍스트
+
     private Tween skill1cooltimeTween; // DOTween 트윈 참조 (중복 Kill을 위해 필요)
 
     public void OnAwakeSkill()
