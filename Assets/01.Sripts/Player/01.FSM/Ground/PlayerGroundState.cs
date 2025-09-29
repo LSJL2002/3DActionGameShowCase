@@ -68,6 +68,7 @@ public class PlayerGroundState : PlayerBaseState
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
     {
-        stateMachine.ChangeState(stateMachine.DodgeState);
+        if(stateMachine.Player.Stats.UseEvade())
+            stateMachine.ChangeState(stateMachine.DodgeState);
     }
 }

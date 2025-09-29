@@ -188,6 +188,7 @@ public class PlayerAttackState : PlayerBaseState
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
     {
+        base.OnDodgeStarted(context);
         float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
         if (normalizedTime >= 0.1f)
         {

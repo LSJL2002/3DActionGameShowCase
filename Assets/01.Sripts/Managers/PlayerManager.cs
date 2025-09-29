@@ -72,7 +72,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     {
         stateMachine.HandleInput();
         stateMachine.LogicUpdate();
-        Stats.UpdateSkillBuffer();
+        Stats.Update();
     }
 
     private void FixedUpdate()
