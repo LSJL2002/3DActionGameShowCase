@@ -26,7 +26,7 @@ public class SmileToiletChargeState : MonsterBaseState
             return;
         }
 
-        Vector3 spawnPos = stateMachine.Monster.transform.position;
+        Vector3 spawnPos = stateMachine.Monster.AreaEffectPoint.transform.position;
         aoeInstance = Object.Instantiate(skillData.areaEffectPrefab, spawnPos, skillData.areaEffectPrefab.transform.rotation);
         stateMachine.Monster.RegisterAOE(aoeInstance);
         aoeController = aoeInstance.GetComponent<AreaEffectController>();
