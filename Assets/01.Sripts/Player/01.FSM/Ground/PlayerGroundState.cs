@@ -62,8 +62,8 @@ public class PlayerGroundState : PlayerBaseState
 
     protected override void OnHeavyAttackStarted(InputAction.CallbackContext context)
     {
-        stateMachine.Player.Stats.UseSkill();
-        stateMachine.ChangeState(stateMachine.SkillState);
+        if (stateMachine.Player.Stats.UseSkill())   // 성공했을 때만
+            stateMachine.ChangeState(stateMachine.SkillState);
     }
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
