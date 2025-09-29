@@ -24,7 +24,7 @@ public class TimeLine_DrainAbility : TimeLineBase
     // 이 타임라인은 재사용되기 때문에 릴리즈하지 않고 비활성화 하도록 함수를 override 함.
     protected override void OnTimeLineStop(PlayableDirector director)
     {
-        TimeLineManager.Instance.Hide(gameObject.name);
         playableDirector.stopped -= OnTimeLineStop;
+        TimeLineManager.Instance.Hide(gameObject.name);
     }
 }

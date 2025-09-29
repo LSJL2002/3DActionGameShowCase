@@ -20,6 +20,7 @@ public class DropItemSpawner : MonoBehaviour
     {
         // 배틀존 클리어 → 아이템 위치 이동 후 켜주기
         Vector3 dropPos = BattleManager.Instance.currentMonster.transform.position; // 몬스터위치
+        dropPos.y = 0;
         dropItem.transform.position = dropPos;
         //dropItem.transform.position = PlayerManager.Instance.stateMachine.Player.transform.position; //플레이어 위치
         dropItem.SetActive(true);

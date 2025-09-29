@@ -1,5 +1,6 @@
 Shader "Ageia/ImageEffect/Glitch" {
  Properties {
+	 [Toggle] _FlipY("Grab Texture Y Flip (UI/Image Effect용)", Float) = 0
   //_GlitchChanger("GlitchChanger", Range(0, 1)) = 0
   _GlitchAmount("GlitchAmount", Range(0, 1)) = 1
   [NoScaleOffset]_GlitchTex("GlitchTex", 2D) = "white" {}
@@ -41,6 +42,8 @@ Shader "Ageia/ImageEffect/Glitch" {
   half _GlitchCutAmountX;
   half _GlitchCutAmountY;
 
+  half _FlipY;
+
   // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
   // See https://docs.unity3d.com/Manual/GPUIn... for more information about instancing.
   // #pragma instancing_options assumeuniformscaling
@@ -51,6 +54,8 @@ Shader "Ageia/ImageEffect/Glitch" {
   void surf (Input IN, inout SurfaceOutput o) {
 
    half3 screenUV = IN.screenPos.xyz / IN.screenPos.w;
+
+   screenUV.y = lerp(screenUV.y, 1 - screenUV.y, _FlipY);
 
    //half Test = IN.uv_MainTex;
 

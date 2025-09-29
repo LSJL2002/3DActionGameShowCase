@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Playables;
 using static GameUI;
 
 public class BattleManager : Singleton<BattleManager>
@@ -17,22 +19,74 @@ public class BattleManager : Singleton<BattleManager>
     public static event Action<BattleZone> OnMonsterDie;
     public static event Action<BattleZone> OnBattleClear;
 
+    [SerializeField] private Material warningMaterial;
+    private Tween emissionTween;
+    private static readonly Color baseEmission = Color.black;
+    private static readonly Color warningEmission = new Color(100f / 255f, 100f / 255f, 0f / 255f);
+    private static readonly Color safeEmission = new Color(18f / 255f, 1f, 0f / 255f);
+
+    private void StartWarning()
+    {
+        if (warningMaterial == null) return;
+        warningMaterial.EnableKeyword("_EMISSION");
+
+        // 시작 전에 반드시 기본값으로 세팅
+        warningMaterial.SetColor("_EmissionColor", baseEmission);
+
+        emissionTween?.Kill();
+        emissionTween = DOTween.To(
+            () => warningMaterial.GetColor("_EmissionColor"),
+            x => warningMaterial.SetColor("_EmissionColor", x),
+            warningEmission,
+            0.8f
+        ).SetLoops(-1, LoopType.Yoyo)
+         .SetUpdate(true)
+         .SetTarget(warningMaterial);
+    }
+
+
+    private void StopWarning()
+    {
+        emissionTween?.Kill();
+        emissionTween = null;
+        warningMaterial.SetColor("_EmissionColor", safeEmission);
+    }
+
+
     public async void StartBattle(BattleZone zone)
     {
         if (isBattle) return;
         isBattle = true;
         currentZone = zone;
-
+        var cutScene = currentZone.PlayableDirector;
 
         // 1. 벽 켜기
         currentZone.SetWallsActive(true);
+        StartWarning();
 
-        // 2. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position+Vector3.up);
+        // 2. 연출 시작
+        cutScene.Play();
+
+        // 플레이 상태 체크 (연출 시작 직후)
+        if (!Application.isPlaying || this == null) return;
+
+        // Timeline 끝날 때까지 대기
+        await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
+
+        // 플레이 상태 체크 (대기 후)
+        if (!Application.isPlaying || this == null) return;
+
+        // 3. 몬스터 소환
+        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.spawnPoint.position);
+
+        // 플레이 상태 체크 (몬스터 로드 끝난 뒤)
+        if (!Application.isPlaying || this == null || currentMonster == null) return;
+
+        currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
 
         OnBattleStart?.Invoke(zone);
-
     }
+
 
     private void Update()
     {
@@ -48,39 +102,33 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
     {
-        string monsterKey = monsterId.ToString(); // Addressables 키 (등록한 이름이랑 일치해야 함)
+        string monsterKey = monsterId.ToString();
 
-        // 프리팹 비동기 로드 & 인스턴스화
+        // 로드 + 인스턴스화를 한 번에
         var handle = Addressables.InstantiateAsync(monsterKey, spawnPos, Quaternion.identity);
-        GameObject monsterInstance = await handle.Task;
 
-        if (monsterInstance != null)
-        {
-            currentMonster = monsterInstance;
-            Debug.Log($"몬스터 [{monsterId}] 소환 완료!");
-
-            BaseMonster baseMonsterComponent = currentMonster.GetComponent<BaseMonster>();
-            monsterStats = baseMonsterComponent.Stats;
-
-            string enemyName = monsterStats.monsterData.monsterName;
-            float enemyMaxHP = monsterStats.monsterData.maxHp;
-
-            return monsterInstance; // 호출부에서 받을 수 있음
-        }
-        else
-        {
-            Debug.LogError($"몬스터 {monsterId} Addressable 프리팹을 찾을 수 없음! (Key 확인 필요)");
+        // 플레이 꺼지면 더 진행하지 않도록 체크
+        if (!Application.isPlaying)
             return null;
+
+        GameObject instance = await handle.Task;
+
+        if (instance != null)
+        {
+            currentMonster = instance;
+            monsterStats = instance.GetComponent<BaseMonster>().Stats;
         }
+
+        return instance;
     }
 
     public void HandleMonsterDie()
     {
         if (monsterStats.CurrentHP > 0) return;
         OnMonsterDie?.Invoke(currentZone);
+        StopWarning();
     }
 
 

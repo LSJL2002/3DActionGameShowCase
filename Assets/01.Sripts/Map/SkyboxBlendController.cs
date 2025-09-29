@@ -46,23 +46,26 @@ public class SkyboxBlendController : MonoBehaviour
 
     private void OnEnable()
     {
-        BattleManager.OnBattleStart += HandleBattleStart;
-        BattleManager.OnBattleClear += HandleBattleClear;
+        //BattleManager.OnBattleStart += HandleBattleStart;
+        //BattleManager.OnBattleClear += HandleBattleClear;
     }
 
     private void OnDisable()
     {
-        BattleManager.OnBattleStart -= HandleBattleStart;
-        BattleManager.OnBattleClear -= HandleBattleClear;
+        //BattleManager.OnBattleStart -= HandleBattleStart;
+        //BattleManager.OnBattleClear -= HandleBattleClear;
     }
 
-    private void HandleBattleStart(BattleZone zone)
+    public void HandleBattleStart()
     {
+        rotateSky();
         ToggleSky();
+        
     }
 
-    private void HandleBattleClear(BattleZone zone)
+    public void HandleBattleClear()
     {
+        rotateSky();
         ToggleSky();
     }
 
@@ -70,17 +73,14 @@ public class SkyboxBlendController : MonoBehaviour
     public void ToggleSky()
     {
         // 낮(0) ↔ 밤(1) 토글
-        float targetBlend = isNight ? 1f : 0f;
-        //float targetRotation = isNight ? 0f : 270; // 회전값도 원하면 바꿔줘
+        float targetBlend = isNight ? 0f : 1f;
+        
 
         blendSkybox
             .DOFloat(targetBlend, "_Blend", transitionTime)
             .SetEase(Ease.InOutSine);
 
-        //blendSkybox
-        //    .DOFloat(targetRotation, "_Rotation", transitionTime)
-        //    .SetEase(Ease.InOutSine);
-
+        
         isNight = !isNight; // 상태 반전
 
         if (mainLight != null)
@@ -91,4 +91,13 @@ public class SkyboxBlendController : MonoBehaviour
                 .SetEase(Ease.InOutSine);
         }
     }  
+
+    public void rotateSky()
+    {
+        float targetRotation = isNight ? 0f : 270;
+
+        blendSkybox
+            .DOFloat(targetRotation, "_Rotation", transitionTime)
+            .SetEase(Ease.InOutSine);
+    }
 }

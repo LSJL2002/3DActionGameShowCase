@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class GameScene : SceneBase
 {
@@ -20,6 +22,9 @@ public class GameScene : SceneBase
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
 
         AudioManager.Instance.PlayBGM("1");
+
+        // 타임라인매니저 최초 인스턴스용 호출
+        TimeLineManager timeLineManager = TimeLineManager.Instance;
     }
 
     public async void DelayMethod()

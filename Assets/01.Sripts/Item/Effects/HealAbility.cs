@@ -4,34 +4,48 @@ using System.Runtime.CompilerServices;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
+using Zenject.SpaceFighter;
 
 [CreateAssetMenu(fileName = "NewItemAbility", menuName = "Item Abilities/Heal")]
 public class HealAbility : ItemAbility
 {
+    // DOTween Sequence 참조를 저장
+    private Sequence healSequence;
+
     public override void Use(ItemData itemData)
     {
-        //float healpercentage = itemData.effectValue; // 효과 값 (%)
-        //float duration = itemData.duration; // 효과 시간 (s)
-        //float totalHealAmount = 0;
-        //float amountPerDuration = totalHealAmount / duration; // 회복 총량을 지속시간으로 나누기
-        //float healamount = PlayerManager.Instance.Stats.MaxHealth.Value * itemData.effectValue/100; // 단위시간당 회복량
+        PlayerStats stats = PlayerManager.Instance.Stats;
+        float healPercentage = itemData.effectValue; // 회복량 (n%)
+        float duration = itemData.duration; // 지속시간 (n초)
+        float totalHealAmount = stats.MaxHealth.Value * healPercentage / 100; // 총 회복량 계산: 최대 체력의 n%
+        float healPerTick = totalHealAmount / duration; // 1회당 회복량 계산: 총 회복량 / 호출 횟수
+        float interval = itemData.duration / duration; // 회복 호출 간격 계산: 총 지속 시간 / 호출 횟수
 
-        //// DOTween.To를 사용하여 currentHealth 변수를 targetHealth까지 10초 동안 변화시킵니다.
-        //DOTween.To(() => currentHealth, // Getter: 트윈 시작 시 현재 체력
-        //           x => currentHealth = x, // Setter: 트윈이 진행되는 동안 체력 값 업데이트
-        //           targetHealth, // End Value: 최종 목표 체력 (ex: 800)
-        //           duration) // Duration: 트윈 지속 시간 (10초)
-        //       .SetEase(Ease.Linear) // 부드럽고 일정한 회복을 위해 Linear(선형) 이징을 사용합니다.
-        //       .OnUpdate(() =>
-        //       {
-        //           // 트윈이 진행될 때마다 호출됩니다 (선택 사항).
-        //           // UI 업데이트 로직 (예: 체력 바 슬라이더)을 여기에 넣을 수 있습니다.
-        //           Debug.Log($"회복 중... 현재 체력: {currentHealth:F2}");
-        //       })
-        //       .OnComplete(() =>
-        //       {
-        //           // 트윈이 10초 후에 완료되면 호출됩니다.
-        //           Debug.Log($"물약 회복 완료! 최종 체력: {currentHealth:F2}");
-        //       });
+        // 이전 Sequence가 있다면 제거 (중복 사용 방지)
+        healSequence?.Kill();
+
+        // 새로운 Sequence 생성
+        healSequence = DOTween.Sequence();
+
+        // 루프를 돌면서 Sequence에 AppendCallback과 AppendInterval을 추가
+        for (int i = 0; i < duration; i++)
+        {
+            // 플레이어의 AddHeal 함수 호출 (1회당 회복량 전달)
+            healSequence.AppendCallback(() => stats.RecoverHealth(healPerTick));
+
+            // 다음 회복까지 대기 시간 추가
+            if (i < duration - 1)
+            {
+                // interval초씩 대기 (회복은 바로 돼서 0초걸리고, 1초 쉬고, 다시 회복 0초 이런식)
+                healSequence.AppendInterval(interval);
+            }
+        }
+
+        // Sequence 재생 및 Auto파괴옵션세팅 호출
+        healSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
+                    .OnKill(() => healSequence = null) // Sequence가 Kill 될 때 참조 해제
+                    .Play(); // Sequence 시작
+
+        Debug.Log($"물약 사용 시작: 총 {duration}초 동안 {duration}회 (매 {interval}초마다 {healPerTick} 회복)");
     }
 }
