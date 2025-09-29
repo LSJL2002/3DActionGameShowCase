@@ -55,7 +55,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public async void StartBattle(BattleZone zone)
     {
-        await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_SMachineBattleStart");
+        var cutScene =  await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_SMachineBattleStart");
 
         if (isBattle) return;
         isBattle = true;
@@ -70,13 +70,13 @@ public class BattleManager : Singleton<BattleManager>
         if (!Application.isPlaying || this == null) return;
 
         // Timeline 끝날 때까지 대기
-        //await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
+        await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
 
         // 플레이 상태 체크 (대기 후)
         if (!Application.isPlaying || this == null) return;
 
         // 3. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
+        currentMonster = await SpawnMonster(zone.summonMonsterId, cutScene.transform.GetChild(3).transform.position);
 
         // 플레이 상태 체크 (몬스터 로드 끝난 뒤)
         if (!Application.isPlaying || this == null || currentMonster == null) return;
