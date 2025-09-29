@@ -27,6 +27,7 @@ public class MonsterAIEvents : MonoBehaviour
 
     private AIMode currentmode = AIMode.Idle;
     private bool processingEnabled = true;
+    private PlayerManager PlayerManager;
 
     private void Awake()
     {
@@ -37,8 +38,7 @@ public class MonsterAIEvents : MonoBehaviour
     {
         if (!processingEnabled || player == null || stateMachine == null) return;
 
-        var stats = player.GetComponent<PlayerStats>();
-        if (stats != null && stats.IsDead)
+        if (PlayerManager.Stats.IsDead)
         {
             if (currentmode != AIMode.Idle)
             {
@@ -46,9 +46,8 @@ public class MonsterAIEvents : MonoBehaviour
                 RestingPhase?.Invoke();
                 stateMachine.ChangeState(stateMachine.MonsterIdleState);
             }
-            return; 
+            return;
         }
-
         stateMachine.Monster.PickPatternByCondition();
         float distance = Vector3.Distance(transform.position, player.position);
         float detectRange = stateMachine.Monster.Stats.DetectRange;
