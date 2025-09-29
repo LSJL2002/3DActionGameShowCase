@@ -47,18 +47,19 @@ public class PlayerStats : IStats
     public float CurrentHealth { get; private set; }
     public float CurrentEnergy { get; private set; }
 
-    // ================스킬 버퍼/쿨타임================
+    // ====================스킬 버퍼======================
     public int SkillBufferMax { get; private set; } = 2;
     public int SkillBufferCurrent { get; set; } = 2; //이거랑
     public float SkillCooldown { get; private set; } = 5f; //이거
-    public float LastSkillTime { get; set; } = -5f;
 
-    // =================== 회피 관련 ===================
+    // =================== 회피 버퍼 =====================
     public int EvadeBufferMax { get; private set; } = 4;
     public int EvadeBufferCurrent { get; set; } = 4;
     public float EvadeCooldown { get; private set; } = 4f;
-    public float LastEvadeTime { get; set; } = -4f;
 
+    // ===================누적 타이머======================
+    private readonly Queue<float> skillRecoveryTimes = new();
+    private readonly Queue<float> evadeRecoveryTimes = new();
 
 
     public bool IsDead => CurrentHealth <= 0;
@@ -82,10 +83,8 @@ public class PlayerStats : IStats
 
         // 스킬 버퍼를 풀로 채우고 타이머 초기화
         SkillBufferCurrent = SkillBufferMax;   // 2개로 시작
-        LastSkillTime = Time.time;             // 지금 시점을 기준으로 회복 타이머 시작
         // 회피 초기화
         EvadeBufferCurrent = EvadeBufferMax;
-        LastEvadeTime = Time.time;
     }
 
     public void TakeDamage(float amount)
@@ -144,57 +143,44 @@ public class PlayerStats : IStats
 
     public event Action<StatType> OnStatChanged;
 
-    
-    // ===================스킬 사용===================
-    private bool CanUseSkill()
-    {
-        bool cooldownReady = Time.time - LastSkillTime >= SkillCooldown;
-        return cooldownReady && SkillBufferCurrent > 0;
-    }
 
+    // ===================버퍼 사용===================
     public bool UseSkill()
     {
-        if (!CanUseSkill()) return false;
+        if (SkillBufferCurrent <= 0) return false;
         SkillBufferCurrent--;
-        LastSkillTime = Time.time;
+        skillRecoveryTimes.Enqueue(Time.time + SkillCooldown);
         return true;
-    }
-
-
-    // =================== 회피 사용 ===================
-    private bool CanEvade()
-    {
-        bool cooldownReady = Time.time - LastEvadeTime >= EvadeCooldown;
-        return cooldownReady && EvadeBufferCurrent > 0;
     }
 
     public bool UseEvade()
     {
-        if (!CanEvade()) return false;
+        if (EvadeBufferCurrent <= 0) return false;
         EvadeBufferCurrent--;
-        LastEvadeTime = Time.time;
+        evadeRecoveryTimes.Enqueue(Time.time + EvadeCooldown);
         return true;
     }
 
     // =================== 버퍼 업데이트 ===================
-    public void UpdateEvadeBuffer()
-    {
-        if (Time.time - LastEvadeTime >= EvadeCooldown && EvadeBufferCurrent < EvadeBufferMax)
-        {
-            EvadeBufferCurrent++;            // 한 개씩 회복
-            LastEvadeTime = Time.time;       // 회복한 시점 기록
-        }
-    }
-
     public void UpdateSkillBuffer()
     {
-        if (Time.time - LastSkillTime >= SkillCooldown && SkillBufferCurrent < SkillBufferMax)
+        while (skillRecoveryTimes.Count > 0 && skillRecoveryTimes.Peek() <= Time.time)
         {
-            SkillBufferCurrent++;            // 한 개씩 증가
-            LastSkillTime = Time.time;       // 회복한 시점을 다시 기록 
+            skillRecoveryTimes.Dequeue();
+            if (SkillBufferCurrent < SkillBufferMax)
+                SkillBufferCurrent++;
         }
     }
 
+    public void UpdateEvadeBuffer()
+    {
+        while (evadeRecoveryTimes.Count > 0 && evadeRecoveryTimes.Peek() <= Time.time)
+        {
+            evadeRecoveryTimes.Dequeue();
+            if (EvadeBufferCurrent < EvadeBufferMax)
+                EvadeBufferCurrent++;
+        }
+    }
     // 기존 UpdateSkillBuffer와 같이 외부 Update에서 호출 가능
     public void Update()
     {
