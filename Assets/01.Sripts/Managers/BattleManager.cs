@@ -67,23 +67,19 @@ public class BattleManager : Singleton<BattleManager>
         // 2. 연출 시작
         cutScene.Play();
 
-        // 비동기로 몬스터 로드 시작
-        var monster = await LoadMonsterPrefab(zone.summonMonsterId);
+        // 플레이 상태 체크
+        if (!Application.isPlaying || this == null) return;
 
-        // Timeline이 끝날 때까지 대기
+        // Timeline 끝날 때까지 대기
         await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
 
-        // 3.몬스터 소환 완료 대기
-        if (monster != null)
-        {
-            //currentMonster = SpawnMonster(monster, zone.PlayableDirector.transform.position + Vector3.up);
-            currentMonster = SpawnMonster(monster, zone.spawnPoint.position);
+        // 3. 몬스터 소환
+        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.spawnPoint.position);
+
+        if (currentMonster != null)
             currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
-        }
 
         OnBattleStart?.Invoke(zone);
-
-
     }
 
     private void Update()
@@ -100,28 +96,24 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-
-    public async Task<GameObject> LoadMonsterPrefab(int monsterId)
+    public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
     {
         string monsterKey = monsterId.ToString();
-        var handle = Addressables.LoadAssetAsync<GameObject>(monsterKey);
-        GameObject prefab = await handle.Task;
 
-        if (prefab == null)
-        {
-            Debug.LogError($"몬스터 {monsterId} 프리팹을 찾을 수 없음!");
+        // 로드 + 인스턴스화를 한 번에
+        var handle = Addressables.InstantiateAsync(monsterKey, spawnPos, Quaternion.identity);
+
+        // 플레이 꺼지면 더 진행하지 않도록 체크
+        if (!Application.isPlaying)
             return null;
+
+        GameObject instance = await handle.Task;
+
+        if (instance != null)
+        {
+            currentMonster = instance;
+            monsterStats = instance.GetComponent<BaseMonster>().Stats;
         }
-        return prefab;
-    }
-
-    public GameObject SpawnMonster(GameObject prefab, Vector3 spawnPos)
-    {
-        spawnPos.y = 0;
-        var instance = GameObject.Instantiate(prefab, spawnPos, Quaternion.identity);
-
-        currentMonster = instance;
-        monsterStats = instance.GetComponent<BaseMonster>().Stats;
 
         return instance;
     }
