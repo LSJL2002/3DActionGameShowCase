@@ -31,7 +31,19 @@ public class MonsterAIEvents : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        var playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+            PlayerManager = playerObj.GetComponent<PlayerManager>();
+
+            if (PlayerManager == null)
+                Debug.LogError("PlayerManager component not found on Player object!");
+        }
+        else
+        {
+            Debug.LogError("Player object with tag 'Player' not found!");
+        }
     }
 
     private void Update()
