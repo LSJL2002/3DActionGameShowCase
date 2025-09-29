@@ -2088,7 +2088,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1101219969500883049}
         m_TargetAssemblyTypeName: TimeLineBase, Assembly-CSharp
-        m_MethodName: OnClickButton
+        m_MethodName: OnStopButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4908,7 +4908,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 5ee51d76132def44e8bffeba958ad226, type: 2}
-  m_InitialState: 0
+  m_InitialState: 1
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -4933,6 +4933,8 @@ PlayableDirector:
     value: {fileID: 5597157441418737195}
   - key: {fileID: -5346449546672505648, guid: 5ee51d76132def44e8bffeba958ad226, type: 2}
     value: {fileID: 4479173732269116451}
+  - key: {fileID: -1941176722835511458, guid: 5ee51d76132def44e8bffeba958ad226, type: 2}
+    value: {fileID: 951372550656587042}
   m_ExposedReferences:
     m_References:
     - afa85838c9f11d340a9d25dbb580da39: {fileID: 1548973937249863492}
@@ -11307,9 +11309,9 @@ RectTransform:
   - {fileID: 2698215502148286855}
   - {fileID: 8430786720526419439}
   - {fileID: 8229356306368110312}
+  - {fileID: 693679714286755716}
   - {fileID: 8430817149090503987}
   - {fileID: 9067899292774160713}
-  - {fileID: 693679714286755716}
   m_Father: {fileID: 2517166702877463210}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -11863,8 +11865,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4479173732269116451}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0012552851, y: 0.982799, z: -0.006684754, w: 0.18455322}
-  m_LocalPosition: {x: 2.1539307, y: 0.47106934, z: 16.802002}
+  m_LocalRotation: {x: 0.15031826, y: -0.010690434, z: 0.0016457282, w: 0.9885785}
+  m_LocalPosition: {x: -0.016967773, y: 1.5100098, z: -0.97300005}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11901,11 +11903,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
-  far clip plane: 5000
+  near clip plane: 0.3
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 10
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
