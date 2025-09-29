@@ -7,15 +7,16 @@ public class PlayerSkillState : PlayerBaseState
 {
     private Transform attackTarget;
 
-    private float forwardDashPower = 3f;   // 앞으로 힘
-    private float returnDashPower = 3f;    // 뒤로 힘
+    private enum SkillPhase { DashForward, Wait, Return }
+    private SkillPhase phase;
+
+    private float forwardDashPower = 2f;   // 앞으로 힘
+    private float returnDashPower = 2f;    // 뒤로 힘
     private float dashDuration = 0.2f;     // 힘 적용 시간
-    private float waitTime = 0.5f;         // 뒤로 돌아오기까지 대기
+    private float waitTime = 0.8f;         // 뒤로 돌아오기까지 대기
 
     private float dashTimer = 0f;
     private float waitTimer = 0f;
-    private bool isReturning = false;
-    private Vector3 dashDirection;
 
     public PlayerSkillState(PlayerStateMachine sm) : base(sm) { }
 
@@ -42,13 +43,6 @@ public class PlayerSkillState : PlayerBaseState
 
         dashTimer = 0f;
         waitTimer = 0f;
-        isReturning = false;
-
-        // 이동 방향 설정
-        dashDirection = attackTarget != null
-            ? (attackTarget.position - stateMachine.Player.transform.position).normalized
-            : stateMachine.Player.transform.forward;
-        dashDirection.y = 0f;
     }
 
     public override void Exit()
@@ -77,59 +71,18 @@ public class PlayerSkillState : PlayerBaseState
         }
 
         // 앞으로 / 뒤로 힘 적용
-        if (!isReturning)
+        switch (phase)
         {
-            if (attackTarget != null)
-            {
-                Vector3 toTarget = attackTarget.position - stateMachine.Player.transform.position;
-                toTarget.y = 0;
-                float distance = toTarget.magnitude;
-
-                if (distance > 0.1f)
-                {
-                    float moveAmount = Mathf.Min(forwardDashPower * Time.deltaTime, distance);
-                    stateMachine.Player.ForceReceiver.AddForce(dashDirection * moveAmount, true);
-                }
-                else
-                {
-                    // 타겟 도달 → 대기 시작
-                    waitTimer += Time.deltaTime;
-                    if (waitTimer >= waitTime)
-                    {
-                        isReturning = true;
-                        dashTimer = 0f;
-                    }
-                }
-            }
-            else
-            {
-                // 타겟 없으면 그냥 forward 방향으로 dashDuration 동안 이동
-                if (dashTimer < dashDuration)
-                {
-                    dashTimer += Time.deltaTime;
-                    stateMachine.Player.ForceReceiver.AddForce(dashDirection * forwardDashPower, true);
-                }
-                else
-                {
-                    waitTimer += Time.deltaTime;
-                    if (waitTimer >= waitTime)
-                    {
-                        isReturning = true;
-                        dashTimer = 0f;
-                    }
-                }
-            }
+            case SkillPhase.DashForward:
+                DashForward();
+                break;
+            case SkillPhase.Wait:
+                Wait();
+                break;
+            case SkillPhase.Return:
+                Return();
+                break;
         }
-        else
-        {
-            // 뒤로 돌아오기
-            if (dashTimer < dashDuration)
-            {
-                dashTimer += Time.deltaTime;
-                stateMachine.Player.ForceReceiver.AddForce(-dashDirection * returnDashPower, true);
-            }
-        }
-
 
         // ForceReceiver 적용
         ForceMove();
@@ -138,6 +91,53 @@ public class PlayerSkillState : PlayerBaseState
         if (GetNormalizeTime(stateMachine.Player.Animator, "Skill") >= 0.9f)
         {
             stateMachine.ChangeState(stateMachine.IdleState);
+        }
+    }
+
+    private void DashForward()
+    {
+        if (attackTarget == null)
+        {
+            // 타겟이 없어졌으면 대기 단계로
+            phase = SkillPhase.Wait;
+            waitTimer = 0f;
+            return;
+        }
+
+        Vector3 toTarget = attackTarget.position - stateMachine.Player.transform.position;
+        toTarget.y = 0f;
+        float distance = toTarget.magnitude;
+
+        if (distance > 0.1f)
+        {
+            Vector3 dashDir = toTarget.normalized;
+            stateMachine.Player.ForceReceiver.AddForce(dashDir * forwardDashPower * Time.deltaTime, true);
+        }
+        else
+        {
+            // 타겟 도착 → 대기 단계로
+            phase = SkillPhase.Wait;
+            waitTimer = 0f;
+        }
+    }
+
+    private void Wait()
+    {
+        waitTimer += Time.deltaTime;
+        if (waitTimer >= waitTime)
+        {
+            // 대기 끝 → 리턴 단계로
+            phase = SkillPhase.Return;
+            dashTimer = 0f;
+        }
+    }
+
+    private void Return()
+    {
+        if (dashTimer < dashDuration)
+        {
+            dashTimer += Time.deltaTime;
+            stateMachine.Player.ForceReceiver.AddForce(-stateMachine.Player.transform.forward * returnDashPower, true);
         }
     }
 }

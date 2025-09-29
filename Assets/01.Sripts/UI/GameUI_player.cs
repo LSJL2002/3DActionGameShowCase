@@ -43,21 +43,23 @@ public partial class GameUI : UIBase
         PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
     }
 
-    public void OnPlayerDestroy()
+    public void OnEnablePlayer()
+    {
+        playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
+    }
+
+    public void OnDisablePlayer()
     {
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독 해제
         PlayerManager.Instance.Stats.OnPlayerHealthChanged -= OnPlayerHealthChanged;
         PlayerManager.Instance.Stats.OnStatChanged -= UpdateStat;
     }
 
-    public void OnEnablePlayer()
-    {
-        playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f).SetDelay(6f); });
-    }
-
     // 플레이어 체력 변경 이벤트 발생 시 호출
-    private void OnPlayerHealthChanged()
+    private async void OnPlayerHealthChanged()
     {
+        await UIManager.Instance.Show<DamageEffectUI>();
+
         // 체력 텍스트 업데이트
         playerHPText.text = Mathf.FloorToInt(playerStats.CurrentHealth / playerMaxHP * 100).ToString() + "%";
         float playerHPpercentage = playerStats.CurrentHealth / playerMaxHP;

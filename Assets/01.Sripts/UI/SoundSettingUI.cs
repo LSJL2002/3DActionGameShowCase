@@ -11,16 +11,21 @@ public class SoundSettingUI : UIBase
     [SerializeField] private Slider sfxVolumeSlider;
 
     [SerializeField] private GameObject quitButton;
+    [SerializeField] private GameObject returnButton;
 
     protected override void OnEnable()
     {
+        base.OnEnable();
+
         if (SceneLoadManager.Instance.nowSceneIndex == 2)
         {
-            quitButton.SetActive(false);
+            quitButton.SetActive(true);
+            returnButton.SetActive(true);
         }
         else
         {
-            quitButton.SetActive(true);
+            quitButton.SetActive(false);
+            returnButton.SetActive(false);
         }
     }
 
@@ -56,7 +61,7 @@ public class SoundSettingUI : UIBase
                 }
                 else
                 {
-                    await UIManager.Instance.Show<PauseUI>();
+                    await UIManager.Instance.Show<GameUI>();
                 }
                 Hide();
                 break;

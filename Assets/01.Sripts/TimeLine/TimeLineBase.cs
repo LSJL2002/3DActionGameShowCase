@@ -17,7 +17,7 @@ public class TimeLineBase : MonoBehaviour
 
     protected virtual void Awake() 
     {
-        mainCamera = PlayerManager.Instance.GetComponentInChildren<Camera>();
+        mainCamera = PlayerManager.Instance.camera.GetComponentInChildren<Camera>();
         gameUICanvas = UIManager.Instance.Get<GameUI>().canvas;
     }
 
@@ -48,7 +48,7 @@ public class TimeLineBase : MonoBehaviour
 
     protected virtual void OnDestroy() { }
 
-    public void OnClickButton()
+    public void OnStopButton()
     {
         playableDirector.Stop();
     }

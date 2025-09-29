@@ -8,7 +8,6 @@ public class SmileToiletChargeState : MonsterBaseState
     private MonsterSkillSO skillData;
     private GameObject aoeInstance;
     private AreaEffectController aoeController;
-    private CharacterController controller;
     private bool attackActive;
 
     public SmileToiletChargeState(MonsterStateMachine ms, MonsterSkillSO chargeSkill) : base(ms)
@@ -55,34 +54,24 @@ public class SmileToiletChargeState : MonsterBaseState
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Charge));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
+        attackActive = true;
     }
-
-    public override void PhysicsUpdate()
+    
+    public override void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        base.PhysicsUpdate();
+        if (!attackActive) return;
 
-        if (!attackActive || controller == null) return;
-
-        // Check for player collision in front of the monster
-        Vector3 center = controller.transform.position + controller.center;
-        float radius = controller.radius;
-        float height = controller.height;
-
-        Collider[] hits = Physics.OverlapCapsule(center + Vector3.up * (height/2 - radius),
-                                                center - Vector3.up * (height/2 - radius),
-                                                radius);
-
-        foreach (var hit in hits)
+        if (hit.collider.CompareTag("Player"))
         {
-            if (hit.CompareTag("Player"))
+            IDamageable dmg = hit.collider.GetComponent<IDamageable>();
+            if (dmg != null)
             {
-                IDamageable dmg = hit.GetComponent<IDamageable>();
-                dmg?.OnTakeDamage(stateMachine.Monster.Stats.AttackPower);
-                Debug.Log("Player hit by charge!");
+                dmg.OnTakeDamage(stateMachine.Monster.Stats.AttackPower);
+                Debug.Log("Player hit by charge via OnControllerColliderHit!");
+                attackActive = false;
             }
         }
     }
-
     public override void Exit()
     {
         if (aoeController != null)
@@ -96,7 +85,7 @@ public class SmileToiletChargeState : MonsterBaseState
             stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
         }
-        
+
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
     }
     public override void OnAttackHit()

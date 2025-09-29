@@ -21,8 +21,6 @@ public class MonsterDeathState : MonsterBaseState
             cc.enabled = false;
         }
         PlayTriggerAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Death));
-        BattleManager.Instance.HandleMonsterDie();
-
     }
 
     public override void Update()

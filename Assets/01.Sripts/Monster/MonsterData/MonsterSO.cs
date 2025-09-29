@@ -13,10 +13,6 @@ public class MonsterSO : ScriptableObject
     public float attackSpeed;
     public List<string> statusEffect;
     public float moveSpeed;
-    public int equipWeaponId;
-    public int equipArmorId;
-    public int equipAccId;
-    public List<int> dropItem;
     public int detectRange;
     public int attackRange; //나중에 삭제
     public List<MonsterSkillSO> useSkill; //나중에 추가

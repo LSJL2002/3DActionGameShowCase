@@ -26,7 +26,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private ItemInformationUI itemInformationUI;
 
     // 기본 컬러값 설정
-    private Color defaultColor = new Color(210 / 255f, 210 / 255f, 210 / 255f, 255 / 255f);
+    private Color defaultColor = new Color(0 / 255f, 0 / 255f, 0 / 255f, 200 / 255f);
 
     public void OnEnable()
     {

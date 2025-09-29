@@ -8,13 +8,14 @@ using UnityEngine.XR;
 using System;
 using Unity.VisualScripting;
 using Unity.Mathematics;
+using UnityEngine.TextCore.Text;
 
 public class BaseMonster : MonoBehaviour, IDamageable
 {
     [Header("References")]
     [SerializeField] public MonsterAnimationData animationData;
     public MonsterPatternSO patternConfig;
-
+    public CharacterController Controller { get; private set; }
     public Animator Animator { get; private set; }
     public NavMeshAgent Agent { get; private set; }
     public MonsterStatHandler Stats { get; private set; }
@@ -28,8 +29,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public MonsterStateMachine stateMachine;
 
     protected MonsterPatternSO.PatternEntry currentPattern;
+    protected int currentPatternPriority = -1; //아직 선택된 패턴이 없음
     protected int currentStepIndex = 0;
     protected bool isRunningPattern = false;
+    private bool ignoreDistanceCheck = false;
 
     // 체력이 변경될 때 호출될 이벤트
     public static event System.Action OnEnemyHealthChanged;
@@ -41,6 +44,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         Animator = GetComponentInChildren<Animator>();
         Agent = GetComponent<NavMeshAgent>();
         Stats = GetComponent<MonsterStatHandler>();
+        Controller = GetComponent<CharacterController>();
 
         aiEvents = GetComponent<MonsterAIEvents>() ?? gameObject.AddComponent<MonsterAIEvents>();
         aiEvents.SetStateMachine(stateMachine);
@@ -48,7 +52,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     protected virtual void Start()
     {
-        stateMachine = new MonsterStateMachine(this); 
+        stateMachine = new MonsterStateMachine(this);
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
         PlayerTarget = GameObject.FindWithTag("Player").transform;
         if (Agent != null) Agent.speed = stateMachine.MovementSpeed;
@@ -81,13 +85,27 @@ public class BaseMonster : MonoBehaviour, IDamageable
         var chosenCondition = validConditions[0];
         if (chosenCondition.possiblePatternIds.Count == 0) return;
 
+        if (isRunningPattern && chosenCondition.priority <= currentPatternPriority)
+        {
+            return;
+        }
+
+        if (isRunningPattern)
+        {
+            StopAllCoroutines();
+            isRunningPattern = false;
+            currentPattern = null;
+            currentStepIndex = 0;
+        }
+
         int patternId = chosenCondition.possiblePatternIds[UnityEngine.Random.Range(0, chosenCondition.possiblePatternIds.Count)];
         currentPattern = patternConfig.GetPatternById(patternId);
         if (currentPattern == null) return;
         stateMachine.RangeMultiplier = chosenCondition.rangeMultiplier;
         stateMachine.PreCastTimeMultiplier = chosenCondition.preCastTimeMultiplier;
         stateMachine.EffectValueMultiplier = chosenCondition.effectValueMultiplier;
-        Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
+        ignoreDistanceCheck = chosenCondition.ignoreDistanceCheck;
+        //Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
 
         currentStepIndex = 0;
         StartCoroutine(RunPattern());
@@ -130,13 +148,14 @@ public class BaseMonster : MonoBehaviour, IDamageable
             }
 
             float skillRange = GetSkillRangeFromState(attackState);
-
-            // --- Wait until player is in attack range (AI handles movement) ---
-            yield return new WaitUntil(() =>
-                PlayerTarget != null &&
-                Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange * 0.8f
-            );
-
+            if (!ignoreDistanceCheck) // If ignore distance check is true, then just perform the attack
+            {
+                // --- Wait until player is in attack range (AI handles movement) ---
+                yield return new WaitUntil(() =>
+                    PlayerTarget != null &&
+                    Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange
+                );
+            }
             // --- Perform attack ---
             stateMachine.isAttacking = true;
             stateMachine.ChangeState(attackState);
@@ -150,7 +169,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
             // --- Return to Idle after attack ---
             if (!(stateMachine.CurrentState is MonsterIdleState))
+            {
                 stateMachine.ChangeState(stateMachine.MonsterIdleState);
+                yield return new WaitForSeconds(0.3f); // lock in Idle for a bit
+            }
 
             currentStepIndex++;
             yield return new WaitForSeconds(0.2f); // small delay between steps
@@ -158,6 +180,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         float cooldown = UnityEngine.Random.Range(1f, 3f);
         yield return new WaitForSeconds(cooldown);
         currentPattern = null;
+        currentPatternPriority = -1;
         isRunningPattern = false;
     }
 
@@ -172,7 +195,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
                 return GetSkillRangeFromState(state);
             }
         }
-        Debug.LogError("Cannot Find Skill Range");
+        //쿨 다운인 상태에는 몬스터 기본 공격 사거리를 사용
         return Stats.AttackRange;
     }
 
@@ -189,6 +212,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
         return Stats.AttackRange; // 없다면, 몬스터의 기본 사거리 사용
     }
 
+    public void OnDeathAnimationComplete()
+    {
+        BattleManager.Instance.HandleMonsterDie();
+    }
 
     public void OnAttackAnimationComplete()
     {
@@ -238,5 +265,12 @@ public class BaseMonster : MonoBehaviour, IDamageable
         foreach (var aoe in activeAOEs)
             if (aoe != null) Destroy(aoe);
         activeAOEs.Clear();
+    }
+    
+    protected virtual void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (IsDead) return;
+
+        (stateMachine.CurrentState as MonsterBaseState)?.OnControllerColliderHit(hit);
     }
 }
