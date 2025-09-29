@@ -83,7 +83,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     void OnDie()
     {
         Animator.SetTrigger("Die");
-        enabled = false;
+        gameObject.SetActive(false);
     }
 
     public void EnableInput(bool active)

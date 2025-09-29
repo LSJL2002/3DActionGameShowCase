@@ -16,8 +16,9 @@ public class AreaEffectController : MonoBehaviour
     private float castTime;
     private int damage;
 
-    public void CircleInitialize(float castDuration, float radius, int damageAmount)
+    public void CircleInitialize(float castDuration, float radius, int damageAmount, MonsterSkillSO skill)
     {
+        skillData = skill;
         castTime = castDuration;
         damage = damageAmount;
 
