@@ -25,7 +25,10 @@ public class BattleZone : MonoBehaviour
     [SerializeField]
     private BattleZoneSO ZoneData;
 
-  
+    [Header("타임라인키")]
+    public string timelineKey;
+
+
     private void Awake()
     {
         if (ZoneData != null)

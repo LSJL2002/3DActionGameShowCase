@@ -53,38 +53,77 @@ public class BattleManager : Singleton<BattleManager>
     }
 
 
+    //public async void StartBattle(BattleZone zone)
+    //{
+    //    var cutScene =  await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_SMachineBattleStart");
+
+    //    if (isBattle) return;
+    //    isBattle = true;
+    //    currentZone = zone;
+
+    //    // 1. 벽 켜기
+    //    currentZone.SetWallsActive(true);
+    //    StartWarning();
+
+
+    //    // 플레이 상태 체크 (연출 시작 직후)
+    //    if (!Application.isPlaying || this == null) return;
+
+    //    // Timeline 끝날 때까지 대기
+    //    await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
+
+    //    // 플레이 상태 체크 (대기 후)
+    //    if (!Application.isPlaying || this == null) return;
+
+    //    // 3. 몬스터 소환
+    //    currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
+
+    //    // 플레이 상태 체크 (몬스터 로드 끝난 뒤)
+    //    if (!Application.isPlaying || this == null || currentMonster == null) return;
+
+    //    currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
+
+    //    OnBattleStart?.Invoke(zone);
+    //}
+
     public async void StartBattle(BattleZone zone)
     {
-        var cutScene =  await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_SMachineBattleStart");
-
         if (isBattle) return;
         isBattle = true;
         currentZone = zone;
 
-        // 1. 벽 켜기
+        // 1. 벽 켜기 + 경고 이펙트 시작
         currentZone.SetWallsActive(true);
         StartWarning();
 
+        // 2. 컷씬 실행 & 종료 대기 (스킵 포함)
+        if (!string.IsNullOrEmpty(zone.timelineKey))
+        {
+            Debug.Log($"Battle Start → Timeline 실행: {zone.timelineKey}");
+            await TimeLineManager.Instance.PlayAndWait(zone.timelineKey);
+        }
 
-        // 플레이 상태 체크 (연출 시작 직후)
-        if (!Application.isPlaying || this == null) return;
-
-        // Timeline 끝날 때까지 대기
-        await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
-
-        // 플레이 상태 체크 (대기 후)
+        // 게임 종료 중이면 리턴
         if (!Application.isPlaying || this == null) return;
 
         // 3. 몬스터 소환
         currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
 
-        // 플레이 상태 체크 (몬스터 로드 끝난 뒤)
-        if (!Application.isPlaying || this == null || currentMonster == null) return;
+        if (currentMonster != null)
+        {
+            currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
+            Debug.Log("Battle Start → 몬스터 소환 완료");
+        }
+        else
+        {
+            Debug.LogError("Battle Start → 몬스터 소환 실패");
+        }
 
-        currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
-
+        // 4. 전투 시작 이벤트 브로드캐스트
         OnBattleStart?.Invoke(zone);
     }
+
+
 
 
     private void Update()
