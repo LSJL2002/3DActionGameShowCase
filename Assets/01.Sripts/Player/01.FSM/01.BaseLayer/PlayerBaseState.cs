@@ -266,14 +266,18 @@ public abstract class PlayerBaseState : Istate
         float minDist = float.MaxValue;
         foreach (var hit in hits)
         {
+            // 한 단계 위 부모 가져오기
+            Transform target = hit.transform.parent ?? hit.transform;
+
             float dist = Vector3.Distance(
                 stateMachine.Player.transform.position,
-                hit.transform.position
+                target.position
             );
+
             if (dist < minDist)
             {
                 minDist = dist;
-                nearest = hit.transform;
+                nearest = target;
             }
         }
         if (faceTarget && nearest != null)

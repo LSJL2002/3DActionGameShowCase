@@ -33,7 +33,7 @@ public class ForceReceiver : MonoBehaviour
         {
             verticalVelocity += Physics.gravity.y * Time.deltaTime;
         }
-
+        // 매 프레임 impact를 SmoothDamp로 줄이는중, 자연스럽게 힘이 줄어듬
         impact = Vector3.SmoothDamp(impact, Vector3.zero, ref dampingVelocity, drag);
     }
 
