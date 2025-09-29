@@ -41,6 +41,10 @@ public class PlayerStateMachine : StateMachine
     public int ComboIndex { get; set; } //콤보인덱스
     public bool IsKnockback { get; set; }
     public bool IsStun { get; set; }
+    public bool IsSkill { get; set; }
+
+
+
 
     //Ground 로직
     public PlayerIdleState IdleState { get;}
