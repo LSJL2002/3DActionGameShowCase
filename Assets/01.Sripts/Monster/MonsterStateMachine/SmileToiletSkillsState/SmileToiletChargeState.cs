@@ -67,6 +67,8 @@ public class SmileToiletChargeState : MonsterBaseState
             if (dmg != null)
             {
                 dmg.OnTakeDamage(stateMachine.Monster.Stats.AttackPower);
+                Vector3 sourcePos = stateMachine.Monster.transform.position;
+                dmg.ApplyEffect(skillData.monsterEffectType, sourcePos, skillData.knockbackDistance, skillData.duration);
                 Debug.Log("Player hit by charge via OnControllerColliderHit!");
                 attackActive = false;
             }
