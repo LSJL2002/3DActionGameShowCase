@@ -47,6 +47,12 @@ public class PlayerStats : IStats
     public float CurrentHealth { get; private set; }
     public float CurrentEnergy { get; private set; }
 
+    // 스킬 버퍼/쿨타임
+    public int SkillBufferMax { get; private set; } = 2;
+    public int SkillBufferCurrent { get; set; } = 2; //이거랑
+    public float SkillCooldown { get; private set; } = 5f; //이거
+    public float LastSkillTime { get; set; } = -5f;
+
 
 
     public bool IsDead => CurrentHealth <= 0;
@@ -124,4 +130,26 @@ public class PlayerStats : IStats
     }
 
     public event Action<StatType> OnStatChanged;
+
+
+    private bool CanUseSkill()
+    {
+        bool cooldownReady = Time.time - LastSkillTime >= SkillCooldown;
+        return cooldownReady && SkillBufferCurrent > 0;
+    }
+
+    public void UseSkill()
+    {
+        if (!CanUseSkill()) return;
+        SkillBufferCurrent--;
+        LastSkillTime = Time.time;
+    }
+
+    public void UpdateSkillBuffer()
+    {
+        if (Time.time - LastSkillTime >= SkillCooldown && SkillBufferCurrent < SkillBufferMax)
+        {
+            SkillBufferCurrent = SkillBufferMax;
+        }
+    }
 }
