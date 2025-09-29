@@ -22,10 +22,8 @@ public class TimeLine_GameOver : TimeLineBase
 
     public void OnClickButton()
     {
-        Debug.Log("버튼클릭");
-
         TimeLineManager.Instance.Release(gameObject.name);
-
-        SceneLoadManager.Instance.ChangeScene(2); // Home씬으로 전환
+        
+        SceneLoadManager.Instance.LoadScene(0); // Home씬으로 전환
     }
 }

@@ -8,7 +8,8 @@ public enum States
     Skill1,
     Skill2,
     Skill3,
-    Skill4
+    Skill4,
+    Skill5
 }
 
 public enum ConditionType

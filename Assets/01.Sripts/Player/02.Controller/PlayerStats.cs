@@ -72,7 +72,11 @@ public class PlayerStats : IStats
         AttackSpeed = new Stat(data.attackSpeed);
 
         CurrentHealth = MaxHealth.Value;
-        CurrentEnergy = MaxEnergy.Value; 
+        CurrentEnergy = MaxEnergy.Value;
+
+        // 스킬 버퍼를 풀로 채우고 타이머 초기화
+        SkillBufferCurrent = SkillBufferMax;   // 2개로 시작
+        LastSkillTime = Time.time;             // 지금 시점을 기준으로 회복 타이머 시작
     }
 
     public void TakeDamage(float amount)
@@ -138,18 +142,20 @@ public class PlayerStats : IStats
         return cooldownReady && SkillBufferCurrent > 0;
     }
 
-    public void UseSkill()
+    public bool UseSkill()
     {
-        if (!CanUseSkill()) return;
+        if (!CanUseSkill()) return false;
         SkillBufferCurrent--;
         LastSkillTime = Time.time;
+        return true;
     }
 
     public void UpdateSkillBuffer()
     {
         if (Time.time - LastSkillTime >= SkillCooldown && SkillBufferCurrent < SkillBufferMax)
         {
-            SkillBufferCurrent = SkillBufferMax;
+            SkillBufferCurrent++;            // 한 개씩 증가
+            LastSkillTime = Time.time;       // 회복한 시점을 다시 기록 
         }
     }
 }

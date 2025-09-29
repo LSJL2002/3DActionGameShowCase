@@ -7,7 +7,6 @@ public class PlayerKnockbackState : Istate
 {
     private readonly PlayerStateMachine stateMachine;
 
-    private readonly float layerBlendSpeed;
     private readonly int knockLayerIndex;
 
     private Vector3 knockDirection;
@@ -15,13 +14,9 @@ public class PlayerKnockbackState : Istate
     private float duration;
     private float elapsed;
 
-    private bool targetLayerOn = false;
-    private float currentLayerWeight = 0f;
-
     public PlayerKnockbackState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
-        this.layerBlendSpeed = layerBlendSpeed;
 
         knockLayerIndex = stateMachine.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
     }
@@ -39,13 +34,10 @@ public class PlayerKnockbackState : Istate
 
     public void Enter()
     {
-        targetLayerOn = true;
         // 애니메이션 트리거
         var anim = stateMachine.Player.Animator;
         anim.SetTrigger(stateMachine.Player.AnimationData.KnockbackParameterHash);
-
-        // 캐릭터를 넉백 방향으로 바라보게 회전 고정
-        stateMachine.Player.transform.forward = knockDirection;
+        anim.SetLayerWeight(knockLayerIndex, 1);
 
         // 제어 불가 상태 → 이동/회전 입력 무시
         stateMachine.IsKnockback = true;
@@ -53,7 +45,9 @@ public class PlayerKnockbackState : Istate
 
     public void Exit()
     {
-        targetLayerOn = false;
+        var anim = stateMachine.Player.Animator;
+        anim.SetLayerWeight(knockLayerIndex, 1);
+
         stateMachine.IsKnockback = false;
     }
 
@@ -63,30 +57,25 @@ public class PlayerKnockbackState : Istate
     {
         elapsed += Time.deltaTime;
 
+        // 넉백 중 맞은 몬스터 바라보기 대신 넉백 반대 방향 바라보기
+        if (knockDirection.sqrMagnitude > 0.01f)
+        {
+            Vector3 lookDir = -knockDirection; // 넉백 방향 반대로
+            lookDir.y = 0f;                    // 수직 회전 제거
+            stateMachine.Player.transform.forward = lookDir.normalized;
+        }
+
         if (elapsed >= duration)
         {
             Exit();
             // 넉백 종료 → Idle로 복귀
             stateMachine.ChangeState(stateMachine.IdleState);
         }
-        UpdateLayerWeight();
     }
 
     public void PhysicsUpdate()
     {
         // 넉백 방향으로 밀기
         stateMachine.Player.Controller.Move(knockDirection * knockForce * Time.deltaTime);
-    }
-
-    private void UpdateLayerWeight()
-    {
-        float target = targetLayerOn ? 1f : 0f;
-        currentLayerWeight = Mathf.MoveTowards(
-            currentLayerWeight,
-            target,
-            layerBlendSpeed * Time.deltaTime
-        );
-
-        stateMachine.Player.Animator.SetLayerWeight(knockLayerIndex, currentLayerWeight);
     }
 }

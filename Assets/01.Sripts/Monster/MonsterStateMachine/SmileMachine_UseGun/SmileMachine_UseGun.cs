@@ -5,6 +5,7 @@ using UnityEngine;
 public class SmileMachine_UseGun : BaseMonster
 {
     public GameObject rifleParticleEffect;
+    public GameObject groggyParticleEffect;
     public Collider baseAttackCollider;
 
     protected override void Awake()
@@ -13,6 +14,8 @@ public class SmileMachine_UseGun : BaseMonster
 
         if (rifleParticleEffect != null)
             rifleParticleEffect.SetActive(false);
+        if (groggyParticleEffect != null)
+            groggyParticleEffect.SetActive(false);
     }
     protected override MonsterBaseState GetStateFromEnum(States stateEnum)
     {
@@ -22,6 +25,7 @@ public class SmileMachine_UseGun : BaseMonster
             case States.Skill2: return stateMachine.SmileToiletSlamState;
             case States.Skill3: return stateMachine.SmileToiletChargeState;
             case States.Skill4: return stateMachine.SmileMachineShootState;
+            case States.Skill5: return stateMachine.SmileMachineGroggyShoot;
             case States.BaseAttack: return stateMachine.MonsterBaseAttack;
             case States.BaseAttack2: return stateMachine.MonsterBaseAttackAlt;
             default: return null;
@@ -40,6 +44,8 @@ public class SmileMachine_UseGun : BaseMonster
                 return Stats.GetSkill("SmileMachine_Charge").range;
             case SmileMachineShootState:
                 return Stats.GetSkill("SmileMachine_Shoot").range;
+            case SmileMachineGroggyShoot:
+                return Stats.GetSkill("SmileMachine_GroggyShoot").range;
             default:
                 return Stats.AttackRange;
         }

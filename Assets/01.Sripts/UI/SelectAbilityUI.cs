@@ -32,14 +32,14 @@ public class SelectAbilityUI : UIBase
     {
         base.OnEnable();
 
+        // 마우스 커서 보이게
+        PlayerManager.Instance.EnableInput(false);
+
         canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1.5f); });
 
         OnSelectAbilityUI?.Invoke();
 
         AudioManager.Instance.PlaySFX("OpenSelectAbilityUISound");
-
-        // 마우스 커서 보이게
-        PlayerManager.Instance.EnableInput(false);
 
         BattleManager battleManager = BattleManager.Instance;
 

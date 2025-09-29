@@ -8,18 +8,13 @@ public class PlayerStunState : Istate
     private readonly PlayerStateMachine stateMachine;
 
     private  float duration;
-    private readonly float layerBlendSpeed;
     private readonly int stunLayerIndex;
 
-    private float startTime;
-    private float currentLayerWeight = 0f;
-    private bool targetLayerOn = false;
     private float elapsed;
 
     public PlayerStunState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
-        this.layerBlendSpeed = layerBlendSpeed;
 
         // Layer 이름 → Animator에서 찾기
         stunLayerIndex = stateMachine.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
@@ -39,16 +34,16 @@ public class PlayerStunState : Istate
         // 애니메이션 트리거
         var anim = stateMachine.Player.Animator;
         anim.SetTrigger(stateMachine.Player.AnimationData.StunParameterHash);
-
-        startTime = Time.time;
-        targetLayerOn = true;
+        anim.SetLayerWeight(stunLayerIndex, 1);
 
         stateMachine.IsStun = true;
     }
 
     public void Exit()
     {
-        targetLayerOn = false;
+        var anim = stateMachine.Player.Animator;
+        anim.SetLayerWeight(stunLayerIndex, 0);
+
         stateMachine.IsStun = false;
     }
 
@@ -60,6 +55,8 @@ public class PlayerStunState : Istate
 
     public void LogicUpdate()
     {
+        Debug.Log(duration);
+
         elapsed += Time.deltaTime;
 
         if (elapsed >= duration)
@@ -68,23 +65,10 @@ public class PlayerStunState : Istate
             // 스턴 종료 → Idle로 복귀
             stateMachine.ChangeState(stateMachine.IdleState);
         }
-        UpdateLayerWeight();
     }
 
     public void PhysicsUpdate()
     {
         // 스턴 중 이동 없음 (ForceReceiver 사용 안 함)
-    }
-
-    private void UpdateLayerWeight()
-    {
-        float target = targetLayerOn ? 1f : 0f;
-        currentLayerWeight = Mathf.MoveTowards(
-            currentLayerWeight,
-            target,
-            layerBlendSpeed * Time.deltaTime
-        );
-
-        stateMachine.Player.Animator.SetLayerWeight(stunLayerIndex, currentLayerWeight);
     }
 }
