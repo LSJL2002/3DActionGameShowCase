@@ -23,11 +23,6 @@ public class MonsterDeathState : MonsterBaseState
         PlayTriggerAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Death));
     }
 
-    public override void Update()
-    {
-
-    }
-
     public override void Exit()
     {
         

@@ -21,6 +21,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public MonsterStatHandler Stats { get; private set; }
     public MonsterAIEvents aiEvents { get; private set; }
     public Transform PlayerTarget { get; set; }
+    public GameObject AreaEffectPoint;
     public bool IsDead { get; private set; }
     [HideInInspector] public bool hasStartedCombat = false;
     public event Action OnAttackAnimationCompleteEvent;

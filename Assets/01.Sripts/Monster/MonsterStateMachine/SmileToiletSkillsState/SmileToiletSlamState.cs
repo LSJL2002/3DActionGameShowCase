@@ -27,7 +27,8 @@ public class SmileToiletSlamState : MonsterBaseState
         stateMachine.isAttacking = true;
         StopMoving();
 
-        Vector3 spawnPos = stateMachine.Monster.transform.position;
+        Vector3 spawnPos = stateMachine.Monster.AreaEffectPoint.transform.position;
+        Debug.Log(spawnPos);
 
         aoeInstance = Object.Instantiate(skillData.areaEffectPrefab, spawnPos, Quaternion.identity);
         stateMachine.Monster.RegisterAOE(aoeInstance);
