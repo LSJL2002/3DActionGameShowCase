@@ -95,22 +95,25 @@ public class MonsterBaseState : Istate
         {
             Vector3 move = forceReceiver != null ? forceReceiver.Movement * Time.deltaTime : Vector3.zero;
 
-            // Keep monster solid: push overlapping players away
-            Collider[] hits = Physics.OverlapCapsule(cc.bounds.center + Vector3.up * cc.height/2,
-                                                    cc.bounds.center - Vector3.up * cc.height/2,
-                                                    cc.radius);
+            Vector3 top = cc.transform.position + cc.center + Vector3.up * (cc.height / 2 - cc.radius);
+            Vector3 bottom = cc.transform.position + cc.center - Vector3.up * (cc.height / 2 - cc.radius);
+            Collider[] hits = Physics.OverlapCapsule(top, bottom, cc.radius, LayerMask.GetMask("Player"));
+
             foreach (var hit in hits)
             {
-                if (hit.CompareTag("Player"))
+                Vector3 dir = cc.transform.position - hit.transform.position;
+                dir.y = 0f;
+                if (dir.sqrMagnitude > 0.0001f)
                 {
-                    Vector3 dir = (cc.transform.position - hit.transform.position).normalized;
-                    move += dir * 0.02f; // tweak small value
+                    dir.Normalize();
+                    move += dir * 0.02f; // tweak small value if needed
                 }
             }
 
             cc.Move(move);
         }
     }
+
 
 
     protected bool IsEnemyInDetectionRange()
