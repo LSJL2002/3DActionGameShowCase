@@ -28,6 +28,8 @@ public partial class GameUI : UIBase
         ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
 
         OnAwakePlayer();
+
+        OnAwakeSkill();
     }
 
     protected override void OnEnable()
@@ -39,6 +41,7 @@ public partial class GameUI : UIBase
 
         OnEnablePlayer();
         OnEnableEnemy();
+        OnEnableSkill();
     }
 
     protected override void OnDisable()
@@ -46,6 +49,7 @@ public partial class GameUI : UIBase
         base.OnDisable();
 
         OnDisablePlayer();
+        OnDisableSkill();
 
         BattleManager.OnBattleStart -= LoadMonsterStat;    //해제    
         BattleManager.OnBattleClear -= ReleaseMonsterStat; //해제
