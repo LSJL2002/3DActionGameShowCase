@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.VFX;
 using Zenject.SpaceFighter;
+using static CartoonFX.CFXR_Effect;
 using static SkillSO;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -15,11 +16,11 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     private SkillManagers skillManager;
     private ForceReceiver forceReceiver;
 
+    public GameObject spawnPoint;
 
     [Header("Debug / Gizmos")]
     [SerializeField] private PlayerInfo playerInfo;
     [SerializeField] private int attackIndex = 0; // 인스펙터에서 공격 선택
-
     [SerializeField] private Transform currentAttackTarget; // 인스펙터용
     public Transform CurrentAttackTarget
     {
@@ -40,39 +41,34 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     /// 공격 입력 시 호출 에니메이션 이벤트로 조작
     public void OnAttack(string skillName)
     {
-        var skillObj = skillManager.SpawnSkill(skillName);
+        if (string.IsNullOrEmpty(skillName)) return;
 
-        // Hitbox 연결
-        var skillHitbox = skillObj.GetComponentInChildren<Hitbox>();
-        if (skillHitbox != null)
-            skillHitbox.OnHit += HandleHit;
+        // 플레이어 위치 기준으로 스킬 생성
+        Vector3 spawnPosition = spawnPoint.transform.position;
+        Quaternion spawnRotation = spawnPoint.transform.rotation; // 회전 정보 추가
 
-        // ParticleSystem 재생
-        var ps = skillObj.GetComponent<ParticleSystem>();
-        if (ps != null) ps.Play();
+        // SpawnSkill 호출 (풀링, 파티클, Hitbox, 사운드 처리)
+        var skillObj = skillManager.SpawnSkill(skillName, spawnPosition, spawnRotation);
+        if (skillObj == null) return;
 
-        // 일정 시간 후 반환 처리
-        float duration = ps != null ? ps.main.duration : 1f;
+        var skillHitboxes = skillObj.GetComponentsInChildren<Hitbox>();
 
-        // DOTween Sequence로 통합 처리
-        Sequence seq = DOTween.Sequence();
-
-        // duration 시간 동안 대기
-        seq.AppendInterval(duration);
-
-        // Hitbox 이벤트 해제 + VFX 종료
-        seq.AppendCallback(() =>
+        foreach (var hitbox in skillHitboxes)
         {
-            if (skillHitbox != null)
-                skillHitbox.OnHit -= HandleHit;
+            hitbox.OnHit -= HandleHit;
+            hitbox.OnHit += HandleHit;
+        }
+    }
 
-
-            // 필요하면 카메라 셰이크도 여기서 호출 가능
-            // CameraShake.Instance?.Shake(0.2f, 1f);
-        });
-
-        // Sequence 재생
-        seq.Play();
+    private void HandleHit(IDamageable target, Vector3 hitPoint)
+    {
+        int damage = Mathf.RoundToInt(player.Stats.Attack.Value);
+        target.OnTakeDamage(damage);
+        // 타격 효과 & 카메라 흔들림 & 사운드
+        // 충돌 지점에서 타격 이펙트 생성
+        skillManager.SpawnSkill("Hit1", hitPoint);
+        AudioManager.Instance?.PlaySFX("Hit1");
+        //CameraShake.Instance?.Shake(0.2f, 1f);
     }
 
 
@@ -82,14 +78,6 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     }
 
 
-    private void HandleHit(IDamageable target)
-    {
-        int damage = Mathf.RoundToInt(player.Stats.Attack.Value);
-        target.OnTakeDamage(damage);
-
-        // 디버그: 몇 번 호출됐는지
-        Debug.Log($"Hit! 대상: {target}, 피해량: {damage}");
-    }
 
 
     // IDamageable 구현 예시 (플레이어가 맞았을 때)

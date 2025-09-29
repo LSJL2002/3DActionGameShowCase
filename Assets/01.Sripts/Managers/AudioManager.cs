@@ -77,7 +77,7 @@ public class AudioManager : Singleton<AudioManager>
         SetSfxVolume(_sfxVolume);
 
         // 테스트용 BGM 재생 (나중에 삭제 가능)
-        PlayBGM("1");
+        PlayBGM("InGameBGM");
     }
 
 

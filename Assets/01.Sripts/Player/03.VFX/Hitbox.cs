@@ -4,19 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// 역활: 충돌감지, 대상필터링(Layer기준)
-// 행위 실행은 안함: 실제 데미지 처리, 피격 애니메이션, 넉백 등은 Hitbox가 직접 하지 않음
-// 장점: Hitbox는 범용으로 여러 공격 모션에 재사용 가능
+// 역할: 충돌 감지 & 대상 필터링(Layer 기준)
+// 실제 데미지, 이펙트 등은 외부(구독자)가 처리
 public class Hitbox : MonoBehaviour
 {
     [SerializeField] private LayerMask targetLayer;
     private bool active = false;
 
     // 이미 맞은 대상 관리 (멀티히트 방지)
-    private HashSet<IDamageable> alreadyHit = new HashSet<IDamageable>();
+    private readonly HashSet<IDamageable> alreadyHit = new();
 
     // Hitbox가 맞으면 호출되는 이벤트
-    public event Action<IDamageable> OnHit;
+    public event Action<IDamageable, Vector3> OnHit;
 
     public void OnEnable()
     {
@@ -40,10 +39,13 @@ public class Hitbox : MonoBehaviour
 
         if (other.TryGetComponent<IDamageable>(out var dmgable))
         {
+            // 이미 맞은 대상이면 무시
             if (alreadyHit.Contains(dmgable)) return;
 
+            // 아직 맞지 않았다면 → 히트 처리
             alreadyHit.Add(dmgable);
-            OnHit?.Invoke(dmgable);
+            Vector3 hitPoint = other.ClosestPoint(transform.position);
+            OnHit?.Invoke(dmgable, hitPoint);
         }
     }
 }
