@@ -11,7 +11,7 @@ public class LookAtCamera : MonoBehaviour
     void Start()
     {
         // 메인 카메라를 플레이어에서 가져옴
-        Camera cam = PlayerManager.Instance.GetComponentInChildren<Camera>();
+        Camera cam = PlayerManager.Instance.camera.GetComponentInChildren<Camera>();
 
         // 카메라의 트랜스폼을 변수에 저장
         mainCameraTransform = cam.transform;
