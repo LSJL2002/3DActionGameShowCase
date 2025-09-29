@@ -55,6 +55,8 @@ public class BattleManager : Singleton<BattleManager>
 
     public async void StartBattle(BattleZone zone)
     {
+        await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_SMachineBattleStart");
+
         if (isBattle) return;
         isBattle = true;
         currentZone = zone;
