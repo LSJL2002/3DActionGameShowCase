@@ -25,7 +25,7 @@ public class SmileToiletSmashState : MonsterBaseState
 
         stateMachine.isAttacking = true;
 
-        Vector3 spawnPos = stateMachine.Monster.transform.position;
+        Vector3 spawnPos = stateMachine.Monster.AreaEffectPoint.transform.position;
         Quaternion spawnRot = Quaternion.LookRotation(stateMachine.Monster.transform.forward) * Quaternion.Euler(0, 90f, 0);
 
         // Spawn the AOE effect
