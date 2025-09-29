@@ -54,20 +54,49 @@ public class TutorialUI : UIBase
             }
 
             talkText.text = "";
+            bool completedBySkip = false; // 이번문장이 x키로 즉시 완성됐는지 표시.
 
             for (int i = 0; i < text.textContent.Length; i++)
             {
                 talkText.text += text.textContent[i];
-                yield return new WaitForSeconds(0.05f); // 글자 사이 텀 (0.05초 예시)
+                // 0.05초 대기 or X키 입력 시 즉시 스킵
+                float elapsed = 0.0f;
+                while (elapsed < 0.05f) 
+                {
+                    if (Input.GetKeyDown(KeyCode.X))
+                    {
+                        talkText.text = text.textContent;
+                        i = text.textContent.Length;
+                        completedBySkip = true;
+                        break;
+                    }
+                    elapsed += Time.deltaTime;
+                    yield return null;
+                }
             }
 
-            yield return new WaitForSeconds(time);
+            if (completedBySkip)
+            {
+                yield return null;                          // 한 프레임 대기 (같은 프레임 GetKeyDown 무시)
+                while (Input.GetKey(KeyCode.X))             // 키 누른 상태 유지면 연속 스킵 방지
+                    yield return null;
+            }
+
+            float wait = 0f;
+            while (wait < time)
+            {
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    break;
+                }
+                wait += Time.deltaTime;
+                yield return null;
+            }
         }
 
         Hide();
         playerCamera.SetActive(false);
         CompanionCamera.SetActive(false);
-        // playText = false;
     }
 
     public void PlayDialogue(SceneType type)
