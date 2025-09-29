@@ -15,15 +15,17 @@ public class SoundSettingUI : UIBase
 
     protected override void OnEnable()
     {
-        if (SceneLoadManager.Instance.nowSceneIndex == 3)
-        {
-            quitButton.SetActive(false);
-            returnButton.SetActive(false);
-        }
-        else
+        base.OnEnable();
+
+        if (SceneLoadManager.Instance.nowSceneIndex == 2)
         {
             quitButton.SetActive(true);
             returnButton.SetActive(true);
+        }
+        else
+        {
+            quitButton.SetActive(false);
+            returnButton.SetActive(false);
         }
     }
 
