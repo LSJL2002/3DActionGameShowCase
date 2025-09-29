@@ -1,12 +1,8 @@
 using DG.Tweening;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
-using UnityEngine.Playables;
 using UnityEngine.UI;
-using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 // 아이템 슬롯 하나하나의 상태를 시각적으로 보여주는 View 계층의 클래스 (아이콘, 수량숫자 넣고 빼기 등)
 public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler

@@ -25196,8 +25196,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2222357952695652599}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0012552851, y: 0.982799, z: -0.006684754, w: 0.18455322}
-  m_LocalPosition: {x: 2.1539106, y: 0.47107852, z: 16.802002}
+  m_LocalRotation: {x: 0.00125531, y: 0.982799, z: -0.0066848868, w: 0.18455324}
+  m_LocalPosition: {x: 2.4349194, y: 1.6710786, z: 21.422}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -49030,6 +49030,7 @@ GameObject:
   - component: {fileID: 2938059567764373131}
   - component: {fileID: 755259601832614971}
   - component: {fileID: 2350039389358476001}
+  - component: {fileID: 7060693979522323927}
   m_Layer: 5
   m_Name: SkipButton
   m_TagString: Untagged
@@ -49141,7 +49142,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1996933599381938565}
         m_TargetAssemblyTypeName: TimeLineBase, Assembly-CSharp
-        m_MethodName: OnClickButton
+        m_MethodName: OnStopButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -49151,6 +49152,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7060693979522323927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4770124564391356886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonObject: {fileID: 4770124564391356886}
 --- !u!1 &4772025917770694045
 GameObject:
   m_ObjectHideFlags: 0
@@ -49163,7 +49177,6 @@ GameObject:
   - component: {fileID: 6331170331256265644}
   - component: {fileID: 1064156937011987970}
   - component: {fileID: 2782462658709191823}
-  - component: {fileID: 7953899370702182542}
   - component: {fileID: 1996933599381938565}
   m_Layer: 0
   m_Name: TimeLine_DrainAbility
@@ -49279,7 +49292,7 @@ MonoBehaviour:
     m_Events:
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 7953899370702182542}
+        - m_Target: {fileID: 3242056400383940326, guid: 88371502bbd0d8e49a92e59de3c606d5, type: 3}
           m_TargetAssemblyTypeName: SkyboxBlendController, Assembly-CSharp
           m_MethodName: ToggleSky
           m_Mode: 1
@@ -49291,25 +49304,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &7953899370702182542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4772025917770694045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dfcb5dbdee86dc4d957c43e9d224b50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blendSkybox: {fileID: 2100000, guid: 3a3dc6331ccbf3148b263f60c069ede1, type: 2}
-  transitionTime: 3
-  flipX: 0
-  flipY: 0
-  blendOffset: 1
-  rotationOffset: 88
-  mainLight: {fileID: 0}
 --- !u!114 &1996933599381938565
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -25,7 +25,7 @@ public class PauseUI : UIBase
 
             // Home씬으로 돌아가기 (거기서 종료가능)
             case "Quit":
-                SceneLoadManager.Instance.LoadScene(2);
+                SceneLoadManager.Instance.LoadScene(0);
                 break;
         }
 

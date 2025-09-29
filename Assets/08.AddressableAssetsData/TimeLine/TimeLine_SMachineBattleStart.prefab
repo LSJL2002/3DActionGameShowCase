@@ -84,6 +84,7 @@ GameObject:
   - component: {fileID: 4538588579201400151}
   - component: {fileID: 6905007873578091111}
   - component: {fileID: 9166855152203544453}
+  - component: {fileID: 5026266438898304288}
   m_Layer: 5
   m_Name: SkipButton
   m_TagString: Untagged
@@ -205,6 +206,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5026266438898304288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067175255019275191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonObject: {fileID: 1067175255019275191}
 --- !u!1 &1401185962370405803
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,7 +909,7 @@ MonoBehaviour:
     m_Events:
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
+        - m_Target: {fileID: 3242056400383940326, guid: 88371502bbd0d8e49a92e59de3c606d5, type: 3}
           m_TargetAssemblyTypeName: SkyboxBlendController, Assembly-CSharp
           m_MethodName: HandleBattleStart
           m_Mode: 1
@@ -1158,8 +1172,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7980120968984507681}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0012552851, y: 0.982799, z: -0.006684754, w: 0.18455322}
-  m_LocalPosition: {x: 0.93000007, y: 0.97300005, z: 11.001}
+  m_LocalRotation: {x: 0.00125531, y: 0.982799, z: -0.0066848868, w: 0.18455324}
+  m_LocalPosition: {x: 1.0705044, y: 1.5730001, z: 13.311}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

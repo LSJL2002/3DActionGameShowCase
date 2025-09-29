@@ -4,24 +4,24 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// °¢ ¾ÀÀÇ ½ºÅ©¸³Æ®°¡ »ó¼Ó¹ÞÀ» Å¬·¡½º
+// ê° ì”¬ì˜ ìŠ¤í¬ë¦½íŠ¸ê°€ ìƒì†ë°›ì„ í´ëž˜ìŠ¤
 public abstract class SceneBase : MonoBehaviour
 {
-    // ÇöÀç ¸Å´ÏÀú°¡ ¸¸µé¾îÁ® ÀÖ´ÂÁö È®ÀÎÇÏ´Â °úÁ¤
+    // í˜„ìž¬ ë§¤ë‹ˆì €ê°€ ë§Œë“¤ì–´ì ¸ ìžˆëŠ”ì§€ í™•ì¸í•˜ëŠ” ê³¼ì •
     protected virtual void Awake()
     {
-        // ¾À·Îµå¸Å´ÏÀúÀÇ isManager º¯¼ö°¡ false¶ó¸é
+        // ì”¬ë¡œë“œë§¤ë‹ˆì €ì˜ isManager ë³€ìˆ˜ê°€ falseë¼ë©´
         if (!SceneLoadManager.Instance.isManager)
         {
-            // ¾À·Îµå¸Å´ÏÀúÀÇ Change¾À ÇÔ¼ö¸¦ È£Ãâ
-            // ¸Å°³º¯¼ö1 : 0¹ø ¾ÀÀ¸·Î º¯°æ (¸Å´ÏÀú¾À)
-            // ¸Å°³º¯¼ö2 : ¶÷´Ù½ÄÀ» ÀÌ¿ëÇÏ¿© ÀÌ¸§¾ø´Â ÇÔ¼ö½ÄÀ» ¸Å°³º¯¼ö·Î Àü´Þ (inManager º¯¼ö¸¦ true·Î º¯°æ + "¸Å´ÏÀú¾À"À» ¾ð·Îµå¾À)
-            // ¸Å°³º¯¼ö3 : AdditiveÇü½ÄÀÇ ·Îµå¾À¸ðµå ÁöÁ¤ (ÇÑ ¾À¿¡ µÎ°³ÀÌ»óÀÇ ¾ÀÀÌ Á¸Àç°¡´É, ¸Å´ÏÀú¾ÀÀº ¸Å´ÏÀú¸¸ »ý¼ºÈÄ ¹Ù·Î ¾ð·Îµå¾À)
+            // ì”¬ë¡œë“œë§¤ë‹ˆì €ì˜ Changeì”¬ í•¨ìˆ˜ë¥¼ í˜¸ì¶œ
+            // ë§¤ê°œë³€ìˆ˜1 : në²ˆ ì”¬ìœ¼ë¡œ ë³€ê²½ (ë§¤ë‹ˆì €ì”¬)
+            // ë§¤ê°œë³€ìˆ˜2 : ëžŒë‹¤ì‹ì„ ì´ìš©í•˜ì—¬ ì´ë¦„ì—†ëŠ” í•¨ìˆ˜ì‹ì„ ë§¤ê°œë³€ìˆ˜ë¡œ ì „ë‹¬ (inManager ë³€ìˆ˜ë¥¼ trueë¡œ ë³€ê²½ + "ë§¤ë‹ˆì €ì”¬"ì„ ì–¸ë¡œë“œì”¬)
+            // ë§¤ê°œë³€ìˆ˜3 : Additiveí˜•ì‹ì˜ ë¡œë“œì”¬ëª¨ë“œ ì§€ì • (í•œ ì”¬ì— ë‘ê°œì´ìƒì˜ ì”¬ì´ ì¡´ìž¬ê°€ëŠ¥, ë§¤ë‹ˆì €ì”¬ì€ ë§¤ë‹ˆì €ë§Œ ìƒì„±í›„ ë°”ë¡œ ì–¸ë¡œë“œì”¬)
             SceneLoadManager.Instance.ChangeScene
             (
-                0, // ¸Å°³º¯¼ö1
-                () =>{SceneLoadManager.Instance.isManager = true; SceneLoadManager.Instance.UnLoadScene(0);}, // ¸Å°³º¯¼ö2
-                LoadSceneMode.Additive // ¸Å°³º¯¼ö3
+                2, // ë§¤ê°œë³€ìˆ˜1
+                () =>{SceneLoadManager.Instance.isManager = true; SceneLoadManager.Instance.UnLoadScene(2);}, // ë§¤ê°œë³€ìˆ˜2
+                LoadSceneMode.Additive // ë§¤ê°œë³€ìˆ˜3
             );
         }
     }

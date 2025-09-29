@@ -1,12 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.SceneManagement;
-using UnityEngine.WSA;
 
 public class MapManager : Singleton<MapManager>
 {
@@ -100,7 +94,7 @@ public class MapManager : Singleton<MapManager>
     {
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
-            SceneLoadManager.Instance.ChangeScene(2);
+            SceneLoadManager.Instance.LoadScene(0);
             Debug.Log("마지막 스테이지 클리어!");
             round++;
             Debug.Log("현재 회차 : " + round);

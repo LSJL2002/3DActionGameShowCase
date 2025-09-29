@@ -20,7 +20,7 @@ public class HomeUI : UIBase
         {
             case "NewGame":
                 // 새 게임 시작
-                SceneLoadManager.Instance.LoadScene(3);
+                SceneLoadManager.Instance.LoadScene(1);
                 break;
 
             case "LoadStart":

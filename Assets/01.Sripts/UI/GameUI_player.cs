@@ -60,6 +60,8 @@ public partial class GameUI : UIBase
     {
         await UIManager.Instance.Show<DamageEffectUI>();
 
+        Debug.Log(playerStats.CurrentHealth);
+
         // 체력 텍스트 업데이트
         playerHPText.text = Mathf.FloorToInt(playerStats.CurrentHealth / playerMaxHP * 100).ToString() + "%";
         float playerHPpercentage = playerStats.CurrentHealth / playerMaxHP;

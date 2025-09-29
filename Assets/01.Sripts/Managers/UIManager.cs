@@ -22,7 +22,7 @@ public class UIManager : Singleton<UIManager>
     // 한번 생성한 UI를 다시 생성하지 않도록 Dictionary로 관리
     private Dictionary<string, AsyncOperationHandle<GameObject>> uiHandles = new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
-    private @PlayerInput playerInput;
+    public @PlayerInput playerInput;
 
     protected override void Awake()
     {
@@ -161,6 +161,7 @@ public class UIManager : Singleton<UIManager>
         // 씬 언로드 이벤트 구독 해제
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
 
+        playerInput.Player.Disable(); // Player 액션 맵 활성화 (다시 TAB 입력을 알 수 있도록 켜둠)
         playerInput.Player.Inventory.performed -= GameUIToggle; // 인벤토리 입력(TAB)에 OnGameUI 함수 구독해제
         
     }
