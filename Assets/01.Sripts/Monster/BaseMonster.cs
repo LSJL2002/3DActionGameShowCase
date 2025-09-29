@@ -177,7 +177,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
             currentStepIndex++;
             yield return new WaitForSeconds(0.2f); // small delay between steps
         }
-        float cooldown = UnityEngine.Random.Range(1f, 3f);
+        float cooldown = UnityEngine.Random.Range(10f, 20f);
         yield return new WaitForSeconds(cooldown);
         currentPattern = null;
         currentPatternPriority = -1;

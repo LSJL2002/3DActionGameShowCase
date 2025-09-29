@@ -11,9 +11,12 @@ public class MonsterIdleState : MonsterBaseState
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
     }
 
-    public override void Update()
+    public override void PhysicsUpdate()
     {
-        base.Update();
+        Debug.Log("Idle PhysicsUpdate");
+
+        base.PhysicsUpdate();
+
         Transform player = stateMachine.Monster.PlayerTarget;
         if (player != null)
         {
