@@ -26,7 +26,9 @@ public class TutorialUI : UIBase
     // private bool playText;
     private bool bossOneIntroPlayed = false;
     // 목스터 생명 수치
-    private bool bossOneAt90Played, bossOneAt60Played, bossOneAt30Played, bossOneAt10Played;
+    private bool bossOneAt90Played, bossOneAt60Played, bossOneAt30Played, bossOneAt10Played, bossOneAt0Played;
+    // 선택 후 대화
+    private bool bossOneAfterSelectPlayed = false;
 
     public List<TextSO> dialogues = new List<TextSO>();
 
@@ -122,24 +124,58 @@ public class TutorialUI : UIBase
 
         if (!bossOneAt60Played && hpPercent <= 0.60f)
         {
-            bossOneAt90Played = true;
+            bossOneAt60Played = true;
             TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010025);
             if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
         }
 
         if (!bossOneAt30Played && hpPercent <= 0.30f)
         {
-            bossOneAt90Played = true;
+            bossOneAt30Played = true;
             TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010026);
             if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
         }
 
         if (!bossOneAt10Played && hpPercent <= 0.10f)
         {
-            bossOneAt90Played = true;
+            bossOneAt10Played = true;
             TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010027);
             if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
         }
+
+        if (!bossOneAt0Played && hpPercent <= 0.001f)
+        {
+            bossOneAt0Played = true;
+            List<TextSO> scene = new List<TextSO>();
+            foreach (TextSO text in dialogues)
+            {
+                if (text.scenes == type.ToString() && text.id >= 50010028 && text.id <= 50010031)
+                {
+                    scene.Add(text);
+                }
+            }
+            scene.Sort((a, b) => a.id.CompareTo(b.id)); 
+            StartCoroutine(ShowText(scene, 2.0f));      
+        }
+    }
+
+    public void PlayBossAfterSelection(SceneType type)
+    {
+        if (type != SceneType.Boss_1 || bossOneAfterSelectPlayed) return;
+        List<TextSO> scene = new List<TextSO>();
+        foreach (TextSO text in dialogues)
+        {
+            // 50010032 ~ 50010033 두 줄만 수집
+            if (text.scenes == type.ToString() && text.id >= 50010032 && text.id <= 50010033)
+            {
+                scene.Add(text);
+            }
+        }
+
+        scene.Sort((a, b) => a.id.CompareTo(b.id));
+        bossOneAfterSelectPlayed = true;
+
+        StartCoroutine(ShowText(scene, 2.0f));
     }
     #endregion
 }
