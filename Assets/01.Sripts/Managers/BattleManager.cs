@@ -76,7 +76,7 @@ public class BattleManager : Singleton<BattleManager>
         if (!Application.isPlaying || this == null) return;
 
         // 3. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.summonMonsterId, cutScene.transform.GetChild(3).transform.position);
+        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
 
         // 플레이 상태 체크 (몬스터 로드 끝난 뒤)
         if (!Application.isPlaying || this == null || currentMonster == null) return;
