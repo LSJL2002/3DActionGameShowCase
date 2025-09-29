@@ -24,8 +24,6 @@ public class BattleZone : MonoBehaviour
 
     [SerializeField]
     private BattleZoneSO ZoneData;
-    public PlayableDirector PlayableDirector;
-    public Transform spawnPoint;
 
   
     private void Awake()
