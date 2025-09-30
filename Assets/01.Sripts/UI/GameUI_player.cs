@@ -45,6 +45,10 @@ public partial class GameUI : UIBase
     {
         playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
 
+        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독해제 (중복구독 방지)
+        PlayerManager.Instance.Stats.OnPlayerHealthChanged -= OnPlayerHealthChanged;
+        PlayerManager.Instance.Stats.OnStatChanged -= UpdateStat;
+
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
         PlayerManager.Instance.Stats.OnPlayerHealthChanged += OnPlayerHealthChanged;
         PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
@@ -52,9 +56,7 @@ public partial class GameUI : UIBase
 
     public void OnDisablePlayer()
     {
-        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독 해제
-        PlayerManager.Instance.Stats.OnPlayerHealthChanged -= OnPlayerHealthChanged;
-        PlayerManager.Instance.Stats.OnStatChanged -= UpdateStat;
+        DOTween.Kill(this);
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출

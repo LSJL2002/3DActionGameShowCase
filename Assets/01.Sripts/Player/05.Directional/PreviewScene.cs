@@ -99,6 +99,8 @@ public class PreviewScene : MonoBehaviour
                 await UIManager.Instance.Show<SoundSettingUI>();
                 break;
             case "Quit": previewAnimator.SetBool("Base/Switch_Inven", true);
+                Time.timeScale = 1f;
+                PlayerManager.Instance.EnableInput(false);
                 SceneLoadManager.Instance.LoadScene(0); // Home씬으로 이동
                 break;
         }
