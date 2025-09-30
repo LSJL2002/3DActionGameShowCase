@@ -10,6 +10,7 @@ public class TimeLine_DrainAbility : TimeLineBase
         base.OnEnable();
 
         playableDirector.stopped += OnTimeLineStop;
+        playableDirector.stopped += SetToDay => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToDay();
 
         // 타임라인의 위치를 현재 플레이어 캐릭터 위치로 이동
         float height = PlayerManager.Instance.GetComponent<CharacterController>().height;
@@ -25,6 +26,7 @@ public class TimeLine_DrainAbility : TimeLineBase
     protected override void OnTimeLineStop(PlayableDirector director)
     {
         playableDirector.stopped -= OnTimeLineStop;
+        playableDirector.stopped -= SetToDay => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToDay();
         TimeLineManager.Instance.Hide(gameObject.name);
     }
 }
