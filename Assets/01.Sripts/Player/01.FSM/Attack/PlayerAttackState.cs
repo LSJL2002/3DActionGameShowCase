@@ -101,11 +101,13 @@ public class PlayerAttackState : PlayerBaseState
     // ===================== 공격 콤보 처리 =====================
     private void HandleCombo(float normalizedTime)
     {
-        // 다음 공격 버퍼링
-        if (attackButtonHeld && bufferedComboIndex < 0 && currentAttack.ComboStateIndex != -1)
+        // 항상 입력을 받아서 버퍼 갱신
+        if (attackButtonHeld && currentAttack.ComboStateIndex != -1)
+        {
             bufferedComboIndex = currentAttack.ComboStateIndex;
+        }
 
-        // ComboTransitionTime 이상 + 트리거 미발동
+        // 콤보 전환
         if (bufferedComboIndex >= 0 && normalizedTime >= currentAttack.ComboTransitionTime && !comboTriggered)
         {
             comboTriggered = true;
@@ -113,22 +115,13 @@ public class PlayerAttackState : PlayerBaseState
             SetAttack(bufferedComboIndex);
             bufferedComboIndex = -1;
 
-            // 가장 가까운 몬스터 탐색
             attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
             stateMachine.Player.Combat.SetAttackTarget(attackTarget);
-            // 공격 진입 시 Lock-On 강제 적용
-            if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
+            if (attackTarget != null)
+                stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
         }
 
-        // 마지막 공격(-1) 처리
-        if (currentAttack.ComboStateIndex == -1 && normalizedTime >= 1f)
-        {
-            if (attackButtonHeld)
-            {
-                SetAttack(1); // 입력 유지 시 1타부터 재시작
-            }
-            // 입력 없으면 FinishAttackState로 CheckIdleTransition에서 전환
-        }
+        // 마지막 공격(-1)에서는 자동 전환 없음
     }
     private void HandleAttackEnd(float normalizedTime)
     {
@@ -174,11 +167,21 @@ public class PlayerAttackState : PlayerBaseState
     {
         attackButtonHeld = true;
         lastAttackInputTime = Time.time;
-        if (!stateMachine.IsAttacking)
-            stateMachine.IsAttacking = true;
 
-        // 트리거는 여기서만 발동
-        stateMachine.Player.Animator.SetTrigger(stateMachine.Player.AnimationData.ComboTriggerHash);
+        if (!stateMachine.IsAttacking)
+        {
+            // 공격 중이 아니면 1타부터 시작
+            stateMachine.ComboIndex = 1; // 1타부터 시작
+            SetAttack(stateMachine.ComboIndex);
+            stateMachine.Player.Animator.SetTrigger(stateMachine.Player.AnimationData.AttackTriggerHash);
+            stateMachine.IsAttacking = true;
+        }
+        else
+        {
+            // 공격 중이면 콤보 입력 처리
+            if (currentAttack.ComboStateIndex != -1)
+                bufferedComboIndex = currentAttack.ComboStateIndex;
+        }
     }
 
     protected override void OnAttackCanceled(InputAction.CallbackContext context)
