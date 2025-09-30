@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GroundData>k__BackingField:
     <BaseRotationDamping>k__BackingField: 25
-    <BaseSpeed>k__BackingField: 0.8
+    <BaseSpeed>k__BackingField: 0.1
     <WalkSpeedModifier>k__BackingField: 0.7
     <RunAccelerationTime>k__BackingField: 2
     <RunSpeedModifier>k__BackingField: 1
@@ -29,43 +29,49 @@ MonoBehaviour:
     <StopDistance>k__BackingField: 5
     <AttackInfoDatas>k__BackingField:
     - <AttackName>k__BackingField: Attack1
-      <ComboStateIndex>k__BackingField: 1
-      <ComboTransitionTime>k__BackingField: 0.5
+      <ComboTimingStart>k__BackingField: 0.4
+      <ComboTimingEnd>k__BackingField: 0.7
+      <InputBufferTime>k__BackingField: 0.2
       <ForceTransitionTime>k__BackingField: 0
       <Force>k__BackingField: 0
       <Dealing_Start_TransitionTime>k__BackingField: 0.2
       <Dealing_End_TransitionTime>k__BackingField: 0.4
     - <AttackName>k__BackingField: Attack2
-      <ComboStateIndex>k__BackingField: 2
-      <ComboTransitionTime>k__BackingField: 0.5
+      <ComboTimingStart>k__BackingField: 0.4
+      <ComboTimingEnd>k__BackingField: 0.7
+      <InputBufferTime>k__BackingField: 0.2
       <ForceTransitionTime>k__BackingField: 0
       <Force>k__BackingField: 0
       <Dealing_Start_TransitionTime>k__BackingField: 0.2
       <Dealing_End_TransitionTime>k__BackingField: 0.4
     - <AttackName>k__BackingField: Attack3
-      <ComboStateIndex>k__BackingField: 3
-      <ComboTransitionTime>k__BackingField: 0.5
+      <ComboTimingStart>k__BackingField: 0.4
+      <ComboTimingEnd>k__BackingField: 0.7
+      <InputBufferTime>k__BackingField: 0.2
       <ForceTransitionTime>k__BackingField: 0
       <Force>k__BackingField: 0
       <Dealing_Start_TransitionTime>k__BackingField: 0.2
       <Dealing_End_TransitionTime>k__BackingField: 0.4
     - <AttackName>k__BackingField: Attack4
-      <ComboStateIndex>k__BackingField: 4
-      <ComboTransitionTime>k__BackingField: 0.5
+      <ComboTimingStart>k__BackingField: 0.4
+      <ComboTimingEnd>k__BackingField: 0.7
+      <InputBufferTime>k__BackingField: 0.2
       <ForceTransitionTime>k__BackingField: 0
       <Force>k__BackingField: 0
       <Dealing_Start_TransitionTime>k__BackingField: 0.2
       <Dealing_End_TransitionTime>k__BackingField: 0.4
     - <AttackName>k__BackingField: Attack5
-      <ComboStateIndex>k__BackingField: 5
-      <ComboTransitionTime>k__BackingField: 0.8
+      <ComboTimingStart>k__BackingField: 0.4
+      <ComboTimingEnd>k__BackingField: 0.7
+      <InputBufferTime>k__BackingField: 0.2
       <ForceTransitionTime>k__BackingField: 0
       <Force>k__BackingField: 0
       <Dealing_Start_TransitionTime>k__BackingField: 0.2
       <Dealing_End_TransitionTime>k__BackingField: 0.4
     - <AttackName>k__BackingField: Attack6
-      <ComboStateIndex>k__BackingField: -1
-      <ComboTransitionTime>k__BackingField: 0
+      <ComboTimingStart>k__BackingField: 0.4
+      <ComboTimingEnd>k__BackingField: 0.7
+      <InputBufferTime>k__BackingField: 0.2
       <ForceTransitionTime>k__BackingField: 0
       <Force>k__BackingField: 0
       <Dealing_Start_TransitionTime>k__BackingField: 0.2
@@ -89,7 +95,7 @@ MonoBehaviour:
   <StatData>k__BackingField:
     <id>k__BackingField: 0
     <name>k__BackingField: Player1
-    <maxHp>k__BackingField: 1
+    <maxHp>k__BackingField: 100
     <maxMp>k__BackingField: 100
     <attackPower>k__BackingField: 10
     <defense>k__BackingField: 0

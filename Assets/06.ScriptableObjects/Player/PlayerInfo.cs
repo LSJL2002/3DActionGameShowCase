@@ -79,7 +79,7 @@ public class AttackInfoData
     public string AttackName { get; private set; }
 
     [field: SerializeField, Tooltip("다음 콤보 입력 가능 시작 시점 (0~1)")]
-    [field: Range(0f, 1f)] public float ComboTimingStart { get; private set; } = 0.3f;
+    [field: Range(0f, 1f)] public float ComboTimingStart { get; private set; } = 0.6f;
 
     [field: SerializeField, Tooltip("다음 콤보 입력 가능 종료 시점 (0~1)")]
     [field: Range(0f, 1f)] public float ComboTimingEnd { get; private set; } = 0.7f;
