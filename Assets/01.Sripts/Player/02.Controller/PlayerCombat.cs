@@ -13,8 +13,10 @@ using static UnityEngine.Rendering.DebugUI;
 public class PlayerCombat : MonoBehaviour, IDamageable
 {
     private PlayerManager player;
-    private SkillManagers skillManager;
-    private ForceReceiver forceReceiver;
+    private SkillManagers skill;
+    private ForceReceiver force;
+    private CameraManager camera;
+    private HitStopManager hitStop;
 
     public GameObject spawnPoint;
 
@@ -31,10 +33,12 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     private void Awake()
     {
         player ??= GetComponent<PlayerManager>();
-        skillManager = player.skill;
+        skill = player.skill;
+        camera = player.camera;
+        hitStop = player.hitStop;
         playerInfo = player.InfoData;
 
-        forceReceiver = GetComponent<ForceReceiver>();
+        force = GetComponent<ForceReceiver>();
     }
 
 
@@ -48,7 +52,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
         Quaternion spawnRotation = spawnPoint.transform.rotation; // 회전 정보 추가
 
         // SpawnSkill 호출 (풀링, 파티클, Hitbox, 사운드 처리)
-        var skillObj = skillManager.SpawnSkill(skillName, spawnPosition, spawnRotation);
+        var skillObj = skill.SpawnSkill(skillName, spawnPosition, spawnRotation);
         if (skillObj == null) return;
 
         var skillHitboxes = skillObj.GetComponentsInChildren<Hitbox>();
@@ -66,9 +70,10 @@ public class PlayerCombat : MonoBehaviour, IDamageable
         target.OnTakeDamage(damage);
         // 타격 효과 & 카메라 흔들림 & 사운드
         // 충돌 지점에서 타격 이펙트 생성
-        skillManager.SpawnSkill("Hit1", hitPoint);
         AudioManager.Instance?.PlaySFX("Hit1");
-        //CameraShake.Instance?.Shake(0.2f, 1f);
+        skill.SpawnSkill("Hit1", hitPoint);
+        camera?.Shake(2f, 0.2f); //강도, 시간
+        hitStop.DoHitStop(); //초, 값
     }
 
 
@@ -148,7 +153,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
     /// </summary>
     public void MoveBehindTarget()
     {
-        if (CurrentAttackTarget == null || forceReceiver == null) return;
+        if (CurrentAttackTarget == null || force == null) return;
 
         Vector3 startPos = transform.position;
 
@@ -190,7 +195,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
 
                 // 6️⃣ 이동
                 Vector3 delta = newPos - transform.position;
-                forceReceiver.AddForce(delta, horizontalOnly: true);
+                force.AddForce(delta, horizontalOnly: true);
 
                 // 7️⃣ 타겟 바라보기 (XZ 평면만)
                 Vector3 lookDir = CurrentAttackTarget.position - transform.position;
@@ -202,7 +207,7 @@ public class PlayerCombat : MonoBehaviour, IDamageable
                 }
 
                 // 8️⃣ 실제 캐릭터 이동
-                player.Controller.Move(forceReceiver.Movement * Time.deltaTime);
+                player.Controller.Move(force.Movement * Time.deltaTime);
             })
             .OnComplete(() =>
             {
