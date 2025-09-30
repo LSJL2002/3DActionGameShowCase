@@ -20,16 +20,11 @@ public class TimeLineManager : Singleton<TimeLineManager>
         PlayerManager.Instance.Stats.OnDie += OnGameOverTimeLine; // 플레이어 사망이벤트에 구독
     }
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        PlayerManager.Instance.Stats.OnDie -= OnGameOverTimeLine; // 플레이어 사망이벤트에 구독해제
-    }
-
     // 게임오버 타임라인 호출하는 함수
     private async void OnGameOverTimeLine()
     {
+        PlayerManager.Instance.Stats.OnDie -= OnGameOverTimeLine; // 플레이어 사망이벤트에 구독해제
+
         await OnTimeLine<PlayableDirector>("TimeLine_GameOver");
     }
 

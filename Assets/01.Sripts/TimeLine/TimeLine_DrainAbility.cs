@@ -28,5 +28,7 @@ public class TimeLine_DrainAbility : TimeLineBase
         playableDirector.stopped -= OnTimeLineStop;
         playableDirector.stopped -= SetToDay => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToDay();
         TimeLineManager.Instance.Hide(gameObject.name);
+
+        UIManager.Instance.Get<TutorialUI>().PlayBossAfterSelection(SceneType.Boss_1);
     }
 }

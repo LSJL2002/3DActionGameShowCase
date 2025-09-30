@@ -2089,7 +2089,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1101219969500883049}
         m_TargetAssemblyTypeName: TimeLineBase, Assembly-CSharp
-        m_MethodName: OnStopButton
+        m_MethodName: OnSkipButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11879,8 +11879,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4479173732269116451}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00125531, y: 0.982799, z: -0.0066848868, w: 0.18455324}
-  m_LocalPosition: {x: 2.4349365, y: 1.6710205, z: 21.422}
+  m_LocalRotation: {x: -0.24577463, y: -0.0073738205, z: -0.011566761, w: 0.96922994}
+  m_LocalPosition: {x: -1.222168, y: 0.6094971, z: 0.559917}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11917,11 +11917,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
-  far clip plane: 5000
+  near clip plane: 0.3
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 10
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
