@@ -69,6 +69,18 @@ public class SkyboxBlendController : MonoBehaviour
         ToggleSky();
     }
 
+    public void SetToDay()
+    {
+        blendSkybox.SetFloat("_Blend", 0f); // 낮 시작
+        blendSkybox.SetFloat("_Rotation", 0f);
+    }
+
+    public void SetToNight()
+    {
+        blendSkybox.SetFloat("_Blend", 1f); 
+        blendSkybox.SetFloat("_Rotation", 270f);
+    }
+
     // 필요하면 런타임 중 Rotation도 Tween 가능
     public void ToggleSky()
     {

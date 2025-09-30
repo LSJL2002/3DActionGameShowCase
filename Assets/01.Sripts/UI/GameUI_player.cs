@@ -37,11 +37,17 @@ public partial class GameUI : UIBase
         // 플레이어 이미지 fillAmount를 초기화
         playerHPImage.fillAmount = 1f;
         playerMPImage.fillAmount = 1f;
+
+        playerHPText.text = playerStats.CurrentHealth.ToString("#,##0");
     }
 
     public void OnEnablePlayer()
     {
         playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
+
+        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독해제 (중복구독 방지)
+        PlayerManager.Instance.Stats.OnPlayerHealthChanged -= OnPlayerHealthChanged;
+        PlayerManager.Instance.Stats.OnStatChanged -= UpdateStat;
 
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
         PlayerManager.Instance.Stats.OnPlayerHealthChanged += OnPlayerHealthChanged;
@@ -50,9 +56,7 @@ public partial class GameUI : UIBase
 
     public void OnDisablePlayer()
     {
-        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독 해제
-        PlayerManager.Instance.Stats.OnPlayerHealthChanged -= OnPlayerHealthChanged;
-        PlayerManager.Instance.Stats.OnStatChanged -= UpdateStat;
+        DOTween.Kill(this);
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출
@@ -63,7 +67,7 @@ public partial class GameUI : UIBase
         Debug.Log(playerStats.CurrentHealth);
 
         // 체력 텍스트 업데이트
-        playerHPText.text = Mathf.FloorToInt(playerStats.CurrentHealth / playerMaxHP * 100).ToString() + "%";
+        playerHPText.text = playerStats.CurrentHealth.ToString("#,##0");
         float playerHPpercentage = playerStats.CurrentHealth / playerMaxHP;
 
         // 플레이어 체력이 40% 이하가 되면 닷트윈 효과(지속)

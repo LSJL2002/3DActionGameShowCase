@@ -25,6 +25,7 @@ public class MonsterBaseState : Istate
     public virtual void OnControllerColliderHit(ControllerColliderHit hit) { }
     public virtual void Update()
     {
+        Debug.Log("Apply Gravity");
         ApplyForcesOnly();
     }
     public virtual void OnAttackHit() { }
@@ -97,24 +98,26 @@ public class MonsterBaseState : Istate
 
             Vector3 top = cc.transform.position + cc.center + Vector3.up * (cc.height / 2 - cc.radius);
             Vector3 bottom = cc.transform.position + cc.center - Vector3.up * (cc.height / 2 - cc.radius);
+
             Collider[] hits = Physics.OverlapCapsule(top, bottom, cc.radius, LayerMask.GetMask("Player"));
 
             foreach (var hit in hits)
             {
                 Vector3 dir = cc.transform.position - hit.transform.position;
                 dir.y = 0f;
+
                 if (dir.sqrMagnitude > 0.0001f)
                 {
                     dir.Normalize();
-                    move += dir * 0.02f; // tweak small value if needed
+                    move += dir * 0.02f;
                 }
             }
+            float vertical = move.y; 
+            move.y = 0f;
 
-            cc.Move(move);
+            cc.Move(new Vector3(move.x, 0f, move.z) + Vector3.up * vertical);
         }
     }
-
-
 
     protected bool IsEnemyInDetectionRange()
     {
@@ -130,6 +133,13 @@ public class MonsterBaseState : Istate
         var forceReceiver = stateMachine.Monster.GetComponent<ForceReceiver>();
         if (cc == null || forceReceiver == null) return;
 
-        cc.Move(forceReceiver.Movement * Time.deltaTime);
+        Vector3 move = forceReceiver.Movement * Time.deltaTime;
+
+        if (cc.isGrounded && move.y <= 0f)
+        {
+            move.y = -0.1f; 
+        }
+
+        cc.Move(move);
     }
 }

@@ -14,19 +14,19 @@ public class PreviewScene : MonoBehaviour
 
     [Header("UI Buttons")]
     [SerializeField] private Button btnCharacter;
-    [SerializeField] private Button btnStat;
     [SerializeField] private Button btnCore;
     [SerializeField] private Button btnSkill;
-    [SerializeField] private Button btnInventory;
+    [SerializeField] private Button btnOption;
+    [SerializeField] private Button btnQuit;
 
     private void Awake()
     {
         // 버튼 리스너 등록
         btnCharacter?.onClick.AddListener(() => OpenPreview("Char"));
-        btnStat?.onClick.AddListener(() => OpenPreview("Stat"));
         btnCore?.onClick.AddListener(() => OpenPreview("Core"));
         btnSkill?.onClick.AddListener(() => OpenPreview("Skill"));
-        btnInventory?.onClick.AddListener(() => OpenPreview("Inven"));
+        btnOption?.onClick.AddListener(() => OpenPreview("Option"));
+        btnQuit?.onClick.AddListener(() => OpenPreview("Quit"));
     }
 
     private void OnEnable()
@@ -87,18 +87,21 @@ public class PreviewScene : MonoBehaviour
         switch (target)
         {
             case "Char": previewAnimator.SetBool("Base/Switch_Char", true);
-                break;
-            case "Stat": previewAnimator.SetBool("Base/Switch_Stat", true);
                 await UIManager.Instance.Show<CharacterInfomationUI>();
                 break;
-            case "Core": previewAnimator.SetBool("Base/Switch_Core", true);
+            case "Core": previewAnimator.SetBool("Base/Switch_Stat", true);
                 await UIManager.Instance.Show<CharacterCoreUI>();
                 break;
-            case "Skill": previewAnimator.SetBool("Base/Switch_Skill", true);
+            case "Skill": previewAnimator.SetBool("Base/Switch_Core", true);
                 await UIManager.Instance.Show<CharacterSkillUI>();
                 break;
-            case "Inven": previewAnimator.SetBool("Base/Switch_Inven", true);
+            case "Option": previewAnimator.SetBool("Base/Switch_Skill", true);
                 await UIManager.Instance.Show<SoundSettingUI>();
+                break;
+            case "Quit": previewAnimator.SetBool("Base/Switch_Inven", true);
+                Time.timeScale = 1f;
+                PlayerManager.Instance.EnableInput(false);
+                SceneLoadManager.Instance.LoadScene(0); // Home씬으로 이동
                 break;
         }
 
