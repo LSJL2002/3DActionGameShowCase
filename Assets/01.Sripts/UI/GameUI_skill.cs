@@ -22,6 +22,9 @@ public partial class GameUI : UIBase
     [SerializeField] private Image skill1Image; // 스킬1 이미지
     [SerializeField] private TextMeshProUGUI skill1Text; // 스킬1 스택 텍스트
 
+    private Sequence evadeCoolTimeSequence = null;
+    private Sequence heavyAttackCoolTimeSequence = null;
+
     public void OnAwakeSkill()
     {
         evadeImage.fillAmount = 1;
@@ -50,18 +53,20 @@ public partial class GameUI : UIBase
     {
         evadeText.text = playerStats.EvadeBufferCurrent.ToString(); // 스택을 업데이트
 
+        if (evadeCoolTimeSequence.IsActive()) return;
+
         float cooltimeDuration = playerStats.EvadeCooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
 
         evadeImage.fillAmount = 1f; // 시작 전 1f로 초기화
 
-        Sequence mySequence = DOTween.Sequence(); // 새로운 시퀀스 생성
-        mySequence.Append(evadeImage.DOFillAmount(0f, cooltimeDuration)); // 시퀀스에 트윈 추가 (쿨타임 이미지 시각효과)
-        mySequence.AppendCallback(() => { evadeImage.fillAmount = 1f; });
-        mySequence.AppendCallback(() => { evadeText.text = playerStats.EvadeBufferMax.ToString(); });
+        evadeCoolTimeSequence = DOTween.Sequence(); // 새로운 시퀀스 생성
+        evadeCoolTimeSequence.Append(evadeImage.DOFillAmount(0f, cooltimeDuration)); // 시퀀스에 트윈 추가 (쿨타임 이미지 시각효과)
+        evadeCoolTimeSequence.AppendCallback(() => { evadeImage.fillAmount = 1f; });
+        evadeCoolTimeSequence.AppendCallback(() => { evadeText.text = playerStats.EvadeBufferMax.ToString(); });
 
         // Sequence 재생 및 Auto파괴옵션세팅 호출
-        mySequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
-                    .OnKill(() => mySequence = null) // Sequence가 Kill 될 때 참조 해제
+        evadeCoolTimeSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
+                    .OnKill(() => evadeCoolTimeSequence = null) // Sequence가 Kill 될 때 참조 해제
                     .Play(); // Sequence 시작
     }
 
@@ -70,18 +75,20 @@ public partial class GameUI : UIBase
     {
         skill1Text.text = playerStats.SkillBufferCurrent.ToString(); // 스택을 업데이트
 
+        if (heavyAttackCoolTimeSequence.IsActive()) return;
+
         float cooltimeDuration = playerStats.SkillCooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
 
         skill1Image.fillAmount = 1f; // 시작 전 1f로 초기화
 
-        Sequence mySequence = DOTween.Sequence(); // 새로운 시퀀스 생성
-        mySequence.Append(skill1Image.DOFillAmount(0f, cooltimeDuration)); // 시퀀스에 트윈 추가 (쿨타임 이미지 시각효과)
-        mySequence.AppendCallback(() => { skill1Image.fillAmount = 1f; });
-        mySequence.AppendCallback(() => { skill1Text.text = playerStats.SkillBufferMax.ToString(); });
+        heavyAttackCoolTimeSequence = DOTween.Sequence(); // 새로운 시퀀스 생성
+        heavyAttackCoolTimeSequence.Append(skill1Image.DOFillAmount(0f, cooltimeDuration)); // 시퀀스에 트윈 추가 (쿨타임 이미지 시각효과)
+        heavyAttackCoolTimeSequence.AppendCallback(() => { skill1Image.fillAmount = 1f; });
+        heavyAttackCoolTimeSequence.AppendCallback(() => { skill1Text.text = playerStats.SkillBufferMax.ToString(); });
 
         // Sequence 재생 및 Auto파괴옵션세팅 호출
-        mySequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
-                    .OnKill(() => mySequence = null) // Sequence가 Kill 될 때 참조 해제
+        heavyAttackCoolTimeSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
+                    .OnKill(() => heavyAttackCoolTimeSequence = null) // Sequence가 Kill 될 때 참조 해제
                     .Play(); // Sequence 시작
     }
 }
