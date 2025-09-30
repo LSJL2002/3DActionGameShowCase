@@ -151,11 +151,20 @@ public class BaseMonster : MonoBehaviour, IDamageable
             float skillRange = GetSkillRangeFromState(attackState);
             if (!ignoreDistanceCheck) // If ignore distance check is true, then just perform the attack
             {
-                // --- Wait until player is in attack range (AI handles movement) ---
+                float waitTime = 0f;
+                bool inRange = false;
                 yield return new WaitUntil(() =>
-                    PlayerTarget != null &&
-                    Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange
-                );
+                {
+                    waitTime += Time.deltaTime;
+                    inRange = (PlayerTarget != null && Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange);
+                    return inRange || waitTime >= 5f;
+                });
+
+                if (!inRange)
+                {
+                    Debug.Log($"{name} stopped pattern {currentPattern.id} after 5s timeout");
+                    break;
+                }
             }
             // --- Perform attack ---
             stateMachine.isAttacking = true;
