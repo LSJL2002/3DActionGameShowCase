@@ -89,6 +89,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01deb2de265a4714eaf9e9f8c1b948a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 1865476314593472009}
+  aimConstraint: {fileID: 2418450553012926700}
 --- !u!895512359 &2418450553012926700
 AimConstraint:
   m_ObjectHideFlags: 0
@@ -127,6 +129,7 @@ GameObject:
   - component: {fileID: 7076728093855075888}
   - component: {fileID: 7231901724067247961}
   - component: {fileID: 670652611318765946}
+  - component: {fileID: 1865476314593472009}
   m_Layer: 5
   m_Name: LockOnCanvas
   m_TagString: Untagged
@@ -199,7 +202,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &7231901724067247961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,3 +241,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &1865476314593472009
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3218191845544919062}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
