@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerComboAttackState : PlayerAttackState
 {
-    public PlayerComboAttackState(PlayerStateMachine stateMachine) : base(stateMachine) { }
-
-
+    public PlayerComboAttackState(PlayerStateMachine sm) : base(sm)
+    {
+    }
 }
