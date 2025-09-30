@@ -23,6 +23,10 @@ public class TutorialUI : UIBase
     public GameObject playerCamera;
     public GameObject CompanionCamera;
 
+    public Image skipProgressImage; // fill amount 이미지
+    private float holdToSkipAll = 1.5f; // 1.5초 동안 fill amount 1로
+    private float releaseReturnTime = 0.6f; // 중간에 손을 때면 0.6초 동안 0으로 
+
     // private bool playText;
     private bool bossOneIntroPlayed = false;
     // 목스터 생명 수치
@@ -40,8 +44,36 @@ public class TutorialUI : UIBase
     #region Tutorial
     IEnumerator ShowText(List<TextSO> scene, float time)
     {
+        float xHeld = 0f;      // 누적 홀드시간(초)
+        bool skipAll = false;  // 전체 스킵 플래그
+
+        // 로컬 함수: 매 프레임 게이지/홀드시간 갱신
+        void UpdateSkipUI(bool isHolding)
+        {
+            if (skipProgressImage != null)
+            {
+                if (isHolding)
+                {
+                    xHeld += Time.deltaTime;
+                    skipProgressImage.fillAmount = Mathf.Clamp01(xHeld / holdToSkipAll);
+                }
+                else
+                {
+                    // 손을 떼면 fillAmount가 releaseReturnTime초에 걸쳐 0으로 감쇠
+                    float step = (releaseReturnTime > 0f) ? Time.deltaTime / releaseReturnTime : 1f;
+                    skipProgressImage.fillAmount = Mathf.MoveTowards(skipProgressImage.fillAmount, 0f, step);
+                    xHeld = skipProgressImage.fillAmount * holdToSkipAll; // 일관성 유지
+                }
+
+                // 게이지가 0이면 감춰도 됨
+                skipProgressImage.enabled = skipProgressImage.fillAmount > 0f;
+            }
+        }
+
         foreach (TextSO text in scene)
         {
+            if (skipAll) break;
+
             if (text.abc == Speaker.Player.ToString())
             {
                 playerCamera.SetActive(true);
@@ -56,13 +88,23 @@ public class TutorialUI : UIBase
             talkText.text = "";
             bool completedBySkip = false; // 이번문장이 x키로 즉시 완성됐는지 표시.
 
+            // 글자 출력
             for (int i = 0; i < text.textContent.Length; i++)
             {
+                if (skipAll) break;
+
                 talkText.text += text.textContent[i];
+
                 // 0.05초 대기 or X키 입력 시 즉시 스킵
                 float elapsed = 0.0f;
                 while (elapsed < 0.05f) 
                 {
+                    bool holding = Input.GetKeyUp(KeyCode.X);
+                    UpdateSkipUI(holding);
+
+                    // 전체 스킵
+                    if (xHeld >= holdToSkipAll) { skipAll = true; break; }
+
                     if (Input.GetKeyDown(KeyCode.X))
                     {
                         talkText.text = text.textContent;
@@ -75,28 +117,52 @@ public class TutorialUI : UIBase
                 }
             }
 
+            if (skipAll) break;
+
+            // 같은 프레임 중복 입력 방지 + 길게 누름 감시
             if (completedBySkip)
             {
-                yield return null;                          // 한 프레임 대기 (같은 프레임 GetKeyDown 무시)
-                while (Input.GetKey(KeyCode.X))             // 키 누른 상태 유지면 연속 스킵 방지
+                yield return null; // 한 프레임 쉬기
+                while (true)
+                {
+                    bool holding = Input.GetKey(KeyCode.X);
+                    UpdateSkipUI(holding);
+
+                    if (xHeld >= holdToSkipAll) { skipAll = true; break; }
+                    if (!holding) break; // 키를 떼면 다음 단계로
                     yield return null;
+                }
             }
 
+            if (skipAll) break;
+
+            // 문장 간 대기
             float wait = 0f;
             while (wait < time)
             {
-                if (Input.GetKeyDown(KeyCode.X))
-                {
-                    break;
-                }
+                bool holding = Input.GetKey(KeyCode.X);
+                UpdateSkipUI(holding);
+
+                if (xHeld >= holdToSkipAll) { skipAll = true; break; }
+                if (Input.GetKeyDown(KeyCode.X)) break; // 다음 문장으로
+
                 wait += Time.deltaTime;
                 yield return null;
             }
+
+            if (skipAll) break;
         }
 
         Hide();
         playerCamera.SetActive(false);
         CompanionCamera.SetActive(false);
+
+        // 게이지 리셋
+        if (skipProgressImage != null)
+        {
+            skipProgressImage.fillAmount = 0f;
+            skipProgressImage.enabled = false;
+        }
     }
 
     public void PlayDialogue(SceneType type)
