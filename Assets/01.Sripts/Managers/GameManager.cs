@@ -83,18 +83,5 @@ public class GameManager : Singleton<GameManager>
         ChangeState(eGameState.Pause);
 
         Debug.Log($"IsPauseGame : {check}");
-
-        // 일시정지 UI를 활성화/비활성화
-        //await UIManager.Instance.Show<PauseUI>();
-    }
-
-    // 게임 오버
-    public void GameEnd()
-    {
-        // 게임 상태를 변경
-        ChangeState(eGameState.GameEnd);
-
-        // 게임오버씬으로 전환
-        // SceneLoadManager.Instance.ChangeScene(0);
     }
 }
