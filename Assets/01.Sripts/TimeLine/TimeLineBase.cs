@@ -48,9 +48,17 @@ public class TimeLineBase : MonoBehaviour
 
     protected virtual void OnDestroy() { }
 
-    public void OnStopButton()
+    public void OnSkipButton()
     {
-        playableDirector.Stop();
+        // 타임라인의 재생 시간을 '총 길이 - 아주 작은 값'으로 설정
+        // playableDirector.duration : 타임라인의 총 재생 시간(초)
+        // 1 / GetSpeed() : 1 프레임을 재생하는 데 걸리는 시간(프레임 간격)을 의미
+        double endTime = playableDirector.duration - (1 / playableDirector.playableGraph.GetRootPlayable(0).GetSpeed());
+
+        // 설정된 시간(endTime)으로 타임라인을 이동
+        playableDirector.time = endTime;
+        
+        playableDirector.Play();
     }
 }
 

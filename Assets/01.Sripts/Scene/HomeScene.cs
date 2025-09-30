@@ -11,6 +11,8 @@ public class HomeScene : SceneBase
         ShowUI();
         AudioManager.Instance.StopBGM();
         AudioManager.Instance.PlayBGM("2");
+
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private async void ShowUI()
