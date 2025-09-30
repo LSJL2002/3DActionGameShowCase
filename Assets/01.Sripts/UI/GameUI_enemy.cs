@@ -17,7 +17,6 @@ public partial class GameUI : UIBase
     [SerializeField] public TextMeshProUGUI enemyNameText;  // UI : 적 이름 텍스트
     [SerializeField] public TextMeshProUGUI enemyHPText; // UI : 적 체력 텍스트
     [SerializeField] private CanvasGroup enemyInfoCanvasGroup;
-    [SerializeField] private Image enemyIcon;
     [SerializeField] private Sprite enemyDefaultIcon;
     [SerializeField] private Sprite enemyClearIcon;
     private MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
@@ -40,8 +39,6 @@ public partial class GameUI : UIBase
 
                 enemyHPImage.fillAmount = 1f; // 적 체력 슬라이더를 100%
 
-                enemyIcon.sprite = enemyDefaultIcon;
-
                 enemyInfoCanvasGroup.DOFade(0f, 0f);
 
                 monsterStats = null; // 스텟 변수 클리어
@@ -49,8 +46,6 @@ public partial class GameUI : UIBase
                 break;
 
             case 1:
-
-                enemyIcon.sprite = enemyDefaultIcon;
 
                 enemyInfoCanvasGroup.DOFade(1f, 1.5f);
 
@@ -85,10 +80,5 @@ public partial class GameUI : UIBase
 
         // 체력 텍스트도 업데이트
         enemyHPText.text = monsterStats.CurrentHP.ToString("#,##0");
-
-        if (enemyHPText.text == "0")
-        {
-            enemyIcon.sprite = enemyClearIcon;
-        }
     }
 }
