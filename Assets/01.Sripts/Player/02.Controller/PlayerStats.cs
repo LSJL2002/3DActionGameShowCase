@@ -75,7 +75,7 @@ public class PlayerStats : IStats
         MaxEnergy = new Stat(data.maxMp);
         Attack = new Stat(data.attackPower);
         Defense = new Stat(data.defense);
-        MoveSpeed = new Stat(data.Speed);
+        MoveSpeed = new Stat(data.moveSpeed);
         AttackSpeed = new Stat(data.attackSpeed);
 
         CurrentHealth = MaxHealth.Value;

@@ -36,7 +36,7 @@ public class PlayerKnockbackState : Istate
     {
         // 애니메이션 트리거
         var anim = stateMachine.Player.Animator;
-        anim.SetTrigger(stateMachine.Player.AnimationData.KnockbackParameterHash);
+        anim.SetBool(stateMachine.Player.AnimationData.KnockbackParameterHash, true);
         anim.SetLayerWeight(knockLayerIndex, 1);
 
         // 제어 불가 상태 → 이동/회전 입력 무시
@@ -46,6 +46,8 @@ public class PlayerKnockbackState : Istate
     public void Exit()
     {
         var anim = stateMachine.Player.Animator;
+        anim.SetBool(stateMachine.Player.AnimationData.KnockbackParameterHash, false);
+
         anim.SetLayerWeight(knockLayerIndex, 1);
 
         stateMachine.IsKnockback = false;

@@ -1,3 +1,4 @@
+using UnityEditor.Build.Pipeline.Utilities;
 using UnityEngine;
 
 public class MonsterBaseAttackAlt : MonsterBaseState
@@ -5,6 +6,7 @@ public class MonsterBaseAttackAlt : MonsterBaseState
     private int damage;
     private BoxCollider attackCollider;
     private MonsterAnimationData.MonsterAnimationType animationType;
+    private bool hasHit;
 
     public MonsterBaseAttackAlt(MonsterStateMachine stateMachine, MonsterAnimationData.MonsterAnimationType animType) : base(stateMachine)
     {
@@ -25,6 +27,7 @@ public class MonsterBaseAttackAlt : MonsterBaseState
     public override void Enter()
     {
         StopMoving();
+        hasHit = false;
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
 
@@ -45,13 +48,18 @@ public class MonsterBaseAttackAlt : MonsterBaseState
 
     public override void OnAttackHit()
     {
-        if (attackCollider != null)
+        if (attackCollider != null && !hasHit)
         {
             // Set the damage
             AttackTrigger trigger = attackCollider.GetComponent<AttackTrigger>();
             if (trigger != null)
             {
                 trigger.damage = damage;
+                trigger.onHit = () =>
+                {
+                    hasHit = true;
+                    attackCollider.enabled = false;
+                };
             }
 
             attackCollider.enabled = true;
