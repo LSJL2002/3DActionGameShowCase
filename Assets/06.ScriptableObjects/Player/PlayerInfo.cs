@@ -103,8 +103,8 @@ public class AttackInfoData
 
 public enum AttackType
 {
-    Lite,
-    Heavy,
+    LightAttack,
+    HeavyAttack,
     Skill,
     Dodge
 }
@@ -133,7 +133,9 @@ public class SkillInfoData
     [field: SerializeField] public EffectType effectType { get; private set; }
     [field: SerializeField] public float effectValue { get; private set; }
     [field: SerializeField] public float duration { get; private set; }
+    //public List<castEffectName> = new List<castEffectName>();
     [field: SerializeField] public float range { get; private set; }
+    //public List<areaEffectPrefab> = new List<areaEffectPrefab>();
     [field: SerializeField] public float knockbackDistance { get; private set; }
     [field: SerializeField] public int comboSkillId { get; private set; }
     [field: SerializeField] public float cooldown { get; private set; }
