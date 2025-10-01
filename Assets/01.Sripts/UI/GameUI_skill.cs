@@ -9,7 +9,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Zenject;
 
 // GameUI의 Skill Part
 public partial class GameUI : UIBase

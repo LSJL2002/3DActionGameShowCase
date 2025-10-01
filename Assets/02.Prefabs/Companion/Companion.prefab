@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8984950861769752557}
   - component: {fileID: 6308421219246408783}
+  - component: {fileID: 1250405825950572520}
   - component: {fileID: 9221723030689603056}
   m_Layer: 0
   m_Name: CompanionCamera
@@ -84,6 +85,14 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!81 &1250405825950572520
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270669326274077702}
+  m_Enabled: 1
 --- !u!895512359 &9221723030689603056
 AimConstraint:
   m_ObjectHideFlags: 0
@@ -95,7 +104,7 @@ AimConstraint:
   serializedVersion: 2
   m_Weight: 0.032
   m_RotationAtRest: {x: 6.320006, y: -170.707, z: 0.000000053687103}
-  m_RotationOffset: {x: 0.22326463, y: -4.1335573, z: 6.175696}
+  m_RotationOffset: {x: 0.22327536, y: -4.1335645, z: 6.1757064}
   m_AimVector: {x: 0, y: -0.67, z: 1}
   m_UpVector: {x: 0, y: 0.13, z: 0}
   m_WorldUpVector: {x: 0, y: 1, z: 0}
@@ -137,7 +146,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.14, z: 0.79}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5974102722943521851}
@@ -5377,7 +5386,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.028254911, y: -0.032457493, z: -0.056719575, w: 0.9974624}
   m_LocalPosition: {x: -1.607, y: 1.847, z: -0.5}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8984950861769752557}

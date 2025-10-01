@@ -4,7 +4,6 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.VFX;
-using Zenject.SpaceFighter;
 using static CartoonFX.CFXR_Effect;
 using static SkillSO;
 using static UnityEngine.Rendering.DebugUI;

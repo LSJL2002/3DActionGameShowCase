@@ -99,7 +99,7 @@ public class TutorialUI : UIBase
                 float elapsed = 0.0f;
                 while (elapsed < 0.05f) 
                 {
-                    bool holding = Input.GetKey(KeyCode.X);
+                    bool holding = Input.GetKeyUp(KeyCode.X);
                     UpdateSkipUI(holding);
 
                     // 전체 스킵

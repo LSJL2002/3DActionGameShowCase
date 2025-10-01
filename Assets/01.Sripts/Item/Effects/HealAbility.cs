@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
-using Zenject.SpaceFighter;
 
 [CreateAssetMenu(fileName = "NewItemAbility", menuName = "Item Abilities/Heal")]
 public class HealAbility : ItemAbility
