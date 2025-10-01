@@ -25,6 +25,7 @@ public class MonsterBaseAttack : MonsterBaseState
     public override void Enter()
     {
         StopMoving();
+        hasHit = false;
         stateMachine.isAttacking = true;
         // Start attack animation
         StartAnimation(stateMachine.Monster.animationData.GetHash(

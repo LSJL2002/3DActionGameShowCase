@@ -150,24 +150,19 @@ public class SkillInfoData
 [Serializable]
 public class PlayerStatData
 {
-    [field: SerializeField] public int id { get; private set; } = 0;
-    [field: SerializeField] public string name { get; private set; } = "Test";
+    [field: SerializeField] public string id { get; private set; } = "00000001";
+    [field: SerializeField] public string name { get; private set; }
     [field: SerializeField] public float maxHp { get; private set; } = 100;
     [field: SerializeField] public float maxMp { get; private set; } = 100;
     [field: SerializeField] public int attackPower { get; private set; } = 10;
     [field: SerializeField] public int defense { get; private set; } = 0;
-    [field: SerializeField] public float Speed { get; private set; } = 1; //임시
     [field: SerializeField] public float attackSpeed { get; private set; } = 1.0f;
-    //public List<StatusEffect> statusEffectList = new List<StatusEffect>();
     [field: SerializeField] public float moveSpeed { get; private set; } = 1.0f;
-    //public List<EquipWeaponId> = new List<EquipWeaponId>();
-    //public List<equipArmorId> = new List<equipArmorId>();
-    //public List<equipAccId> = new List<equipAccId>();
     [field: SerializeField] public int jumpCount { get; private set; } = 1;
     [field: SerializeField] public int dodgeCount { get; private set; } = 1;
     //public List<inventoryItemList> = new List<inventoryItemList>();
     //public List<effectItemList> = new List<effectItemList>();
-    [field: SerializeField] public int usableSkillDicList { get; private set; }
+    [field: SerializeField] public string usableSkillDicList { get; private set; } = "70000000";
 
 }
 

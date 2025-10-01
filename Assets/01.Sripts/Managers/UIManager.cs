@@ -24,6 +24,8 @@ public class UIManager : Singleton<UIManager>
 
     public @PlayerInput playerInput;
 
+    public bool tutorialEnabled = true; // 튜토리얼 재생여부
+
     protected override void Awake()
     {
         playerInput = new @PlayerInput();

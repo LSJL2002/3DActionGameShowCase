@@ -33,7 +33,7 @@ public class PlayerStunState : Istate
     {
         // 애니메이션 트리거
         var anim = stateMachine.Player.Animator;
-        anim.SetTrigger(stateMachine.Player.AnimationData.StunParameterHash);
+        anim.SetBool(stateMachine.Player.AnimationData.StunParameterHash, true);
         anim.SetLayerWeight(stunLayerIndex, 1);
 
         stateMachine.IsStun = true;
@@ -42,6 +42,8 @@ public class PlayerStunState : Istate
     public void Exit()
     {
         var anim = stateMachine.Player.Animator;
+        anim.SetBool(stateMachine.Player.AnimationData.StunParameterHash, false);
+
         anim.SetLayerWeight(stunLayerIndex, 0);
 
         stateMachine.IsStun = false;

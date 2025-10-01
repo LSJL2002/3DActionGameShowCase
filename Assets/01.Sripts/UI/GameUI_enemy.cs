@@ -20,7 +20,9 @@ public partial class GameUI : UIBase
     [SerializeField] private Sprite enemyDefaultIcon;
     [SerializeField] private Sprite enemyClearIcon;
     private MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
-    
+
+    Sequence enemyDamageSequence;
+
     public void OnEnableEnemy()
     {
         enemyInfoCanvasGroup.DOFade(0f, 0f);
@@ -59,9 +61,17 @@ public partial class GameUI : UIBase
         }
     }
 
+    public void OnDisableEnemy()
+    {
+        DOTween.Kill(this);
+        enemyDamageSequence = null;
+    }
+
     // 적 체력 변경 이벤트 발생 시 호출
     private void OnEnemyHealthChanged()
     {
+        enemyDamageSequence.Kill(); // 이전 시퀀스가 실행중이면 종료
+
         float duration = 0.2f;
 
         // 닷트윈 체력바 fillAmount를 부드럽게 변경
@@ -74,9 +84,9 @@ public partial class GameUI : UIBase
 
         // 닷트윈 색상 변경했다 돌아오기 효과
         Color originalColor = enemyHPText.color;                         // 현재 색상 값을 저장
-        Sequence mySequence = DOTween.Sequence();                        // 새로운 시퀀스 생성
-        mySequence.Append(enemyHPText.DOColor(Color.red, duration));     // 시퀀스에 첫 번째 트윈 추가 (빨간색으로 변경)
-        mySequence.Append(enemyHPText.DOColor(originalColor, duration)); // 시퀀스에 두 번째 트윈 추가 (원래 색상으로 돌아오기)
+        enemyDamageSequence = DOTween.Sequence();                        // 새로운 시퀀스 생성
+        enemyDamageSequence.Append(enemyHPText.DOColor(Color.red, duration));     // 시퀀스에 첫 번째 트윈 추가 (빨간색으로 변경)
+        enemyDamageSequence.Append(enemyHPText.DOColor(originalColor, duration)); // 시퀀스에 두 번째 트윈 추가 (원래 색상으로 돌아오기)
 
         // 체력 텍스트도 업데이트
         enemyHPText.text = monsterStats.CurrentHP.ToString("#,##0");
