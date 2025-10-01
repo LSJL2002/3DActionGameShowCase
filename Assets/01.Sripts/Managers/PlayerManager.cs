@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
-using Zenject.SpaceFighter;
 
 public interface IPlayer
 {

@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
-using Zenject.SpaceFighter;
 using Cursor = UnityEngine.Cursor;
 
 

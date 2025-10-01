@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Zenject;
 
 // GameUI의 Base
 public partial class GameUI : UIBase
