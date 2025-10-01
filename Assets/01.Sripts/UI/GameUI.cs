@@ -37,7 +37,7 @@ public partial class GameUI : UIBase
         base.OnEnable();
 
         BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯 불러오기
-        BattleManager.OnBattleClear += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
+        BattleManager.OnMonsterDie += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
 
         OnEnablePlayer();
         OnEnableEnemy();
@@ -68,8 +68,11 @@ public partial class GameUI : UIBase
 
     public void ReleaseMonsterStat(BattleZone zone)                  //몬스터 스텟 해제
     {
-        monsterStats.OnHealthChanged -= OnEnemyHealthChanged;
-        monsterStats = null;
+        if (monsterStats != null)
+        {
+            monsterStats.OnHealthChanged -= OnEnemyHealthChanged;
+            monsterStats = null;
+        }
         ChangeState(eBattleState.Idle);
         SetEnemyInfo(0);
     }
