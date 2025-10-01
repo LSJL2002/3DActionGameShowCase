@@ -7,13 +7,16 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class CameraManager : MonoBehaviour
 {
-    public Transform MainCamera { get; set; }
-    public PostProcessVolume Volume { get; set; }
-    public CinemachineFreeLook FreeLookCam { get; set; }
+    public Transform MainCamera { get; private set; }
+    public PostProcessVolume Volume { get; private set; }
+    public CinemachineFreeLook FreeLookCam { get; private set; }
 
-    public CinemachineTargetGroup targetGroup;
+    public CinemachineTargetGroup targetGroup {  get; private set; }
+    public CinemachineVirtualCamera targetCam { get; private set; }
+    public CinemachineBasicMultiChannelPerlin noise {  get; private set; }
+    private float shakeTimer;
+
     public Transform player; // 인스펙터에서 플레이어 위치 할당
-
     private Transform lockOnTarget;
 
     private void Awake()
@@ -23,9 +26,27 @@ public class CameraManager : MonoBehaviour
         var freeLooks = GetComponentsInChildren<CinemachineFreeLook>();
         FreeLookCam = freeLooks[0]; // 첫 번째
         // FreeLook = freeLooks.FirstOrDefault(f => f.name == "PlayerCam"); // 이름으로 골라내기
+
+        targetGroup = GetComponentInChildren<CinemachineTargetGroup>();
+        targetCam = targetGroup.GetComponentInChildren<CinemachineVirtualCamera>();
+        noise = targetCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
-    // ===================== Lock-On =====================
+    private void Update()
+    {
+        if (shakeTimer > 0)
+        {
+            shakeTimer -= Time.deltaTime;
+            if (shakeTimer <= 0f)
+            {
+                // 흔들림 원상 복구
+                noise.m_AmplitudeGain = 0f;
+            }
+        }
+    }
+
+
+    // ======================== 카메라 Lock-On ========================
     public void ToggleLockOnTarget(Transform target)
     {
         var groupCam = targetGroup.GetComponentInChildren<CinemachineVirtualCamera>(true);
@@ -69,6 +90,15 @@ public class CameraManager : MonoBehaviour
 
     public bool HasTarget() => lockOnTarget != null;
     public Transform GetLockOnTarget() => lockOnTarget;
+
+    // ===================== 카메라 흔들기 =========================
+    public void Shake(float intensity, float time)
+    {
+        if (noise == null) return;
+
+        noise.m_AmplitudeGain = intensity;
+        shakeTimer = time;
+    }
 
 
     // ===================== 카메라 보정 회전 =====================
