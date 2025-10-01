@@ -37,8 +37,6 @@ public class PlayerAttackState : PlayerBaseState
     {
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
-
-        stateMachine.IsAttacking = false; // AttackState 종료 시 초기화
     }
 
     public override void LogicUpdate()
@@ -56,11 +54,13 @@ public class PlayerAttackState : PlayerBaseState
 
     protected override void OnAttackStarted(InputAction.CallbackContext context)
     {
+        base.OnAttackStarted(context);
         comboHandler.RegisterInput();
     }
 
     protected override void OnAttackCanceled(InputAction.CallbackContext context)
     {
+        base.OnAttackCanceled(context);
         // 공격 버튼 떼었을 때는 특별한 동작 없음
     }
 
