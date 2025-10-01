@@ -23,12 +23,13 @@ public class TimeLine_DrainAbility : TimeLineBase
 
     // 타임라인 정지시 호출 될 함수 (타임라인 정지 이벤트에 구독)
     // 이 타임라인은 재사용되기 때문에 릴리즈하지 않고 비활성화 하도록 함수를 override 함.
-    protected override void OnTimeLineStop(PlayableDirector director)
+    protected override async void OnTimeLineStop(PlayableDirector director)
     {
         playableDirector.stopped -= OnTimeLineStop;
         playableDirector.stopped -= SetToDay => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToDay();
         TimeLineManager.Instance.Hide(gameObject.name);
 
+        await UIManager.Instance.Show<TutorialUI>();
         UIManager.Instance.Get<TutorialUI>().PlayBossAfterSelection(SceneType.Boss_1);
     }
 }
