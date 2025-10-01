@@ -49,17 +49,20 @@ public class PlayerStats : IStats
 
     // ====================스킬 버퍼======================
     public int SkillBufferMax { get; private set; } = 2;
-    public int SkillBufferCurrent { get; set; } = 2; //이거랑
-    public float SkillCooldown { get; private set; } = 5f; //이거
+    public int SkillBufferCurrent { get; set; }
+    public float SkillCooldown { get; private set; } = 5f;
 
     // =================== 회피 버퍼 =====================
     public int EvadeBufferMax { get; private set; } = 4;
-    public int EvadeBufferCurrent { get; set; } = 4;
+    public int EvadeBufferCurrent { get; set; }
     public float EvadeCooldown { get; private set; } = 4f;
 
     // ===================누적 타이머======================
     private readonly Queue<float> skillRecoveryTimes = new();
     private readonly Queue<float> evadeRecoveryTimes = new();
+    // 마지막으로 큐에 넣은 회복 시간(연속 회복을 위해)
+    private float lastSkillRecoveryTime = 0f;
+    private float lastEvadeRecoveryTime = 0f;
 
 
     public bool IsDead => CurrentHealth <= 0;
@@ -81,10 +84,12 @@ public class PlayerStats : IStats
         CurrentHealth = MaxHealth.Value;
         CurrentEnergy = MaxEnergy.Value;
 
-        // 스킬 버퍼를 풀로 채우고 타이머 초기화
-        SkillBufferCurrent = SkillBufferMax;   // 2개로 시작
-        // 회피 초기화
-        EvadeBufferCurrent = EvadeBufferMax;
+        SkillBufferCurrent = SkillBufferMax; // 스킬 버퍼를 풀로 채우고 타이머 초기화
+        EvadeBufferCurrent = EvadeBufferMax; // 회피 초기화
+
+        // 초기 last times를 현재 시간으로 세팅해도 되고 0으로 둬도 됨
+        lastSkillRecoveryTime = 0f;
+        lastEvadeRecoveryTime = 0f;
     }
 
     public void TakeDamage(float amount)
@@ -135,8 +140,8 @@ public class PlayerStats : IStats
             case StatType.MaxEnergy: MaxEnergy.RemoveModifier(value); break;
             case StatType.Attack: Attack.RemoveModifier(value); break;
             case StatType.Defense: Defense.RemoveModifier(value); break;
-            case StatType.MoveSpeed: MoveSpeed.AddModifier(value); break;
-            case StatType.AttackSpeed: AttackSpeed.AddModifier(value); break;
+            case StatType.MoveSpeed: MoveSpeed.RemoveModifier(value); break;
+            case StatType.AttackSpeed: AttackSpeed.RemoveModifier(value); break;
         }
         OnStatChanged?.Invoke(statType);
     }
@@ -148,16 +153,51 @@ public class PlayerStats : IStats
     public bool UseSkill()
     {
         if (SkillBufferCurrent <= 0) return false;
+
         SkillBufferCurrent--;
-        skillRecoveryTimes.Enqueue(Time.time + SkillCooldown);
+
+        // Sequential recovery time logic
+        float nextRecover;
+        if (skillRecoveryTimes.Count == 0)
+        {
+            nextRecover = Time.time + SkillCooldown;
+        }
+        else
+        {
+            // ensure chained spacing: last + cooldown
+            nextRecover = lastSkillRecoveryTime + SkillCooldown;
+            // but also ensure it's at least now + cooldown
+            if (nextRecover < Time.time + SkillCooldown)
+                nextRecover = Time.time + SkillCooldown;
+        }
+
+        skillRecoveryTimes.Enqueue(nextRecover);
+        lastSkillRecoveryTime = nextRecover;
+
         return true;
     }
 
     public bool UseEvade()
     {
         if (EvadeBufferCurrent <= 0) return false;
+
         EvadeBufferCurrent--;
-        evadeRecoveryTimes.Enqueue(Time.time + EvadeCooldown);
+
+        float nextRecover;
+        if (evadeRecoveryTimes.Count == 0)
+        {
+            nextRecover = Time.time + EvadeCooldown;
+        }
+        else
+        {
+            nextRecover = lastEvadeRecoveryTime + EvadeCooldown;
+            if (nextRecover < Time.time + EvadeCooldown)
+                nextRecover = Time.time + EvadeCooldown;
+        }
+
+        evadeRecoveryTimes.Enqueue(nextRecover);
+        lastEvadeRecoveryTime = nextRecover;
+
         return true;
     }
 
