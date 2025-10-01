@@ -18,11 +18,15 @@ public class CharacterSkillUI : UIBase
     {
         base.Awake();
 
-        OnUseItemUI?.Invoke();
-
         InventoryManager.Instance.characterSkillUI = this;
 
         InventoryManager.Instance.SetSkillUI();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        OnUseItemUI?.Invoke();
     }
 
     public void Setup(InventoryViewModel viewModel)

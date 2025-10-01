@@ -20,11 +20,14 @@ public partial class CharacterInfomationUI : UIBase
 
     public void InventoryAwake()
     {
-        OnUseItemUI?.Invoke();
-
         InventoryManager.Instance.characterInventoryUI = this;
 
         InventoryManager.Instance.SetInventoryUI();
+    }
+
+    public void InventoryOnEnable()
+    {
+        OnUseItemUI?.Invoke();
     }
 
     public void Setup(InventoryViewModel viewModel)

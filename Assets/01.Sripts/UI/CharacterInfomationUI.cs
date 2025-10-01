@@ -13,6 +13,12 @@ public partial class CharacterInfomationUI : UIBase
         base.Awake();
 
         InventoryAwake();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        InventoryOnEnable();
 
         SetPlayerStat();
     }

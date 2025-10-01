@@ -18,11 +18,15 @@ public class CharacterCoreUI : UIBase
     {
         base.Awake();
 
-        OnUseItemUI?.Invoke();
-
         InventoryManager.Instance.characterCoreUI = this;
 
         InventoryManager.Instance.SetCoreUI();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        OnUseItemUI?.Invoke();
     }
 
     public void Setup(InventoryViewModel viewModel)
