@@ -4,6 +4,7 @@ public class MonsterBaseAttack : MonsterBaseState
 {
     private int damage;
     private BoxCollider attackCollider;
+    private bool hasHit;
 
     public MonsterBaseAttack(MonsterStateMachine stateMachine) : base(stateMachine)
     {
@@ -24,6 +25,7 @@ public class MonsterBaseAttack : MonsterBaseState
     public override void Enter()
     {
         StopMoving();
+        hasHit = false;
         stateMachine.isAttacking = true;
         // Start attack animation
         StartAnimation(stateMachine.Monster.animationData.GetHash(
@@ -45,15 +47,21 @@ public class MonsterBaseAttack : MonsterBaseState
     // Call this from an animation event
     public override void OnAttackHit()
     {
-        if (attackCollider != null)
+        if (attackCollider != null && !hasHit)
         {
             // Set the damage
             AttackTrigger trigger = attackCollider.GetComponent<AttackTrigger>();
             if (trigger != null)
             {
                 trigger.damage = damage;
+                trigger.onHit = () =>
+                {
+                    hasHit = true;
+                    attackCollider.enabled = false;
+                    Debug.Log("Attack Hit Once");
+                };
             }
-
+            
             attackCollider.enabled = true;
             Debug.Log("Attack collider enabled!");
         }
