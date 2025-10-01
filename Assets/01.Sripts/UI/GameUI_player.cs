@@ -27,6 +27,8 @@ public partial class GameUI : UIBase
 
     float duration = 0.2f; // 닷트윈 효과들에서 사용할 시간
 
+    Sequence playerDamageSequence;
+
     public void OnAwakePlayer()
     {
         playerStats = PlayerManager.Instance.Stats;
@@ -57,6 +59,7 @@ public partial class GameUI : UIBase
     public void OnDisablePlayer()
     {
         DOTween.Kill(this);
+        playerDamageSequence = null;
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출
@@ -64,7 +67,7 @@ public partial class GameUI : UIBase
     {
         await UIManager.Instance.Show<DamageEffectUI>();
 
-        Debug.Log(playerStats.CurrentHealth);
+        playerDamageSequence.Kill(); // 기존 시퀀스가 있다면 종료
 
         // 체력 텍스트 업데이트
         playerHPText.text = playerStats.CurrentHealth.ToString("#,##0");
@@ -86,10 +89,10 @@ public partial class GameUI : UIBase
             playerHPText.DOColor(Color.red, duration).OnComplete(() => { playerHPText.DOColor(originalColor, duration); });
         }
 
-        Sequence mySequence = DOTween.Sequence(); // 새로운 시퀀스 생성
-        mySequence.Append(playerHPImage.rectTransform.DOShakePosition(duration, 10, 10, 90, true, true)); // 시퀀스에 트윈 추가 (체력바 : 흔들림)
-        mySequence.Append(playerHPText.rectTransform.DOShakePosition(duration, 10, 10, 90, true, true)); // 시퀀스에 트윈 추가 (체력텍스트 : 흔들림)
-        mySequence.Append(playerHPImage.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 1.0f).SetEase(Ease.OutQuad)); // 시퀀스에 트윈 추가 (체력바 : 부드럽게 감소)
+        playerDamageSequence = DOTween.Sequence(); // 새로운 시퀀스 생성
+        playerDamageSequence.Append(playerHPImage.rectTransform.DOShakePosition(duration, 10, 10, 90, true, true)); // 시퀀스에 트윈 추가 (체력바 : 흔들림)
+        playerDamageSequence.Append(playerHPText.rectTransform.DOShakePosition(duration, 10, 10, 90, true, true)); // 시퀀스에 트윈 추가 (체력텍스트 : 흔들림)
+        playerDamageSequence.Append(playerHPImage.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 1.0f).SetEase(Ease.OutQuad)); // 시퀀스에 트윈 추가 (체력바 : 부드럽게 감소)
     }
 
     // 플레이어 스탯이 변화했을때 호출 할 함수

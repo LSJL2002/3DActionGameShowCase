@@ -49,6 +49,7 @@ public partial class GameUI : UIBase
         base.OnDisable();
 
         OnDisablePlayer();
+        OnDisableEnemy();
         OnDisableSkill();
 
         BattleManager.OnBattleStart -= LoadMonsterStat;    //해제    

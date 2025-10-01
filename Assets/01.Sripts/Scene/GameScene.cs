@@ -7,8 +7,6 @@ using UnityEngine.Playables;
 
 public class GameScene : SceneBase
 {
-    [SerializeField] private bool tutorialEnabled = true; // 튜토리얼 재생여부
-
     protected override void Awake()
     {
         base.Awake();
@@ -31,11 +29,12 @@ public class GameScene : SceneBase
     {
         await UIManager.Instance.Show<GameUI>();
 
-        if (tutorialEnabled)
+        // UI매니저의 튜토리얼 재생 여부 확인 후 재생
+        if (UIManager.Instance.tutorialEnabled)
         {
             await UIManager.Instance.Show<TutorialUI>();
             UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
-            tutorialEnabled = false;
+            UIManager.Instance.tutorialEnabled = false;
         }
     }
 }
