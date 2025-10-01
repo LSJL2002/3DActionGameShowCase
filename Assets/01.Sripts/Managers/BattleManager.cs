@@ -97,10 +97,10 @@ public class BattleManager : Singleton<BattleManager>
         StartWarning();
 
         // 2. 컷씬 실행 & 종료 대기 (스킵 포함)
-        if (!string.IsNullOrEmpty(zone.timelineKey))
+        if (!string.IsNullOrEmpty(zone.startBattleTimelineKey))
         {
-            Debug.Log($"Battle Start → Timeline 실행: {zone.timelineKey}");
-            await TimeLineManager.Instance.PlayAndWait(zone.timelineKey);
+            Debug.Log($"Battle Start → Timeline 실행: {currentZone.startBattleTimelineKey}");
+            await TimeLineManager.Instance.PlayAndWait(currentZone.startBattleTimelineKey);
         }
 
         // 게임 종료 중이면 리턴
@@ -162,10 +162,17 @@ public class BattleManager : Singleton<BattleManager>
         return instance;
     }
 
-    public void HandleMonsterDie()
+    public async void HandleMonsterDie()
     {
         if (monsterStats.CurrentHP > 0) return;
+        //if (!string.IsNullOrEmpty(currentZone.endBattleTimelineKey))
+        //{
+        //    Debug.Log($"몬스터사망 → Timeline 실행: {currentZone.endBattleTimelineKey}");
+        //    await TimeLineManager.Instance.PlayAndWait(currentZone.endBattleTimelineKey);
+        //}
+        var cutScene = await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.endBattleTimelineKey);
         OnMonsterDie?.Invoke(currentZone);
+ 
         StopWarning();
     }
 
