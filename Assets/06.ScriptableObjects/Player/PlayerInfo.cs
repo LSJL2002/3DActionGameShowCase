@@ -75,14 +75,18 @@ public class PlayerAttackData
 [Serializable]
 public class AttackInfoData
 {
-    [field: SerializeField, Tooltip("공격 이름")]
+    [field: SerializeField, Tooltip("공격 에니메이션 이름")]
     public string AttackName { get; private set; }
 
-    [field: SerializeField, Tooltip("콤보 상태 인덱스")]
-    public int ComboStateIndex { get; private set; }
+    [field: SerializeField, Tooltip("다음 콤보 입력 가능 시작 시점 (0~1)")]
+    [field: Range(0f, 1f)] public float ComboTimingStart { get; private set; } = 0.6f;
 
-    [field: SerializeField, Tooltip("다음 공격 실행 시점(0~1)")]
-    [field: Range(0f, 1f)] public float ComboTransitionTime { get; private set; } = 0.8f;
+    [field: SerializeField, Tooltip("다음 콤보 입력 가능 종료 시점 (0~1)")]
+    [field: Range(0f, 1f)] public float ComboTimingEnd { get; private set; } = 0.7f;
+
+    [field: SerializeField, Tooltip("입력 버퍼 허용 시간 (초)")]
+    [field: Range(0f, 0.5f)] public float InputBufferTime { get; private set; } = 0.2f;
+
 
     [field: SerializeField, Tooltip("앞으로 밀리는 시간")]
     [field: Range(0f, 3f)] public float ForceTransitionTime { get; private set; }
