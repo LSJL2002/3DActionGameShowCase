@@ -26,7 +26,7 @@ public class TitleUI : UIBase
                 gameTitleText.DOKill();
                 clickToGameText.DOKill();
                 blackEffectPanelImage.DOFade(0f, 0f);
-                clickToGameText.DOFade(0f,0f);
+                clickToGameText.DOFade(0f, 0f);
 
                 // 첫 번째 DOFade가 완료된 후 두 번째 DOFade가 시작
                 gameTitleText.DOFade(1f, 0f).OnComplete(() =>
@@ -37,6 +37,7 @@ public class TitleUI : UIBase
                         Hide();
                     });
                 });
+
                 break;
         }
     }

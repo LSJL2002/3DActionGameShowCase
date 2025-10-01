@@ -7,15 +7,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GlitchEffectMaterial_Home
-  m_Shader: {fileID: 4800000, guid: 3748634f691eeb84fbcf189c78853988, type: 3}
+  m_Name: GlitchEffectMaterial_HomeGameTitle
+  m_Shader: {fileID: 4800000, guid: ac609884662a9b346970ac0482d2c2c6, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _FLIPY_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -43,6 +44,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _GlitchTex:
         m_Texture: {fileID: 2800000, guid: 29a150db4c0a7f948ad70575f8c10c20, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -66,29 +71,72 @@ Material:
     m_Ints: []
     m_Floats:
     - _BumpScale: 1
+    - _ColorMask: 15
+    - _CullMode: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DisappearThreshold: 0
     - _DstBlend: 0
-    - _FlipY: 0
-    - _GlitchAmount: 0.005
+    - _FaceDilate: 0
+    - _FlashStrength: 2
+    - _FlashThreshold: 0.02
+    - _FlipY: 1
+    - _GlitchAmount: 0.01
     - _GlitchCutAmountX: 1.4
     - _GlitchCutAmountY: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _GradientScale: 5
+    - _ImageCenterY: 0.5
+    - _ImageHeight: 1
+    - _LineThickness: 0.02
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _OutlineSoftness: 0
+    - _OutlineWidth: 0
     - _Parallax: 0.02
+    - _PerspectiveFilter: 0.875
+    - _ScaleFactor: 1
+    - _ScaleRatioA: 1
+    - _ScaleRatioB: 1
+    - _ScaleRatioC: 1
+    - _ScaleX: 1
+    - _ScaleY: 1
+    - _ShaderFlags: 0
+    - _Sharpness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _TextureHeight: 512
+    - _TextureWidth: 512
     - _UVSec: 0
+    - _UnderlayDilate: 0
+    - _UnderlayOffsetX: 0
+    - _UnderlayOffsetY: 0
+    - _UnderlaySoftness: 0
+    - _UseUIAlphaClip: 0
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    - _WeightBold: 0.5
+    - _WeightNormal: 0
     - _ZWrite: 1
     m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlitchColor1: {r: 1, g: 0.24056602, b: 0.24056602, a: 0.56078434}
     - _GlitchColor2: {r: 0.51006126, g: 0.4669811, b: 1, a: 0.6313726}
     - _GlitchColor3: {r: 0.5000513, g: 0.8490566, b: 0.43654326, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_BuildTextureStacks: []
