@@ -31,7 +31,14 @@ public class TitleUI : UIBase
                 clickToGameText.DOFade(0f, 0f);
 
                 // 첫 번째 DOFade가 완료된 후 두 번째 DOFade가 시작
-                gameTitleText.DOFade(1f, 0f).OnComplete(() => { gameTitleText.DOFade(0f, 1.5f); });
+                gameTitleText.DOFade(1f, 0f).OnComplete(() =>
+                {
+                    gameTitleText.DOFade(0f, 1.5f).OnComplete(async () =>
+                    {
+                        await UIManager.Instance.Show<HomeUI>();
+                        Hide();
+                    });
+                });
 
                 // 첫 번째 DOFade가 완료된 후 두 번째 DOFade가 시작
                 gameTitleImage.DOFade(1f, 0f).OnComplete(() =>

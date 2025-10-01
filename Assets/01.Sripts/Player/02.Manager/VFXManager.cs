@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using Zenject.SpaceFighter;
 
 public class VFXManager : MonoBehaviour
 {

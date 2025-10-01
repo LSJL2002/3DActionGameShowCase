@@ -8,6 +8,7 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
+using Zenject;
 
 // GameUI의 Player Part
 public partial class GameUI : UIBase

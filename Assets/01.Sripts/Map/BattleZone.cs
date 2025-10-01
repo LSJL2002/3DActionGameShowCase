@@ -21,12 +21,12 @@ public class BattleZone : MonoBehaviour
 
     [Header("못나가게막는벽")]
     [SerializeField] private GameObject walls;
-    [SerializeField] private BattleZoneSO ZoneData;
 
+    [SerializeField]
+    private BattleZoneSO ZoneData;
 
     [Header("타임라인키")]
-     public string startBattleTimelineKey;
-     public string endBattleTimelineKey;
+    public string timelineKey;
 
 
     private void Awake()
