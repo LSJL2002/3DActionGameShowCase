@@ -13,7 +13,7 @@ public class PreviewScene : MonoBehaviour
     private Animator previewAnimator;
 
     [Header("UI Buttons")]
-    [SerializeField] private Button btnCharacter;
+    [SerializeField] private Button btnInfo;
     [SerializeField] private Button btnCore;
     [SerializeField] private Button btnSkill;
     [SerializeField] private Button btnOption;
@@ -22,7 +22,7 @@ public class PreviewScene : MonoBehaviour
     private void Awake()
     {
         // 버튼 리스너 등록
-        btnCharacter?.onClick.AddListener(() => OpenPreview("Char"));
+        btnInfo?.onClick.AddListener(() => OpenPreview("Char"));
         btnCore?.onClick.AddListener(() => OpenPreview("Core"));
         btnSkill?.onClick.AddListener(() => OpenPreview("Skill"));
         btnOption?.onClick.AddListener(() => OpenPreview("Option"));

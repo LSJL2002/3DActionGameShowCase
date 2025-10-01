@@ -5,21 +5,18 @@ using UnityEngine;
 
 public class KeySettingUI : UIBase
 {
-    [SerializeField] private GameObject quitButton;
     [SerializeField] private GameObject returnButton;
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        if (SceneLoadManager.Instance.nowSceneIndex == 2)
+        if (SceneLoadManager.Instance.nowSceneIndex == 0)
         {
-            quitButton.SetActive(true);
             returnButton.SetActive(true);
         }
         else
         {
-            quitButton.SetActive(false);
             returnButton.SetActive(false);
         }
     }
@@ -32,16 +29,7 @@ public class KeySettingUI : UIBase
         {
             // 이전 UI로 돌아가기
             case "Return":
-
-                // Home씬이라면, HomeUI 팝업 / 그 외 씬이라면, I 팝업
-                if (SceneLoadManager.Instance.nowSceneIndex == 2)
-                {
-                    await UIManager.Instance.Show<HomeUI>();
-                }
-                else
-                {
-                    await UIManager.Instance.Show<GameUI>();
-                }
+                await UIManager.Instance.Show<HomeUI>();
                 Hide();
                 break;
 
