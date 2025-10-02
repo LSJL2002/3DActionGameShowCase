@@ -36,7 +36,29 @@
 메뉴 열기 / 일시정지: Esc
 
 ## 프로젝트 구조
-Assets/ ├── 00.Scenes # 게임 씬 파일 모음 ├── 01.Sripts # 게임 스크립트 (C# 코드) ├── 02.Prefabs # 프리팹 오브젝트 ├── 03.Animations # 애니메이션 클립 및 컨트롤러 ├── 04.Particlas # 파티클 효과 ├── 05.Materials # 머티리얼 리소스 ├── 06.ScriptableObjects # 스크립터블 오브젝트 데이터 ├── 07.System # 시스템 관련 스크립트 및 매니저 ├── 08.AddressableAssetsData # Addressables 관련 데이터 ├── 09.Plugins # 외부 플러그인 ├── 10.Resources # 리소스 폴더 (런타임 로딩용) ├── 10.TimeLines # Timeline 관련 애셋 ├── 99.Externals # 외부 리소스 ├── 99.MAvatar # 아바타 관련 리소스 ├── AddressableAssetsData # Addressables 기본 데이터 ├── Editor # 에디터 확장 스크립트 ├── JMO Assets # 외부 에셋 (JMO 패키지) ├── MA_ToolBox # 툴박스 관련 에셋 ├── Resources # 추가 리소스 폴더 ├── StreamingAssets # 스트리밍 에셋 (런타임 로딩) ├── TextMesh Pro # TextMeshPro 관련 리소스 └── Unity-Logs-Viewer # 로그 뷰어 관련 리소스
+Assets/ 
+├── 00.Scenes # 게임 씬 파일 모음 
+├── 01.Sripts # 게임 스크립트 (C# 코드) 
+├── 02.Prefabs # 프리팹 오브젝트 
+├── 03.Animations # 애니메이션 클립 및 컨트롤러 
+├── 04.Particlas # 파티클 효과
+├── 05.Materials # 머티리얼 리소스 
+├── 06.ScriptableObjects # 스크립터블 오브젝트 데이터 
+├── 07.System # 시스템 관련 스크립트 및 매니저 
+├── 08.AddressableAssetsData # Addressables 관련 데이터 
+├── 09.Plugins # 외부 플러그인 
+├── 10.Resources # 리소스 폴더 (런타임 로딩용) 
+├── 10.TimeLines # Timeline 관련 애셋 
+├── 99.Externals # 외부 리소스 
+├── 99.MAvatar # 아바타 관련 리소스 
+├── AddressableAssetsData # Addressables 기본 데이터 
+├── Editor # 에디터 확장 스크립트 
+├── JMO Assets # 외부 에셋 (JMO 패키지) 
+├── MA_ToolBox # 툴박스 관련 에셋 
+├── Resources # 추가 리소스 폴더 
+├── StreamingAssets # 스트리밍 에셋 (런타임 로딩) 
+├── TextMesh Pro # TextMeshPro 관련 리소스 
+└── Unity-Logs-Viewer # 로그 뷰어 관련 리소스
 
 ## 알려진 문제
 - 일부 버그 존재
