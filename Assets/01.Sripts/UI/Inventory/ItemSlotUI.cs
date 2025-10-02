@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // 아이템 슬롯 하나하나의 상태를 시각적으로 보여주는 View 계층의 클래스 (아이콘, 수량숫자 넣고 빼기 등)
-public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ItemSlotUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI countText;
@@ -19,7 +19,6 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public string itemName;
     public string itemType;
     public string itemDescription;
-    private ItemInformationUI itemInformationUI;
 
     // 기본 컬러값 설정
     private Color defaultColor = new Color(0 / 255f, 0 / 255f, 0 / 255f, 200 / 255f);
@@ -98,45 +97,5 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
 
         UIManager.Instance.Hide<ItemInformationUI>();
-    }
-
-    // 마우스 커서가 올라왔을때 효과
-    public async void OnPointerEnter(PointerEventData eventData)
-    {
-        // 아이템 정보가 있다면
-        if (itemData != null)
-        {
-            AudioManager.Instance.PlaySFX("ButtonSoundEffect3");
-            this.transform.DOScale(1.1f, 0.2f);
-
-            // 아이템정보UI 켜기
-            await UIManager.Instance.Show<ItemInformationUI>();
-
-            // 아직 변수가 없다면 가져와서 할당
-            if ( itemInformationUI == null )
-            {
-                itemInformationUI = UIManager.Instance.Get<ItemInformationUI>();
-            }
-
-            itemInformationUI.SetItemSlotData(this);
-
-            // 정보창을 마우스 커서 위치로 옮기기
-            RectTransform rectTransform = itemInformationUI.GetComponent<RectTransform>();
-            Vector3 offset = new Vector3(rectTransform.sizeDelta.x/2f, rectTransform.sizeDelta.y/2f, 0);
-            itemInformationUI.transform.position = (Vector3)eventData.position - offset;
-        }
-    }
-
-    // 마우스 커서가 나갔을때 효과
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        // itemDescriptionUI 변수가 null이 아닐 때만 실행
-        if (itemInformationUI != null && itemInformationUI.isActiveAndEnabled)
-        {
-            this.transform.DOScale(1.0f, 0.2f);
-
-            // 아이템정보UI 끄기
-            itemInformationUI.Hide();
-        }
     }
 }

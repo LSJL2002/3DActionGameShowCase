@@ -272,7 +272,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonObject: {fileID: 696957268376683507}
+  buttonType: 1
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 696957268376683507}
+  fadeDuration: 1
 --- !u!1 &926036354081294323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1132,7 +1135,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonObject: {fileID: 2545205546123725007}
+  buttonType: 1
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 2545205546123725007}
+  fadeDuration: 1
 --- !u!1 &2599148445336537765
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,7 +1397,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonObject: {fileID: 3281447362704082601}
+  buttonType: 1
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 3281447362704082601}
+  fadeDuration: 1
 --- !u!1 &3362203216099116977
 GameObject:
   m_ObjectHideFlags: 0
@@ -3822,4 +3831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonObject: {fileID: 8965663308230913280}
+  buttonType: 1
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 8965663308230913280}
+  fadeDuration: 1
