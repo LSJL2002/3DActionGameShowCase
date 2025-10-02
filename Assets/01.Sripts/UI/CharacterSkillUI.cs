@@ -23,7 +23,7 @@ public class CharacterSkillUI : UIBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        UIManager.Instance.ChangeState(DecisionState.UseItem);
+        InventoryManager.Instance.ChangeUseItemState();
     }
 
     public void Setup(InventoryViewModel viewModel)

@@ -24,7 +24,7 @@ public partial class CharacterInfomationUI : UIBase
 
     public void OnEnableInventory()
     {
-        UIManager.Instance.ChangeState(DecisionState.UseItem);
+        InventoryManager.Instance.ChangeUseItemState();
     }
 
     public void Setup(InventoryViewModel viewModel)

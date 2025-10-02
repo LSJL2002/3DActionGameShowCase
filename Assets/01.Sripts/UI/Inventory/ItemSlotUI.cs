@@ -60,7 +60,7 @@ public class ItemSlotUI : MonoBehaviour
     {
         if (itemData == null) return;
 
-        switch (UIManager.Instance.currentDecisionState)
+        switch (InventoryManager.Instance.currentDecisionState)
         {
             // 아이템 사용 상황
             case DecisionState.UseItem:

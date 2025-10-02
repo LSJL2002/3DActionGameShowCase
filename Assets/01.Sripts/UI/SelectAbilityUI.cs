@@ -32,7 +32,7 @@ public class SelectAbilityUI : UIBase
 
         canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1.5f); });
 
-        UIManager.Instance.ChangeState(DecisionState.SelectAbility);
+        InventoryManager.Instance.ChangeSelectAbilityState();
 
         AudioManager.Instance.PlaySFX("OpenSelectAbilityUISound");
 

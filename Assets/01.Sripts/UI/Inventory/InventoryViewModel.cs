@@ -60,8 +60,6 @@ public class InventoryViewModel
     {
         DecisionButtonUI decisionUI = await UIManager.Instance.Show<DecisionButtonUI>();
 
-        DecisionButtonUI decisionButtonUI = UIManager.Instance.Get<DecisionButtonUI>();
-
         // 이벤트 구독을 위한 델리게이트 변수 생성
         Action<bool> onDecisionMadeCallback = null;
         onDecisionMadeCallback = async (isConfirmed) =>
@@ -70,7 +68,7 @@ public class InventoryViewModel
             if (isConfirmed)
             {
                 // 현재 허가 내용에 따라 스위치
-                switch (UIManager.Instance.currentDecisionState)
+                switch (InventoryManager.Instance.currentDecisionState)
                 {
                     // 아이템 사용에 대한 내용이라면,
                     case DecisionState.UseItem:
