@@ -12,13 +12,13 @@ public partial class CharacterInfomationUI : UIBase
 {
     private PlayerStats playerStats; // 플레이어의 stats에 접근가능한 변수
 
-    private TextMeshProUGUI nameText;
-    private TextMeshProUGUI healthText;
-    private TextMeshProUGUI energyText;
-    private TextMeshProUGUI attackText;
-    private TextMeshProUGUI defenseText;
-    private TextMeshProUGUI attackSpeedText;
-    private TextMeshProUGUI moveSpeedText;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private TextMeshProUGUI energyText;
+    [SerializeField] private TextMeshProUGUI attackText;
+    [SerializeField] private TextMeshProUGUI defenseText;
+    [SerializeField] private TextMeshProUGUI attackSpeedText;
+    [SerializeField] private TextMeshProUGUI moveSpeedText;
 
     public void AwakeStatus()
     {
@@ -29,6 +29,10 @@ public partial class CharacterInfomationUI : UIBase
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
         PlayerManager.Instance.Stats.OnPlayerHealthChanged += () => SetPlayerStat(StatType.MaxHealth);
         PlayerManager.Instance.Stats.OnStatChanged += SetPlayerStat;
+
+        // 초기 UI 갱신
+        playerStats = PlayerManager.Instance.Stats;
+        SetPlayerStat(StatType.MaxHealth);
     }
 
     // 플레이어 스탯 정보 초기화 함수
