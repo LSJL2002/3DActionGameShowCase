@@ -1,11 +1,9 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [Serializable]
@@ -24,7 +22,7 @@ public class NamedSFX
 public class AudioManager : Singleton<AudioManager>
 {
     [Header("Mixer")]
-    [SerializeField] private AudioMixer audioMixer; // MainMixer
+    [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private AudioMixerGroup bgmGroup;
     [SerializeField] private AudioMixerGroup sfxGroup;
 
@@ -33,32 +31,34 @@ public class AudioManager : Singleton<AudioManager>
 
     [Header("SFX Clips")]
     [SerializeField] private List<NamedSFX> sfxList;
-    public int sfxPoolSize = 5; //µøΩ√¿Áª˝∞°¥…«—ºˆ
+    [SerializeField] private int sfxPoolSize = 5; //ÎèôÏãúÏû¨ÏÉù Í∞ÄÎä• Ïàò
 
-    private List<AudioSource> sfxSources = new List<AudioSource>();
+    private List<AudioSource> sfxSources = new();
     private int currentSfxIndex = 0;
     private AudioSource bgmSource;
 
-    private Dictionary<string, AudioClip> bgmDict = new Dictionary<string, AudioClip>();
-    private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
+    private Dictionary<string, AudioClip> bgmDict = new();
+    private Dictionary<string, AudioClip> sfxDict = new();
 
-    [Range(0f, 1f)]
-    [SerializeField] private float _bgmVolume = 0.25f;
-    public float bgmVolume => _bgmVolume;
-    [Range(0f, 1f)]
-    [SerializeField] private float _sfxVolume = 0.5f;
-    public float sfxVolume => _bgmVolume;
+    [SerializeField, Range(0f, 1f)] private float _masterVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float _bgmVolume = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float _sfxVolume = 0.5f;
 
+    public float MasterVolume => _masterVolume;
+    public float BgmVolume => _bgmVolume;
+    public float SfxVolume => _sfxVolume;
 
-    private void Awake()
+    protected override void Awake()
     {
-        // BGM ø¿µø¿ º“Ω∫ ª˝º∫
+        base.Awake();
+
+        // BGM Ïò§ÎîîÏò§ ÏÜåÏä§ ÏÉùÏÑ±
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.outputAudioMixerGroup = bgmGroup;
         bgmSource.loop = true;
         bgmSource.playOnAwake = false;
 
-        // SFX «Æ √ ±‚»≠
+        // SFX ÌíÄ Ï¥àÍ∏∞Ìôî
         for (int i = 0; i < sfxPoolSize; i++)
         {
             AudioSource sfx = gameObject.AddComponent<AudioSource>();
@@ -67,51 +67,53 @@ public class AudioManager : Singleton<AudioManager>
             sfxSources.Add(sfx);
         }
 
-        // µÒº≈≥ ∏Æ √ ±‚»≠
-        foreach (var bgm in bgmList)
-        {
-            if (!bgmDict.ContainsKey(bgm.name))
-                bgmDict.Add(bgm.name, bgm.clip);
-        }
+        // ÎîïÏÖîÎÑàÎ¶¨ Ï¥àÍ∏∞Ìôî
+        InitDictionary(bgmList, bgmDict);
+        InitDictionary(sfxList, sfxDict);
 
-        foreach (var sfx in sfxList)
-        {
-            if (!sfxDict.ContainsKey(sfx.name))
-                sfxDict.Add(sfx.name, sfx.clip);
-        }
-
+        // Ï¥àÍ∏∞ Î≥ºÎ•® ÏÑ∏ÌåÖ
+        SetMasterVolume(_masterVolume);
         SetBgmVolume(_bgmVolume);
         SetSfxVolume(_sfxVolume);
+
+        // ÌÖåÏä§Ìä∏Ïö© BGM Ïû¨ÏÉù (ÎÇòÏ§ëÏóê ÏÇ≠Ï†ú Í∞ÄÎä•)
+        PlayBGM("InGameBGM");
     }
 
-    private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
-    private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (Enum.TryParse(scene.name, out GameScene gameScene))
-        {
-            string sceneName = SceneUtility.GetSceneName(gameScene);
-            PlayBGM(sceneName);
-        }
-    }
 
     void Update()
     {
-        // «◊ªÛ ∫º∑˝ √÷Ω≈»≠ (ø…º«ø°º≠ ΩΩ∂Û¿Ã¥ı∑Œ ¡∂¿˝ Ω√ π›øµµ«∞‘)
-        bgmSource.volume = bgmVolume;
+        // Ìï≠ÏÉÅ Î≥ºÎ•® ÏµúÏã†Ìôî
+        bgmSource.volume = _bgmVolume;
         foreach (var sfx in sfxSources) sfx.volume = _sfxVolume;
 
-        // πˆ∆∞ ≈¨∏Ø SFX
-        if (Input.GetMouseButtonDown(0))
-        {
-            GameObject clicked = EventSystem.current.currentSelectedGameObject;
-            if (clicked != null && clicked.GetComponent<Button>() != null)
-                PlayClickSFX();
-        }
+        // UI Î≤ÑÌäº ÌÅ¥Î¶≠ SFX Ï≤òÎ¶¨
+        CheckUIButtonClick();
     }
 
-    #region Mixer Volume Control
+
+    #region Dictionary Init
+    private void InitDictionary<T>(List<T> list, Dictionary<string, AudioClip> dict) where T : class
+    {
+        dict.Clear();
+        foreach (var item in list)
+        {
+            if (item is NamedBGM bgm && !dict.ContainsKey(bgm.name))
+                dict.Add(bgm.name, bgm.clip);
+            else if (item is NamedSFX sfx && !dict.ContainsKey(sfx.name))
+                dict.Add(sfx.name, sfx.clip);
+        }
+    }
+    #endregion
+
+    #region Mixer Volume
     private float LinearToDecibel(float linear) => linear <= 0f ? -80f : Mathf.Log10(linear) * 20f;
+
+    public void SetMasterVolume(float volume)
+    {
+        _masterVolume = Mathf.Clamp01(volume);
+        audioMixer.SetFloat("Master_Volume", LinearToDecibel(_masterVolume));
+    }
 
     public void SetBgmVolume(float volume)
     {
@@ -126,14 +128,22 @@ public class AudioManager : Singleton<AudioManager>
     }
     #endregion
 
-
     #region BGM
     public void PlayBGM(string name)
     {
+        bgmSource.Stop();
+
         if (!bgmDict.TryGetValue(name, out var clip)) return;
         if (bgmSource.clip == clip) return;
+
         bgmSource.clip = clip;
         bgmSource.Play();
+    }
+
+    public void StopBGM()
+    {
+        if (bgmSource.isPlaying)
+            bgmSource.Stop();
     }
 
     public async UniTask FadeToBGM(string name, float duration)
@@ -143,7 +153,7 @@ public class AudioManager : Singleton<AudioManager>
         float startVolume = _bgmVolume;
         float time = 0f;
 
-        // ∆‰¿ÃµÂ æ∆øÙ
+        // Fade Out
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -151,11 +161,11 @@ public class AudioManager : Singleton<AudioManager>
             await UniTask.Yield();
         }
 
-        // ªı ≈¨∏≥ ¿Áª˝
+        // ÏÉàÎ°úÏö¥ BGM Ïû¨ÏÉù
         bgmSource.clip = newClip;
         bgmSource.Play();
 
-        // ∆‰¿ÃµÂ ¿Œ
+        // Fade In
         time = 0f;
         while (time < duration)
         {
@@ -164,8 +174,25 @@ public class AudioManager : Singleton<AudioManager>
             await UniTask.Yield();
         }
     }
-    #endregion
 
+    public async UniTask FadeOutBGM(float duration)
+    {
+        if (!bgmSource.isPlaying) return;
+
+        float startVolume = _bgmVolume;
+        float time = 0f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            SetBgmVolume(Mathf.Lerp(startVolume, 0f, time / duration));
+            await UniTask.Yield();
+        }
+
+        StopBGM();
+        SetBgmVolume(startVolume); // ÏõêÎûò Î≥ºÎ•® Î≥µÏõê
+    }
+    #endregion
 
     #region SFX
     public void PlaySFX(string name)
@@ -177,5 +204,17 @@ public class AudioManager : Singleton<AudioManager>
     }
 
     public void PlayClickSFX() => PlaySFX("Click");
+    #endregion
+
+    #region UI Click Check
+    private void CheckUIButtonClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameObject clicked = EventSystem.current.currentSelectedGameObject;
+            if (clicked != null && clicked.GetComponent<Button>() != null)
+                PlayClickSFX();
+        }
+    }
     #endregion
 }

@@ -1,0 +1,87 @@
+using System.Collections;
+using Cysharp.Threading.Tasks.Triggers;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class MonsterCenterSkillAttack : MonsterBaseState
+{
+    private MonsterSkillSO skill;
+    private GameObject aoeInstance;
+    private AreaEffectController aoeController;
+
+    public MonsterCenterSkillAttack(MonsterStateMachine stateMachine, MonsterSkillSO skillData) 
+        : base(stateMachine)
+    {
+        skill = skillData;
+    }
+
+    public override void Enter()
+    {
+        Debug.Log($"[CenterSkillAttack] Entering with skill: {skill?.skillName}");
+        if (skill == null)
+        {
+            Debug.LogError("Skill is NULL!");
+            return;
+        }
+        if (skill.areaEffectPrefab == null)
+        {
+            Debug.LogError($"Skill {skill.skillName} has NO areaEffectPrefab assigned!");
+            return;
+        }
+
+        // Find the monster's AreaEffect spawn point
+        Transform areaEffectPoint = stateMachine.Monster.transform.Find("AreaEffect");
+        if (areaEffectPoint == null)
+        {
+            Debug.LogError("Monster has no child named 'AreaEffect'!");
+            return;
+        }
+
+        // Instantiate at the position but NOT as a child
+        aoeInstance = Object.Instantiate(skill.areaEffectPrefab, areaEffectPoint.position, areaEffectPoint.rotation);
+
+        aoeController = aoeInstance.GetComponent<AreaEffectController>();
+        if (aoeController == null)
+        {
+            Debug.LogError("Prefab has no AreaEffectController attached!");
+            return;
+        }
+
+        aoeController.CircleInitialize(skill.preCastTime, skill.range, stateMachine.Monster.Stats.AttackPower,skill);
+
+        aoeController.OnTelegraphFinished += OnTelegraphComplete;
+    }
+
+    private void OnTelegraphComplete()
+    {
+        // Play monster's attack animation
+        //StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.));
+    }
+
+    // Called by Animation Event
+    public void EnableDamage()
+    {
+        aoeController?.EnableDamage(stateMachine.Monster.transform);
+
+        // Destroy prefab right after damage triggers
+        if (aoeInstance != null)
+        {
+            Object.Destroy(aoeInstance, 0.5f); // small delay so OnTriggerEnter can fire
+        }
+    }
+
+    // Called by Animation Event
+    public void DisableDamage()
+    {
+        aoeController?.DisableDamage();
+    }
+
+    public override void Exit()
+    {
+        if (aoeController != null)
+            aoeController.OnTelegraphFinished -= OnTelegraphComplete;
+
+        if (aoeInstance != null)
+            Object.Destroy(aoeInstance);
+    }
+}

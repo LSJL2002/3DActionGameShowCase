@@ -1,0 +1,45 @@
+using System.Collections;
+using System.Collections.Generic;
+using Cinemachine;
+using DG.Tweening;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class HomeUI : UIBase
+{
+    [SerializeField] private CanvasGroup newGameButton;
+    [SerializeField] private CanvasGroup loadGameButton;
+    [SerializeField] private CanvasGroup optionButton;
+    [SerializeField] private CanvasGroup quitButton;
+
+    public async void OnClickButton(string str)
+    {
+        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+
+        switch (str)
+        {
+            case "NewGame":
+                // 새 게임 시작
+                SceneLoadManager.Instance.LoadScene(1);
+                UIManager.Instance.tutorialEnabled = true;
+                break;
+
+            case "LoadStart":
+                // 기존 게임을 로드
+                UIManager.Instance.tutorialEnabled = false;
+                break;
+
+            case "OptionUI":
+                // IU매니저의 Show 메서드를 호출하여 OptionUI를 화면에 표시
+                await UIManager.Instance.Show<SoundSettingUI>();
+                break;
+
+            case "Quit":
+                // 어플리케이션 종료
+                Application.Quit();
+                break;
+        }
+        // 현재 팝업창 닫기
+        Hide();
+    }
+}

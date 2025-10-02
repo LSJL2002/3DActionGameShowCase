@@ -1,0 +1,91 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+public class MonsterStatHandler : MonoBehaviour
+{
+    [Header("Template Data (SO)")]
+    public MonsterSO monsterData;
+
+    [Header("Runtime Stats (Inspector창 변경)")]
+    public float maxHp;
+    public float maxMp;
+    public float CurrentHP;
+    public float CurrentMP;
+    public int AttackPower;
+    public int Defense;
+    public float AttackSpeed;
+    public float MoveSpeed;
+    public int DetectRange;
+    public int AttackRange;
+    public List<string> StatusEffect;
+    public List<int> DropItem;
+    public List<MonsterSkillSO> MonsterSkills;
+
+    private Dictionary<string, MonsterSkillSO> skillDict;
+    public event Action OnHealthChanged;
+
+    void Awake()
+    {
+        if (monsterData != null)
+        {
+            maxHp = monsterData.maxHp;
+            CurrentHP = maxHp;
+            maxMp = monsterData.maxMp;
+            CurrentMP = maxMp;
+            AttackPower = monsterData.attackPower;
+            Defense = monsterData.defense;
+            AttackSpeed = monsterData.attackSpeed;
+            MoveSpeed = monsterData.moveSpeed;
+            DetectRange = monsterData.detectRange;
+            AttackRange = monsterData.attackRange;
+            StatusEffect = new List<string>(monsterData.statusEffect);
+
+            MonsterSkills = new List<MonsterSkillSO>(monsterData.useSkill);
+
+            skillDict = new Dictionary<string, MonsterSkillSO>();
+            foreach (var skill in MonsterSkills)
+            {
+                if (skill != null && !skillDict.ContainsKey(skill.skillName))
+                {
+                    skillDict.Add(skill.skillName, skill);
+                }
+            }
+        }
+    }
+
+
+    public MonsterSkillSO GetSkill(string skillName)
+    {
+        if (skillDict != null && skillDict.TryGetValue(skillName, out var skill))
+            return skill;
+        return null;
+    }
+
+    public void Heal(int amount)
+    {
+        CurrentHP = Mathf.Min(CurrentHP + amount, monsterData.maxHp);
+    }
+
+    public bool isAlive()
+    {
+        if (CurrentHP > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void ApplyDamage(int amount)
+    {
+        int damage = amount - Defense;
+        CurrentHP -= damage;
+        CurrentHP = Mathf.Max(0, CurrentHP);
+        OnHealthChanged?.Invoke();
+    }
+
+    public void Die()
+    {
+        Debug.Log($"{monsterData.monsterName} 사망!");
+    }
+}

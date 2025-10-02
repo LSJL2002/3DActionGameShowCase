@@ -1,0 +1,19 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "NewMonster", menuName = "Monster Data")]
+public class MonsterSO : ScriptableObject
+{
+    public int id;
+    public string monsterName;
+    public float maxHp;
+    public float maxMp;
+    public int attackPower;
+    public int defense;
+    public float attackSpeed;
+    public List<string> statusEffect;
+    public float moveSpeed;
+    public int detectRange;
+    public int attackRange; //나중에 삭제
+    public List<MonsterSkillSO> useSkill; //나중에 추가
+}

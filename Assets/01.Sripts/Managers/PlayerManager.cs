@@ -2,42 +2,62 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
-using Zenject.SpaceFighter;
 
 public interface IPlayer
 {
-    public void LockOnInput(int val);
 }
 
-public class PlayerManager : MonoBehaviour, IPlayer
+public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
-    [field: SerializeField] public PlayerSO Data { get; private set; }
+    [field: SerializeField] public PlayerInfo InfoData { get; private set; }
+
     public PlayerStats Stats { get; private set; }
 
 
     [field: Header("Animations")]
     [field: SerializeField] public PlayerAnimationHash AnimationData { get; private set; }
-    //·±Å¸ÀÓ °è»êÀÌ ÇÊ¿äÇÑ µ¥ÀÌÅÍ´Â ÀÌ·¸°Ô ÃÊ±âÈ­
+    //ëŸ°íƒ€ì„ ê³„ì‚°ì´ í•„ìš”í•œ ë°ì´í„°ëŠ” ì´ë ‡ê²Œ ì´ˆê¸°í™”
 
-    public Animator Animator { get; private set; }
+
+    public Animator Animator { get; private set; } //ë£¨íŠ¸ëª¨ì…˜ì€ ë³¸ì²´ì—
     public CharacterController Controller { get; private set; }
     public PlayerController Input { get; private set; }
     public ForceReceiver ForceReceiver { get; private set; }
     public Interaction Interaction { get; private set; }
+    public PlayerCombat Combat { get; private set; }
 
-    private PlayerStateMachine stateMachine; //¼ø¼ö C# Å¬·¡½º
+
+    public PlayerStateMachine stateMachine; //ìˆœìˆ˜ C# í´ë˜ìŠ¤
+    public SkillManagers skill;
+    public CameraManager camera;
+    public DirectionManager direction;
+    public VFXManager vFX;
+    public HitStopManager hitStop;
+
 
     private void Awake()
     {
+        //ì„ì‹œí•¨ìˆ˜
+        Cursor.lockState = CursorLockMode.Locked;
+        Application.targetFrameRate = 120;
+
+        AnimationData = new PlayerAnimationHash();
         AnimationData.Initialize();
-        Animator ??= GetComponentInChildren<Animator>();
+
+        Animator ??= GetComponent<Animator>();
         Controller ??= GetComponent<CharacterController>();
         Input ??= GetComponent<PlayerController>();
         ForceReceiver ??= GetComponent<ForceReceiver>();
         Interaction ??= GetComponent<Interaction>();
-        Stats = new PlayerStats(Data);
+        Combat ??= GetComponent<PlayerCombat>();
 
+        Stats = new PlayerStats(InfoData.StatData);
         stateMachine = new PlayerStateMachine(this);
+        skill ??= GetComponentInChildren<SkillManagers>();
+        camera ??= GetComponentInChildren<CameraManager>();
+        direction ??= GetComponentInChildren<DirectionManager>();
+        vFX ??= GetComponent<VFXManager>();
+        hitStop ??= GetComponent<HitStopManager>();
 
         Stats.OnDie += OnDie;
     }
@@ -50,7 +70,8 @@ public class PlayerManager : MonoBehaviour, IPlayer
     private void Update()
     {
         stateMachine.HandleInput();
-        stateMachine.Update();
+        stateMachine.LogicUpdate();
+        Stats.Update();
     }
 
     private void FixedUpdate()
@@ -61,12 +82,22 @@ public class PlayerManager : MonoBehaviour, IPlayer
     void OnDie()
     {
         Animator.SetTrigger("Die");
-        enabled = false;
+        gameObject.SetActive(false);
     }
 
-    // ¿ÜºÎ¿¡¼­ ÀÌ ¸Ş¼­µå·Î¸¸ Á¢±Ù
-    public void LockOnInput(int val)
+    public void EnableInput(bool active)
     {
-        //Controller.LockOnInput(val);
+        if (active)
+        {
+            Input.PlayerActions.Enable();
+            camera.SetCameraInputEnabled(true);
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Input.PlayerActions.Disable();
+            camera.SetCameraInputEnabled(false);
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 }
