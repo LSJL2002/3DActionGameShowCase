@@ -23,7 +23,7 @@ public class CharacterCoreUI : UIBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        InventoryManager.Instance.ChangeUseItemState();
+        UIManager.Instance.ChangeState(DecisionState.UseItem);
     }
 
     public void Setup(InventoryViewModel viewModel)

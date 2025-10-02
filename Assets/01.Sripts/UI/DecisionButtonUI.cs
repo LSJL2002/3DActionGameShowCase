@@ -5,13 +5,6 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public enum DecisionState 
-{ 
-    UseItem,
-    SelectAbility,
-    EnterToZone,
-}
-
 public class DecisionButtonUI : UIBase
 {
     [SerializeField] private ItemData itemData;
@@ -27,11 +20,13 @@ public class DecisionButtonUI : UIBase
 
         Canvas canvas = GetComponentInParent<Canvas>();
         canvas.sortingOrder = 101;
+
+        PlayerManager.Instance.EnableInput(false);
     }
 
     public void SetGuideText()
     {
-        switch(InventoryManager.Instance.currentDecisionState)
+        switch(UIManager.Instance.currentDecisionState)
         {
             case DecisionState.UseItem:
                 guideText.text = "아이템을<br>사용하시겠습니까?";
@@ -59,6 +54,7 @@ public class DecisionButtonUI : UIBase
                 OnDecisionMade?.Invoke(false);
                 break;
         }
+        PlayerManager.Instance.EnableInput(true);
         Hide(); // 현재 팝업창 닫기
     }
 }

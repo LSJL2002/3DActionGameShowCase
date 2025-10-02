@@ -10,6 +10,13 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum DecisionState
+{
+    UseItem,
+    SelectAbility,
+    EnterToZone,
+}
+
 // 제네릭 싱글톤 스크립트를 상속
 public class UIManager : Singleton<UIManager>
 {
@@ -25,6 +32,8 @@ public class UIManager : Singleton<UIManager>
     public @PlayerInput playerInput;
 
     public bool tutorialEnabled = true; // 튜토리얼 재생여부
+
+    public DecisionState currentDecisionState;
 
     protected override void Awake()
     {
@@ -197,5 +206,21 @@ public class UIManager : Singleton<UIManager>
             return;
         }
         AllHide(); // Menu를 열 때 일단 모든 UI를 비활성화
+    }
+
+    public void ChangeState(DecisionState decisionState)
+    {
+        switch (decisionState)
+        {
+            case DecisionState.UseItem:
+                currentDecisionState = DecisionState.UseItem;
+                break;
+            case DecisionState.SelectAbility:
+                currentDecisionState = DecisionState.SelectAbility;
+                break;
+            case DecisionState.EnterToZone:
+                currentDecisionState = DecisionState.EnterToZone;
+                break;
+        }
     }
 }
