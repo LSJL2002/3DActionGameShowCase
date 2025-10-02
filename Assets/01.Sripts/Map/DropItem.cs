@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class DropItem : MonoBehaviour, IInteractable
 {
+    private void Awake()
+    {
+        if(MapManager.Instance.GetComponent<DropItemSpawner>().dropItem == null)
+        {
+            MapManager.Instance.GetComponent<DropItemSpawner>().dropItem = this.gameObject;
+        }
+    }
+
     private void Start()
     {
         gameObject.SetActive(false);
     }
+
 
     public string GetInteractPrompt()
     {

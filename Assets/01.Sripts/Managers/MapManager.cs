@@ -11,18 +11,21 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] private int BossZoneId;
 
     [SerializeField] private int round; // 게임매니저로..
-    private NavMeshDataInstance navMeshInstance;
+
+    [SerializeField] private GameObject tutorialWall;
 
     private void OnEnable()
     {
         BattleManager.OnBattleStart += OpenZone;
         BattleManager.OnBattleClear += OpenNextZone;
+        TutorialUI.endTutorial += tutorialWallToggle;
     }
 
     private void OnDisable()
     {
         BattleManager.OnBattleStart -= OpenZone;
         BattleManager.OnBattleClear -= OpenNextZone;
+        TutorialUI.endTutorial -= tutorialWallToggle;
     }
 
     private async void Start()
@@ -73,7 +76,19 @@ public class MapManager : Singleton<MapManager>
             startZone.gameObject.SetActive(true);
             currentZone = startZone;
         }
+
+       if(tutorialWall != null)
+        {
+            tutorialWall = GameObject.Find("TutorialWall");
+            tutorialWall.SetActive(true);
+        }
         Debug.Log("맵 초기화 완료");
+    }
+
+    public void tutorialWallToggle()
+    {
+        if(tutorialWall != null)
+        tutorialWall.SetActive(false);
     }
 
     public void RegisterStage(BattleZone zone)
