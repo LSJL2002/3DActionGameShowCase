@@ -5,13 +5,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LoadingScene : MonoBehaviour
+public class LoadingScene : SceneBase
 {
     public TextMeshProUGUI loadingText; // 씬로딩 텍스트
     public Slider loadingSlider; // 씬로딩 슬라이더바
 
-    public void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         StartCoroutine(LoadAsyncScene(SceneLoadManager.Instance.targetSceneIndex));
     }
 
