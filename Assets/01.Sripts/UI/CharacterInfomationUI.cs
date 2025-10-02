@@ -25,8 +25,6 @@ public partial class CharacterInfomationUI : UIBase
 
     public async void OnClickButton(string str)
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
         switch (str)
         {
             // 게임UI로 돌아가기

@@ -61,8 +61,6 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (itemData == null) return;
 
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
         switch (InventoryManager.Instance.currentDecisionState)
         {
             // 아이템 사용 상황

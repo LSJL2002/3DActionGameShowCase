@@ -38,7 +38,6 @@ public class DecisionButtonUI : UIBase
 
     public void OnClickButton(string str)
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
         DOVirtual.DelayedCall(0.2f, () => { }); // 아무것도 없이 n초간 대기
 
         switch (str)

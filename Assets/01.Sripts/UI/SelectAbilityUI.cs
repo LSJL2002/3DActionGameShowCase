@@ -150,8 +150,6 @@ public class SelectAbilityUI : UIBase
 
     public void OnClickButton(string str)
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
         InventoryManager.Instance.LoadData_Addressables("20000000");
         Debug.Log("회복약 획득");
 

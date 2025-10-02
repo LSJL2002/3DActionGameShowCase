@@ -23,8 +23,6 @@ public class KeySettingUI : UIBase
 
     public async void OnClickButton(string str)
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
         switch (str)
         {
             // 이전 UI로 돌아가기

@@ -59,8 +59,6 @@ public class CharacterCoreUI : UIBase
 
     public void OnClickButton(string str)
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
         switch (str)
         {
             // 게임UI로 돌아가기

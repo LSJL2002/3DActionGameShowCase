@@ -14,8 +14,6 @@ public class HomeUI : UIBase
 
     public async void OnClickButton(string str)
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
         switch (str)
         {
             case "NewGame":
