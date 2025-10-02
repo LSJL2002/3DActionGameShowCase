@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public enum SceneType
 {
@@ -35,6 +36,8 @@ public class TutorialUI : UIBase
     private bool bossOneAfterSelectPlayed = false;
 
     public List<TextSO> dialogues = new List<TextSO>();
+
+    public static event Action endTutorial;
 
     protected override void OnEnable()
     {
@@ -152,7 +155,7 @@ public class TutorialUI : UIBase
 
             if (skipAll) break;
         }
-
+        endTutorial?.Invoke();
         Hide();
         playerCamera.SetActive(false);
         CompanionCamera.SetActive(false);

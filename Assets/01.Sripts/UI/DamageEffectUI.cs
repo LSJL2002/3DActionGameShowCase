@@ -10,6 +10,6 @@ public class DamageEffectUI : UIBase
         base.OnEnable();
 
         // n초 대기 후 실행
-        DOVirtual.DelayedCall(0.2f, () => { Hide(); });
+        DOVirtual.DelayedCall(0.3f, () => { Hide(); });
     }
 }
