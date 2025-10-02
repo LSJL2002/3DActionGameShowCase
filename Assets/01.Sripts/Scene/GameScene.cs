@@ -34,7 +34,6 @@ public class GameScene : SceneBase
         {
             await UIManager.Instance.Show<TutorialUI>();
             UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
-            UIManager.Instance.tutorialEnabled = false;
         }
     }
 }
