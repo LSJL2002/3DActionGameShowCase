@@ -5,13 +5,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// 로딩씬에만 존재할 매니저 (DontDestroyOnLoad 아님)
-public class LoadingManager : Singleton<LoadingManager>
+public class LoadingScene : MonoBehaviour
 {
     public TextMeshProUGUI loadingText; // 씬로딩 텍스트
     public Slider loadingSlider; // 씬로딩 슬라이더바
 
-    protected override void Awake()
+    public void Awake()
     {
         StartCoroutine(LoadAsyncScene(SceneLoadManager.Instance.targetSceneIndex));
     }
