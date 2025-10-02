@@ -12,15 +12,14 @@ public partial class CharacterInfomationUI : UIBase
     {
         base.Awake();
 
-        InventoryAwake();
+        AwakeInventory();
+        AwakeStatus();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        InventoryOnEnable();
-
-        SetPlayerStat();
+        OnEnableInventory();
     }
 
     public async void OnClickButton(string str)

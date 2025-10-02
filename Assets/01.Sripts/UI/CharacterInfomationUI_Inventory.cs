@@ -18,14 +18,14 @@ public partial class CharacterInfomationUI : UIBase
     // (구독:인벤토리매니저)
     public static event Action OnUseItemUI;
 
-    public void InventoryAwake()
+    public void AwakeInventory()
     {
         InventoryManager.Instance.characterInventoryUI = this;
 
         InventoryManager.Instance.SetInventoryUI();
     }
 
-    public void InventoryOnEnable()
+    public void OnEnableInventory()
     {
         OnUseItemUI?.Invoke();
     }

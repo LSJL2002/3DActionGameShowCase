@@ -107,6 +107,7 @@ public partial class GameUI : UIBase
         }
 
         previousHP = playerStats.CurrentHealth;
+        Debug.Log($"이전체력 : {previousHP}");
     }
 
     // 플레이어 스탯이 변화했을때 호출 할 함수
