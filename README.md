@@ -1,3 +1,7 @@
+## 프로토타입 개발정보 확인 (중간발표 PPT 자료)
+
+https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Ffile.notion.so%2Ff%2Ff%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2F6b303b5a-b267-4b2e-8108-7ba31a9d4b79%2F3D%25EC%2595%25A1%25EC%2585%2598%25EA%25B2%258C%25EC%259E%2584_%25EB%25B0%259C%25ED%2591%259C%25EC%259E%2590%25EB%25A3%258C.pptx%3Ftable%3Dblock%26id%3D27f2dc3e-f514-802e-8cd1-e9b2ac09bf25%26spaceId%3D83c75a39-3aba-4ba4-a792-7aefe4b07895%26expirationTimestamp%3D1759392000000%26signature%3D80TSKrz9BRdXU9d2uL_3nxqUhNboN4E9LOHDkEd4zTA%26downloadName%3D3D%25EC%2595%25A1%25EC%2585%2598%25EA%25B2%258C%25EC%259E%2584%2B%25EB%25B0%259C%25ED%2591%259C%25EC%259E%2590%25EB%25A3%258C.pptx&wdOrigin=BROWSELINK
+
 ## WorkFlow
 <details><summary>접기/펼치기</summary>
     
