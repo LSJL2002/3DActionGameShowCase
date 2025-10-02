@@ -20,7 +20,11 @@ public class HomeUI : UIBase
         {
             case "NewGame":
                 // 새 게임 시작
-                SceneLoadManager.Instance.LoadScene(1);
+                SceneLoadManager.Instance.ChangeScene(1, () =>
+                {
+                    MapManager.Instance.ResetZones();
+                    BattleManager.Instance.ResetBattleState();
+                });
                 break;
 
             case "LoadStart":
