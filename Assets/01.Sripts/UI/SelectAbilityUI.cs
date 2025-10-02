@@ -21,12 +21,7 @@ public class SelectAbilityUI : UIBase
     private AsyncOperationHandle<ItemData> skillLoadHandle;
     private AsyncOperationHandle<ItemData> coreLoadHandle;
 
-    //private ItemData skillHandle; // 테스트
-    //private ItemData coreHandle; // 테스트
-
     [SerializeField] private List<ItemSlotUI> itemSlots;
-
-    public static event Action OnSelectAbilityUI; // (구독:인벤토리매니저)
 
     protected override void OnEnable()
     {
@@ -37,7 +32,7 @@ public class SelectAbilityUI : UIBase
 
         canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1.5f); });
 
-        OnSelectAbilityUI?.Invoke();
+        InventoryManager.Instance.ChangeSelectAbilityState();
 
         AudioManager.Instance.PlaySFX("OpenSelectAbilityUISound");
 

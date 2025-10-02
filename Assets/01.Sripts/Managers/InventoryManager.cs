@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public enum DecisionState { UseItem, SelectAbility, }
-
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
@@ -21,31 +19,16 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         base.Start();
 
-        SelectAbilityUI.OnSelectAbilityUI += ChangeSelectAbilityState;
-        CharacterInfomationUI.OnUseItemUI += ChangeUseItemState;
-        CharacterCoreUI.OnUseItemUI += ChangeUseItemState;
-        CharacterSkillUI.OnUseItemUI += ChangeUseItemState;
-
         inventoryModel = new Inventory();
         inventoryViewModel = new InventoryViewModel(inventoryModel);
     }
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        SelectAbilityUI.OnSelectAbilityUI -= ChangeSelectAbilityState;
-        CharacterInfomationUI.OnUseItemUI -= ChangeUseItemState;
-        CharacterCoreUI.OnUseItemUI -= ChangeUseItemState;
-        CharacterSkillUI.OnUseItemUI -= ChangeUseItemState;
-    }
-
-    private void ChangeSelectAbilityState()
+    public void ChangeSelectAbilityState()
     {
         currentDecisionState = DecisionState.SelectAbility;
     }
 
-    private void ChangeUseItemState()
+    public void ChangeUseItemState()
     {
         currentDecisionState = DecisionState.UseItem;
     }

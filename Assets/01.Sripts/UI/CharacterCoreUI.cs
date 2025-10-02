@@ -11,9 +11,6 @@ public class CharacterCoreUI : UIBase
 
     private InventoryViewModel _viewModel;
 
-    // (구독:인벤토리매니저)
-    public static event Action OnUseItemUI;
-
     protected override void Awake()
     {
         base.Awake();
@@ -26,7 +23,7 @@ public class CharacterCoreUI : UIBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        OnUseItemUI?.Invoke();
+        InventoryManager.Instance.ChangeUseItemState();
     }
 
     public void Setup(InventoryViewModel viewModel)
@@ -55,19 +52,6 @@ public class CharacterCoreUI : UIBase
                 itemSlots[i].ClearSlot();
             }
         }
-    }
-
-    public void OnClickButton(string str)
-    {
-        switch (str)
-        {
-            // 게임UI로 돌아가기
-            case "Return":
-                break;
-        }
-        
-        // 현재 팝업창 닫기
-        Hide();
     }
 
     // 스킬장착 함수 (스킬카드 버튼에서 호출)

@@ -5,6 +5,13 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
+public enum DecisionState 
+{ 
+    UseItem,
+    SelectAbility,
+    EnterToZone,
+}
+
 public class DecisionButtonUI : UIBase
 {
     [SerializeField] private ItemData itemData;
@@ -33,13 +40,15 @@ public class DecisionButtonUI : UIBase
             case DecisionState.SelectAbility:
                 guideText.text = "이 능력을<br>선택하시겠습니까??";
                 break;
+
+            case DecisionState.EnterToZone:
+                guideText.text = "진입 후 전투가 시작됩니다.<br>진입하시겠습니까?";
+                break;
         }
     }
 
     public void OnClickButton(string str)
     {
-        DOVirtual.DelayedCall(0.2f, () => { }); // 아무것도 없이 n초간 대기
-
         switch (str)
         {
             case "Yes":
@@ -50,8 +59,6 @@ public class DecisionButtonUI : UIBase
                 OnDecisionMade?.Invoke(false);
                 break;
         }
-
-        // 현재 팝업창 닫기
-        Hide();
+        Hide(); // 현재 팝업창 닫기
     }
 }

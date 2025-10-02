@@ -15,9 +15,6 @@ public partial class CharacterInfomationUI : UIBase
 
     private InventoryViewModel inventoryViewModel;
 
-    // (구독:인벤토리매니저)
-    public static event Action OnUseItemUI;
-
     public void AwakeInventory()
     {
         InventoryManager.Instance.characterInventoryUI = this;
@@ -27,7 +24,7 @@ public partial class CharacterInfomationUI : UIBase
 
     public void OnEnableInventory()
     {
-        OnUseItemUI?.Invoke();
+        InventoryManager.Instance.ChangeUseItemState();
     }
 
     public void Setup(InventoryViewModel viewModel)
