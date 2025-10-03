@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Playables;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class GameScene : SceneBase
 {
+    private AsyncOperationHandle<GameObject> minimapCameraHandle;
+
     protected override void Awake()
     {
         base.Awake();
@@ -29,6 +35,7 @@ public class GameScene : SceneBase
     {
         await UIManager.Instance.Show<GameUI>();
         await UIManager.Instance.Show<MiniMapUI>();
+        minimapCameraHandle = Addressables.InstantiateAsync("MinimapCamera");
 
         // UI매니저의 튜토리얼 재생 여부 확인 후 재생
         if (UIManager.Instance.tutorialEnabled)
@@ -36,5 +43,12 @@ public class GameScene : SceneBase
             await UIManager.Instance.Show<TutorialUI>();
             UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
         }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        Addressables.ReleaseInstance(minimapCameraHandle);
     }
 }
