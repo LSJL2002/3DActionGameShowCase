@@ -88,7 +88,7 @@ public class AudioManager : Singleton<AudioManager>
         foreach (var sfx in sfxSources) sfx.volume = _sfxVolume;
 
         // UI 버튼 클릭 SFX 처리
-        CheckUIButtonClick();
+        CheckUIButtonHoverClick();
     }
 
 
@@ -204,17 +204,55 @@ public class AudioManager : Singleton<AudioManager>
     }
 
     public void PlayClickSFX() => PlaySFX("Click");
+    public void PlayHoverSFX() => PlaySFX("Hover");
     #endregion
 
-    #region UI Click Check
-    private void CheckUIButtonClick()
+    #region UI Hover & Click
+    private GameObject lastHoveredButton;
+
+    private void CheckUIButtonHoverClick()
     {
-        if (Input.GetMouseButtonDown(0))
+        // 현재 마우스가 가리키는 UI 버튼
+        GameObject hoveredButton = GetHoveredButton();
+
+        // Hover 사운드 (마우스가 버튼 위로 들어올 때만)
+        if (hoveredButton != null && hoveredButton != lastHoveredButton)
         {
-            GameObject clicked = EventSystem.current.currentSelectedGameObject;
-            if (clicked != null && clicked.GetComponent<Button>() != null)
-                PlayClickSFX();
+            PlayHoverSFX(); // Hover용 SFX 재생
+            lastHoveredButton = hoveredButton;
+        }
+
+        // Hover 종료 시 초기화
+        if (hoveredButton == null || hoveredButton.GetComponent<Button>() == null)
+        {
+            lastHoveredButton = null;
+        }
+
+        // Click 사운드
+        if (Input.GetMouseButtonDown(0) && hoveredButton != null && hoveredButton.GetComponent<Button>() != null)
+        {
+            PlayClickSFX();
         }
     }
-    #endregion
+
+    // 마우스가 가리키는 버튼 가져오기
+    private GameObject GetHoveredButton()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (var result in results)
+        {
+            if (result.gameObject.GetComponent<Button>() != null)
+                return result.gameObject;
+        }
+
+        return null;
+    }
+#endregion
 }
