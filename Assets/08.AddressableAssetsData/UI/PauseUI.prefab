@@ -300,10 +300,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6080265677097561535}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -56, y: -41}
-  m_SizeDelta: {x: 400, y: 800}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -75, y: 25}
+  m_SizeDelta: {x: -150, y: -50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1137243846066389713
 CanvasRenderer:
@@ -325,17 +325,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 97eed44a916df0c4d805b95ef31d3cac, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.78431374}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 16c63ca4672f16c43b3a580d8003c948, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -489,7 +489,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonObject: {fileID: 1423398964584664004}
+  buttonType: 1
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 0}
+  itemSlotUI: {fileID: 0}
+  fadeDuration: 1
 --- !u!1 &1854652424638376535
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,7 +718,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8344352943765336511
 RectTransform:
   m_ObjectHideFlags: 0
@@ -776,7 +780,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 350, y: -170}
-  m_SizeDelta: {x: 700, y: 0}
+  m_SizeDelta: {x: 700, y: 262.51}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2289055643306414886
 CanvasRenderer:
@@ -998,10 +1002,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2426038801039820818}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 350, y: -50}
+  m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &5446320742395744666
 CanvasRenderer:
@@ -1348,7 +1352,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonObject: {fileID: 6570150202395024878}
+  buttonType: 1
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 0}
+  itemSlotUI: {fileID: 0}
+  fadeDuration: 1
 --- !u!1 &6766279856803785483
 GameObject:
   m_ObjectHideFlags: 0
@@ -1546,7 +1554,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonObject: {fileID: 8366717032029616470}
+  buttonType: 1
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 0}
+  itemSlotUI: {fileID: 0}
+  fadeDuration: 1
 --- !u!1 &8909191614464141281
 GameObject:
   m_ObjectHideFlags: 0

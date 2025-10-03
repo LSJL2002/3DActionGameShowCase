@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
@@ -96,5 +97,10 @@ public partial class GameUI : UIBase
 
                 break;
         }
+    }
+
+    public async void OnClick()
+    {
+        await UIManager.Instance.Show<PauseUI>();
     }
 }

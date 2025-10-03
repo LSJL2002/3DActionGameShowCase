@@ -22,22 +22,10 @@ public partial class CharacterInfomationUI : UIBase
         OnEnableInventory();
     }
 
-    public async void OnClickButton(string str)
+    public void OnClickButton(string str)
     {
         switch (str)
         {
-            // 게임UI로 돌아가기
-            case "Return":
-                await UIManager.Instance.Show<CompanionUI>();
-                Hide();
-                break;
-
-            // CoreUI로 이동
-            case "Left":
-                await UIManager.Instance.Show<CharacterCoreUI>();
-                Hide();
-                break;
-
             case "20000000":
                 InventoryManager.Instance.LoadData_Addressables(str, 1);
                 break;

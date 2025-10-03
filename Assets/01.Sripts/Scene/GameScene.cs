@@ -28,6 +28,7 @@ public class GameScene : SceneBase
     public async void DelayMethod()
     {
         await UIManager.Instance.Show<GameUI>();
+        await UIManager.Instance.Show<MiniMapUI>();
 
         // UI매니저의 튜토리얼 재생 여부 확인 후 재생
         if (UIManager.Instance.tutorialEnabled)
