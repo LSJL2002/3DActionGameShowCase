@@ -54,8 +54,6 @@ public partial class GameUI : UIBase
 
         BattleManager.OnBattleStart -= LoadMonsterStat;    //해제    
         BattleManager.OnBattleClear -= ReleaseMonsterStat; //해제
-
-        ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
     }
 
     public void LoadMonsterStat(BattleZone zone)                     //몬스터 스텟 불러오기

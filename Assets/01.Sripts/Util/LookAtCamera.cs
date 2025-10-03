@@ -21,9 +21,10 @@ public class LookAtCamera : MonoBehaviour
         playerInput = new @PlayerInput();
         playerInput.Player.Camera.performed += SetRockOn; // 키입력('F')에 함수 구독
         playerInput.Player.Enable(); // Player 액션 맵 활성화
+
+        BattleManager.OnMonsterDie += DisableRockOn;  //전투끝날시(몬스터사망시) 스텟 해제하기
     }
 
-    // 카메라 움직임 이후에 실행되어야 회전과 위치가 자연스럽습니다.
     private void LateUpdate()
     {
         if (camTransform == null || monsterTransform == null)
@@ -53,20 +54,26 @@ public class LookAtCamera : MonoBehaviour
 
     private void SetRockOn(InputAction.CallbackContext context)
     {
-        if (canvasGroup != null)
-        {
-            // 알파값을 0과 1로 토글 (록온 이미지 껐다 켜기)
-            canvasGroup.alpha = (canvasGroup.alpha == 0f) ? 1f : 0f;
-        }
+        // 알파값을 0과 1로 토글 (록온 이미지 껐다 켜기)
+        canvasGroup.alpha = (canvasGroup.alpha == 0f) ? 1f : 0f;
+    }
+
+    private void DisableRockOn(BattleZone zone)
+    {
+        // 몬스터가 죽으면 록온 이미지 끄기
+        canvasGroup.alpha = 0f;
+
+        // 인풋 시스템 구독 해제 및 비활성화 (시체에 록온 못하게)
+        playerInput.Player.Camera.performed -= SetRockOn;
+        playerInput.Player.Disable();
     }
 
     private void OnDestroy()
     {
-        if (playerInput != null)
-        {
-            // 인풋 시스템 구독 해제 및 비활성화
-            playerInput.Player.Camera.performed -= SetRockOn;
-            playerInput.Player.Disable();
-        }
+        // 인풋 시스템 구독 해제 및 비활성화
+        playerInput.Player.Camera.performed -= SetRockOn;
+        playerInput.Player.Disable();
+
+        BattleManager.OnMonsterDie -= DisableRockOn;
     }
 }
