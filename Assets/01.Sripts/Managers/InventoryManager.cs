@@ -13,24 +13,12 @@ public class InventoryManager : Singleton<InventoryManager>
     public CharacterSkillUI characterSkillUI;
     public CharacterCoreUI characterCoreUI;
 
-    public DecisionState currentDecisionState;
-
     protected override void Start()
     {
         base.Start();
 
         inventoryModel = new Inventory();
         inventoryViewModel = new InventoryViewModel(inventoryModel);
-    }
-
-    public void ChangeSelectAbilityState()
-    {
-        currentDecisionState = DecisionState.SelectAbility;
-    }
-
-    public void ChangeUseItemState()
-    {
-        currentDecisionState = DecisionState.UseItem;
     }
 
     // 인벤토리 시스템 최초 초기화시 호출될 함수 (각 UI에서 호출)
