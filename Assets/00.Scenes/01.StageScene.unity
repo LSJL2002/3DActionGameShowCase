@@ -8504,6 +8504,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 213682445}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!223 &219749982 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 565180732950704833, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
+  m_PrefabInstance: {fileID: 402759205}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &226535919
 GameObject:
   m_ObjectHideFlags: 0
@@ -14300,6 +14305,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 565180732950704833, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 917452145374208714, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -14356,6 +14365,10 @@ PrefabInstance:
       propertyPath: m_ChildCameras.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8073608664527006141, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 219749982}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

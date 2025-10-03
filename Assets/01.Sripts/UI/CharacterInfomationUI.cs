@@ -20,6 +20,7 @@ public partial class CharacterInfomationUI : UIBase
     {
         base.OnEnable();
         OnEnableInventory();
+        uiType = UIType.Screen;
     }
 
     public void OnClickButton(string str)

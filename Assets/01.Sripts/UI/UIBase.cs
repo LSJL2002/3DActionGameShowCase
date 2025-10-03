@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum UIType
+{
+    GameUI,
+    Screen,
+    Popup,
+    Dialog,
+}
+
 public class UIBase : MonoBehaviour
 {
     [HideInInspector]
     public Canvas canvas;
+    public UIType uiType = UIType.GameUI;
 
     public virtual void Hide()
     {
