@@ -95,7 +95,7 @@ public class BattleManager : Singleton<BattleManager>
 
         // 1. 벽 켜기 + 경고 이펙트 시작
         currentZone.SetWallsActive(true);
-        StartWarning();
+        //StartWarning();
 
         // 2. 컷씬 실행 & 종료 대기 (스킵 포함)
         if (!string.IsNullOrEmpty(zone.startBattleTimelineKey))
@@ -174,7 +174,7 @@ public class BattleManager : Singleton<BattleManager>
         var cutScene = await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.endBattleTimelineKey);
         OnMonsterDie?.Invoke(currentZone);
  
-        StopWarning();
+        //StopWarning();
     }
 
 
