@@ -11,6 +11,7 @@ public class PreviewScene : MonoBehaviour
     [SerializeField] private string previewSceneName = "PlayerUIScene";
     private bool isLoaded = false;
     private Animator previewAnimator;
+    [SerializeField] private Canvas canvas;
 
     [Header("UI Buttons")]
     [SerializeField] private Button btnInfo;
@@ -32,10 +33,22 @@ public class PreviewScene : MonoBehaviour
     private void OnEnable()
     {
         LoadPreviewScene();
+
+        if (canvas.sortingOrder == 0)
+        {
+            int sortingOrder = UIManager.Instance.LoadedUICount + 1;
+            canvas.sortingOrder = sortingOrder;
+        }
     }
 
     private void OnDisable()
     {
+        if (UIManager.Instance.currentUI != null)
+        {
+            string uiName = UIManager.Instance.currentUI.gameObject.name;
+            UIManager.Instance.Hide(uiName);
+        }
+
         UnloadPreviewScene();
     }
 
@@ -83,6 +96,12 @@ public class PreviewScene : MonoBehaviour
         previewAnimator.SetBool("Base/Switch_Skill", false);
         previewAnimator.SetBool("Base/Switch_Inven", false);
 
+        if(UIManager.Instance.currentUI != null)
+        {
+            string uiName = UIManager.Instance.currentUI.gameObject.name;
+            UIManager.Instance.Hide(uiName);
+        }
+
         // 선택한 Pose만 true
         switch (target)
         {
@@ -104,7 +123,5 @@ public class PreviewScene : MonoBehaviour
                 SceneLoadManager.Instance.LoadScene(0); // Home씬으로 이동
                 break;
         }
-
-        UIManager.Instance.AllHide(UIManager.Instance.currentUI);
     }
 }

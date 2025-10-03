@@ -42,6 +42,8 @@ public class TutorialUI : UIBase
     protected override void OnEnable()
     {
         // playText = true;
+
+        uiType = UIType.Dialog;
     }
 
     #region Tutorial
@@ -168,10 +170,12 @@ public class TutorialUI : UIBase
         }
     }
 
+    List<TextSO> scene;
+
     public void PlayDialogue(SceneType type)
     {
 
-        List<TextSO> scene = new List<TextSO>();
+        scene = new List<TextSO>();
 
         foreach (TextSO text in dialogues)
         {

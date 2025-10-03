@@ -27,6 +27,8 @@ public class SelectAbilityUI : UIBase
     {
         base.OnEnable();
 
+        uiType = UIType.Popup;
+
         // 마우스 커서 보이게
         PlayerManager.Instance.EnableInput(false);
 

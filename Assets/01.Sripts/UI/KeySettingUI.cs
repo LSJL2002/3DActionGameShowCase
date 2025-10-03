@@ -19,6 +19,8 @@ public class KeySettingUI : UIBase
         {
             returnButton.SetActive(false);
         }
+
+        uiType = UIType.Screen;
     }
 
     public async void OnClickButton(string str)
