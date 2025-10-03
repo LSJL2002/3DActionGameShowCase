@@ -8,6 +8,7 @@ public class TimeLineBase : MonoBehaviour
 {
     private Camera mainCamera;
     private Canvas gameUICanvas;
+    private Canvas miniMapUICanvas;
     [SerializeField] protected PlayableDirector playableDirector;
 
     protected virtual void OnTimeLineStop(PlayableDirector director)
@@ -19,12 +20,14 @@ public class TimeLineBase : MonoBehaviour
     {
         mainCamera = PlayerManager.Instance.camera.GetComponentInChildren<Camera>();
         gameUICanvas = UIManager.Instance.Get<GameUI>().canvas;
+        miniMapUICanvas = UIManager.Instance.Get<MiniMapUI>().canvas;
     }
 
     protected virtual void OnEnable() 
     {
         mainCamera.gameObject.SetActive(false);
         gameUICanvas.gameObject.SetActive(false);
+        miniMapUICanvas.gameObject.SetActive(false);
         AudioManager.Instance.StopBGM();
 
         PlayerManager.Instance.EnableInput(false); // 마우스 커서 보이게
@@ -42,6 +45,7 @@ public class TimeLineBase : MonoBehaviour
     {
         mainCamera.gameObject.SetActive(true);
         gameUICanvas.gameObject.SetActive(true);
+        miniMapUICanvas.gameObject.SetActive(true);
 
         PlayerManager.Instance.EnableInput(true); // 마우스 락
     }

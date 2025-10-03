@@ -203,6 +203,7 @@ public class UIManager : Singleton<UIManager>
         {
             AllHide(); // Menu를 닫을 때 일단 모든 UI를 비활성화
             await UIManager.Instance.Show<GameUI>(); // GameUI를 켜줌
+            await UIManager.Instance.Show<MiniMapUI>(); // MiniMapUI를 켜줌
             return;
         }
         AllHide(); // Menu를 열 때 일단 모든 UI를 비활성화
