@@ -308,6 +308,9 @@ MonoBehaviour:
       parameterName: Run
     - type: 3
       parameterName: Attack
+  patternConfig: {fileID: 0}
+  AreaEffectPoint: {fileID: 0}
+  hasStartedCombat: 0
   circleBorderPrefab: {fileID: 2003918614585761640}
   circleFillPrefab: {fileID: 667249818603838827}
 --- !u!195 &5235926596850603450
@@ -345,6 +348,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterData: {fileID: 11400000, guid: 08e6f5432a54ed34c8ee74566765ecbf, type: 2}
+  maxHp: 0
+  maxMp: 0
   CurrentHP: 0
   CurrentMP: 0
   AttackPower: 0
@@ -686,6 +691,10 @@ PrefabInstance:
     - target: {fileID: 3218191845544919062, guid: c772234a7ee26ee4691630832e3d2269, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076728093855075888, guid: c772234a7ee26ee4691630832e3d2269, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7469290932461088524, guid: c772234a7ee26ee4691630832e3d2269, type: 3}
       propertyPath: m_Pivot.x
