@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DropItemSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject dropItem; // 인스펙터에 드랍 아이템 넣어두기
+    [field : SerializeField]public GameObject dropItem { get; set; }// 인스펙터에 드랍 아이템 넣어두기
 
     private void OnEnable()
     {

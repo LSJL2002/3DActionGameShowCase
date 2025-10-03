@@ -110,11 +110,13 @@ public class PlayerStats : IStats
     public void RecoverHealth(float amount)
     {
         CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth.Value);
+        OnPlayerHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
     }
 
     public void RecoverEnergy(float amount)
     {
         CurrentEnergy = Mathf.Min(CurrentEnergy + amount, MaxEnergy.Value);
+        OnPlayerHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
     }
 
     public void AddModifier(StatType statType, float value)

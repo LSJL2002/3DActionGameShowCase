@@ -12,29 +12,20 @@ public partial class CharacterInfomationUI : UIBase
     {
         base.Awake();
 
-        InventoryAwake();
-
-        SetPlayerStat();
+        AwakeInventory();
+        AwakeStatus();
     }
 
-    public async void OnClickButton(string str)
+    protected override void OnEnable()
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
+        base.OnEnable();
+        OnEnableInventory();
+    }
 
+    public void OnClickButton(string str)
+    {
         switch (str)
         {
-            // 게임UI로 돌아가기
-            case "Return":
-                await UIManager.Instance.Show<CompanionUI>();
-                Hide();
-                break;
-
-            // CoreUI로 이동
-            case "Left":
-                await UIManager.Instance.Show<CharacterCoreUI>();
-                Hide();
-                break;
-
             case "20000000":
                 InventoryManager.Instance.LoadData_Addressables(str, 1);
                 break;

@@ -15,8 +15,6 @@ public class TitleUI : UIBase
 
     public void OnClickButton(string str)
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-
         switch (str)
         {
             case "GameStart":

@@ -20,11 +20,13 @@ public class DecisionButtonUI : UIBase
 
         Canvas canvas = GetComponentInParent<Canvas>();
         canvas.sortingOrder = 101;
+
+        PlayerManager.Instance.EnableInput(false);
     }
 
     public void SetGuideText()
     {
-        switch(InventoryManager.Instance.currentDecisionState)
+        switch(UIManager.Instance.currentDecisionState)
         {
             case DecisionState.UseItem:
                 guideText.text = "아이템을<br>사용하시겠습니까?";
@@ -33,14 +35,15 @@ public class DecisionButtonUI : UIBase
             case DecisionState.SelectAbility:
                 guideText.text = "이 능력을<br>선택하시겠습니까??";
                 break;
+
+            case DecisionState.EnterToZone:
+                guideText.text = "진입 후 전투가 시작됩니다.<br>진입하시겠습니까?";
+                break;
         }
     }
 
     public void OnClickButton(string str)
     {
-        AudioManager.Instance.PlaySFX("ButtonSoundEffect");
-        DOVirtual.DelayedCall(0.2f, () => { }); // 아무것도 없이 n초간 대기
-
         switch (str)
         {
             case "Yes":
@@ -51,8 +54,7 @@ public class DecisionButtonUI : UIBase
                 OnDecisionMade?.Invoke(false);
                 break;
         }
-
-        // 현재 팝업창 닫기
-        Hide();
+        PlayerManager.Instance.EnableInput(true);
+        Hide(); // 현재 팝업창 닫기
     }
 }

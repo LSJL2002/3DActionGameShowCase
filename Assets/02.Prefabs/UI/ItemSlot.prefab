@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 1454754797197706519}
   - component: {fileID: 1803176041896226629}
   - component: {fileID: 1967953932208597295}
+  - component: {fileID: 6399893152244480468}
   m_Layer: 5
   m_Name: ItemSlot
   m_TagString: Untagged
@@ -307,6 +308,23 @@ MonoBehaviour:
   m_EffectColor: {r: 0.7264151, g: 0.29125133, b: 0.29125133, a: 1}
   m_EffectDistance: {x: 10, y: -10}
   m_UseGraphicAlpha: 1
+--- !u!114 &6399893152244480468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900100514830595414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonType: 2
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 900100514830595414}
+  itemSlotUI: {fileID: 1803176041896226629}
+  fadeDuration: 1
 --- !u!1 &1712645996946693544
 GameObject:
   m_ObjectHideFlags: 0

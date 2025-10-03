@@ -10,6 +10,13 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum DecisionState
+{
+    UseItem,
+    SelectAbility,
+    EnterToZone,
+}
+
 // 제네릭 싱글톤 스크립트를 상속
 public class UIManager : Singleton<UIManager>
 {
@@ -25,6 +32,8 @@ public class UIManager : Singleton<UIManager>
     public @PlayerInput playerInput;
 
     public bool tutorialEnabled = true; // 튜토리얼 재생여부
+
+    public DecisionState currentDecisionState;
 
     protected override void Awake()
     {
@@ -165,7 +174,6 @@ public class UIManager : Singleton<UIManager>
 
         playerInput.Player.Disable(); // Player 액션 맵 활성화 (다시 TAB 입력을 알 수 있도록 켜둠)
         playerInput.Player.Inventory.performed -= GameUIToggle; // 인벤토리 입력(TAB)에 OnGameUI 함수 구독해제
-        
     }
 
     // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬 언로드시 호출할것)
@@ -195,8 +203,26 @@ public class UIManager : Singleton<UIManager>
         {
             AllHide(); // Menu를 닫을 때 일단 모든 UI를 비활성화
             await UIManager.Instance.Show<GameUI>(); // GameUI를 켜줌
+            await UIManager.Instance.Show<MiniMapUI>(); // MiniMapUI를 켜줌
+            await UIManager.Instance.Show<TutorialUI>(); // TutorialUI를 켜줌
             return;
         }
         AllHide(); // Menu를 열 때 일단 모든 UI를 비활성화
+    }
+
+    public void ChangeState(DecisionState decisionState)
+    {
+        switch (decisionState)
+        {
+            case DecisionState.UseItem:
+                currentDecisionState = DecisionState.UseItem;
+                break;
+            case DecisionState.SelectAbility:
+                currentDecisionState = DecisionState.SelectAbility;
+                break;
+            case DecisionState.EnterToZone:
+                currentDecisionState = DecisionState.EnterToZone;
+                break;
+        }
     }
 }

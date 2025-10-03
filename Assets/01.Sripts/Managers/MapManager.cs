@@ -11,18 +11,21 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] private int BossZoneId;
 
     [SerializeField] private int round; // 게임매니저로..
-    private NavMeshDataInstance navMeshInstance;
+
+    [SerializeField] private GameObject tutorialWall;
 
     private void OnEnable()
     {
         BattleManager.OnBattleStart += OpenZone;
         BattleManager.OnBattleClear += OpenNextZone;
+        TutorialUI.endTutorial += tutorialWallToggle;
     }
 
     private void OnDisable()
     {
         BattleManager.OnBattleStart -= OpenZone;
         BattleManager.OnBattleClear -= OpenNextZone;
+        TutorialUI.endTutorial -= tutorialWallToggle;
     }
 
     private async void Start()
@@ -54,22 +57,39 @@ public class MapManager : Singleton<MapManager>
 
 
         //배틀존 딕셔너리에 아이디를 키값으로 등록
-        var zones = FindObjectsOfType<BattleZone>(); //배틀존을 싹다 찾음
+        ResetZones();
+    }
+    public void ResetZones()
+    {
+        zoneDict.Clear(); // 이전 존 정보 싹 비우기
+
+        var zones = FindObjectsOfType<BattleZone>();
         foreach (var zone in zones)
         {
-            RegisterStage(zone);    //딕셔너리에 추가
-            zone.SetWallsActive(false); //벽먼저꺼줌
-            zone.gameObject.SetActive(false);  //전부 꺼줌
+            RegisterStage(zone);
+            zone.SetWallsActive(false);
+            zone.gameObject.SetActive(false);
         }
 
-        if (zoneDict.TryGetValue(startingZoneId, out var startZone)) //startingZoneId를 가진 배틀존을 찾아서
+        if (zoneDict.TryGetValue(startingZoneId, out var startZone))
         {
-            startZone.gameObject.SetActive(true);   //시작스테이지만 켜줌
+            startZone.gameObject.SetActive(true);
+            currentZone = startZone;
         }
+
+       if(tutorialWall != null)
+        {
+            tutorialWall = GameObject.Find("TutorialWall");
+            tutorialWall.SetActive(true);
+        }
+        Debug.Log("맵 초기화 완료");
     }
 
-
-
+    public void tutorialWallToggle()
+    {
+        if(tutorialWall != null)
+        tutorialWall.SetActive(false);
+    }
 
     public void RegisterStage(BattleZone zone)
     {
@@ -119,7 +139,7 @@ public class MapManager : Singleton<MapManager>
 
         //클리어한 존 지우기
         zone.gameObject.SetActive(false); //Release
-        zoneDict.Remove(zone.id);
+        //zoneDict.Remove(zone.id);
         //Addressables.ReleaseInstance(zone.gameObject);
         currentZone = null;
 

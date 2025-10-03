@@ -859,7 +859,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8430786720526419439
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1984,7 +1984,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8430817149090503987
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2111,7 +2111,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8648361c7bc7894888d1765c1ab52e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonObject: {fileID: 951372550656587042}
+  buttonType: 1
+  targetCanvasGroup: {fileID: 0}
+  targetButton: {fileID: 951372550656587042}
+  itemSlotUI: {fileID: 0}
+  fadeDuration: 1
 --- !u!1 &954252502526969829
 GameObject:
   m_ObjectHideFlags: 0
@@ -3512,7 +3516,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2698215502148286855
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11879,8 +11883,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4479173732269116451}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.24577463, y: -0.0073738205, z: -0.011566761, w: 0.96922994}
-  m_LocalPosition: {x: -1.222168, y: 0.6094971, z: 0.559917}
+  m_LocalRotation: {x: 0.00125531, y: 0.982799, z: -0.0066848868, w: 0.18455324}
+  m_LocalPosition: {x: 2.4349365, y: 0.2709961, z: 15.022}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11917,11 +11921,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.1
+  far clip plane: 5000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -12347,7 +12351,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8229356306368110312
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14940,7 +14944,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9067899292774160713
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15498,7 +15502,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &693679714286755716
 RectTransform:
   m_ObjectHideFlags: 0

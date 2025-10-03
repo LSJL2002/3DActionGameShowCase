@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Playables;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class GameScene : SceneBase
 {
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    private AsyncOperationHandle<GameObject> minimapCameraHandle; // 미니맵 카메라 오브젝트 핸들
+    private AsyncOperationHandle<GameObject> minimapPlayerIconHandle; // 미니맵 플레이어 아이콘 오브젝트 핸들
 
     protected override void Start()
     {
@@ -27,14 +29,49 @@ public class GameScene : SceneBase
 
     public async void DelayMethod()
     {
+        // 게임UI, 미니맵UI 호출
         await UIManager.Instance.Show<GameUI>();
+        await UIManager.Instance.Show<MiniMapUI>();
+
+        // 미니맵 카메라, 플레이어 아이콘 어드레서블로 생성
+        minimapPlayerIconHandle = Addressables.InstantiateAsync("Minimap_PlayerIcon", PlayerManager.Instance.transform);
+        minimapCameraHandle = Addressables.InstantiateAsync("MinimapCamera");
 
         // UI매니저의 튜토리얼 재생 여부 확인 후 재생
         if (UIManager.Instance.tutorialEnabled)
         {
             await UIManager.Instance.Show<TutorialUI>();
             UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
-            UIManager.Instance.tutorialEnabled = false;
         }
+    }
+
+    protected override async void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            MapUI mapUI = UIManager.Instance.Get<MapUI>();
+
+            if (mapUI == null)
+            {
+                await UIManager.Instance.Show<MapUI>();
+            }
+            else if (mapUI.isActiveAndEnabled)
+            {
+                UIManager.Instance.Hide<MapUI>();
+            }
+            else
+            {
+                await UIManager.Instance.Show<MapUI>();
+            }
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        // 미니맵 카메라, 플레이어 아이콘 오브젝트 언로드
+        Addressables.ReleaseInstance(minimapPlayerIconHandle);
+        Addressables.ReleaseInstance(minimapCameraHandle);
     }
 }

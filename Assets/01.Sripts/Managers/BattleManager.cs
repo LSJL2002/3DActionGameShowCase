@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Playables;
@@ -186,6 +187,16 @@ public class BattleManager : Singleton<BattleManager>
         currentMonster = null;
         monsterStats = null;
         isBattle = false;
+    }
+
+    public void ResetBattleState()
+    {
+        currentZone = null;
+        currentMonster = null;
+        monsterStats = null;
+        isBattle = false;
+
+        Debug.Log("BattleManager → 배틀 상태 리셋 완료");
     }
 
     public string GetItemInfo(int index)

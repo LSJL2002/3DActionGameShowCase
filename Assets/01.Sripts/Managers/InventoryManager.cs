@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public enum DecisionState { UseItem, SelectAbility, }
-
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
@@ -15,39 +13,12 @@ public class InventoryManager : Singleton<InventoryManager>
     public CharacterSkillUI characterSkillUI;
     public CharacterCoreUI characterCoreUI;
 
-    public DecisionState currentDecisionState;
-
     protected override void Start()
     {
         base.Start();
 
-        SelectAbilityUI.OnSelectAbilityUI += ChangeSelectAbilityState;
-        CharacterInfomationUI.OnUseItemUI += ChangeUseItemState;
-        CharacterCoreUI.OnUseItemUI += ChangeUseItemState;
-        CharacterSkillUI.OnUseItemUI += ChangeUseItemState;
-
         inventoryModel = new Inventory();
         inventoryViewModel = new InventoryViewModel(inventoryModel);
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        SelectAbilityUI.OnSelectAbilityUI -= ChangeSelectAbilityState;
-        CharacterInfomationUI.OnUseItemUI -= ChangeUseItemState;
-        CharacterCoreUI.OnUseItemUI -= ChangeUseItemState;
-        CharacterSkillUI.OnUseItemUI -= ChangeUseItemState;
-    }
-
-    private void ChangeSelectAbilityState()
-    {
-        currentDecisionState = DecisionState.SelectAbility;
-    }
-
-    private void ChangeUseItemState()
-    {
-        currentDecisionState = DecisionState.UseItem;
     }
 
     // 인벤토리 시스템 최초 초기화시 호출될 함수 (각 UI에서 호출)
