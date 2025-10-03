@@ -67,7 +67,6 @@ public class BattleZone : MonoBehaviour
                 }
                 else
                 {
-                    Animator playerAnimator = other.GetComponent<Animator>();
                     // CharacterController가 있다면 잠시 비활성화
                     playerCC.enabled = false;
 
