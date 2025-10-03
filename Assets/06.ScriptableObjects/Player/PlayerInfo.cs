@@ -95,10 +95,16 @@ public class AttackInfoData
     [field: Range(-10f, 10f)] public float Force { get; private set; } = 1f;
 
     [field: SerializeField, Tooltip("공격 판정 시작 시간(0~1)")]
-    [field: Range(0f, 1f)] public float Dealing_Start_TransitionTime { get; private set; }
+    [field: Range(0f, 1f)] public float HitStartTime { get; private set; } = 0f;
 
     [field: SerializeField, Tooltip("공격 판정 종료 시간(0~1)")]
-    [field: Range(0f, 1f)] public float Dealing_End_TransitionTime { get; private set; }
+    [field: Range(0f, 1f)] public float HitEndTime { get; private set; } = 1f;
+    [field: SerializeField, Tooltip("다단히트 공격 타수")]
+    [field: Range(1, 10)] public int HitCount { get; private set; } = 1;
+    [field: SerializeField, Tooltip("다단히트 간격(초)")]
+    [field: Range(0f, 1f)] public float Interval { get; private set; } = 0.1f;
+
+    [NonSerialized] public bool HasFired; // ComboHandler 내부 사용
 }
 
 public enum AttackType
@@ -127,22 +133,20 @@ public class PlayerSkillData
 [Serializable]
 public class SkillInfoData
 {
-    [field: SerializeField] public int id { get; private set; }
-    [field: SerializeField] public string name { get; private set; }
-    [field: SerializeField] public AttackType attackType { get; private set; }
-    [field: SerializeField] public EffectType effectType { get; private set; }
-    [field: SerializeField] public float effectValue { get; private set; }
-    [field: SerializeField] public float duration { get; private set; }
-    //public List<castEffectName> = new List<castEffectName>();
-    [field: SerializeField] public float range { get; private set; }
-    //public List<areaEffectPrefab> = new List<areaEffectPrefab>();
-    [field: SerializeField] public float knockbackDistance { get; private set; }
-    [field: SerializeField] public int comboSkillId { get; private set; }
-    [field: SerializeField] public float cooldown { get; private set; }
-    [field: SerializeField] public int mpCost { get; private set; }
-    [field: SerializeField] public int hitCount { get; private set; }
-    [field: SerializeField] public float skillUseRange { get; private set; }
-    [field: SerializeField] public float preCastTime { get; private set; }
+    [field: SerializeField] public int Id { get; private set; }
+    [field: SerializeField] public string Name { get; private set; }
+    [field: SerializeField] public AttackType AttackType { get; private set; }
+    [field: SerializeField] public EffectType EffectType { get; private set; }
+    [field: SerializeField] public float EffectValue { get; private set; }
+    [field: SerializeField] public float Duration { get; private set; }
+    [field: SerializeField] public float Range { get; private set; }
+    [field: SerializeField] public float KnockbackDistance { get; private set; }
+    [field: SerializeField] public int ComboSkillId { get; private set; }
+    [field: SerializeField] public float Cooldown { get; private set; }
+    [field: SerializeField] public int MpCost { get; private set; }
+    [field: SerializeField] public int HitCount { get; private set; }
+    [field: SerializeField] public float SkillUseRange { get; private set; }
+    [field: SerializeField] public float PreCastTime { get; private set; }
 }
 
 
@@ -150,19 +154,17 @@ public class SkillInfoData
 [Serializable]
 public class PlayerStatData
 {
-    [field: SerializeField] public string id { get; private set; } = "00000001";
-    [field: SerializeField] public string name { get; private set; }
-    [field: SerializeField] public float maxHp { get; private set; } = 100;
-    [field: SerializeField] public float maxMp { get; private set; } = 100;
-    [field: SerializeField] public int attackPower { get; private set; } = 10;
-    [field: SerializeField] public int defense { get; private set; } = 0;
-    [field: SerializeField] public float attackSpeed { get; private set; } = 1.0f;
-    [field: SerializeField] public float moveSpeed { get; private set; } = 1.0f;
-    [field: SerializeField] public int jumpCount { get; private set; } = 1;
-    [field: SerializeField] public int dodgeCount { get; private set; } = 1;
-    //public List<inventoryItemList> = new List<inventoryItemList>();
-    //public List<effectItemList> = new List<effectItemList>();
-    [field: SerializeField] public string usableSkillDicList { get; private set; } = "70000000";
+    [field: SerializeField] public string Id { get; private set; } = "00000001";
+    [field: SerializeField] public string Name { get; private set; }
+    [field: SerializeField] public float MaxHp { get; private set; } = 100;
+    [field: SerializeField] public float MaxMp { get; private set; } = 100;
+    [field: SerializeField] public int AttackPower { get; private set; } = 10;
+    [field: SerializeField] public int Defense { get; private set; } = 0;
+    [field: SerializeField] public float AttackSpeed { get; private set; } = 1.0f;
+    [field: SerializeField] public float MoveSpeed { get; private set; } = 1.0f;
+    [field: SerializeField] public int JumpCount { get; private set; } = 1;
+    [field: SerializeField] public int DodgeCount { get; private set; } = 1;
+    [field: SerializeField] public string UsableSkillDicList { get; private set; } = "70000000";
 
 }
 

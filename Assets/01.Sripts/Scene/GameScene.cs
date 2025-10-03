@@ -25,6 +25,8 @@ public class GameScene : SceneBase
 
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
+        MapManager.Instance.ResetZones();
+        BattleManager.Instance.ResetBattleState();
     }
 
     public async void DelayMethod()

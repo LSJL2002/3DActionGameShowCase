@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
@@ -22,13 +23,21 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
     public Animator Animator { get; private set; } //루트모션은 본체에
     public CharacterController Controller { get; private set; }
     public PlayerController Input { get; private set; }
+    public PlayerAttackController Attack { get; private set; }
     public ForceReceiver ForceReceiver { get; private set; }
     public Interaction Interaction { get; private set; }
-    public PlayerCombat Combat { get; private set; }
+    public HitboxOverlap Hit { get; private set; }
+    public PlayerDamageable Damageable { get; private set; }
+    public ActionHandler Action { get; private set; }
+    public PlayerVitals Vital { get; private set; }
 
 
+
+    public Transform Face;
+    public Transform Body;
     public PlayerStateMachine stateMachine; //순수 C# 클래스
     public SkillManagers skill;
+    public EventManager eventManager;
     public CameraManager camera;
     public DirectionManager direction;
     public VFXManager vFX;
@@ -47,9 +56,13 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         Animator ??= GetComponent<Animator>();
         Controller ??= GetComponent<CharacterController>();
         Input ??= GetComponent<PlayerController>();
+        Attack ??= GetComponent<PlayerAttackController>();
         ForceReceiver ??= GetComponent<ForceReceiver>();
         Interaction ??= GetComponent<Interaction>();
-        Combat ??= GetComponent<PlayerCombat>();
+        Damageable ??= GetComponent<PlayerDamageable>();
+        Hit ??= GetComponent<HitboxOverlap>();
+        Action ??= GetComponent<ActionHandler>();
+        Vital ??= GetComponent<PlayerVitals>();
 
         Stats = new PlayerStats(InfoData.StatData);
         stateMachine = new PlayerStateMachine(this);
