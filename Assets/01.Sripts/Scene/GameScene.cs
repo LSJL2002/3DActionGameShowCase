@@ -11,12 +11,8 @@ using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class GameScene : SceneBase
 {
-    private AsyncOperationHandle<GameObject> minimapCameraHandle;
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    private AsyncOperationHandle<GameObject> minimapCameraHandle; // 미니맵 카메라 오브젝트 핸들
+    private AsyncOperationHandle<GameObject> minimapPlayerIconHandle; // 미니맵 플레이어 아이콘 오브젝트 핸들
 
     protected override void Start()
     {
@@ -33,8 +29,12 @@ public class GameScene : SceneBase
 
     public async void DelayMethod()
     {
+        // 게임UI, 미니맵UI 호출
         await UIManager.Instance.Show<GameUI>();
         await UIManager.Instance.Show<MiniMapUI>();
+
+        // 미니맵 카메라, 플레이어 아이콘 어드레서블로 생성
+        minimapPlayerIconHandle = Addressables.InstantiateAsync("Minimap_PlayerIcon", PlayerManager.Instance.transform);
         minimapCameraHandle = Addressables.InstantiateAsync("MinimapCamera");
 
         // UI매니저의 튜토리얼 재생 여부 확인 후 재생
@@ -49,6 +49,8 @@ public class GameScene : SceneBase
     {
         base.OnDestroy();
 
+        // 미니맵 카메라, 플레이어 아이콘 오브젝트 언로드
+        Addressables.ReleaseInstance(minimapPlayerIconHandle);
         Addressables.ReleaseInstance(minimapCameraHandle);
     }
 }
