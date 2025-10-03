@@ -98,9 +98,4 @@ public partial class GameUI : UIBase
                 break;
         }
     }
-
-    public async void OnClick()
-    {
-        await UIManager.Instance.Show<PauseUI>();
-    }
 }

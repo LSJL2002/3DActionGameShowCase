@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PauseUI : UIBase
+public class MapUI : UIBase
 {
     public async void OnClickButton(string str)
     {

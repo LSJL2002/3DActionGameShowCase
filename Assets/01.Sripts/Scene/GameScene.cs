@@ -45,6 +45,27 @@ public class GameScene : SceneBase
         }
     }
 
+    protected override async void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            MapUI mapUI = UIManager.Instance.Get<MapUI>();
+
+            if (mapUI == null)
+            {
+                await UIManager.Instance.Show<MapUI>();
+            }
+            else if (mapUI.isActiveAndEnabled)
+            {
+                UIManager.Instance.Hide<MapUI>();
+            }
+            else
+            {
+                await UIManager.Instance.Show<MapUI>();
+            }
+        }
+    }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
