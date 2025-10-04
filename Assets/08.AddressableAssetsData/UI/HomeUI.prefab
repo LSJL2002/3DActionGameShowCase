@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  uiType: 0
   newGameButton: {fileID: 1861940897388098178}
   loadGameButton: {fileID: 3249149698219666697}
   optionButton: {fileID: 2411238391119965137}
@@ -189,7 +190,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: GameStart
+          m_StringArgument: LoadStart
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!225 &3249149698219666697
@@ -219,6 +220,7 @@ MonoBehaviour:
   buttonType: 0
   targetCanvasGroup: {fileID: 3249149698219666697}
   targetButton: {fileID: 3743079766321119182}
+  itemSlotUI: {fileID: 0}
   fadeDuration: 1
 --- !u!1 &4077970406767361667
 GameObject:
@@ -382,6 +384,7 @@ MonoBehaviour:
   buttonType: 0
   targetCanvasGroup: {fileID: 1861940897388098178}
   targetButton: {fileID: 4077970406767361667}
+  itemSlotUI: {fileID: 0}
   fadeDuration: 1
 --- !u!1 &5222723095420201415
 GameObject:
@@ -1081,6 +1084,7 @@ MonoBehaviour:
   buttonType: 0
   targetCanvasGroup: {fileID: 8351260675759659924}
   targetButton: {fileID: 8142965214957132072}
+  itemSlotUI: {fileID: 0}
   fadeDuration: 1
 --- !u!1 &8808612687538981019
 GameObject:
@@ -1244,4 +1248,5 @@ MonoBehaviour:
   buttonType: 1
   targetCanvasGroup: {fileID: 2411238391119965137}
   targetButton: {fileID: 8808612687538981019}
+  itemSlotUI: {fileID: 0}
   fadeDuration: 1

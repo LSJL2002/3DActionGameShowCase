@@ -31,7 +31,7 @@ public class GameManager : Singleton<GameManager>
     private eGameState previousState; // 이전 상태를 저장할 변수
     private eGameState currentState; // 현재 게임 상태를 저장할 변수
 
-    private eGameMode gameMode; //게임 모드를 저장할 변수
+    public eGameMode gameMode; //게임 모드를 저장할 변수
 
     // 상태 변경을 위한 Action 델리게이트
     public event Action<eGameState> changeState;

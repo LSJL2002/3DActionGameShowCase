@@ -188,8 +188,10 @@ public class BattleManager : Singleton<BattleManager>
     public void ClearBattle()
     {
         OnBattleClear?.Invoke(currentZone);
+        SaveManager.Instance.AddStageData(currentZone.id);
+        SaveManager.Instance.SaveData();
 
-        Addressables.ReleaseInstance(currentMonster.gameObject); //갈무리하고나서로 수정
+        Addressables.ReleaseInstance(currentMonster.gameObject); 
         currentZone = null;
         currentMonster = null;
         monsterStats = null;

@@ -26,9 +26,14 @@ public class GameScene : SceneBase
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
 
-        if (MapManager.Instance != null)
+        if(GameManager.Instance.gameMode != eGameMode.LoadGame)
         {
-            MapManager.Instance.CheckMapData();
+            MapManager.Instance.ResetZones();
+            BattleManager.Instance.ResetBattleState();
+        }
+        else if(GameManager.Instance.gameMode == eGameMode.LoadGame)
+        {
+
         }
 
     }
