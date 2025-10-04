@@ -139,6 +139,13 @@ public class BattleManager : Singleton<BattleManager>
             if (currentZone != null)
                 currentMonster.GetComponent<BaseMonster>().OnTakeDamage(50000);
         }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if(currentZone != null)
+            {
+                PlayerManager.Instance.Stats.TakeDamage(5000);
+            }
+        }
     }
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
@@ -187,6 +194,7 @@ public class BattleManager : Singleton<BattleManager>
         currentMonster = null;
         monsterStats = null;
         isBattle = false;
+        
     }
 
     public void ResetBattleState()

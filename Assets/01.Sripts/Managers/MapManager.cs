@@ -11,7 +11,7 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] private int BossZoneId; //마지막 Zone 아이디
 
     [SerializeField] private int round;  // 회차
-    [SerializeField] private int LastClearStage;  // 마지막으로 클리어한 스테이지
+    [SerializeField] public int LastClearStage;  // 마지막으로 클리어한 스테이지
 
     [SerializeField] private GameObject tutorialWall;
 
@@ -111,23 +111,10 @@ public class MapManager : Singleton<MapManager>
         }
     }
 
-    public bool CheckMapData()
-    {
-        if (LastClearStage == 0) //클리어데이터가없으면
-        {
-            ResetZones(); //리셋
-            return false;
-        }
-        else
-        {
-            startingZoneId = LastClearStage; //스타팅존을 라스트 클리어스테이지로 지정함. 즉 그 전투를 다시해야함
-            ResetZones();
-            return true;
-        }
-    }
-
     private void OpenNextZone(BattleZone zone) // 클리어시
     {
+        LastClearStage = currentZone.id;
+
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
             SceneLoadManager.Instance.LoadScene(0);

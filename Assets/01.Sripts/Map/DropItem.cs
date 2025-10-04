@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class DropItem : MonoBehaviour, IInteractable
 {
-    private void Awake()
-    {
-        if(MapManager.Instance.GetComponent<DropItemSpawner>().dropItem == null)
-        {
-            MapManager.Instance.GetComponent<DropItemSpawner>().dropItem = this.gameObject;
-        }
-    }
-
     private void Start()
     {
+        if (MapManager.Instance != null)
+        {
+            if (MapManager.Instance.GetComponent<DropItemSpawner>().dropItem == null)
+            {
+                MapManager.Instance.GetComponent<DropItemSpawner>().dropItem = this.gameObject;
+            }
+        }
         gameObject.SetActive(false);
     }
 
