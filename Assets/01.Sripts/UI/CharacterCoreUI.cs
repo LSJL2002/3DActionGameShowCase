@@ -24,7 +24,6 @@ public class CharacterCoreUI : UIBase
     {
         base.OnEnable();
         UIManager.Instance.ChangeState(DecisionState.UseItem);
-        uiType = UIType.Screen;
     }
 
     public void Setup(InventoryViewModel viewModel)
