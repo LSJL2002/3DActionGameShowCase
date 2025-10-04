@@ -7,10 +7,11 @@ public class MapManager : Singleton<MapManager>
     private Dictionary<int, BattleZone> zoneDict = new Dictionary<int, BattleZone>();
     public BattleZone currentZone;
 
-    [SerializeField] private int startingZoneId;
-    [SerializeField] private int BossZoneId;
+    [SerializeField] private int startingZoneId; //처음 켜줄 Zone 아이디
+    [SerializeField] private int BossZoneId; //마지막 Zone 아이디
 
-    [SerializeField] private int round; // 게임매니저로..
+    [SerializeField] private int round;  // 회차
+    [SerializeField] private int LastClearStage;  // 마지막으로 클리어한 스테이지
 
     [SerializeField] private GameObject tutorialWall;
 
@@ -57,10 +58,10 @@ public class MapManager : Singleton<MapManager>
 
 
         //배틀존 딕셔너리에 아이디를 키값으로 등록
-        ResetZones();
     }
     public void ResetZones()
     {
+        LastClearStage = 0;
         zoneDict.Clear(); // 이전 존 정보 싹 비우기
 
         var zones = FindObjectsOfType<BattleZone>();
@@ -77,7 +78,7 @@ public class MapManager : Singleton<MapManager>
             currentZone = startZone;
         }
 
-       if(tutorialWall != null)
+       if(tutorialWall == null)
         {
             tutorialWall = GameObject.Find("TutorialWall");
             tutorialWall.SetActive(true);
@@ -110,6 +111,21 @@ public class MapManager : Singleton<MapManager>
         }
     }
 
+    public bool CheckMapData()
+    {
+        if (LastClearStage == 0) //클리어데이터가없으면
+        {
+            ResetZones(); //리셋
+            return false;
+        }
+        else
+        {
+            startingZoneId = LastClearStage; //스타팅존을 라스트 클리어스테이지로 지정함. 즉 그 전투를 다시해야함
+            ResetZones();
+            return true;
+        }
+    }
+
     private void OpenNextZone(BattleZone zone) // 클리어시
     {
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
@@ -137,7 +153,7 @@ public class MapManager : Singleton<MapManager>
             }
         }
 
-        //클리어한 존 지우기
+        //클리어한 존 비활성화
         zone.gameObject.SetActive(false); //Release
         //zoneDict.Remove(zone.id);
         //Addressables.ReleaseInstance(zone.gameObject);
@@ -272,3 +288,11 @@ public class MapManager : Singleton<MapManager>
 //    stageDict.TryGetValue(id, out var zone);
 //    return zone;
 //}
+
+
+// new Game  - Reset해주면됨 / 다지워짐
+// Load Game  - 로드해야됨 / 하려면 저장데이터가 필요함. 
+// 스테이지에서 필요한 저장데이터는 마지막으로 클리어한 스테이지 LastClearedStage(Zone)변수에 저장할건데 StageID를 저장할것임
+// 몇회차인지도 저장, 불러오기가필요함
+// 이 데이터는 뉴게임을 누르지않는이상 초기화 될필요가없음
+// 불러왔다면 해당 배틀존을 클리어한 시점이 되어야하며, 플레이어의 위치는 그 배틀존 혹은 zone.transform.position+(0,0,100)
