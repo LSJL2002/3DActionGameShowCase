@@ -42,8 +42,6 @@ public class TutorialUI : UIBase
     protected override void OnEnable()
     {
         // playText = true;
-
-        uiType = UIType.Dialog;
     }
 
     #region Tutorial

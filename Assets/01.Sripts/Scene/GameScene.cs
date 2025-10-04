@@ -37,6 +37,7 @@ public class GameScene : SceneBase
     {
         // 게임UI, 미니맵UI 호출
         await UIManager.Instance.Show<GameUI>();
+        await UIManager.Instance.Show<AttackGaugeUI>();
         await UIManager.Instance.Show<MiniMapUI>();
 
         // 미니맵 카메라, 플레이어 아이콘 어드레서블로 생성
@@ -48,27 +49,6 @@ public class GameScene : SceneBase
         {
             await UIManager.Instance.Show<TutorialUI>();
             UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
-        }
-    }
-
-    protected override async void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            MapUI mapUI = UIManager.Instance.Get<MapUI>();
-
-            if (mapUI == null)
-            {
-                await UIManager.Instance.Show<MapUI>();
-            }
-            else if (mapUI.isActiveAndEnabled)
-            {
-                UIManager.Instance.Hide<MapUI>();
-            }
-            else
-            {
-                await UIManager.Instance.Show<MapUI>();
-            }
         }
     }
 

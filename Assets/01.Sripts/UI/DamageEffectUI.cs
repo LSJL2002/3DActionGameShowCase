@@ -9,8 +9,6 @@ public class DamageEffectUI : UIBase
     {
         base.OnEnable();
 
-        uiType = UIType.Popup;
-
         // n초 대기 후 실행
         DOVirtual.DelayedCall(0.3f, () => { Hide(); });
     }

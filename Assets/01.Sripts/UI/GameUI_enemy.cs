@@ -16,8 +16,6 @@ public partial class GameUI : UIBase
     [SerializeField] public TextMeshProUGUI enemyNameText;  // UI : 적 이름 텍스트
     [SerializeField] public TextMeshProUGUI enemyHPText; // UI : 적 체력 텍스트
     [SerializeField] private CanvasGroup enemyInfoCanvasGroup;
-    [SerializeField] private Sprite enemyDefaultIcon;
-    [SerializeField] private Sprite enemyClearIcon;
     private MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
 
     Sequence enemyDamageSequence;

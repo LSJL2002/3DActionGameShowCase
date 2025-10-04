@@ -24,8 +24,6 @@ public class SoundSettingUI : UIBase
         {
             returnButton.SetActive(false);
         }
-
-        uiType = UIType.Screen;
     }
 
     protected override void Start()
