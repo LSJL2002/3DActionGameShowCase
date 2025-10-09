@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 273298231788413031}
   - component: {fileID: 4002055173842310240}
   m_Layer: 5
-  m_Name: Gauge_Empty
+  m_Name: Gauge_Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -180,8 +180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6864e414bea27054c931560f2b289eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emptyImage: {fileID: 4002055173842310240}
-  fillImage: {fileID: 1142761373064143427}
+  defaultImage: {fileID: 4002055173842310240}
+  waveImage: {fileID: 1142761373064143427}
   popImage: {fileID: 2534252463794712014}
   isFillImage: 0
 --- !u!1 &2355270483533590878
@@ -271,7 +271,7 @@ GameObject:
   - component: {fileID: 1509741389994368148}
   - component: {fileID: 1142761373064143427}
   m_Layer: 5
-  m_Name: Gauge_Fill
+  m_Name: Gauge_Wave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

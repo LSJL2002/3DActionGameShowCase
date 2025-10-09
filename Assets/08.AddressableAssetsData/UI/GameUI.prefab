@@ -1119,6 +1119,7 @@ GameObject:
   - component: {fileID: 7686744485702597052}
   - component: {fileID: 7531623373873293932}
   - component: {fileID: 3852875324663196361}
+  - component: {fileID: 335757838036996599}
   m_Layer: 5
   m_Name: GameUI
   m_TagString: Untagged
@@ -1166,8 +1167,6 @@ MonoBehaviour:
   enemyNameText: {fileID: 526165026481923175}
   enemyHPText: {fileID: 6119994605362594138}
   enemyInfoCanvasGroup: {fileID: 8576560669167663391}
-  enemyDefaultIcon: {fileID: 21300000, guid: 286df313c20785d47a3006173e38807a, type: 3}
-  enemyClearIcon: {fileID: 21300000, guid: a82655bdd7318b2439c936f0b7007487, type: 3}
   playerHPImage: {fileID: 3814700520847346835}
   playerMPImage: {fileID: 6054885660048902996}
   playerInfoCanvasGroup: {fileID: 3902214759424181190}
@@ -1274,6 +1273,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!225 &335757838036996599
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031700828551998716}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1686137542514523453
 PrefabInstance:
   m_ObjectHideFlags: 0

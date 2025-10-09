@@ -248,6 +248,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7686744485702597052}
   - component: {fileID: 1923252369311225290}
+  - component: {fileID: 3945764068061618325}
   m_Layer: 5
   m_Name: MiniMapUI
   m_TagString: Untagged
@@ -288,3 +289,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  uiType: 0
+--- !u!225 &3945764068061618325
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031700828551998716}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

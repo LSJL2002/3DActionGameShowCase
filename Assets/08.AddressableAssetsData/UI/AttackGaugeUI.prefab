@@ -70,6 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7686744485702597052}
   - component: {fileID: 8808709909469911960}
+  - component: {fileID: 2408677543825045273}
   m_Layer: 5
   m_Name: AttackGaugeUI
   m_TagString: Untagged
@@ -112,5 +113,17 @@ MonoBehaviour:
   canvas: {fileID: 0}
   uiType: 0
   gaugeContainer: {fileID: 9009852231516090782}
-  activeGauges: []
+  fillGauges: []
   gaugePrefabAddress: Gauge_Mask
+--- !u!225 &2408677543825045273
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031700828551998716}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
