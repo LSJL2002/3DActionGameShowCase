@@ -58,6 +58,13 @@ public partial class GameUI : UIBase
         BattleManager.OnBattleClear -= ReleaseMonsterStat; //해제
     }
 
+    protected override void Update()
+    {
+        base.Update();
+
+        OnUpdateSkill();
+    }
+
     public void LoadMonsterStat(BattleZone zone)                     //몬스터 스텟 불러오기
     {
         monsterStats = BattleManager.Instance.monsterStats;
