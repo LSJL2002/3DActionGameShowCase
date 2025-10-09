@@ -37,14 +37,14 @@ public partial class GameUI : UIBase
     {
         skillInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { skillInfoCanvasGroup.DOFade(1f, 1f); });
 
-        UIManager.Instance.playerInput.Player.HeavyAttack.performed += OnCoolTimeHeavyAttack; // 우클릭(헤비어택) 입력 이벤트 구독
-        UIManager.Instance.playerInput.Player.Dodge.performed += OnCoolTimeEvade; // 스페이스(회피) 입력 이벤트 구독
+        PlayerManager.Instance.Input.PlayerActions.HeavyAttack.started += OnCoolTimeHeavyAttack; // 우클릭(헤비어택) 입력 이벤트 구독
+        PlayerManager.Instance.Input.PlayerActions.Dodge.started += OnCoolTimeEvade; // 스페이스(회피) 입력 이벤트 구독
     }
 
     public void OnDisableSkill()
     {
-        UIManager.Instance.playerInput.Player.HeavyAttack.performed -= OnCoolTimeHeavyAttack; // 우클릭(헤비어택) 입력 이벤트 구독해제
-        UIManager.Instance.playerInput.Player.Dodge.performed -= OnCoolTimeEvade; // 스페이스(회피) 입력 이벤트 구독해제
+        PlayerManager.Instance.Input.PlayerActions.HeavyAttack.started -= OnCoolTimeHeavyAttack; // 우클릭(헤비어택) 입력 이벤트 구독해제
+        PlayerManager.Instance.Input.PlayerActions.Dodge.started -= OnCoolTimeEvade; // 스페이스(회피) 입력 이벤트 구독해제
     }
 
     // 회피 쿨타임

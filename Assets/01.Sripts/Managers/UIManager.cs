@@ -34,16 +34,9 @@ public class UIManager : Singleton<UIManager>
         get { return uiHandles.Count; }
     }
 
-    public @PlayerInput playerInput;
-
     public bool tutorialEnabled = true; // 튜토리얼 재생여부
 
     public DecisionState currentDecisionState;
-
-    protected override void Awake()
-    {
-        playerInput = new @PlayerInput();
-    }
 
     // UI호출시 사용하는 함수
     // 리소스매니저의 LoadAsset 메서드가 비동기 메서드이므로 Show 메서드도 비동기 메서드로 변경 (반환타입 async Task<T>)
