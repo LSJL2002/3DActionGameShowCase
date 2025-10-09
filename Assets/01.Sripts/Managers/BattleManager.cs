@@ -127,7 +127,7 @@ public class BattleManager : Singleton<BattleManager>
 
 
 
-    private void Update()
+    protected override void Update()
     {
         if (Input.GetKeyDown(KeyCode.O))
         {

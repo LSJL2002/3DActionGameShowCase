@@ -11,25 +11,24 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] private int BossZoneId; //마지막 Zone 아이디
 
     [SerializeField] private int round;  // 회차
-    [SerializeField] public int LastClearStage;  // 마지막으로 클리어한 스테이지
 
     [SerializeField] private GameObject tutorialWall;
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         BattleManager.OnBattleStart += OpenZone;
         BattleManager.OnBattleClear += OpenNextZone;
         TutorialUI.endTutorial += tutorialWallToggle;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         BattleManager.OnBattleStart -= OpenZone;
         BattleManager.OnBattleClear -= OpenNextZone;
         TutorialUI.endTutorial -= tutorialWallToggle;
     }
 
-    private async void Start()
+    protected override async void Start()
     {
         //GameObject map = await LoadAscync("Map");
         //if (map != null)
@@ -61,7 +60,6 @@ public class MapManager : Singleton<MapManager>
     }
     public void ResetZones()
     {
-        LastClearStage = 0;
         zoneDict.Clear(); // 이전 존 정보 싹 비우기
 
         var zones = FindObjectsOfType<BattleZone>();
@@ -71,25 +69,44 @@ public class MapManager : Singleton<MapManager>
             zone.SetWallsActive(false);
             zone.gameObject.SetActive(false);
         }
-
-        if (zoneDict.TryGetValue(startingZoneId, out var startZone))
-        {
-            startZone.gameObject.SetActive(true);
-            currentZone = startZone;
-        }
-
-       if(tutorialWall == null)
+        if (tutorialWall == null)
         {
             tutorialWall = GameObject.Find("TutorialWall");
-            tutorialWall.SetActive(true);
         }
-        Debug.Log("맵 초기화 완료");
+
+        if (GameManager.Instance.gameMode != eGameMode.LoadGame)           //불러오기가 아닐때
+        {
+            tutorialWall.SetActive(true);
+
+            if (zoneDict.TryGetValue(startingZoneId, out var startZone))
+            {
+                startZone.gameObject.SetActive(true);
+                currentZone = startZone;
+            }
+
+
+            Debug.Log("맵 초기화 완료");
+            UIManager.Instance.tutorialEnabled = true;
+        }
+
+        else if (GameManager.Instance.gameMode == eGameMode.LoadGame)
+        {
+            tutorialWall.SetActive(false);
+            int lastClearStage = SaveManager.Instance.playerData.LastClearStage;
+            if (zoneDict.TryGetValue(lastClearStage, out var cleardZone))
+            {
+                OpenNextZone(cleardZone);
+            }
+
+            currentZone = null;
+            Debug.Log("맵 불러오기 완료");
+        }
     }
 
     public void tutorialWallToggle()
     {
-        if(tutorialWall != null)
-        tutorialWall.SetActive(false);
+        if (tutorialWall != null)
+            tutorialWall.SetActive(false);
     }
 
     public void RegisterStage(BattleZone zone)
@@ -113,8 +130,6 @@ public class MapManager : Singleton<MapManager>
 
     private void OpenNextZone(BattleZone zone) // 클리어시
     {
-        LastClearStage = currentZone.id;
-
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
             SceneLoadManager.Instance.LoadScene(0);

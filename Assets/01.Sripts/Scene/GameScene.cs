@@ -14,10 +14,13 @@ public class GameScene : SceneBase
     private AsyncOperationHandle<GameObject> minimapCameraHandle; // 미니맵 카메라 오브젝트 핸들
     private AsyncOperationHandle<GameObject> minimapPlayerIconHandle; // 미니맵 플레이어 아이콘 오브젝트 핸들
 
+    bool hasData;
+
     protected override void Start()
     {
         base.Start();
 
+        hasData = SaveManager.Instance.LoadData();
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
 
@@ -26,16 +29,12 @@ public class GameScene : SceneBase
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
 
-        if(GameManager.Instance.gameMode != eGameMode.LoadGame)
+        if (!hasData || SaveManager.Instance.playerData.LastClearStage == 0)
         {
-            MapManager.Instance.ResetZones();
-            BattleManager.Instance.ResetBattleState();
+            GameManager.Instance.gameMode = eGameMode.NewGame;
         }
-        else if(GameManager.Instance.gameMode == eGameMode.LoadGame)
-        {
-
-        }
-
+        MapManager.Instance.ResetZones();
+        BattleManager.Instance.ResetBattleState();
     }
 
     public async void DelayMethod()

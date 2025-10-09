@@ -17,7 +17,7 @@ public class SaveManager : Singleton<SaveManager>
     private string fileName = "/save.json"; // path/fileName.json을 위해 앞에 /추가
     private string keyWord = "projectEight";
 
-    private void Start()
+    protected override void Start()
     {
         path = Application.persistentDataPath + fileName;
         Debug.Log(path);
@@ -31,20 +31,21 @@ public class SaveManager : Singleton<SaveManager>
         Debug.Log($"{data}를 저장했습니다");
     }
 
-    public void LoadData()
+    public bool LoadData()
     {
         if (!File.Exists(path)) // 파일이 존재하지 않으면
         {
             Debug.LogWarning("Save file not found, creating new one...");
             playerData = new PlayerDatas(); // 기본값으로 초기화
             SaveData(); // 새로 저장
-            return; // 종료
+            return false; // false 리턴
         }
 
         string data = File.ReadAllText(path);
 
         playerData = JsonUtility.FromJson<PlayerDatas>(EncryptAndDecrypt(data));
         Debug.Log($"{data}를 불러왔습니다");
+        return true; // true리턴               <-불러올데이터가있는지 확인가능
     }
 
     private string EncryptAndDecrypt(string data) // 암호화 및 복호화
