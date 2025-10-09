@@ -34,7 +34,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 620, y: 100}
+  m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &6950564140612225747
 MonoBehaviour:
@@ -56,8 +56,8 @@ MonoBehaviour:
   m_ChildAlignment: 6
   m_StartCorner: 2
   m_StartAxis: 0
-  m_CellSize: {x: 20, y: 100}
-  m_Spacing: {x: 20, y: 0}
+  m_CellSize: {x: 5, y: 100}
+  m_Spacing: {x: 5, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &9031700828551998716
@@ -70,6 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7686744485702597052}
   - component: {fileID: 8808709909469911960}
+  - component: {fileID: 2408677543825045273}
   m_Layer: 5
   m_Name: AttackGaugeUI
   m_TagString: Untagged
@@ -112,5 +113,17 @@ MonoBehaviour:
   canvas: {fileID: 0}
   uiType: 0
   gaugeContainer: {fileID: 9009852231516090782}
-  activeGauges: []
+  fillGauges: []
   gaugePrefabAddress: Gauge_Mask
+--- !u!225 &2408677543825045273
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031700828551998716}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

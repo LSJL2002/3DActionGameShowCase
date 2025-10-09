@@ -36,8 +36,7 @@ public class PreviewScene : MonoBehaviour
 
         if (canvas.sortingOrder == 0)
         {
-            int sortingOrder = UIManager.Instance.LoadedUICount + 1;
-            canvas.sortingOrder = sortingOrder;
+            canvas.sortingOrder = UIManager.Instance.GetNewSortingOrder();
         }
     }
 
@@ -89,6 +88,12 @@ public class PreviewScene : MonoBehaviour
     {
         if (previewAnimator == null) return;
 
+        if (UIManager.Instance.currentUI != null)
+        {
+            string uiName = UIManager.Instance.currentUI.gameObject.name;
+            UIManager.Instance.Hide(uiName);
+        }
+
         // 먼저 모든 Pose bool 초기화
         previewAnimator.SetBool("Base/Switch_Char", false);
         previewAnimator.SetBool("Base/Switch_Stat", false);
@@ -96,28 +101,27 @@ public class PreviewScene : MonoBehaviour
         previewAnimator.SetBool("Base/Switch_Skill", false);
         previewAnimator.SetBool("Base/Switch_Inven", false);
 
-        if(UIManager.Instance.currentUI != null)
-        {
-            string uiName = UIManager.Instance.currentUI.gameObject.name;
-            UIManager.Instance.Hide(uiName);
-        }
-
         // 선택한 Pose만 true
         switch (target)
         {
-            case "Char": previewAnimator.SetBool("Base/Switch_Char", true);
+            case "Char":
+                previewAnimator.SetBool("Base/Switch_Char", true);
                 await UIManager.Instance.Show<CharacterInfomationUI>();
                 break;
-            case "Core": previewAnimator.SetBool("Base/Switch_Stat", true);
+            case "Core":
+                previewAnimator.SetBool("Base/Switch_Stat", true);
                 await UIManager.Instance.Show<CharacterCoreUI>();
                 break;
-            case "Skill": previewAnimator.SetBool("Base/Switch_Core", true);
+            case "Skill":
+                previewAnimator.SetBool("Base/Switch_Core", true);
                 await UIManager.Instance.Show<CharacterSkillUI>();
                 break;
-            case "Option": previewAnimator.SetBool("Base/Switch_Skill", true);
+            case "Option":
+                previewAnimator.SetBool("Base/Switch_Skill", true);
                 await UIManager.Instance.Show<SoundSettingUI>();
                 break;
-            case "Quit": previewAnimator.SetBool("Base/Switch_Inven", true);
+            case "Quit":
+                previewAnimator.SetBool("Base/Switch_Inven", true);
                 Time.timeScale = 1f;
                 PlayerManager.Instance.EnableInput(false);
                 SceneLoadManager.Instance.LoadScene(0); // Home씬으로 이동

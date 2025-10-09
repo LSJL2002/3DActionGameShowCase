@@ -34,16 +34,11 @@ public class UIManager : Singleton<UIManager>
         get { return uiHandles.Count; }
     }
 
-    public @PlayerInput playerInput;
-
     public bool tutorialEnabled = true; // 튜토리얼 재생여부
 
     public DecisionState currentDecisionState;
 
-    protected override void Awake()
-    {
-        playerInput = new @PlayerInput();
-    }
+    private int lastSortingOrder = 0;
 
     // UI호출시 사용하는 함수
     // 리소스매니저의 LoadAsset 메서드가 비동기 메서드이므로 Show 메서드도 비동기 메서드로 변경 (반환타입 async Task<T>)
@@ -109,9 +104,16 @@ public class UIManager : Singleton<UIManager>
 
         var result = obj.GetComponent<T>();
         result.canvas = canvas;
-        result.canvas.sortingOrder = uiHandles.Count;
+        result.canvas.sortingOrder = GetNewSortingOrder();
 
         return result;
+    }
+
+    // 새로운 UI가 호출될 때마다 Sorting Order 순서를 증가시키는 메서드
+    public int GetNewSortingOrder()
+    {
+        lastSortingOrder++;
+        return lastSortingOrder;
     }
 
     // 다른 스크립트에서 UI를 쉽게 가져올 수 있도록 제네릭 메서드 제공

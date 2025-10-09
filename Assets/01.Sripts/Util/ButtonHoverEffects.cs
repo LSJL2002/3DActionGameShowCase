@@ -46,7 +46,7 @@ public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerE
             
             case ButtonType.ItemSlotButton:
                 // 아이템 정보가 있다면
-                if (itemSlotUI != null)
+                if (itemSlotUI.itemData != null)
                 {
                     AudioManager.Instance.PlaySFX("ButtonSoundEffect3");
                     this.transform.DOScale(1.1f, 0.2f);

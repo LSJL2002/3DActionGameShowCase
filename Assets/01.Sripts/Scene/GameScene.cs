@@ -1,26 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Playables;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class GameScene : SceneBase
 {
     private AsyncOperationHandle<GameObject> minimapCameraHandle; // 미니맵 카메라 오브젝트 핸들
     private AsyncOperationHandle<GameObject> minimapPlayerIconHandle; // 미니맵 플레이어 아이콘 오브젝트 핸들
 
-    bool hasData;
+    CanvasGroup gameUICanvasGroup;
+    CanvasGroup miniMapCanvasGroup;
+    CanvasGroup attackGaugeCanvasGroup;
+
+    protected async override void Awake()
+    {
+        base.Awake();
+
+        // 각 UI 로드
+        await UIManager.Instance.Show<GameUI>();
+        await UIManager.Instance.Show<AttackGaugeUI>();
+        await UIManager.Instance.Show<MiniMapUI>();
+
+        // 각 UI의 CanvasGroup 컴포넌트 가져오기
+        gameUICanvasGroup = UIManager.Instance.Get<GameUI>().GetComponent<CanvasGroup>();
+        miniMapCanvasGroup = UIManager.Instance.Get<MiniMapUI>().GetComponent<CanvasGroup>();
+        attackGaugeCanvasGroup = UIManager.Instance.Get<AttackGaugeUI>().GetComponent<CanvasGroup>();
+    }
 
     protected override void Start()
     {
         base.Start();
 
-        hasData = SaveManager.Instance.LoadData();
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
 
@@ -28,21 +38,16 @@ public class GameScene : SceneBase
 
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
-
-        if (!hasData || SaveManager.Instance.playerData.LastClearStage == 0)
-        {
-            GameManager.Instance.gameMode = eGameMode.NewGame;
-        }
         MapManager.Instance.ResetZones();
         BattleManager.Instance.ResetBattleState();
     }
 
     public async void DelayMethod()
     {
-        // 게임UI, 미니맵UI 호출
-        await UIManager.Instance.Show<GameUI>();
-        await UIManager.Instance.Show<AttackGaugeUI>();
-        await UIManager.Instance.Show<MiniMapUI>();
+        // 각 UI 알파값 1로 변경(페이드인 효과)
+        gameUICanvasGroup.DOFade(1f, 1f);
+        miniMapCanvasGroup.DOFade(1f, 1f);
+        attackGaugeCanvasGroup.DOFade(1f, 1f);
 
         // 미니맵 카메라, 플레이어 아이콘 어드레서블로 생성
         minimapPlayerIconHandle = Addressables.InstantiateAsync("Minimap_PlayerIcon", PlayerManager.Instance.transform);
