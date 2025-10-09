@@ -7,8 +7,9 @@ using UnityEngine.UI;
 public class TimeLineBase : MonoBehaviour
 {
     private Camera mainCamera;
-    private Canvas gameUICanvas;
-    private Canvas miniMapUICanvas;
+    private CanvasGroup gameUICanvasGroup;
+    private CanvasGroup miniMapUICanvasGroup;
+    private CanvasGroup attackGaugeUICanvasGroup;
     [SerializeField] protected PlayableDirector playableDirector;
 
     protected virtual void OnTimeLineStop(PlayableDirector director)
@@ -19,15 +20,17 @@ public class TimeLineBase : MonoBehaviour
     protected virtual void Awake() 
     {
         mainCamera = PlayerManager.Instance.camera.GetComponentInChildren<Camera>();
-        gameUICanvas = UIManager.Instance.Get<GameUI>().canvas;
-        miniMapUICanvas = UIManager.Instance.Get<MiniMapUI>().canvas;
+        gameUICanvasGroup = UIManager.Instance.Get<GameUI>().GetComponent<CanvasGroup>();
+        miniMapUICanvasGroup = UIManager.Instance.Get<MiniMapUI>().GetComponent<CanvasGroup>();
+        attackGaugeUICanvasGroup = UIManager.Instance.Get<AttackGaugeUI>().GetComponent<CanvasGroup>();
     }
 
     protected virtual void OnEnable() 
     {
         mainCamera.gameObject.SetActive(false);
-        gameUICanvas.gameObject.SetActive(false);
-        miniMapUICanvas.gameObject.SetActive(false);
+        gameUICanvasGroup.alpha = 0f;
+        miniMapUICanvasGroup.alpha = 0f;
+        attackGaugeUICanvasGroup.alpha = 0f;
         AudioManager.Instance.StopBGM();
 
         PlayerManager.Instance.EnableInput(false); // 마우스 커서 보이게
@@ -44,8 +47,9 @@ public class TimeLineBase : MonoBehaviour
     protected virtual void OnDisable() 
     {
         mainCamera.gameObject.SetActive(true);
-        gameUICanvas.gameObject.SetActive(true);
-        miniMapUICanvas.gameObject.SetActive(true);
+        gameUICanvasGroup.alpha = 1f;
+        miniMapUICanvasGroup.alpha = 1f;
+        attackGaugeUICanvasGroup.alpha = 1f;
 
         PlayerManager.Instance.EnableInput(true); // 마우스 락
     }
