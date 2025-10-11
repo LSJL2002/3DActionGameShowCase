@@ -1143,7 +1143,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3103904349277345993}
   - component: {fileID: 1018224373736016886}
-  - component: {fileID: 7190109007405177772}
   m_Layer: 6
   m_Name: BaseAttack
   m_TagString: Untagged
@@ -1187,19 +1186,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.8712809}
   m_Center: {x: 0, y: 0, z: -0.064359546}
---- !u!114 &7190109007405177772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 806093250194746402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43cf8dbcf93b1e44d882be9597e4db66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 0
 --- !u!1 &940812702440702915
 GameObject:
   m_ObjectHideFlags: 0
@@ -10965,6 +10951,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100002, guid: 06d796ccd85dc4c4b9c98270196715ae, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7509111821168408921}
+    - targetCorrespondingSourceObject: {fileID: 100002, guid: 06d796ccd85dc4c4b9c98270196715ae, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3435680349296375359}
   m_SourcePrefab: {fileID: 100100000, guid: 06d796ccd85dc4c4b9c98270196715ae, type: 3}
 --- !u!4 &4898589903230224938 stripped
 Transform:
@@ -10997,3 +10986,17 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.51998115, y: 0.5313713, z: 4.0699043}
   m_Center: {x: 0.009523869, y: -0.0026267767, z: 1.8177524}
+--- !u!114 &3435680349296375359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4898589903230457354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6358b79bce79e48b63422601db7df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+  tickRate: 0.2

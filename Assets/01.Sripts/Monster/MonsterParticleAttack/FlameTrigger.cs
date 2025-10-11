@@ -1,18 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FlameTrigger : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private int damage = 10;
+    [SerializeField] private float tickRate = 0.2f;
+
+    private bool isPlayerInside = false;
+    private Coroutine damageRoutine;
+    private IDamageable targetDamageable;
+
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInside = true;
+
+            if (other.TryGetComponent(out targetDamageable))
+            {
+                damageRoutine = StartCoroutine(ApplyDamageOverTime());
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerExit(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInside = false;
+
+            if (damageRoutine != null)
+            {
+                StopCoroutine(damageRoutine);
+                damageRoutine = null;
+            }
+        }
+    }
+
+    private IEnumerator ApplyDamageOverTime()
+    {
+        while (isPlayerInside && targetDamageable != null)
+        {
+            targetDamageable.OnTakeDamage(damage);
+            yield return new WaitForSeconds(tickRate);
+        }
     }
 }

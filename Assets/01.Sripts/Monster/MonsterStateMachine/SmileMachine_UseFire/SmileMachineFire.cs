@@ -6,7 +6,8 @@ public class SmileMachineFire : MonsterBaseState
     private MonsterSkillSO skillData;
     private Coroutine flameRoutine;
     private Transform firePoint;
-    private GameObject flameObject; // renamed for clarity
+    private GameObject flameObject;
+    private bool isFlameActive = false;
 
     public SmileMachineFire(MonsterStateMachine ms, MonsterSkillSO fireSkill) : base(ms)
     {
@@ -25,7 +26,10 @@ public class SmileMachineFire : MonsterBaseState
         }
 
         if (flameObject != null)
+        {
             flameObject.SetActive(true);
+            isFlameActive = true;
+        }
 
         flameRoutine = stateMachine.Monster.StartCoroutine(FlameRoutine());
     }
@@ -45,17 +49,31 @@ public class SmileMachineFire : MonsterBaseState
             yield return null;
         }
 
-        ExitFlame();
+        EndFlame();
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
-    private void ExitFlame()
+    private void EndFlame()
     {
-        if (flameObject != null)
+        if (isFlameActive && flameObject != null)
+        {
             flameObject.SetActive(false);
+            isFlameActive = false;
+        }
 
         stateMachine.isAttacking = false;
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
-        stateMachine.ChangeState(stateMachine.MonsterIdleState);
+    }
+
+    public override void Exit()
+    {
+        if (flameRoutine != null)
+        {
+            stateMachine.Monster.StopCoroutine(flameRoutine);
+            flameRoutine = null;
+        }
+
+        EndFlame();
     }
 
     private void RotateTowardsPlayer()
@@ -79,16 +97,5 @@ public class SmileMachineFire : MonsterBaseState
         {
             firePoint.rotation = Quaternion.Slerp(firePoint.rotation, Quaternion.LookRotation(aimDir), Time.deltaTime * 10f);
         }
-    }
-
-    public override void Exit()
-    {
-        if (flameRoutine != null)
-        {
-            stateMachine.Monster.StopCoroutine(flameRoutine);
-            flameRoutine = null;
-        }
-
-        ExitFlame();
     }
 }
