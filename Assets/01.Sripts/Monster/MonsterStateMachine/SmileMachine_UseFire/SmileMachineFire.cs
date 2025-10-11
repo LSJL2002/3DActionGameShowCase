@@ -6,11 +6,7 @@ public class SmileMachineFire : MonsterBaseState
     private MonsterSkillSO skillData;
     private Coroutine flameRoutine;
     private Transform firePoint;
-    private GameObject flameEffect;
-    private ParticleSystem flameParticles;
-
-    private float damageInterval = 0.2f;
-    private float lastDamageTime;
+    private GameObject flameObject; // renamed for clarity
 
     public SmileMachineFire(MonsterStateMachine ms, MonsterSkillSO fireSkill) : base(ms)
     {
@@ -20,34 +16,27 @@ public class SmileMachineFire : MonsterBaseState
     public override void Enter()
     {
         stateMachine.isAttacking = true;
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
 
         if (stateMachine.Monster is SmileMachine_UseFire monster)
         {
             firePoint = monster.firePoint.transform;
-            flameEffect = monster.flameThrowerEffect;
+            flameObject = monster.flameThrowerEffect;
         }
 
-        if (flameEffect != null)
-        {
-            flameEffect.SetActive(true);
-            flameParticles = flameEffect.GetComponent<ParticleSystem>();
-
-            var collision = flameParticles.collision;
-            collision.enabled = true;
-            collision.type = ParticleSystemCollisionType.World;
-            collision.mode = ParticleSystemCollisionMode.Collision3D;
-            collision.sendCollisionMessages = true;
-
-            flameParticles.Play();
-        }
+        if (flameObject != null)
+            flameObject.SetActive(true);
 
         flameRoutine = stateMachine.Monster.StartCoroutine(FlameRoutine());
     }
 
     private IEnumerator FlameRoutine()
     {
-        float duration = skillData.duration;
         float elapsed = 0f;
+        float duration = skillData.duration;
+
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
         while (elapsed < duration)
         {
@@ -61,20 +50,17 @@ public class SmileMachineFire : MonsterBaseState
 
     private void ExitFlame()
     {
-        if (flameEffect != null)
-        {
-            flameParticles.Stop();
-            flameEffect.SetActive(false);
-        }
+        if (flameObject != null)
+            flameObject.SetActive(false);
 
         stateMachine.isAttacking = false;
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
     private void RotateTowardsPlayer()
     {
-        if (stateMachine.Monster.PlayerTarget == null || firePoint == null)
-            return;
+        if (stateMachine.Monster.PlayerTarget == null || firePoint == null) return;
 
         Transform monsterTransform = stateMachine.Monster.transform;
         Vector3 targetPos = stateMachine.Monster.PlayerTarget.position;
@@ -85,30 +71,18 @@ public class SmileMachineFire : MonsterBaseState
         if (flatDir.sqrMagnitude > 0.001f)
         {
             Quaternion bodyRot = Quaternion.LookRotation(flatDir);
-            float rotateSpeed = 5f;
-            monsterTransform.rotation = Quaternion.Slerp(
-                monsterTransform.rotation,
-                bodyRot,
-                Time.deltaTime * rotateSpeed
-            );
+            monsterTransform.rotation = Quaternion.Slerp(monsterTransform.rotation, bodyRot, Time.deltaTime * 5f);
         }
 
         Vector3 aimDir = targetPos - firePoint.position;
         if (aimDir.sqrMagnitude > 0.001f)
         {
-            Quaternion aimRot = Quaternion.LookRotation(aimDir);
-            firePoint.rotation = Quaternion.Slerp(
-                firePoint.rotation,
-                aimRot,
-                Time.deltaTime * 10f
-            );
+            firePoint.rotation = Quaternion.Slerp(firePoint.rotation, Quaternion.LookRotation(aimDir), Time.deltaTime * 10f);
         }
     }
 
     public override void Exit()
     {
-        Debug.Log("Exit flamethrower");
-
         if (flameRoutine != null)
         {
             stateMachine.Monster.StopCoroutine(flameRoutine);
