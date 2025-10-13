@@ -10,6 +10,9 @@ public interface IPlayer
 
 public class PlayerManager : Singleton<PlayerManager>, IPlayer
 {
+    [SerializeField]
+    public CharacterType CharacterType { get; private set; } = CharacterType.Yuki;
+
     [field: SerializeField] public PlayerInfo InfoData { get; private set; }
 
     public PlayerStats Stats { get; private set; }
@@ -82,9 +85,10 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
 
     private void Update()
     {
-        stateMachine.HandleInput();
-        stateMachine.LogicUpdate();
-        Stats.Update();
+        stateMachine.HandleInput();    // 플레이어 입력 처리
+        stateMachine.LogicUpdate();    // FSM 상태별 논리 업데이트
+        stateMachine.HandleUpdate();   // 현재 BattleModule 업데이트
+        Stats.Update();                // 스탯 처리    
     }
 
     private void FixedUpdate()

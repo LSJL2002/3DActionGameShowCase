@@ -43,8 +43,7 @@ public class PlayerAttackController : MonoBehaviour
         spawnPoint = player.Body;
         playerInfo = player.InfoData;
 
-        hit.OnHit -= HandleHit;
-        hit.OnHit += HandleHit;
+        hit.OnHit += (target, hitPoint) => HandleHit(target, hitPoint, 1f);
     }
 
     /// <summary>
@@ -62,8 +61,9 @@ public class PlayerAttackController : MonoBehaviour
                         ? (CurrentAttackTarget.position - spawnPoint.position).normalized
                         : spawnPoint.forward;
 
-        skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation, HandleHit)
-             ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
+        skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation,
+            (target, hitPoint) => HandleHit(target, hitPoint, 1f))
+            ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
 
         // 근접/원거리 공용 SFX
         AudioManager.Instance?.PlaySFX(skillName);
@@ -72,12 +72,12 @@ public class PlayerAttackController : MonoBehaviour
     /// <summary>
     /// 다단히트 공격: 타수(hitCount)와 간격(interval) 조절 가능
     /// </summary>
-    public void OnAttack(string skillName, int hitCount = 1, float interval = 0.1f)
+    public void OnAttack(string skillName, int hitCount = 1, float interval = 0.1f, float damageMultiplier = 1f)
     {
-        ComboAttackAsync(skillName, hitCount, interval).Forget();
+        ComboAttackAsync(skillName, hitCount, interval, damageMultiplier).Forget();
     }
 
-    private async UniTaskVoid ComboAttackAsync(string skillName, int hitCount, float interval)
+    private async UniTaskVoid ComboAttackAsync(string skillName, int hitCount, float interval, float damageMultiplier)
     {
         for (int i = 0; i < hitCount; i++)
         {
@@ -90,8 +90,9 @@ public class PlayerAttackController : MonoBehaviour
                                 ? (CurrentAttackTarget.position - spawnPoint.position).normalized
                                 : spawnPoint.forward;
 
-                skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation, HandleHit)
-                     ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
+                skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation,
+                    (target, hitPoint) => HandleHit(target, hitPoint, damageMultiplier))
+                    ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
 
                 AudioManager.Instance?.PlaySFX(skillName);
             }
@@ -105,9 +106,9 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    private void HandleHit(IDamageable target, Vector3 hitPoint)
+    private void HandleHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
     {
-        int damage = Mathf.RoundToInt(player.Stats.Attack.Value);
+        int damage = Mathf.RoundToInt(player.Stats.Attack.Value * damageMultiplier);
         target.OnTakeDamage(damage);
 
         // 타격 효과 & 카메라 흔들림 & 사운드
@@ -115,6 +116,9 @@ public class PlayerAttackController : MonoBehaviour
         AudioManager.Instance?.PlaySFX("Hit1");
         camera?.Shake(2f, 0.2f);
         hitStop.DoHitStop();
+
+        // 맞았다는 걸 BattleModule에 알림
+        player.stateMachine.CurrentBattleModule?.OnEnemyHit(target);
     }
 
 
@@ -123,6 +127,8 @@ public class PlayerAttackController : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         player = GetComponent<PlayerManager>();
+        playerInfo = player.InfoData;
+
 
         if (playerInfo == null || playerInfo.AttackData == null)
             return;

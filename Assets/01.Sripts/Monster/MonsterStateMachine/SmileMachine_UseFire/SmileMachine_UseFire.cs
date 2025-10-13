@@ -14,12 +14,6 @@ public class SmileMachine_UseFire : BaseMonster
         if (flameThrowerEffect != null)
         {
             flameThrowerEffect.SetActive(false);
-
-            var flameDamage = flameThrowerEffect.GetComponent<FlameCollisionDamage>();
-            if (flameDamage != null)
-            {
-                flameDamage.Init(this);
-            }
         }
     }
     protected override MonsterBaseState GetStateFromEnum(States stateEnum)

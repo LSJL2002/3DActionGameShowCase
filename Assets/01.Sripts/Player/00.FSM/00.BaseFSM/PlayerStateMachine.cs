@@ -1,12 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+
+
 
 
 public class PlayerStateMachine : StateMachine
 {
     public PlayerManager Player { get; }
+
+    public BattleModule CurrentBattleModule { get; private set; }
+
+    public void SetBattleModule(BattleModule module)
+    {
+        CurrentBattleModule = module;
+    }
+
+    public void HandleAttackInput() => CurrentBattleModule?.OnAttack();
+    public void HandleSkillInput() => CurrentBattleModule?.OnSkill();
+    public void HandleUpdate() => CurrentBattleModule?.OnUpdate();
 
 
     // 원본 데이터
@@ -90,6 +105,20 @@ public class PlayerStateMachine : StateMachine
         // AttackInfo 초기화
         ComboIndex = 0;
         SetAttackInfo(ComboIndex);
+
+        // 캐릭터 타입에 따른 전투 모듈 설정
+        switch (player.CharacterType)
+        {
+            case CharacterType.Yuki:
+                SetBattleModule(new BattleModule_Yuki(this));
+                break;
+            case CharacterType.Aoi:
+                SetBattleModule(new BattleModule_Aoi(this));
+                break;
+            case CharacterType.Mika:
+                SetBattleModule(new BattleModule_Mika(this));
+                break;
+        }
     }
 
     public void SetAttackInfo(int comboIndex)

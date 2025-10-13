@@ -26,11 +26,6 @@ public class PlayerGroundState : PlayerBaseState
     {
         base.LogicUpdate();
 
-        if (stateMachine.IsAttacking)
-        {
-            OnAttack();
-            return;
-        }
 
         Vector3 inputDir = GetMovementDir();
         bool hasInput = inputDir.sqrMagnitude > 0.0001f;
@@ -56,9 +51,14 @@ public class PlayerGroundState : PlayerBaseState
         stateMachine.ChangeState(stateMachine.JumpState);
     }
 
-    protected virtual void OnAttack()
+    protected override void OnAttackStarted(InputAction.CallbackContext context)
     {
-        stateMachine.ChangeState(stateMachine.AttackState);
+        base.OnAttackStarted(context);
+
+        if (!stateMachine.IsAttacking)
+        {
+            stateMachine.ChangeState(stateMachine.AttackState);
+        }
     }
 
     protected override void OnHeavyAttackStarted(InputAction.CallbackContext context)
