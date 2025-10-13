@@ -86,8 +86,6 @@ public partial class GameUI : UIBase
         // 체력이 감소
         else if (playerStats.CurrentHealth < previousHP)
         {
-            await UIManager.Instance.Show<DamageEffectUI>();
-
             audioSource.Stop();
 
             playerDamageSequence = DOTween.Sequence();
