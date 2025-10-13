@@ -155,7 +155,7 @@ public class PlayerStats : IStats
     public bool UseSkill()
     {
         if (SkillBufferCurrent <= 0) return false;
-
+        
         SkillBufferCurrent--;
 
         // Sequential recovery time logic
@@ -175,7 +175,7 @@ public class PlayerStats : IStats
 
         skillRecoveryTimes.Enqueue(nextRecover);
         lastSkillRecoveryTime = nextRecover;
-
+        
         return true;
     }
 

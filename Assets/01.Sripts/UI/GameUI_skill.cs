@@ -50,7 +50,7 @@ public partial class GameUI : UIBase
     // 회피 쿨타임
     public void OnCoolTimeEvade(InputAction.CallbackContext context)
     {
-        if (evadeCoolTimeSequence.IsActive() || playerStats.EvadeBufferCurrent == 0) return;
+        if (evadeCoolTimeSequence.IsActive() || playerStats.EvadeBufferCurrent == 0 && !PlayerManager.Instance.stateMachine.IsDodge) return;
 
         float cooltimeDuration = playerStats.EvadeCooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
 
@@ -69,7 +69,7 @@ public partial class GameUI : UIBase
     // 스킬1 쿨타임
     public void OnCoolTimeHeavyAttack(InputAction.CallbackContext context)
     {
-        if (heavyAttackCoolTimeSequence.IsActive() || playerStats.SkillBufferCurrent == 0) return;
+        if (heavyAttackCoolTimeSequence.IsActive() || playerStats.SkillBufferCurrent == 0 || PlayerManager.Instance.stateMachine.IsSkill) return;
 
         float cooltimeDuration = playerStats.SkillCooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
 
