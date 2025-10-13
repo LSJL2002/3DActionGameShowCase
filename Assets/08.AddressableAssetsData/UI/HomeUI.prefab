@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
+  uiType: 0
   newGameButton: {fileID: 1861940897388098178}
   loadGameButton: {fileID: 3249149698219666697}
   optionButton: {fileID: 2411238391119965137}
@@ -219,6 +220,7 @@ MonoBehaviour:
   buttonType: 0
   targetCanvasGroup: {fileID: 3249149698219666697}
   targetButton: {fileID: 3743079766321119182}
+  itemSlotUI: {fileID: 0}
   fadeDuration: 1
 --- !u!1 &4077970406767361667
 GameObject:
@@ -382,6 +384,7 @@ MonoBehaviour:
   buttonType: 0
   targetCanvasGroup: {fileID: 1861940897388098178}
   targetButton: {fileID: 4077970406767361667}
+  itemSlotUI: {fileID: 0}
   fadeDuration: 1
 --- !u!1 &5222723095420201415
 GameObject:
@@ -491,15 +494,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -625,15 +630,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -759,15 +766,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -893,15 +902,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 00000000
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -1081,6 +1092,7 @@ MonoBehaviour:
   buttonType: 0
   targetCanvasGroup: {fileID: 8351260675759659924}
   targetButton: {fileID: 8142965214957132072}
+  itemSlotUI: {fileID: 0}
   fadeDuration: 1
 --- !u!1 &8808612687538981019
 GameObject:
@@ -1244,4 +1256,5 @@ MonoBehaviour:
   buttonType: 1
   targetCanvasGroup: {fileID: 2411238391119965137}
   targetButton: {fileID: 8808612687538981019}
+  itemSlotUI: {fileID: 0}
   fadeDuration: 1
