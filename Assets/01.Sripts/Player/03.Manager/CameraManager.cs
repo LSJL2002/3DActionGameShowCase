@@ -10,6 +10,9 @@ public class CameraManager : MonoBehaviour
     public Transform MainCamera { get; private set; }
     public PostProcessVolume Volume { get; private set; }
     public CinemachineFreeLook FreeLookCam { get; private set; }
+    [field:SerializeField]public PostProcessVolume VisualVolume { get; private set; }
+    private ColorGrading colorGrading;
+
 
     public CinemachineTargetGroup targetGroup {  get; private set; }
     public CinemachineVirtualCamera targetCam { get; private set; }
@@ -30,7 +33,15 @@ public class CameraManager : MonoBehaviour
         targetGroup = GetComponentInChildren<CinemachineTargetGroup>();
         targetCam = targetGroup.GetComponentInChildren<CinemachineVirtualCamera>();
         noise = targetCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+        if (VisualVolume != null)
+        {
+            // 프로필에서 Color Grading 가져오기
+            VisualVolume.profile.TryGetSettings(out colorGrading);
+        }
+
     }
+
 
     private void Update()
     {
@@ -125,5 +136,14 @@ public class CameraManager : MonoBehaviour
         // 만약 다른 방식(Input System 직접 제어)이라면 아래처럼도 가능
         // FreeLook.m_XAxis.m_InputAxisValue = 0f;
         // FreeLook.m_YAxis.m_InputAxisValue = 0f;
+    }
+
+    // =================== Visual Postprocess =================
+    // Color Grading 켜기/끄기
+    public void SetColorGradingEnabled(bool enabled)
+    {
+        if (colorGrading == null) return;
+
+        colorGrading.active = enabled;
     }
 }

@@ -64,6 +64,11 @@ public class PlayerStats : IStats
     private float lastSkillRecoveryTime = 0f;
     private float lastEvadeRecoveryTime = 0f;
 
+    // ================= 모듈 데이터 ======================
+    // ================== Yuki 각성 게이지 ======================
+    public float AwakenGauge { get; set; } = 0f; // 0~100
+    public float MaxAwakenGauge { get; private set; } = 100f;
+
 
     public bool IsDead => CurrentHealth <= 0;
 
@@ -90,6 +95,8 @@ public class PlayerStats : IStats
         // 초기 last times를 현재 시간으로 세팅해도 되고 0으로 둬도 됨
         lastSkillRecoveryTime = 0f;
         lastEvadeRecoveryTime = 0f;
+
+        AwakenGauge = 0f;
     }
 
     public void TakeDamage(float amount)
@@ -229,4 +236,14 @@ public class PlayerStats : IStats
         UpdateSkillBuffer();
         UpdateEvadeBuffer();
     }
+
+    // ============= Yuki 각성 게이지 ===================
+    public void AddAwakenGauge(float amount)
+    {
+        AwakenGauge += amount;
+        if (AwakenGauge > MaxAwakenGauge)
+            AwakenGauge = MaxAwakenGauge;
+    }
+
+    public void ResetAwakenGauge() => AwakenGauge = 0f;
 }

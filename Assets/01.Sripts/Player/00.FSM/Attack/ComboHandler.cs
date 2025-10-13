@@ -10,6 +10,7 @@ public class ComboHandler
     private bool queued;                    // 다음 콤보 예약 여부
     private float lastInputTime;
     private readonly List<AttackInfoData> attacks;
+    public List<AttackInfoData> AttackListReference => attacks;
     private Animator animator;
 
     private readonly PlayerAttackController attackCtrl;
@@ -66,7 +67,7 @@ public class ComboHandler
             // HitStart~HitEnd 범위 안에서 다단히트 실행
             float duration = step.HitEndTime - step.HitStartTime;
             float interval = Mathf.Clamp(step.Interval, 0.01f, duration / step.HitCount);
-            attackCtrl.OnAttack(step.AttackName, step.HitCount, interval);
+            attackCtrl.OnAttack(step.AttackName, step.HitCount, interval, step.DamageMultiplier);
         }
 
         // 다음 콤보 예약 조건

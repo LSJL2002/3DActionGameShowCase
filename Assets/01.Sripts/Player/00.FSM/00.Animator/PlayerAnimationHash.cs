@@ -40,11 +40,11 @@ public class PlayerAnimationHash
     private string dieParameterName = "Base/Toggle_DieState";
 
     [Header("Parameter")]
-    private string horizontalFloatName = "Horizontal";  //Blend
-    private string verticalFloatName = "Vertical";      //Blend
-    private string velocity_XName = "Velocity_X";       //Blend
-    private string velocity_YName = "Velocity_Y";       //Blend
-    private string velocity_ZName = "Velocity_Z";       //Blend
+    private string horizontalFloatName = "Input/Horizontal";  //Blend
+    private string verticalFloatName = "Input/Vertical";      //Blend
+    private string velocity_XName = "Input/Velocity_X";       //Blend
+    private string velocity_YName = "Input/Velocity_Y";       //Blend
+    private string velocity_ZName = "Input/Velocity_Z";       //Blend
 
 
     // ============= 해시 값 ==============

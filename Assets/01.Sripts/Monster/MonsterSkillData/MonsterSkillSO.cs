@@ -27,7 +27,7 @@ public class MonsterSkillSO : ScriptableObject
     public int id;
     public string skillName;
     public string imageId; 
-    public AttackType monsterAttackType; // enum instead of string
+    public MonsterAttackType monsterAttackType; // enum instead of string
 
     [Header("Effect Info")]
     public MonsterEffectType monsterEffectType; // enum instead of string

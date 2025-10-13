@@ -80,9 +80,19 @@ public abstract class PlayerBaseState : Istate
     protected virtual void OnMoveCanceled(InputAction.CallbackContext context) { }
     protected virtual void OnDodgeStarted(InputAction.CallbackContext context) { }
     protected virtual void OnAttackStarted(InputAction.CallbackContext context)
-        => stateMachine.IsAttacking = true;
+    {
+        //stateMachine.IsAttacking = true;
+        //내부적으로 어떤 모듈이 연결되어 있든, FSM이 알아서 처리하도록 맡김
+        //지금 누가 연결되어있는지 모름
+        stateMachine.HandleAttackInput(); // BattleModule로 전달
+    }
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
-        => stateMachine.IsAttacking = false;
+    {
+        //stateMachine.IsAttacking = false;
+
+        // BattleModule에 취소 알림 전달
+        stateMachine.CurrentBattleModule?.OnAttackCanceled();
+    }
     protected virtual void OnHeavyAttackStarted(InputAction.CallbackContext context) { }
     protected virtual void OnHeavyAttackCanceled(InputAction.CallbackContext context) { }
 
@@ -91,17 +101,7 @@ public abstract class PlayerBaseState : Istate
     protected virtual void OnLockOnToggle(InputAction.CallbackContext context)
     {
         var cam = stateMachine.Player.camera;
-
-        if (cam.HasTarget())
-        {
-            cam.ToggleLockOnTarget(null); // 해제
-        }
-        else
-        {
-            // 가까운 몬스터 자동 탐색 후 락온
-            //var nearest = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange);
-            //cam.SetLockOnTarget(nearest);
-        }
+        cam.ToggleLockOnTarget(null); // 무조건 락온 해제
     }
 
     private bool isPaused = false;
@@ -223,12 +223,6 @@ public abstract class PlayerBaseState : Istate
         return forward * stateMachine.MovementInput.y + right * stateMachine.MovementInput.x;
     }
 
-
-    // ==========ForceReceiver에 쌓인 힘을 실제 캐릭터에 적용하는 역할===============
-    protected void ForceMove()
-    {
-        stateMachine.Player.Controller.Move(stateMachine.Player.ForceReceiver.Movement * Time.deltaTime);
-    }
 
     // ====================== 에니메이션 특정 태그 =============================
     protected float GetNormalizeTime(Animator animator, string tag)

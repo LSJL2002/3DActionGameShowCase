@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class EventManager : MonoBehaviour
 {
+    private PlayerManager player;
     private ForceReceiver force;
     private Transform playerTransform;
 
@@ -15,9 +17,10 @@ public class EventManager : MonoBehaviour
     public int pathPoints = 5;
 
 
-    public void Initialize(Transform player, ForceReceiver forceReceiver)
+    public void Initialize(PlayerManager playermanager, Transform body, ForceReceiver forceReceiver)
     {
-        playerTransform = player;
+        player = playermanager;
+        playerTransform = body;
         force = forceReceiver;
     }
 
@@ -55,11 +58,15 @@ public class EventManager : MonoBehaviour
             .SetEase(Ease.OutQuad)
             .OnUpdate(() =>
             {
+                // 경로 계산
                 float t = elapsed;
                 Vector3 newPos = CatmullRomPath(path, t);
+                // 이동 delta 계산
                 Vector3 delta = newPos - playerTransform.position;
+                // ForceReceiver에 힘 추가
                 force.AddForce(delta, horizontalOnly: true);
 
+                // 타겟 바라보기
                 Vector3 lookDir = target.position - playerTransform.position;
                 lookDir.y = 0f;
                 if (lookDir != Vector3.zero)
@@ -70,6 +77,7 @@ public class EventManager : MonoBehaviour
             })
             .OnComplete(() =>
             {
+                // 최종 위치에서 타겟 바라보기
                 Vector3 lookDir = target.position - playerTransform.position;
                 lookDir.y = 0f;
                 if (lookDir != Vector3.zero)
@@ -95,5 +103,24 @@ public class EventManager : MonoBehaviour
                        (-a + c) * u +
                        (2f * a - 5f * b + 4f * c - d) * u2 +
                        (-a + 3f * b - 3f * c + d) * u3);
+    }
+
+    // ================ 각성 공격 막타 이동 =================
+    public void OnAwakenAttackStepMove()
+    {
+        Vector2 input = player.stateMachine.MovementInput; // 현재 방향키 입력
+        Vector3 moveDir;
+        if (input == Vector2.zero)
+        {
+            // 입력 없으면 뒤로 이동
+            moveDir = -player.transform.forward;
+        }
+        else
+        {
+            moveDir = (player.transform.forward * input.y +
+                       player.transform.right * input.x).normalized;
+        }
+
+        player.ForceReceiver?.AddForce(moveDir * 25f, horizontalOnly: true);
     }
 }

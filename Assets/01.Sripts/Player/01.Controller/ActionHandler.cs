@@ -12,20 +12,19 @@ public class ActionHandler : MonoBehaviour
     private void Awake()
     {
         player = GetComponent<PlayerManager>();
+    }
+
+    private void Start()
+    {
         eventManager = player.eventManager;
         forceReceiver = player.ForceReceiver;
         playerTransform = transform;
 
-        eventManager?.Initialize(playerTransform, forceReceiver);
+        eventManager?.Initialize(player, playerTransform, forceReceiver);
     }
 
-    // 일반 호출
-    public void MoveBehindTarget(Transform target)
-    {
-        eventManager?.MoveBehindTarget(target);
-    }
 
-    // 애니메이션 이벤트용 (매개변수 없이 호출 가능)
+    // ============ 애니메이션 이벤트용 (매개변수 없이 호출 가능) =================
     public void MoveBehindTargetFromAnimationEvent()
     {
         var attackController = player.Attack; // PlayerAttackController
@@ -33,5 +32,9 @@ public class ActionHandler : MonoBehaviour
         {
             eventManager?.MoveBehindTarget(attackController.CurrentAttackTarget);
         }
+    }
+    public void AwakenAttackMove()
+    {
+        eventManager.OnAwakenAttackStepMove();
     }
 }

@@ -32,7 +32,7 @@ public class PlayerSkillState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
-
+        stateMachine.IsSkill = true;
 
         // 가장 가까운 몬스터 탐색
         attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
@@ -46,6 +46,14 @@ public class PlayerSkillState : PlayerBaseState
 
         // 파티클 (VFXManager는 파티클만 재생)
         stateMachine.Player.vFX.StartDash();
+
+        var skillData = stateMachine.Player.InfoData.SkillData.GetSkillInfoData(0);
+        stateMachine.Player.Attack.OnAttack(
+            skillData.SkillName,
+            skillData.HitCount,
+            skillData.Interval,
+            skillData.DamageMultiplier
+        );
 
         // Force 초기화
         stateMachine.Player.ForceReceiver.Reset();
@@ -75,6 +83,8 @@ public class PlayerSkillState : PlayerBaseState
     public override void Exit()
     {
         base.Exit();
+        stateMachine.IsSkill = false;
+
         StopAnimation(stateMachine.Player.AnimationData.SkillBoolHash);
 
         stateMachine.Player.vFX.StopDash();
@@ -153,9 +163,6 @@ public class PlayerSkillState : PlayerBaseState
                 break;
         }
 
-
-        // ForceReceiver → Controller.Move
-        ForceMove();
 
         // 4️⃣ 애니메이션 종료 시 Idle로 전환
         if (GetNormalizeTime(stateMachine.Player.Animator, "Skill") >= 0.99f)

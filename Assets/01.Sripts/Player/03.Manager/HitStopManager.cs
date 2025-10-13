@@ -11,7 +11,7 @@ public class HitStopManager : MonoBehaviour
     /// </summary>
     /// <param name="duration">타임스케일이 지속되는 실제 시간(초, Realtime 기준)</param>
     /// <param name="timeScale">적용할 타임스케일 값 (0 = 완전 정지, 0.2 = 슬로우)</param>
-    public void DoHitStop(float duration = 0.1f, float timeScale = 0.2f)
+    public void DoHitStop(float duration = 0.1f, float timeScale = 0.4f)
     {
         if (!isHitStopping) // 중복 실행 방지
             StartCoroutine(HitStopRoutine(duration, timeScale));
