@@ -77,17 +77,3 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-
-
-# --- URP project sharing fix (keep pipeline settings) ---
-
-# 꼭 공유해야 하는 Unity 설정 파일들
-!ProjectSettings/GraphicsSettings.asset
-!ProjectSettings/QualitySettings.asset
-!ProjectSettings/EditorBuildSettings.asset
-!ProjectSettings/DynamicsManager.asset
-!ProjectSettings/InputManager.asset
-
-# URP 관련 Asset (렌더 파이프라인)
-!Assets/Settings/
-!Assets/Settings/*.asset
