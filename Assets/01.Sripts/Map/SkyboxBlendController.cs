@@ -21,19 +21,19 @@ public class SkyboxBlendController : MonoBehaviour
     public Light mainLight;
     private void Awake()
     {
-        // 씬에 Directional Light 하나만 있으면 자동으로 찾아오기
-        if (mainLight == null)
-            mainLight = FindObjectOfType<Light>();
+        //// 씬에 Directional Light 하나만 있으면 자동으로 찾아오기
+        //if (mainLight == null)
+        //    mainLight = FindObjectOfType<Light>();
     }
     private void Start()
     {
         // Skybox 적용
-        RenderSettings.skybox = blendSkybox;
+        //RenderSettings.skybox = blendSkybox;
 
-        // 초기 세팅
-        skyInitialize();
-        blendSkybox.SetFloat("_Blend", blendOffset);
-        blendSkybox.SetFloat("_Rotation", rotationOffset);
+        //// 초기 세팅
+        //skyInitialize();
+        //blendSkybox.SetFloat("_Blend", blendOffset);
+        //blendSkybox.SetFloat("_Rotation", rotationOffset);
     }
 
     private void skyInitialize()
@@ -44,72 +44,60 @@ public class SkyboxBlendController : MonoBehaviour
         blendSkybox.SetFloat("_Rotation", rotationOffset);
     }
 
-    private void OnEnable()
-    {
-        //BattleManager.OnBattleStart += HandleBattleStart;
-        //BattleManager.OnBattleClear += HandleBattleClear;
-    }
-
-    private void OnDisable()
-    {
-        //BattleManager.OnBattleStart -= HandleBattleStart;
-        //BattleManager.OnBattleClear -= HandleBattleClear;
-    }
-
     public void HandleBattleStart()
     {
-        rotateSky();
-        ToggleSky();
+        //rotateSky();
+        //ToggleSky();
         
     }
 
     public void HandleBattleClear()
     {
-        rotateSky();
-        ToggleSky();
+        //rotateSky();
+        //ToggleSky();
     }
 
     public void SetToDay()
     {
-        blendSkybox.SetFloat("_Blend", 0f); // 낮 시작
-        blendSkybox.SetFloat("_Rotation", 0f);
+        //blendSkybox.SetFloat("_Blend", 0f); // 낮 시작
+        //blendSkybox.SetFloat("_Rotation", 0f);
     }
 
     public void SetToNight()
     {
-        blendSkybox.SetFloat("_Blend", 1f); 
-        blendSkybox.SetFloat("_Rotation", 270f);
+        //blendSkybox.SetFloat("_Blend", 1f); 
+        //blendSkybox.SetFloat("_Rotation", 270f);
     }
 
     // 필요하면 런타임 중 Rotation도 Tween 가능
     public void ToggleSky()
     {
-        // 낮(0) ↔ 밤(1) 토글
-        float targetBlend = isNight ? 0f : 1f;
+        //// 낮(0) ↔ 밤(1) 토글
+        //float targetBlend = isNight ? 0f : 1f;
         
 
-        blendSkybox
-            .DOFloat(targetBlend, "_Blend", transitionTime)
-            .SetEase(Ease.InOutSine);
+        //blendSkybox
+        //    .DOFloat(targetBlend, "_Blend", transitionTime)
+        //    .SetEase(Ease.InOutSine);
 
         
-        isNight = !isNight; // 상태 반전
+        //isNight = !isNight; // 상태 반전
 
-        if (mainLight != null)
-        {
-            Vector3 lightRotation = isNight ? Vector3.zero : new Vector3(0f, 270f, 0f);
-            mainLight.transform
-                .DORotate(lightRotation, transitionTime)
-                .SetEase(Ease.InOutSine);
-        }
+        //if (mainLight != null)
+        //{
+        //    Vector3 lightRotation = isNight ? Vector3.zero : new Vector3(0f, 270f, 0f);
+        //    mainLight.transform
+        //        .DORotate(lightRotation, transitionTime)
+        //        .SetEase(Ease.InOutSine);
+        //}
     }  
 
     public void rotateSky()
     {
-        float targetRotation = isNight ? 0f : 270;
+        //float targetRotation = isNight ? 0f : 270;
 
-        blendSkybox
-            .DOFloat(targetRotation, "_Rotation", transitionTime)
-            .SetEase(Ease.InOutSine);
+        //blendSkybox
+        //    .DOFloat(targetRotation, "_Rotation", transitionTime)
+        //    .SetEase(Ease.InOutSine);
     }
 }

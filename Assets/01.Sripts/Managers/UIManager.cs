@@ -29,6 +29,11 @@ public class UIManager : Singleton<UIManager>
     // 한번 생성한 UI를 다시 생성하지 않도록 Dictionary로 관리
     private Dictionary<string, AsyncOperationHandle<GameObject>> uiHandles = new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
+    public int LoadedUICount
+    {
+        get { return uiHandles.Count; }
+    }
+
     public @PlayerInput playerInput;
 
     public bool tutorialEnabled = true; // 튜토리얼 재생여부
@@ -59,7 +64,10 @@ public class UIManager : Singleton<UIManager>
         {
             T uiBase = handle.Result.GetComponent<T>();
             uiBase.canvas.gameObject.SetActive(true);
-            currentUI = uiBase;
+            if (uiBase.uiType == UIType.Screen)
+            {
+                currentUI = uiBase;
+            }
             return uiBase;
         }
 
@@ -67,7 +75,10 @@ public class UIManager : Singleton<UIManager>
         else
         {
             T uiBase = await Load<T>(uiName);
-            currentUI = uiBase;
+            if (uiBase.uiType == UIType.Screen)
+            {
+                currentUI = uiBase;
+            }
             return uiBase;
         }
     }
@@ -137,33 +148,11 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    // 지정된 UI 빼고 딕셔너리 목록 전부 Hide 하는 함수
-    public void AllHide(UIBase uiName = null)
-    {
-        foreach (var handle in uiHandles.Values)
-        {
-            // 핸들이 유효하고 결과 오브젝트가 있는지 확인
-            if (handle.IsValid() && handle.Result != null)
-            {
-                UIBase uiBase = handle.Result.GetComponent<UIBase>();
-
-                // 현재 UI(currentUI)와 다르다면 비활성화
-                if (uiBase != uiName)
-                {
-                    uiBase.canvas.gameObject.SetActive(false);
-                }
-            }
-        }
-    }
-
     protected override void OnEnable()
     {
         base.OnEnable();
         // 씬 언로드 이벤트 구독
         SceneManager.sceneUnloaded += OnSceneUnloaded;
-
-        playerInput.Player.Inventory.performed += GameUIToggle; // 인벤토리 입력(TAB)에 OnGameUI 함수 구독
-        playerInput.Player.Enable(); // Player 액션 맵 활성화 (다시 TAB 입력을 알 수 있도록 켜둠)
     }
 
     protected override void OnDisable()
@@ -171,9 +160,6 @@ public class UIManager : Singleton<UIManager>
         base.OnDisable();
         // 씬 언로드 이벤트 구독 해제
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
-
-        playerInput.Player.Disable(); // Player 액션 맵 활성화 (다시 TAB 입력을 알 수 있도록 켜둠)
-        playerInput.Player.Inventory.performed -= GameUIToggle; // 인벤토리 입력(TAB)에 OnGameUI 함수 구독해제
     }
 
     // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬 언로드시 호출할것)
@@ -191,23 +177,6 @@ public class UIManager : Singleton<UIManager>
         }
 
         uiHandles.Clear();
-    }
-
-    private async void GameUIToggle(InputAction.CallbackContext context)
-    {
-        GameUI gameUIInstance = UIManager.Instance.Get<GameUI>();
-        bool isCurrentlyActive = gameUIInstance.canvas.gameObject.activeSelf;
-
-        // 꺼져있었다면
-        if (!isCurrentlyActive)
-        {
-            AllHide(); // Menu를 닫을 때 일단 모든 UI를 비활성화
-            await UIManager.Instance.Show<GameUI>(); // GameUI를 켜줌
-            await UIManager.Instance.Show<MiniMapUI>(); // MiniMapUI를 켜줌
-            await UIManager.Instance.Show<TutorialUI>(); // TutorialUI를 켜줌
-            return;
-        }
-        AllHide(); // Menu를 열 때 일단 모든 UI를 비활성화
     }
 
     public void ChangeState(DecisionState decisionState)

@@ -36,6 +36,8 @@ public partial class GameUI : UIBase
     {
         base.OnEnable();
 
+        uiType = UIType.GameUI;
+
         BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯 불러오기
         BattleManager.OnMonsterDie += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
 

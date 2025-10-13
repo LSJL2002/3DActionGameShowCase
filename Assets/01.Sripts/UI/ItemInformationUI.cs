@@ -19,6 +19,8 @@ public class ItemInformationUI : UIBase
         // 최상위 캔버스의 sortting order 값을 항상 최상위로 설정
         Canvas canvas = GetComponentInParent<Canvas>();
         canvas.sortingOrder = 100;
+
+        uiType = UIType.Popup;
     }
 
     public void SetItemSlotData(ItemSlotUI itemSlotUI)

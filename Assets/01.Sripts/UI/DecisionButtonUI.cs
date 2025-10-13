@@ -22,6 +22,8 @@ public class DecisionButtonUI : UIBase
         canvas.sortingOrder = 101;
 
         PlayerManager.Instance.EnableInput(false);
+
+        uiType = UIType.Popup;
     }
 
     public void SetGuideText()

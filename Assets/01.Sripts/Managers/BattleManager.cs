@@ -95,7 +95,7 @@ public class BattleManager : Singleton<BattleManager>
 
         // 1. 벽 켜기 + 경고 이펙트 시작
         currentZone.SetWallsActive(true);
-        StartWarning();
+        //StartWarning();
 
         // 2. 컷씬 실행 & 종료 대기 (스킵 포함)
         if (!string.IsNullOrEmpty(zone.startBattleTimelineKey))
@@ -174,7 +174,7 @@ public class BattleManager : Singleton<BattleManager>
         var cutScene = await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.endBattleTimelineKey);
         OnMonsterDie?.Invoke(currentZone);
  
-        StopWarning();
+        //StopWarning();
     }
 
 
@@ -214,12 +214,17 @@ public class BattleManager : Singleton<BattleManager>
         }
     }
 
-
-    //    public void LoadMonsterStat(BattleZone zone)
-    //{
-    //    monsterStats = BattleManager.Instance.monsterStats;
-    //    ChangeState(eState.Battle, BattleManager.Instance.monsterStats.monsterData.monsterName, BattleManager.Instance.monsterStats.monsterData.maxHp);
-    //}
-
-    //BattleManager.OnBattleStart += LoadMonsterStat; //이벤트에 등록하면 해당배틀존에 들어가면 발동함
 }
+
+
+
+
+
+//몬스터 체력별 대사
+//OnTakeDamage
+// UIManager.Instance.Show<TutorialUI>();
+//UIManager.Instance.Get<TutorialUI>().TryPlayBossThresholdDialogue(SceneType.Boss_1);
+
+//public void TryPlayBossThresholdDialogue(SceneType type)
+//{
+//    float hpPercent = BattleManager.Instance.monsterStats.CurrentHP / BattleManager.Instance.monsterStats.maxHp;
