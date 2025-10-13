@@ -59,7 +59,7 @@ public class SkillManagers : MonoBehaviour
 
         // 파티클 재생
         var ps = obj.GetComponentInChildren<ParticleSystem>();
-        ps?.Play(true);
+        ps.Play(true);  // 새로 재생
 
         // 원거리 ProjectileHitbox 연결
         var projectileHit = obj.GetComponentInChildren<ProjectileHitbox>();

@@ -30,8 +30,8 @@ Material:
   - _BUILTIN_ALPHATEST_ON
   - _BUILTIN_AlphaClip
   - _BUILTIN_SURFACE_TYPE_TRANSPARENT
+  m_InvalidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -41,7 +41,6 @@ Material:
   disabledShaderPasses:
   - SHADOWCASTER
   - DepthOnly
-  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -139,7 +138,6 @@ Material:
     - _ALPHA: 1
     - _AlphaClip: 0
     - _AlphaClipVal: 0
-    - _AlphaToMask: 0
     - _BLENDBETWEENMASK: 0
     - _BUILTIN_AlphaClip: 1
     - _BUILTIN_Blend: 2
@@ -166,7 +164,6 @@ Material:
     - _Dissolve_Falloff: 0.1
     - _Dissolve_Tex_Oneminus: 0
     - _DstBlend: 10
-    - _DstBlendAlpha: 10
     - _EdgeWidth: 0
     - _Emission: 1
     - _EnvironmentReflections: 1
@@ -183,6 +180,7 @@ Material:
     - _OcclusionStrength: 1
     - _OneMinus: 0
     - _Opacity: 1
+    - _Override_Amount: 0
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -194,7 +192,6 @@ Material:
     - _SoftParticlePow: 1
     - _SpecularHighlights: 1
     - _SrcBlend: 5
-    - _SrcBlendAlpha: 1
     - _StylizeAmount: 0.413
     - _StylizedValue: 0.12
     - _SubmaskRot: 0
@@ -204,7 +201,7 @@ Material:
     - _UseCustomdata_Color: 1
     - _UseGradientMap: 0
     - _UseSoftParticle: 0
-    - _Use_Dissolve_Tex: 1
+    - _Use_Dissolve_Tex: 0
     - _Use_Gradient_Mask: 0
     - _WorkflowMode: 1
     - _ZTest: 4
@@ -228,7 +225,6 @@ Material:
     - _SubmaskOffset: {r: 0, g: 0, b: 0, a: 0}
     - _SubmaskScroll: {r: 0.66, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!114 &1740787049716454303
 MonoBehaviour:
   m_ObjectHideFlags: 11
@@ -241,4 +237,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 10
+  version: 5

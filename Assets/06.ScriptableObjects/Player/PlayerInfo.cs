@@ -78,8 +78,11 @@ public class AttackInfoData
     [field: SerializeField, Tooltip("공격 에니메이션 이름")]
     public string AttackName { get; private set; }
 
+    [field: SerializeField, Tooltip("데미지")]
+    public float DamageMultiplier { get; private set; } = 1.0f;
+
     [field: SerializeField, Tooltip("다음 콤보 입력 가능 시작 시점 (0~1)")]
-    [field: Range(0f, 1f)] public float ComboTimingStart { get; private set; } = 0.6f;
+    [field: Range(0f, 1f)] public float ComboTimingStart { get; private set; } = 0.4f;
 
     [field: SerializeField, Tooltip("다음 콤보 입력 가능 종료 시점 (0~1)")]
     [field: Range(0f, 1f)] public float ComboTimingEnd { get; private set; } = 0.7f;
@@ -92,28 +95,23 @@ public class AttackInfoData
     [field: Range(0f, 3f)] public float ForceTransitionTime { get; private set; }
 
     [field: SerializeField, Tooltip("공격 시 캐릭터에 적용되는 힘")]
-    [field: Range(-10f, 10f)] public float Force { get; private set; } = 1f;
+    [field: Range(-10f, 10f)] public float Force { get; private set; }
 
     [field: SerializeField, Tooltip("공격 판정 시작 시간(0~1)")]
     [field: Range(0f, 1f)] public float HitStartTime { get; private set; } = 0f;
 
     [field: SerializeField, Tooltip("공격 판정 종료 시간(0~1)")]
     [field: Range(0f, 1f)] public float HitEndTime { get; private set; } = 1f;
+
     [field: SerializeField, Tooltip("다단히트 공격 타수")]
     [field: Range(1, 10)] public int HitCount { get; private set; } = 1;
+
     [field: SerializeField, Tooltip("다단히트 간격(초)")]
-    [field: Range(0f, 1f)] public float Interval { get; private set; } = 0.1f;
+    [field: Range(0f, 0.1f)] public float Interval { get; private set; } = 0.03f;
 
     [NonSerialized] public bool HasFired; // ComboHandler 내부 사용
 }
 
-public enum AttackType
-{
-    LightAttack,
-    HeavyAttack,
-    Skill,
-    Dodge
-}
 
 public enum EffectType
 {
@@ -125,28 +123,60 @@ public enum EffectType
 [Serializable]
 public class PlayerSkillData
 {
-    [field: SerializeField] public List<SkillInfoData> SkillInfoData { get; private set; }
-    public int GetSkillInfoCount() { return SkillInfoData.Count; }
-    public SkillInfoData GetSkillInfoCount(int index) { return SkillInfoData[index]; }
+    [field: SerializeField]
+    public List<SkillInfoData> SkillInfoDatas { get; private set; } = new List<SkillInfoData>();
+    public int GetSkillInfoCount() => SkillInfoDatas.Count;
+    public SkillInfoData GetSkillInfoData(int index) => SkillInfoDatas[index];
 }
 
 [Serializable]
 public class SkillInfoData
 {
-    [field: SerializeField] public int Id { get; private set; }
-    [field: SerializeField] public string Name { get; private set; }
-    [field: SerializeField] public AttackType AttackType { get; private set; }
-    [field: SerializeField] public EffectType EffectType { get; private set; }
-    [field: SerializeField] public float EffectValue { get; private set; }
-    [field: SerializeField] public float Duration { get; private set; }
-    [field: SerializeField] public float Range { get; private set; }
-    [field: SerializeField] public float KnockbackDistance { get; private set; }
-    [field: SerializeField] public int ComboSkillId { get; private set; }
-    [field: SerializeField] public float Cooldown { get; private set; }
-    [field: SerializeField] public int MpCost { get; private set; }
-    [field: SerializeField] public int HitCount { get; private set; }
-    [field: SerializeField] public float SkillUseRange { get; private set; }
-    [field: SerializeField] public float PreCastTime { get; private set; }
+    [field: SerializeField, Tooltip("스킬 에니메이션 이름")]
+    public string SkillName { get; private set; }
+
+    [field: SerializeField, Tooltip("공격 타입")]
+    public EffectType EffectType { get; private set; }
+
+    [field: SerializeField, Tooltip("데미지")]
+    public float DamageMultiplier { get; private set; } = 1.5f;
+
+    [field: SerializeField, Tooltip("지속시간")]
+    public float Duration { get; private set; }
+
+    [field: SerializeField, Tooltip("사거리")]
+    public float Range { get; private set; }
+
+    [field: SerializeField, Tooltip("넉백 거리")]
+    public float KnockbackDistance { get; private set; }
+
+    [field: SerializeField, Tooltip("쿨타임")]
+    [field: Range(0f, 10f)] public float Cooldown { get; private set; } = 5f;
+
+    [field: SerializeField, Tooltip("Mp 소모량")]
+    public int MpCost { get; private set; }
+
+
+    [field: SerializeField, Tooltip("입력 버퍼 허용 시간 (초)")]
+    [field: Range(0f, 0.5f)] public float InputBufferTime { get; private set; } = 0.2f;
+
+    [field: SerializeField, Tooltip("앞으로 밀리는 시간")]
+    [field: Range(0f, 3f)] public float ForceTransitionTime { get; private set; }
+
+    [field: SerializeField, Tooltip("공격 시 캐릭터에 적용되는 힘")]
+    [field: Range(-10f, 10f)] public float Force { get; private set; }
+
+    [field: SerializeField, Tooltip("공격 판정 시작 시간(0~1)")]
+    [field: Range(0f, 1f)] public float HitStartTime { get; private set; } = 0f;
+
+    [field: SerializeField, Tooltip("공격 판정 종료 시간(0~1)")]
+    [field: Range(0f, 1f)] public float HitEndTime { get; private set; } = 1f;
+
+    [field: SerializeField, Tooltip("다단히트 공격 타수")]
+    [field: Range(1, 10)] public int HitCount { get; private set; } = 1;
+
+    [field: SerializeField, Tooltip("다단히트 간격(초)")]
+    [field: Range(0f, 0.1f)] public float Interval { get; private set; } = 0.03f;
 }
 
 
@@ -179,4 +209,7 @@ public class PlayerInfo : ScriptableObject
     [field: SerializeField] public PlayerAttackData AttackData { get; private set; }
     [field: SerializeField] public PlayerSkillData SkillData { get; private set; }
     [field: SerializeField] public PlayerStatData StatData { get; private set; }
+
+    // 특수 공격 SO를 단일 필드로 두고 캐릭터에 따라 다르게 할당
+    [field: SerializeField] public ModuleDataBase ModuleData { get; private set; }
 }

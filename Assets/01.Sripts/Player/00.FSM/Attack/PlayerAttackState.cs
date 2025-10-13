@@ -6,47 +6,47 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    private ComboHandler comboHandler;
+    private BattleModule module;
 
     private Transform attackTarget;
 
-    private PlayerAttackController attackCtrl;
-
-
 
     public PlayerAttackState(PlayerStateMachine sm) : base(sm) { }
+
+    public override bool AllowMovement => false; // 스킬 중 이동 제한
+    public override bool AllowRotation => false;
+
 
     public override void Enter()
     {
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
 
+        stateMachine.IsAttacking = true;
+
+        module = stateMachine.CurrentBattleModule;
+
         attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
         stateMachine.Player.Attack.SetAttackTarget(attackTarget);
         if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
-
-        attackCtrl = stateMachine.Player.Attack;
-
-        // PlayerManager에서 공격 정보 가져오기
-        var attackInfos = stateMachine.Player.InfoData.AttackData.AttackInfoDatas;
-        // ComboHandler 초기화
-        comboHandler = new ComboHandler(attackInfos, stateMachine.Player.Animator, attackCtrl);
-
-        comboHandler.RegisterInput();
     }
 
     public override void Exit()
     {
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
+
+        stateMachine.IsAttacking = false;
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        var currentAttack = comboHandler.Update(); // 현재 공격 단계 + 발동
-        if (currentAttack == null && !comboHandler.IsActive)
+        module?.OnUpdate();
+
+        // 콤보가 비활성화되면 Idle로 전환
+        if (module?.ComboHandler?.IsActive == false)
         {
             stateMachine.ChangeState(stateMachine.IdleState);
         }
@@ -55,12 +55,21 @@ public class PlayerAttackState : PlayerBaseState
     protected override void OnAttackStarted(InputAction.CallbackContext context)
     {
         base.OnAttackStarted(context);
-        comboHandler.RegisterInput();
+
+        module?.OnAttack();
+
+        // 공격 시작 시점에만 타겟 갱신
+        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
+        stateMachine.Player.Attack.SetAttackTarget(attackTarget);
+        if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
     }
 
     protected override void OnAttackCanceled(InputAction.CallbackContext context)
     {
         base.OnAttackCanceled(context);
+
+        if (stateMachine.CurrentBattleModule is BattleModule_Yuki yuki)
+            yuki.OnAttackCanceled();
     }
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
