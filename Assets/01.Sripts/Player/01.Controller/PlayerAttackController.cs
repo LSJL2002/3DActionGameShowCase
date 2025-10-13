@@ -93,8 +93,6 @@ public class PlayerAttackController : MonoBehaviour
                 skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation,
                     (target, hitPoint) => HandleHit(target, hitPoint, damageMultiplier))
                     ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
-
-                AudioManager.Instance?.PlaySFX(skillName);
             }
             else
             {

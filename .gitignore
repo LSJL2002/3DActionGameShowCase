@@ -77,3 +77,14 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# --- URP 및 Shader Graph 동기화 예외 ---
+
+# URP Render Pipeline Asset & Renderer
+!Assets/Settings/UniversalRenderPipelineAsset.asset
+!Assets/Settings/ForwardRenderer.asset
+# Shader Graph Asset
+!Assets/**/*.shadergraph
+# ProjectSettings 중 URP 관련 설정
+!ProjectSettings/GraphicsSettings.asset
+!ProjectSettings/QualitySettings.asset
