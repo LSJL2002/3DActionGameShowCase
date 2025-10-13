@@ -88,7 +88,7 @@ public class ObjectFollow : MonoBehaviour
 
     void OnMove()
     {
-        bool isMoving = rb != null && rb.velocity.sqrMagnitude > (moveSpeedThreshold * moveSpeedThreshold);
+        bool isMoving = rb != null && rb.linearVelocity.sqrMagnitude > (moveSpeedThreshold * moveSpeedThreshold);
 
         // 애니메이션
         anim.SetBool("isMove", isMoving);

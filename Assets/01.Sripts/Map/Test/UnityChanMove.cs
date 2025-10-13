@@ -50,10 +50,10 @@ public class UnityChanMove : MonoBehaviour
             worldMove.Normalize();
 
         // 속도 적용 (y는 유지)
-        Vector3 vel = _rb.velocity;
+        Vector3 vel = _rb.linearVelocity;
         vel.x = worldMove.x * finalSpeed;
         vel.z = worldMove.z * finalSpeed;
-        _rb.velocity = vel;
+        _rb.linearVelocity = vel;
 
         // 입력 벡터가 0이 아닐 때만 회전
         if (worldMove != Vector3.zero)

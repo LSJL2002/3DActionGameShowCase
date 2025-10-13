@@ -87,7 +87,7 @@ public class FollowState : PetState
         // 앵커 근처면 확실히 정지(잔여 속도 제거)
         if (toAnchor <= comp.stopBuffer * 0.9f)
         {
-            comp.rb.velocity = Vector3.zero;
+            comp.rb.linearVelocity = Vector3.zero;
             comp.rb.angularVelocity = Vector3.zero;
             return;
         }
