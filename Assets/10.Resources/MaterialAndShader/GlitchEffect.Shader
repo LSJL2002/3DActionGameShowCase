@@ -122,16 +122,16 @@ Shader "URP/ImageEffect/Glitch" {
                 // 3. 색상 분리 및 샘플링
                 
                 // Red 채널: X축 +UV 오프셋 적용
-                half3 r = SAMPLE_TEXTURE2D(_GrabTexture, sampler_GrabTexture, float2(screenUV.x + UV, screenUV.y)).r
-                         * lerp(half3(1, 0, 0), _GlitchColor1, GlitchAmountFinal);
+                fixed3 r = SAMPLE_TEXTURE2D(_GrabTexture, sampler_GrabTexture, float2(screenUV.x + UV, screenUV.y)).r
+                         * lerp(fixed3(1, 0, 0), _GlitchColor1, GlitchAmountFinal);
                 
                 // Green 채널: X축 -UV 오프셋 적용
-                half3 g = SAMPLE_TEXTURE2D(_GrabTexture, sampler_GrabTexture, float2(screenUV.x - UV, screenUV.y)).g
-                         * lerp(half3(0, 1, 0), _GlitchColor2, GlitchAmountFinal);
+                fixed3 g = SAMPLE_TEXTURE2D(_GrabTexture, sampler_GrabTexture, float2(screenUV.x - UV, screenUV.y)).g
+                         * lerp(fixed3(0, 1, 0), _GlitchColor2, GlitchAmountFinal);
                 
                 // Blue 채널: Y축 +UV 오프셋 적용
-                half3 b = SAMPLE_TEXTURE2D(_GrabTexture, sampler_GrabTexture, float2(screenUV.x, screenUV.y + UV)).b
-                         * lerp(half3(0, 0, 1), _GlitchColor3, GlitchAmountFinal);
+                fixed3 b = SAMPLE_TEXTURE2D(_GrabTexture, sampler_GrabTexture, float2(screenUV.x, screenUV.y + UV)).b
+                         * lerp(fixed3(0, 0, 1), _GlitchColor3, GlitchAmountFinal);
 
                 // 4. 최종 색상 조합
                 half3 GlitchFinal = r + g + b;
