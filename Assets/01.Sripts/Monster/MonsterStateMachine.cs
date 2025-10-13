@@ -29,6 +29,7 @@ public class MonsterStateMachine : StateMachine
 
     //smileMachine_UseFire 스킬
     public SmileMachineFire SmileMachineFire { get; private set; }
+    public SmileMachine_FireShoot SmileMachine_FireShoot { get; private set; }
 
     private MonsterAIEvents aiEvents;
     public bool isAttacking = false;
@@ -79,6 +80,8 @@ public class MonsterStateMachine : StateMachine
             SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
             var fireSkill = monster.Stats.GetSkill("SmileMachine_Fire");
             SmileMachineFire = new SmileMachineFire(this, fireSkill);
+            var fireShootSkill = monster.Stats.GetSkill("SmileMachine_FireShoot");
+            SmileMachine_FireShoot = new SmileMachine_FireShoot(this, fireShootSkill);
         }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();
