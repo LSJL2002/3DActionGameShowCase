@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Rendering.Universal;
 
 public class CameraManager : MonoBehaviour
 {
     public Transform MainCamera { get; private set; }
-    public PostProcessVolume Volume { get; private set; }
+    public Volume Volume { get; private set; }
     public CinemachineFreeLook FreeLookCam { get; private set; }
-    [field:SerializeField]public PostProcessVolume VisualVolume { get; private set; }
-    private ColorGrading colorGrading;
+    [field:SerializeField]public Volume VisualVolume { get; private set; }
+    private ColorAdjustments colorAdjustments;
 
 
     public CinemachineTargetGroup targetGroup {  get; private set; }
@@ -25,7 +27,7 @@ public class CameraManager : MonoBehaviour
     private void Awake()
     {
         MainCamera = Camera.main.transform;
-        Volume = MainCamera.gameObject.GetComponent<PostProcessVolume>();
+        Volume = MainCamera.gameObject.GetComponent<Volume>();
         var freeLooks = GetComponentsInChildren<CinemachineFreeLook>();
         FreeLookCam = freeLooks[0]; // 첫 번째
         // FreeLook = freeLooks.FirstOrDefault(f => f.name == "PlayerCam"); // 이름으로 골라내기
@@ -37,9 +39,8 @@ public class CameraManager : MonoBehaviour
         if (VisualVolume != null)
         {
             // 프로필에서 Color Grading 가져오기
-            VisualVolume.profile.TryGetSettings(out colorGrading);
+            VisualVolume.profile.TryGet<ColorAdjustments>(out colorAdjustments);
         }
-
     }
 
 
@@ -142,8 +143,8 @@ public class CameraManager : MonoBehaviour
     // Color Grading 켜기/끄기
     public void SetColorGradingEnabled(bool enabled)
     {
-        if (colorGrading == null) return;
+        if (colorAdjustments == null) return;
 
-        colorGrading.active = enabled;
+        colorAdjustments.active = enabled;
     }
 }
