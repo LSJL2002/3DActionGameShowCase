@@ -35,7 +35,7 @@ public class CompanionFollowState : ICompanionState
     public void Update()
     {
         // 이동 중 애니 판정
-        bool isMoving = Ctx.rb && Ctx.rb.velocity.sqrMagnitude > Ctx.moveSpeedThreshold * Ctx.moveSpeedThreshold;
+        bool isMoving = Ctx.rb && Ctx.rb.linearVelocity.sqrMagnitude > Ctx.moveSpeedThreshold * Ctx.moveSpeedThreshold;
         Ctx.anim?.SetBool("isMove", isMoving);
         
         if (!Ctx.isTalkMode && !Ctx.isAttack && Ctx.targetObject && Ctx.rb)

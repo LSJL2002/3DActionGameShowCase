@@ -13,7 +13,7 @@ public class IdleState : PetState
     public override void Enter()
     {
         // 남은 물리 속도 제거(살짝 미끄러지는 현상 방지)
-        comp.rb.velocity = Vector3.zero;
+        comp.rb.linearVelocity = Vector3.zero;
         comp.rb.angularVelocity = Vector3.zero;
     }
 
