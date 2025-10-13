@@ -78,28 +78,55 @@ public class MapManager : Singleton<MapManager>
         {
             tutorialWall.SetActive(true);
 
-            if (zoneDict.TryGetValue(startingZoneId, out var startZone))
-            {
-                startZone.gameObject.SetActive(true);
-                currentZone = startZone;
-            }
+            //if (zoneDict.TryGetValue(startingZoneId, out var startZone))
+            //{
+            //    startZone.gameObject.SetActive(true);
+            //    currentZone = startZone;
+            //}
 
 
-            Debug.Log("맵 초기화 완료");
+            //Debug.Log("맵 초기화 완료");
+            ReturnToStartZone();
             UIManager.Instance.tutorialEnabled = true;
+            
         }
 
         else if (GameManager.Instance.gameMode == eGameMode.LoadGame)
         {
+            
             tutorialWall.SetActive(false);
             int lastClearStage = SaveManager.Instance.playerData.LastClearStage;
-            if (zoneDict.TryGetValue(lastClearStage, out var cleardZone))
+
+            if (lastClearStage == BossZoneId)
             {
-                OpenNextZone(cleardZone);
+                ReturnToStartZone();
             }
+            else if (zoneDict.TryGetValue(lastClearStage, out var clearedZone))
+            {
+                OpenNextZone(clearedZone);
+            }
+
 
             currentZone = null;
             Debug.Log("맵 불러오기 완료");
+        }
+    }
+
+    private void ReturnToStartZone()
+    {
+        if (zoneDict.TryGetValue(startingZoneId, out var startZone))
+        {
+            // 모든 존 비활성화 (안전장치)
+            foreach (var zone in zoneDict.Values)
+                zone.gameObject.SetActive(false);
+
+            startZone.gameObject.SetActive(true);
+            currentZone = startZone;
+            Debug.Log("시작 스테이지로 복귀!");
+        }
+        else
+        {
+            Debug.LogError("시작 스테이지를 찾을 수 없습니다!");
         }
     }
 
@@ -132,14 +159,7 @@ public class MapManager : Singleton<MapManager>
     {
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
-            SceneLoadManager.Instance.LoadScene(0);
-            Debug.Log("마지막 스테이지 클리어!");
-            round++;
-            Debug.Log("현재 회차 : " + round);
-            //if (round == 0)
-            // SceneManager.LoadScene("Stage2");
-            //if (round == 1)
-            //진엔딩
+            HandleLastStageClear();
             return;
         }
 
@@ -161,6 +181,18 @@ public class MapManager : Singleton<MapManager>
         //Addressables.ReleaseInstance(zone.gameObject);
         currentZone = null;
 
+    }
+
+    private void HandleLastStageClear()
+    {
+        round++;
+        Debug.Log($"마지막 스테이지 클리어! 현재 회차: {round}");
+
+        // 필요시 세이브 추가
+        SaveManager.Instance.SaveData();
+
+        // 씬 리셋 or 엔딩씬
+        SceneLoadManager.Instance.LoadScene(0);
     }
 
     //public async Task<GameObject> LoadAscync(string str)
