@@ -127,7 +127,7 @@ public class BattleManager : Singleton<BattleManager>
 
 
 
-    private void Update()
+    protected override void Update()
     {
         if (Input.GetKeyDown(KeyCode.O))
         {
@@ -138,6 +138,13 @@ public class BattleManager : Singleton<BattleManager>
         {
             if (currentZone != null)
                 currentMonster.GetComponent<BaseMonster>().OnTakeDamage(50000);
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if(currentZone != null)
+            {
+                PlayerManager.Instance.Stats.TakeDamage(5000);
+            }
         }
     }
 
@@ -181,12 +188,15 @@ public class BattleManager : Singleton<BattleManager>
     public void ClearBattle()
     {
         OnBattleClear?.Invoke(currentZone);
+        SaveManager.Instance.AddStageData(currentZone.id);
+        SaveManager.Instance.SaveData();
 
-        Addressables.ReleaseInstance(currentMonster.gameObject); //갈무리하고나서로 수정
+        Addressables.ReleaseInstance(currentMonster.gameObject); 
         currentZone = null;
         currentMonster = null;
         monsterStats = null;
         isBattle = false;
+        
     }
 
     public void ResetBattleState()
