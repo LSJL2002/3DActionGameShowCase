@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -29,7 +30,7 @@ public class GameScene : SceneBase
         attackGaugeCanvasGroup = UIManager.Instance.Get<AttackGaugeUI>().GetComponent<CanvasGroup>();
     }
 
-    protected override void Start()
+    protected override async void Start()
     {
         base.Start();
         hasData = SaveManager.Instance.LoadData();
@@ -39,9 +40,13 @@ public class GameScene : SceneBase
 
         AudioManager.Instance.PlayBGM("InGameBGM");
 
+        
+
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
 
+        await MapManager.Instance.LoadMap();
+        await Task.Yield();
         if (!hasData || SaveManager.Instance.playerData.LastClearStage == 0)
         {
             GameManager.Instance.gameMode = eGameMode.NewGame;
