@@ -50,8 +50,10 @@ public class AudioManager : Singleton<AudioManager>
     public float BgmVolume => _bgmVolume;
     public float SfxVolume => _sfxVolume;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // BGM 오디오 소스 생성
         bgmSource = gameObject.AddComponent<AudioSource>();
         bgmSource.outputAudioMixerGroup = bgmGroup;
