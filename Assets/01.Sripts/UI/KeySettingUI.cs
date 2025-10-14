@@ -33,7 +33,7 @@ public class KeySettingUI : UIBase
 
             case "Quit":
                 // Home씬으로 돌아가기 (거기서 종료가능)
-                SceneLoadManager.Instance.LoadScene(0);
+                SceneLoadManager.Instance.LoadScene(1);
                 Hide();
                 break;
 
