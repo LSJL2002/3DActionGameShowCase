@@ -84,7 +84,7 @@ public class ForceReceiver : MonoBehaviour
             impact = Vector3.SmoothDamp(impact, Vector3.zero, ref dampingVelocity, drag);
 
             // 이동 적용
-            if (controller != null)
+            if (controller != null && controller.enabled && gameObject.activeInHierarchy)
                 controller.Move(Movement * Time.deltaTime);
 
             // 착지 시 Y축 초기화
