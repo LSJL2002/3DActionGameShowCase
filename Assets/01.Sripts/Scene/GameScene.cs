@@ -37,7 +37,7 @@ public class GameScene : SceneBase
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
 
-        AudioManager.Instance.PlayBGM("1");
+        AudioManager.Instance.PlayBGM("InGameBGM");
 
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
