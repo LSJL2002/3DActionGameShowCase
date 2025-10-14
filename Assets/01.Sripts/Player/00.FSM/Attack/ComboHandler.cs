@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class ComboHandler
 {
+    public event Action OnComboFinished; // <- 콤보 끝 알림
+
     private int currentIndex = -1;          // 현재 콤보 인덱스 (-1 = 비활성)
     private bool queued;                    // 다음 콤보 예약 여부
     private float lastInputTime;
@@ -118,6 +120,8 @@ public class ComboHandler
     {
         currentIndex = -1;
         queued = false;
+
+        OnComboFinished?.Invoke();
     }
 
     public bool IsActive => currentIndex >= 0;
