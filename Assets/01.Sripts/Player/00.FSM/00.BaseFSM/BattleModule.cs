@@ -16,6 +16,7 @@ public interface IBattleModule
 {
     void OnAttack();                     // 공격 입력
     void OnSkill();                      // 스킬 입력
+    void OnSkillUpdate();                // 스킬 상태 전용 업데이트
     void OnUpdate();                     // 매 프레임 업데이트
     void OnAttackCanceled();             // 공격 취소
     void ResetCombo();                   // 콤보 초기화
@@ -38,14 +39,22 @@ public interface IBattleModule
         comboHandler?.RegisterInput();
     }
     public abstract void OnSkill();
+    public virtual void OnSkillUpdate() { }
     public virtual void OnUpdate()
     {
         comboHandler?.Update();
     }
     public virtual void OnAttackCanceled()
     {
+        // 입력이 끊겼으므로 다음 콤보 대기 중단
+        //comboActive = false;
+        //comboTimer = 0f;
+    }
+    public virtual void OnSkillCanceled()
+    {
         // 기본 취소 시 행동 없음
     }
+
 
     public virtual void ResetCombo()
     {

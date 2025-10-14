@@ -88,6 +88,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayer
         stateMachine.HandleInput();    // 플레이어 입력 처리
         stateMachine.LogicUpdate();    // FSM 상태별 논리 업데이트
         stateMachine.HandleUpdate();   // 현재 BattleModule 업데이트
+        stateMachine.HandleSkillUpdate();
         Stats.Update();                // 스탯 처리    
     }
 
