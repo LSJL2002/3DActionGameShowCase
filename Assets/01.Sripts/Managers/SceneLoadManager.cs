@@ -33,7 +33,7 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
         targetSceneIndex = sceneIndex;
 
         // 로딩씬 로드
-        ChangeScene(3);
+        ChangeScene(4);
     }
 
     // 매개변수1(씬번호) : 로드할 씬번호

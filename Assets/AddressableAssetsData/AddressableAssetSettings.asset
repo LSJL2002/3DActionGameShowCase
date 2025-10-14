@@ -17,7 +17,7 @@ MonoBehaviour:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -48,8 +48,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bf28c28a6fb6cbe4c91dbf4f0fbf90da, type: 2}
   - {fileID: 11400000, guid: 2afc364a61af1fa499038623d65086c8, type: 2}
   - {fileID: 11400000, guid: 9eb21e7b44a61d847b76ff53ea16b648, type: 2}
-  - {fileID: 11400000, guid: 4ed442cb5e985224e82afa6f1c37e57f, type: 2}
-  - {fileID: 11400000, guid: 9b76c0bc61ace514c80acdb4989d0bc4, type: 2}
   - {fileID: 11400000, guid: cd2b0cefc5a556b46a45271213f88adc, type: 2}
   - {fileID: 11400000, guid: f877f9fe328196a439e7165fa821d0cf, type: 2}
   - {fileID: 11400000, guid: 2b42e1a043f77f947ae4e85699f3a2cc, type: 2}
@@ -75,7 +73,7 @@ MonoBehaviour:
       - m_Id: c95728ce93768884abdb0295ea8a8947
         m_Value: 'ServerData/[BuildTarget]'
       - m_Id: 447f2ec952b7e2f46a29baf61a592aab
-        m_Value: 'http://[PrivateIpAddress]:[HostingServicePort]'
+        m_Value: 'https://s3.ap-southeast-2.amazonaws.com/project8.addressable/[BuildTarget]'
     m_ProfileEntryNames:
     - m_Id: c135bcc2caf4c64448da16a60d765e24
       m_Name: BuildTarget
@@ -97,6 +95,12 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - Dialogue
+    - UI
+    - Monster
+    - Map
+    - Item
+    - TimeLine
+    - Camera
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 3eefa680fc65d614fb4df01fe0e5002a, type: 2}

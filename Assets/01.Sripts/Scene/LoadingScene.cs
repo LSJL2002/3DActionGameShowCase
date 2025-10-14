@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public class LoadingScene : SceneBase
 {
-    public TextMeshProUGUI loadingText; // 씬로딩 텍스트
-    public Slider loadingSlider; // 씬로딩 슬라이더바
+    [SerializeField] private TextMeshProUGUI loadingText; // 씬로딩 텍스트
+    [SerializeField] private Slider loadingSlider; // 씬로딩 슬라이더바
+    private float currentProgress = 0f;
 
     protected override void Awake()
     {
@@ -26,22 +27,26 @@ public class LoadingScene : SceneBase
 
         while (!operation.isDone)
         {
-            float progress = Mathf.Clamp01(operation.progress / 0.9f);
+            // 실제 진행률 (최대 0.9까지)
+            float targetProgress = operation.progress;
 
-            // 로딩 슬라이더의 값에 진행률을 대입
-            loadingSlider.value = progress;
-            // 로딩 텍스트 업데이트
-            loadingText.text = $"Loading... {(int)(progress * 100)}%";
+            // 90%까지 부드럽게 보간
+            // 현재 슬라이더 값(currentProgress)을 실제 로딩 진행률(targetProgress)까지 부드럽게 증가
+            currentProgress = Mathf.Lerp(currentProgress, targetProgress, Time.deltaTime * 5f); // 5f는 속도 조절
+
+            // 0.9로 나누어 0~100%로 변환
+            float displayProgress = Mathf.Clamp01(currentProgress / 0.9f);
+
+            loadingSlider.value = displayProgress;
+            loadingText.text = $"Loading... {(int)(displayProgress * 100)}%";
 
             // 진행율이 90% 이상이 되면,
             if (operation.progress >= 0.9f)
             {
-                // 슬라이더를 100%로 맞추고
-                loadingSlider.maxValue = 1f;
-
-                // 씬변경 허가
+                // 씬 변경 허가
                 operation.allowSceneActivation = true;
             }
+
             yield return null;
         }
     }
