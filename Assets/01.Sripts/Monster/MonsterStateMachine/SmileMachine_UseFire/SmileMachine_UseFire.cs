@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class SmileMachine_UseFire : BaseMonster
 {
+    [Header("FlameThrower Effect")]
     public GameObject flameThrowerEffect;
     public Collider baseAttackCollider;
     public GameObject firePoint;
+
+    [Header("Fireball Effects")]
+    public GameObject fireball;
+    public GameObject groundFire;
 
     protected override void Awake()
     {
@@ -24,6 +29,7 @@ public class SmileMachine_UseFire : BaseMonster
             case States.Skill2: return stateMachine.SmileToiletSlamState;
             case States.Skill3: return stateMachine.SmileToiletChargeState;
             case States.Skill4: return stateMachine.SmileMachineFire;
+            case States.Skill5: return stateMachine.SmileMachine_FireShoot;
             case States.BaseAttack: return stateMachine.MonsterBaseAttack;
             case States.BaseAttack2: return stateMachine.MonsterBaseAttackAlt;
             default: return null;
@@ -32,18 +38,12 @@ public class SmileMachine_UseFire : BaseMonster
 
     protected override float GetSkillRangeFromState(MonsterBaseState state)
     {
-        switch (state)
-        {
-            case SmileToiletSlamState:
-                return Stats.GetSkill("SmileMachine_Slam").range / 2f;
-            case SmileToiletSmashState:
-                return Stats.GetSkill("SmileMachine_Smash").range / 2f;
-            case SmileToiletChargeState:
-                return Stats.GetSkill("SmileMachine_Charge").range;
-            case SmileMachineFire:
-                return Stats.GetSkill("SmileMachine_Fire").range;
-            default:
-                return Stats.AttackRange;
-        }
+        if (state is SmileToiletSlamState) return Stats.GetSkill("SmileMachine_Slam").range / 2f;
+        if (state is SmileToiletSmashState) return Stats.GetSkill("SmileMachine_Smash").range / 2f;
+        if (state is SmileToiletChargeState) return Stats.GetSkill("SmileMachine_Charge").range;
+        if (state is SmileMachineFire) return Stats.GetSkill("SmileMachine_Fire").range;
+        if (state is SmileMachine_FireShoot) return Stats.GetSkill("SmileMachine_FireShoot").skillUseRange;
+
+        return Stats.AttackRange;
     }
 }
