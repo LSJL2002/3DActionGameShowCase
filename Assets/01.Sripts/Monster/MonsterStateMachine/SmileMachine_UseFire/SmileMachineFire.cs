@@ -17,7 +17,6 @@ public class SmileMachineFire : MonsterBaseState
     public override void Enter()
     {
         stateMachine.isAttacking = true;
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
 
         if (stateMachine.Monster is SmileMachine_UseFire monster)
         {
@@ -36,6 +35,7 @@ public class SmileMachineFire : MonsterBaseState
 
     private IEnumerator FlameRoutine()
     {
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         float elapsed = 0f;
         float duration = skillData.duration;
 
