@@ -24,11 +24,12 @@ public class PlayerAttackState : PlayerBaseState
 
         stateMachine.IsAttacking = true;
 
-        module = stateMachine.CurrentBattleModule;
-
         attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
         stateMachine.Player.Attack.SetAttackTarget(attackTarget);
         if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
+
+        module = stateMachine.CurrentBattleModule;
+        if (module != null) module.OnAttackEnd += HandleAttackEnd;
     }
 
     public override void Exit()
@@ -37,6 +38,8 @@ public class PlayerAttackState : PlayerBaseState
         StopAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
 
         stateMachine.IsAttacking = false;
+
+        if (module != null) module.OnAttackEnd -= HandleAttackEnd;
     }
 
     public override void LogicUpdate()
@@ -44,12 +47,6 @@ public class PlayerAttackState : PlayerBaseState
         base.LogicUpdate();
 
         module?.OnUpdate();
-
-        // 콤보가 비활성화되면 Idle로 전환
-        if (module?.ComboHandler?.IsActive == false)
-        {
-            stateMachine.ChangeState(stateMachine.IdleState);
-        }
     }
 
     protected override void OnAttackStarted(InputAction.CallbackContext context)
@@ -80,5 +77,10 @@ public class PlayerAttackState : PlayerBaseState
         {
             stateMachine.ChangeState(stateMachine.DodgeState);
         }
+    }
+
+    private void HandleAttackEnd()
+    {
+        stateMachine.ChangeState(stateMachine.IdleState);
     }
 }

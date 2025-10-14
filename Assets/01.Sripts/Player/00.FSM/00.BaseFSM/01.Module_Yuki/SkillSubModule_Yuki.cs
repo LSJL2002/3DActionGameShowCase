@@ -1,55 +1,45 @@
+using System;
 using UnityEngine;
 
 public class SkillSubModule_Yuki
 {
+    public event Action OnSkillEnd; // FSM에게 신호 전달용
+
     private PlayerStateMachine sm;
 
     private Transform attackTarget;
-    private Vector3 dashDir;
-    private Vector3 returnDir;
+    private Vector3 dashDir, returnDir;
     private float phaseTimer;
 
     private enum Phase { None, Dash, Wait, Return }
     private Phase phase = Phase.None;
 
-    // ====== 설정값 ======
-    private readonly float stopDistance = 2f;
-    private readonly float dashPower = 12f;
-    private readonly float returnPower = 8f;
-    private readonly float dashDuration = 0.15f;
-    private readonly float returnDuration = 0.1f;
-    private readonly float waitTime = 0.8f;
+    // 설정값
+    private const float StopDistance = 2f;
+    private const float DashPower = 12f;
+    private const float ReturnPower = 8f;
+    private const float DashDuration = 0.15f;
+    private const float ReturnDuration = 0.1f;
+    private const float WaitTime = 0.8f;
 
-    public SkillSubModule_Yuki(PlayerStateMachine sm)
-    {
-        this.sm = sm;
-    }
+    public SkillSubModule_Yuki(PlayerStateMachine sm) => this.sm = sm;
 
     public void OnSkill()
     {
         var player = sm.Player;
-
         attackTarget = player.Attack.CurrentAttackTarget;
 
-        // 애니메이션, 파티클
-        var anim = player.AnimationData;
-        player.Animator.SetTrigger(anim.SkillTriggerHash);
+        player.Animator.CrossFade("Skill1", 0.1f);
         player.vFX.StartDash();
 
-        // 스킬 데이터 공격
         var skillData = player.InfoData.SkillData.GetSkillInfoData(0);
-        player.Attack.OnAttack(
-            skillData.SkillName,
-            skillData.HitCount,
-            skillData.Interval,
-            skillData.DamageMultiplier
-        );
+        player.Attack.OnAttack(skillData.SkillName, skillData.HitCount, skillData.Interval, skillData.DamageMultiplier);
 
-        // 방향 설정
         if (attackTarget != null)
         {
             dashDir = (attackTarget.position - player.transform.position).normalized;
             dashDir.y = 0f;
+
             if (dashDir.sqrMagnitude > 0.01f)
                 player.transform.rotation = Quaternion.LookRotation(dashDir);
 
@@ -65,13 +55,17 @@ public class SkillSubModule_Yuki
         }
 
         phaseTimer = 0f;
-        sm.IsSkill = true;
+    }
+
+    public void OnSkillCanceled()
+    {
+        ExitSkill(sm.Player);
     }
 
     public void OnSkillUpdate()
     {
-        var player = sm.Player;
         phaseTimer += Time.deltaTime;
+        var player = sm.Player;
 
         switch (phase)
         {
@@ -85,17 +79,17 @@ public class SkillSubModule_Yuki
     {
         if (attackTarget != null)
         {
-            Vector3 toTarget = attackTarget.position - player.transform.position;
+            var toTarget = attackTarget.position - player.transform.position;
             toTarget.y = 0f;
             float distance = toTarget.magnitude;
 
-            if (distance <= stopDistance)
+            if (distance <= StopDistance)
             {
                 TransitionToPhase(Phase.Wait);
                 return;
             }
 
-            float moveDistance = Mathf.Min(dashPower * Time.deltaTime, distance - stopDistance);
+            float moveDistance = Mathf.Min(DashPower * Time.deltaTime, distance - StopDistance);
             player.ForceReceiver.AddForce(toTarget.normalized * moveDistance / Time.deltaTime);
         }
         else
@@ -103,21 +97,21 @@ public class SkillSubModule_Yuki
             TransitionToPhase(Phase.Wait);
         }
 
-        if (phaseTimer >= dashDuration)
+        if (phaseTimer >= DashDuration)
             TransitionToPhase(Phase.Wait);
     }
 
     private void HandleWait(PlayerManager player)
     {
         player.ForceReceiver.Reset();
-        if (phaseTimer >= waitTime)
+        if (phaseTimer >= WaitTime)
             TransitionToPhase(Phase.Return);
     }
 
     private void HandleReturn(PlayerManager player)
     {
-        player.ForceReceiver.AddForce(returnDir * returnPower);
-        if (phaseTimer >= returnDuration)
+        player.ForceReceiver.AddForce(returnDir * ReturnPower);
+        if (phaseTimer >= ReturnDuration)
         {
             player.ForceReceiver.Reset();
             ExitSkill(player);
@@ -137,9 +131,9 @@ public class SkillSubModule_Yuki
 
         player.vFX.StopDash();
         player.ForceReceiver.Reset();
-        sm.IsSkill = false;
         phase = Phase.None;
 
-        sm.ChangeState(sm.IdleState);
+        // 이벤트로 FSM에게 종료 알림
+        OnSkillEnd?.Invoke();
     }
 }

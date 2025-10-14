@@ -22,11 +22,7 @@ public class PlayerStateMachine : StateMachine
     public void HandleAttackInput() => CurrentBattleModule?.OnAttack();
     public void HandleSkillInput() => CurrentBattleModule?.OnSkill();
     public void HandleUpdate() => CurrentBattleModule?.OnUpdate();
-    public void HandleSkillUpdate()
-    {
-        if (IsSkill)
-            CurrentBattleModule?.OnSkillUpdate();
-    }
+    public void HandleSkillUpdate() => CurrentBattleModule?.OnSkillUpdate();
 
 
     // 원본 데이터

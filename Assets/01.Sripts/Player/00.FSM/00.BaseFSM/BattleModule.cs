@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,23 +7,27 @@ using UnityEngine;
 
 public enum CharacterType
 {
-    Yuki,  // 1차 캐릭터: 각성 모드 + 근접평타 변환
-    Aoi,   // 2차 캐릭터: 기본 원거리 + 게이지 기반 스킬
-    Mika   // 3차 캐릭터: 콤보마다 스킬 발동
+    Yuki,  // 1차 캐릭터: 근접 + 각성 모드
+    Aoi,   // 2차 캐릭터: 원거리 + 게이지 스킬
+    Mika   // 3차 캐릭터: 콤보 기반 스킬
 }
 
 // =============== 인터페이스 ===============
 public interface IBattleModule
 {
-    void OnAttack();                     // 공격 입력
-    void OnSkill();                      // 스킬 입력
-    void OnSkillUpdate();                // 스킬 상태 전용 업데이트
-    void OnUpdate();                     // 매 프레임 업데이트
-    void OnAttackCanceled();             // 공격 취소
-    void ResetCombo();                   // 콤보 초기화
-    void OnEnemyHit(IDamageable target); // 타격 성공 시 호출
+    event Action OnAttackEnd;
+    event Action OnSkillEnd;
 
-    ComboHandler ComboHandler { get; }   // 외부 참조용
+    void OnAttack();                        // 기본 공격
+    void OnAttackCanceled();                
+    void OnUpdate();                  
+    void OnSkill();                         // 스킬 입력
+    void OnSkillCanceled();
+    void OnSkillUpdate();                   
+    void ResetCombo();                      // 콤보 초기화
+    void OnEnemyHit(IDamageable target);    // 타격 성공 시 호출
+
+    ComboHandler ComboHandler { get; }      // 외부 참조용
 }
 
     // =============== 추상 기본 모듈 ===============
@@ -32,37 +37,24 @@ public interface IBattleModule
     protected ComboHandler comboHandler;
     public ComboHandler ComboHandler => comboHandler; // 외부 참조용
 
+    public event Action OnAttackEnd;
+    public event Action OnSkillEnd;
+
     public BattleModule(PlayerStateMachine sm) => this.sm = sm;
 
-    public virtual void OnAttack()
-    {
-        comboHandler?.RegisterInput();
-    }
+    protected void RaiseAttackEnd() => OnAttackEnd?.Invoke();
+    protected void RaiseSkillEnd() => OnSkillEnd?.Invoke();
+    // === 공격 ===
+    public virtual void OnAttack() => comboHandler?.RegisterInput();
+    public virtual void OnAttackCanceled() { }
+    public virtual void OnUpdate() => comboHandler?.Update();
+
+    // === 스킬 ===
     public abstract void OnSkill();
+    public virtual void OnSkillCanceled() { }
     public virtual void OnSkillUpdate() { }
-    public virtual void OnUpdate()
-    {
-        comboHandler?.Update();
-    }
-    public virtual void OnAttackCanceled()
-    {
-        // 입력이 끊겼으므로 다음 콤보 대기 중단
-        //comboActive = false;
-        //comboTimer = 0f;
-    }
-    public virtual void OnSkillCanceled()
-    {
-        // 기본 취소 시 행동 없음
-    }
 
-
-    public virtual void ResetCombo()
-    {
-        comboHandler = null;
-    }
-
-    public virtual void OnEnemyHit(IDamageable target)
-    {
-        // 기본 동작: 히트하면 아무것도 안함
-    }
+    // === 기타 ===
+    public virtual void OnEnemyHit(IDamageable target) { }
+    public virtual void ResetCombo() => comboHandler = null;
 }

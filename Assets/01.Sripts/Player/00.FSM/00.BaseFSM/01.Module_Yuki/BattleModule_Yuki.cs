@@ -20,56 +20,47 @@ public class BattleModule_Yuki : BattleModule
 
         // 초기 콤보 핸들러 연결
         comboHandler = comboSub.ComboHandler;
+
+        // 하위 모듈의 이벤트를 받아서 자신 이벤트로 중계
+        skillSub.OnSkillEnd += RaiseSkillEnd;
+        comboSub.OnComboEnd += RaiseAttackEnd;
+        awakenSub.OnAwakenEnd += RaiseAttackEnd;
     }
 
     // ================== 기본 공격 입력 =================
     public override void OnAttack()
     {
-        if (awakenSub.IsAwakened)
-            comboSub.SetAwakened(true);
-        else
-            comboSub.SetAwakened(false);
-
+        comboSub.SetAwakened(awakenSub.IsAwakened);
         comboSub.OnAttack();
         awakenSub.CheckAwakenHoldStart();
     }
 
-    // ================== 공격 취소 ==================
     public override void OnAttackCanceled()
     {
         comboSub.OnAttackCanceled();
         awakenSub.OnAttackCanceled();
     }
 
-    // ================== 스킬 입력 ==================
-    public override void OnSkill()
-    {
-        skillSub.OnSkill();
-    }
+    // === 스킬 ===
+    public override void OnSkill() => skillSub.OnSkill();
+    public override void OnSkillCanceled() => skillSub.OnSkillCanceled();
 
-    // ============== 일반 업데이트 (항상 호출) =================
+
+    // === 업데이트 ===
     public override void OnUpdate()
     {
         comboSub.OnUpdate();
         awakenSub.OnUpdate();
     }
+    public override void OnSkillUpdate() => skillSub.OnSkillUpdate();
 
-    // ============== 스킬 중 업데이트 (스킬 상태일 때만) ==========
-    public override void OnSkillUpdate()
-    {
-        skillSub.OnSkillUpdate();
-    }
 
-    // =========== 적 타격 시 (콤보/각성게이지 반영 등) ============
+    // === 기타 ===
     public override void OnEnemyHit(IDamageable target)
     {
         comboSub.OnEnemyHit(target);
         awakenSub.OnEnemyHit(target);
     }
 
-    // ===================== 콤보 리셋 ======================
-    public override void ResetCombo()
-    {
-        comboSub.ResetCombo();
-    }
+    public override void ResetCombo() => comboSub.ResetCombo();
 }

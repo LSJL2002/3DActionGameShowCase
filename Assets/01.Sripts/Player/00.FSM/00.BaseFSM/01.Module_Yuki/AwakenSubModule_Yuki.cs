@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class AwakenSubModule_Yuki
 {
+    public event Action OnAwakenEnd;
+
     private PlayerStateMachine sm;
     private bool isAwakened;
     private float currentGauge;
-    private const float decayRate = 10f;
+
+    private const float DecayRate = 10f;
+    private const float AwakenThreshold = 100f;
+
     private bool isHoldingAttack;
     private bool isCheckingHold;
     private float holdStartTime;
-    private const float awakenThreshold = 100f;
 
     public bool IsAwakened => isAwakened;
 
@@ -25,7 +29,7 @@ public class AwakenSubModule_Yuki
     {
         if (!isAwakened) return;
 
-        currentGauge -= decayRate * Time.deltaTime;
+        currentGauge -= DecayRate * Time.deltaTime;
         if (currentGauge <= 0f)
             ExitAwakenedMode();
     }
@@ -42,10 +46,7 @@ public class AwakenSubModule_Yuki
             HoldCheckAsync().Forget();
     }
 
-    public void OnAttackCanceled()
-    {
-        isHoldingAttack = false;
-    }
+    public void OnAttackCanceled() => isHoldingAttack = false;
 
     private async UniTask HoldCheckAsync()
     {
@@ -69,7 +70,7 @@ public class AwakenSubModule_Yuki
     private async UniTask TryEnterAwakenedMode()
     {
         var stats = sm.Player.Stats;
-        if (stats.AwakenGauge >= awakenThreshold)
+        if (stats.AwakenGauge >= AwakenThreshold)
         {
             await EnterAwakenedMode();
             stats.AwakenGauge = 0;
@@ -98,7 +99,7 @@ public class AwakenSubModule_Yuki
         sm.Player.skill.SpawnSkill("Awaken2", sm.Player.Body.position, sm.Player.Body.rotation);
         sm.Player.ForceReceiver?.EndVerticalHold();
 
-        sm.Player.Animator.SetTrigger("ExitAwaken");
+        sm.Player.Animator.SetTrigger("Base/Toggle_AwakenExit");
         sm.Player.camera?.SetColorGradingEnabled(true);
     }
 
@@ -106,5 +107,7 @@ public class AwakenSubModule_Yuki
     {
         isAwakened = false;
         sm.Player.camera?.SetColorGradingEnabled(false);
+
+        OnAwakenEnd?.Invoke(); // FSM으로 알림
     }
 }

@@ -83,6 +83,7 @@ public abstract class PlayerBaseState : Istate
     {
         //내부적으로 어떤 모듈이 연결되어 있든, FSM이 알아서 처리하도록 맡김
         //지금 누가 연결되어있는지 모름
+        if (stateMachine.IsSkill) return;
         stateMachine.HandleAttackInput(); // 기본 공격 입력 → 콤보 모듈로 전달
     }
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
@@ -93,6 +94,7 @@ public abstract class PlayerBaseState : Istate
     protected virtual void OnSkillStarted(InputAction.CallbackContext context)
     {
         // 스킬 입력 → 스킬 서브모듈 실행
+        if (stateMachine.IsAttacking) return;
         stateMachine.HandleSkillInput();
     }
     protected virtual void OnSkillCanceled(InputAction.CallbackContext context)

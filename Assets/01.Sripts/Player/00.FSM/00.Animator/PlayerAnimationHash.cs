@@ -20,13 +20,10 @@ public class PlayerAnimationHash
 
     [Header("Attack")]
     private string attackBoolName = "Base/Switch_AttackState";
-    private string attackTriggerName = "Base/Toggle_Attack"; // Trigger (AnyState 공격)
     private string finishAttackName = "Base/Toggle_FinishAttack"; // Trigger
-    private string comboAttackName = "Base/Toggle_ComboAttack"; // Trigger (콤보 공격)
     private string comboIntName = "Base/Index_ComboIndex"; // Int (콤보 상태)
     [Header("Skill")]
     private string skillBoolName = "Base/Switch_SkillState";
-    private string skillTriggerName = "Base/Toggle_Skill"; // Trigger (AnyState 공격)
     private string skillIntName = "Base/Index_SkillIndex"; // Int (콤보 상태)
 
     [Header("Dodge")]
@@ -59,13 +56,10 @@ public class PlayerAnimationHash
     public int FallBoolHash { get; private set; }
 
     public int AttackBoolHash { get; private set; }
-    public int AttackTriggerHash { get; private set; }
-    public int ComboTriggerHash { get; private set; }
     public int ComboIntHash { get; private set; }
     public int FinishAttackHash { get; private set; }
 
     public int SkillBoolHash { get; private set; }
-    public int SkillTriggerHash { get; private set; }
     public int SkillIntHash { get; private set; }
 
     public int DodgeParameterHash { get; private set; }
@@ -99,13 +93,10 @@ public class PlayerAnimationHash
         FallBoolHash = Animator.StringToHash(fallBoolName);
 
         AttackBoolHash = Animator.StringToHash(attackBoolName);
-        AttackTriggerHash = Animator.StringToHash(attackTriggerName);
-        ComboTriggerHash = Animator.StringToHash(comboAttackName);
         ComboIntHash = Animator.StringToHash(comboIntName);
         FinishAttackHash = Animator.StringToHash(finishAttackName);
 
         SkillBoolHash = Animator.StringToHash(skillBoolName);
-        SkillTriggerHash = Animator.StringToHash(skillTriggerName);
         SkillIntHash = Animator.StringToHash(skillIntName);
 
         DodgeParameterHash = Animator.StringToHash(dodgeParameterName);
