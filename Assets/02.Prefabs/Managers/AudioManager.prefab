@@ -51,49 +51,81 @@ MonoBehaviour:
   bgmList:
   - name: InGameBGM
     clip: {fileID: 8300000, guid: 6889b6e179a6d9a46adf321a8f0f893e, type: 3}
+    volume: 1
   - name: 2
     clip: {fileID: 8300000, guid: 6609f04e5b8ccbc49a4174f246a84dff, type: 3}
+    volume: 1
   - name: 3
     clip: {fileID: 8300000, guid: 37f4b8c77175eac409c3c8c18ca0e30b, type: 3}
+    volume: 1
   sfxList:
   - name: Attack1
     clip: {fileID: 8300000, guid: 73e289857d075b34b907d6cf28d68352, type: 3}
+    volume: 0.5
   - name: Attack2
     clip: {fileID: 8300000, guid: e5246fc1d305ac441af18b6d0e90aa2a, type: 3}
+    volume: 0.5
   - name: Attack3
     clip: {fileID: 8300000, guid: 8eb25a8208dff9743872b79464799653, type: 3}
+    volume: 0.5
   - name: Attack4
     clip: {fileID: 8300000, guid: cadfd7bb453738540a3de39d012fda2f, type: 3}
+    volume: 0.5
   - name: Attack5
     clip: {fileID: 8300000, guid: afef7d04d91896f40aacf5da181ad910, type: 3}
+    volume: 0.5
   - name: Attack6
     clip: {fileID: 8300000, guid: afef7d04d91896f40aacf5da181ad910, type: 3}
+    volume: 0.5
   - name: Skill1
     clip: {fileID: 8300000, guid: 0263e2b286668ff408736670142670b7, type: 3}
+    volume: 0.5
   - name: Hit1
-    clip: {fileID: 8300000, guid: 64ef8169c4a7ca346a8b07c24f7a9008, type: 3}
+    clip: {fileID: 8300000, guid: 8ec0224911abec24d9c17144133b32ec, type: 3}
+    volume: 0.5
+  - name: Awaken
+    clip: {fileID: 8300000, guid: 25e708826ecfc7b499b716e0a524dbe2, type: 3}
+    volume: 1
   - name: Attack11
     clip: {fileID: 8300000, guid: a5fa5c3ea09b1884b9f38411f6e72a07, type: 3}
+    volume: 1
   - name: Attack12
     clip: {fileID: 8300000, guid: 50a163505607df9479f5bc2bf93af263, type: 3}
+    volume: 1
   - name: Attack13
     clip: {fileID: 8300000, guid: a5eacb74f0ec95c4fa62f7d0289bd712, type: 3}
+    volume: 1
   - name: Attack14
     clip: {fileID: 8300000, guid: f0dec8f5fcc4d5d4588a28468c0355c8, type: 3}
+    volume: 1
+  - name: AwakenAttack1
+    clip: {fileID: 8300000, guid: 5d664271cfd9d8b4e93c79f4ea546829, type: 3}
+    volume: 1
+  - name: AwakenAttack2
+    clip: {fileID: 8300000, guid: 28ec76d1fe7c54841a5db08e12f6bae8, type: 3}
+    volume: 1
+  - name: AwakenAttack3
+    clip: {fileID: 8300000, guid: e7353204452746d47b2720db8263efa3, type: 3}
+    volume: 1
   - name: HP_Warning
     clip: {fileID: 8300000, guid: 93cc732235c896843a16df6e74b00e1b, type: 3}
+    volume: 1
   - name: Click
     clip: {fileID: 8300000, guid: f6070fca4af62ee47930afd5d357a467, type: 3}
-  - name: ButtonSoundEffect2
+    volume: 1
+  - name: Hover
     clip: {fileID: 8300000, guid: 6fd9e629e6a1e1c45bdeb81e002f6d0c, type: 3}
+    volume: 1
   - name: ButtonSoundEffect3
     clip: {fileID: 8300000, guid: 9e317dd98b68cc048827d2a340ab6a26, type: 3}
+    volume: 1
   - name: OpenSelectAbilityUISound
     clip: {fileID: 8300000, guid: d0b0a535170549041a9c8192817c0f63, type: 3}
+    volume: 1
   sfxPoolSize: 5
   _masterVolume: 1
   _bgmVolume: 0.5
-  _sfxVolume: 0.1
+  _sfxVolume: 0.5
 --- !u!1 &5297593608048095870
 GameObject:
   m_ObjectHideFlags: 0

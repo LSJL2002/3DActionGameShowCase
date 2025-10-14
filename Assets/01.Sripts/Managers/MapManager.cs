@@ -7,28 +7,28 @@ public class MapManager : Singleton<MapManager>
     private Dictionary<int, BattleZone> zoneDict = new Dictionary<int, BattleZone>();
     public BattleZone currentZone;
 
-    [SerializeField] private int startingZoneId;
-    [SerializeField] private int BossZoneId;
+    [SerializeField] private int startingZoneId; //처음 켜줄 Zone 아이디
+    [SerializeField] private int BossZoneId; //마지막 Zone 아이디
 
-    [SerializeField] private int round; // 게임매니저로..
+    [SerializeField] private int round;  // 회차
 
     [SerializeField] private GameObject tutorialWall;
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         BattleManager.OnBattleStart += OpenZone;
         BattleManager.OnBattleClear += OpenNextZone;
         TutorialUI.endTutorial += tutorialWallToggle;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         BattleManager.OnBattleStart -= OpenZone;
         BattleManager.OnBattleClear -= OpenNextZone;
         TutorialUI.endTutorial -= tutorialWallToggle;
     }
 
-    private async void Start()
+    protected override async void Start()
     {
         //GameObject map = await LoadAscync("Map");
         //if (map != null)
@@ -57,7 +57,6 @@ public class MapManager : Singleton<MapManager>
 
 
         //배틀존 딕셔너리에 아이디를 키값으로 등록
-        ResetZones();
     }
     public void ResetZones()
     {
@@ -70,25 +69,71 @@ public class MapManager : Singleton<MapManager>
             zone.SetWallsActive(false);
             zone.gameObject.SetActive(false);
         }
-
-        if (zoneDict.TryGetValue(startingZoneId, out var startZone))
-        {
-            startZone.gameObject.SetActive(true);
-            currentZone = startZone;
-        }
-
-       if(tutorialWall != null)
+        if (tutorialWall == null)
         {
             tutorialWall = GameObject.Find("TutorialWall");
-            tutorialWall.SetActive(true);
         }
-        Debug.Log("맵 초기화 완료");
+
+        if (GameManager.Instance.gameMode != eGameMode.LoadGame)           //불러오기가 아닐때
+        {
+            tutorialWall.SetActive(true);
+
+            //if (zoneDict.TryGetValue(startingZoneId, out var startZone))
+            //{
+            //    startZone.gameObject.SetActive(true);
+            //    currentZone = startZone;
+            //}
+
+
+            //Debug.Log("맵 초기화 완료");
+            ReturnToStartZone();
+            UIManager.Instance.tutorialEnabled = true;
+            
+        }
+
+        else if (GameManager.Instance.gameMode == eGameMode.LoadGame)
+        {
+            
+            tutorialWall.SetActive(false);
+            int lastClearStage = SaveManager.Instance.playerData.LastClearStage;
+
+            if (lastClearStage == BossZoneId)
+            {
+                ReturnToStartZone();
+            }
+            else if (zoneDict.TryGetValue(lastClearStage, out var clearedZone))
+            {
+                OpenNextZone(clearedZone);
+            }
+
+
+            currentZone = null;
+            Debug.Log("맵 불러오기 완료");
+        }
+    }
+
+    private void ReturnToStartZone()
+    {
+        if (zoneDict.TryGetValue(startingZoneId, out var startZone))
+        {
+            // 모든 존 비활성화 (안전장치)
+            foreach (var zone in zoneDict.Values)
+                zone.gameObject.SetActive(false);
+
+            startZone.gameObject.SetActive(true);
+            currentZone = startZone;
+            Debug.Log("시작 스테이지로 복귀!");
+        }
+        else
+        {
+            Debug.LogError("시작 스테이지를 찾을 수 없습니다!");
+        }
     }
 
     public void tutorialWallToggle()
     {
-        if(tutorialWall != null)
-        tutorialWall.SetActive(false);
+        if (tutorialWall != null)
+            tutorialWall.SetActive(false);
     }
 
     public void RegisterStage(BattleZone zone)
@@ -114,14 +159,7 @@ public class MapManager : Singleton<MapManager>
     {
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
         {
-            SceneLoadManager.Instance.LoadScene(0);
-            Debug.Log("마지막 스테이지 클리어!");
-            round++;
-            Debug.Log("현재 회차 : " + round);
-            //if (round == 0)
-            // SceneManager.LoadScene("Stage2");
-            //if (round == 1)
-            //진엔딩
+            HandleLastStageClear();
             return;
         }
 
@@ -137,12 +175,24 @@ public class MapManager : Singleton<MapManager>
             }
         }
 
-        //클리어한 존 지우기
+        //클리어한 존 비활성화
         zone.gameObject.SetActive(false); //Release
         //zoneDict.Remove(zone.id);
         //Addressables.ReleaseInstance(zone.gameObject);
         currentZone = null;
 
+    }
+
+    private void HandleLastStageClear()
+    {
+        round++;
+        Debug.Log($"마지막 스테이지 클리어! 현재 회차: {round}");
+
+        // 필요시 세이브 추가
+        SaveManager.Instance.SaveData();
+
+        // 씬 리셋 or 엔딩씬
+        SceneLoadManager.Instance.LoadScene(0);
     }
 
     //public async Task<GameObject> LoadAscync(string str)
@@ -272,3 +322,11 @@ public class MapManager : Singleton<MapManager>
 //    stageDict.TryGetValue(id, out var zone);
 //    return zone;
 //}
+
+
+// new Game  - Reset해주면됨 / 다지워짐
+// Load Game  - 로드해야됨 / 하려면 저장데이터가 필요함. 
+// 스테이지에서 필요한 저장데이터는 마지막으로 클리어한 스테이지 LastClearedStage(Zone)변수에 저장할건데 StageID를 저장할것임
+// 몇회차인지도 저장, 불러오기가필요함
+// 이 데이터는 뉴게임을 누르지않는이상 초기화 될필요가없음
+// 불러왔다면 해당 배틀존을 클리어한 시점이 되어야하며, 플레이어의 위치는 그 배틀존 혹은 zone.transform.position+(0,0,100)

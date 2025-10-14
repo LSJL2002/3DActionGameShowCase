@@ -18,13 +18,14 @@ public class HomeUI : UIBase
         {
             case "NewGame":
                 // 새 게임 시작
+                GameManager.Instance.gameMode = eGameMode.NewGame;
                 SceneLoadManager.Instance.LoadScene(1);
-                UIManager.Instance.tutorialEnabled = true;
                 break;
 
             case "LoadStart":
                 // 기존 게임을 로드
-                UIManager.Instance.tutorialEnabled = false;
+                GameManager.Instance.gameMode = eGameMode.LoadGame;
+                SceneLoadManager.Instance.LoadScene(1);
                 break;
 
             case "OptionUI":

@@ -16,17 +16,17 @@ public abstract class PlayerBaseState : Istate
         this.stateMachine = stateMachine;
     }
 
-    // 상태별 행동 훅
+    // ============ 공통 설정 =============
     public virtual bool AllowRotation => true;
     public virtual bool AllowMovement => true;
 
-
+    // ============ 상태 진입 / 종료 =============
     public virtual void Enter() => AddInputActionCallbacks();
     public virtual void Exit() => RemoveInputActionCallbacks();
     protected void StartAnimation(int animatorHash) => stateMachine.Player.Animator.SetBool(animatorHash, true);
     protected void StopAnimation(int animatorHash) => stateMachine.Player.Animator.SetBool(animatorHash, false);
 
-
+    // ============ 입력 콜백 등록 =============
     protected virtual void AddInputActionCallbacks()
     {
         PlayerController input = stateMachine.Player.Input;
@@ -34,8 +34,8 @@ public abstract class PlayerBaseState : Istate
         input.PlayerActions.Dodge.started += OnDodgeStarted;
         input.PlayerActions.Attack.started += OnAttackStarted;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
-        input.PlayerActions.HeavyAttack.started += OnHeavyAttackStarted;
-        input.PlayerActions.HeavyAttack.canceled += OnHeavyAttackCanceled;
+        input.PlayerActions.HeavyAttack.started += OnSkillStarted;
+        input.PlayerActions.HeavyAttack.canceled += OnSkillCanceled;
 
         input.PlayerActions.Menu.performed += OnMenuToggle;
         input.PlayerActions.Camera.started += OnLockOnToggle;
@@ -49,8 +49,8 @@ public abstract class PlayerBaseState : Istate
         input.PlayerActions.Dodge.started -= OnDodgeStarted;
         input.PlayerActions.Attack.started -= OnAttackStarted;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
-        input.PlayerActions.HeavyAttack.started -= OnHeavyAttackStarted;
-        input.PlayerActions.HeavyAttack.canceled -= OnHeavyAttackCanceled;
+        input.PlayerActions.HeavyAttack.started -= OnSkillStarted;
+        input.PlayerActions.HeavyAttack.canceled -= OnSkillCanceled;
 
         input.PlayerActions.Menu.performed -= OnMenuToggle;
         input.PlayerActions.Camera.started -= OnLockOnToggle;
@@ -81,20 +81,26 @@ public abstract class PlayerBaseState : Istate
     protected virtual void OnDodgeStarted(InputAction.CallbackContext context) { }
     protected virtual void OnAttackStarted(InputAction.CallbackContext context)
     {
-        //stateMachine.IsAttacking = true;
         //내부적으로 어떤 모듈이 연결되어 있든, FSM이 알아서 처리하도록 맡김
         //지금 누가 연결되어있는지 모름
-        stateMachine.HandleAttackInput(); // BattleModule로 전달
+        if (stateMachine.IsSkill) return;
+        stateMachine.HandleAttackInput(); // 기본 공격 입력 → 콤보 모듈로 전달
     }
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
     {
-        //stateMachine.IsAttacking = false;
-
         // BattleModule에 취소 알림 전달
         stateMachine.CurrentBattleModule?.OnAttackCanceled();
     }
-    protected virtual void OnHeavyAttackStarted(InputAction.CallbackContext context) { }
-    protected virtual void OnHeavyAttackCanceled(InputAction.CallbackContext context) { }
+    protected virtual void OnSkillStarted(InputAction.CallbackContext context)
+    {
+        // 스킬 입력 → 스킬 서브모듈 실행
+        if (stateMachine.IsAttacking) return;
+        stateMachine.HandleSkillInput();
+    }
+    protected virtual void OnSkillCanceled(InputAction.CallbackContext context)
+    {
+        stateMachine.CurrentBattleModule?.OnSkillCanceled();
+    }
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
 
@@ -144,8 +150,8 @@ public abstract class PlayerBaseState : Istate
     // ========== 개별 입력 읽기 ==========
     private void ReadMovementInput()
     {
-        stateMachine.MovementInput =
-            stateMachine.Player.Input.PlayerActions.Move.ReadValue<Vector2>();
+        var input = stateMachine.Player.Input.PlayerActions.Move.ReadValue<Vector2>();
+        stateMachine.MovementInput = input;
     }
 
     private void ReadZoomInput()

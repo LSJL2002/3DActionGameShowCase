@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using JetBrains.Annotations;
 using TMPro;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 // GameUI의 Player Part
@@ -71,23 +66,9 @@ public partial class GameUI : UIBase
         playerHPText.text = playerStats.CurrentHealth.ToString("#,##0");
         float playerHPpercentage = playerStats.CurrentHealth / playerMaxHP;
 
-        // 플레이어 체력이 40% 이하가 되면 닷트윈 효과(지속)
-        if (playerHPpercentage <= 0.4)
-        {
-            playerHPImage_Back.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
-            playerHPText.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
-            
-            if (!audioSource.isPlaying)
-            {
-                audioSource.Play();
-            }
-        }
-
         // 체력이 감소
-        else if (playerStats.CurrentHealth < previousHP)
+        if (playerStats.CurrentHealth < previousHP)
         {
-            await UIManager.Instance.Show<DamageEffectUI>();
-
             audioSource.Stop();
 
             playerDamageSequence = DOTween.Sequence();
@@ -95,7 +76,18 @@ public partial class GameUI : UIBase
             playerDamageSequence.Append(playerHPText.DOColor(Color.white, duration));
             playerDamageSequence.Append(playerHPImage_Front.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 0f));
             playerDamageSequence.Append(playerHPImage_Back.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 3.0f).SetEase(Ease.OutQuad));
-          
+
+            // 플레이어 체력이 40% 이하가 되면 닷트윈 효과(지속)
+            if (playerHPpercentage <= 0.4)
+            {
+                playerHPImage_Back.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
+                playerHPText.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
+
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.Play();
+                }
+            }
         }
 
         // 체력이 증가

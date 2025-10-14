@@ -12,6 +12,8 @@ public class GameScene : SceneBase
     CanvasGroup miniMapCanvasGroup;
     CanvasGroup attackGaugeCanvasGroup;
 
+    bool hasData;
+
     protected async override void Awake()
     {
         base.Awake();
@@ -30,6 +32,7 @@ public class GameScene : SceneBase
     protected override void Start()
     {
         base.Start();
+        hasData = SaveManager.Instance.LoadData();
 
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
@@ -38,6 +41,11 @@ public class GameScene : SceneBase
 
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
+
+        if (!hasData || SaveManager.Instance.playerData.LastClearStage == 0)
+        {
+            GameManager.Instance.gameMode = eGameMode.NewGame;
+        }
         MapManager.Instance.ResetZones();
         BattleManager.Instance.ResetBattleState();
     }
