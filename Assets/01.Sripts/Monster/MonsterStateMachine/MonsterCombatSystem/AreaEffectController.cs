@@ -133,6 +133,60 @@ public class AreaEffectController : MonoBehaviour
     }
 
 
+    // ------------------- Multiple Circle Method -------------------
+
+    public void MultipleCircleInitialize(float castDuration, float radius, int damageAmount, MonsterSkillSO skill, int count, float offsetRange, float delayBetween, SmileMachine_FireShoot stateRef)
+    {
+        skillData = skill;
+        castTime = castDuration;
+        damage = damageAmount;
+
+        StartCoroutine(MultipleCircleRoutine(count, radius, offsetRange, delayBetween, stateRef));
+    }
+
+    private IEnumerator MultipleCircleRoutine(int count, float radius, float offsetRange, float delayBetween, SmileMachine_FireShoot stateRef)
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogWarning("Player not found");
+            yield break;
+        }
+
+        Vector3 basePos = player.transform.position;
+
+        for (int i = 0; i < count; i++)
+        {
+            // Random offset around player
+            Vector2 randomOffset = Random.insideUnitCircle * offsetRange;
+            Vector3 spawnPos = basePos + new Vector3(randomOffset.x, 0, randomOffset.y);
+
+            // Instantiate a new circle
+            GameObject aoeObj = Instantiate(skillData.areaEffectPrefab, spawnPos, Quaternion.identity);
+            AreaEffectController aoeCtrl = aoeObj.GetComponent<AreaEffectController>();
+            aoeCtrl.StopAllCoroutines();
+
+            // Set up the telegraph fill
+            aoeCtrl.CircleInitialize(castTime, radius, damage, skillData);
+
+            // When this circle finishes, fireball is shot and circle destroyed
+            aoeCtrl.OnTelegraphFinished += () =>
+            {
+                stateRef.ShootFireball(aoeObj.transform.position); // use passed state reference
+                Destroy(aoeObj, 0.5f);
+            };
+
+            yield return new WaitForSeconds(delayBetween); // stagger spawn
+        }
+    }
+
+
+
+
+
+    
+
+
     public void EnableDamage(Transform monsterTransform)
     {
         damageCollider.enabled = true;
