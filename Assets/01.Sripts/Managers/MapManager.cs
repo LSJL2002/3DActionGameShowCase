@@ -67,7 +67,7 @@ public class MapManager : Singleton<MapManager>
 
     public async Task LoadMap()
     {
-        GameObject map = await LoadAscync("Map");
+        GameObject map = await LoadAscync("StatgeSceneMap");
         if (map != null)
         {
             Debug.Log("Map 성공적으로 불러옴!");
