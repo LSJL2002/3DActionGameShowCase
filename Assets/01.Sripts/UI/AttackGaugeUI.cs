@@ -8,11 +8,18 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class AttackGaugeUI : UIBase
 {
+    public enum GaugeState
+    {
+        Fill, // 충전중
+        Full, // 만땅
+        Use, // 사용중
+    }
+
+    private GaugeState currentGaugeState = GaugeState.Fill;
+
     [SerializeField] private GameObject gaugeContainer;
     [SerializeField] private List<GaugeComponent> fillGauges = new List<GaugeComponent>();
     [SerializeField] private string gaugePrefabAddress = "Gauge_Mask";
-
-    private bool allGaugesFull = false;
 
     protected async override void Awake()
     {
@@ -32,18 +39,18 @@ public class AttackGaugeUI : UIBase
     protected override void Start()
     {
         base.Start();
-        
-        PlayerManager.Instance.Input.PlayerActions.Attack.started += UpdateGauge; // 일반공격 입력시 구독
-        PlayerManager.Instance.Input.PlayerActions.HeavyAttack.started += UpdateGauge; // 스킬공격 입력시 구독
+
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        UpdateGauge();
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
-
-        PlayerManager.Instance.Input.PlayerActions.Attack.started -= UpdateGauge; // 일반공격 입력시 구독 해제
-        PlayerManager.Instance.Input.PlayerActions.HeavyAttack.started -= UpdateGauge; // 스킬공격 입력시 구독 해제
-
         ReleaseGaugeHandle(); // 모든 게이지 핸들 해제
     }
 
@@ -76,55 +83,68 @@ public class AttackGaugeUI : UIBase
     }
 
     // 게이지 업데이트 함수 (추가/감소 함께 사용)
-    public void UpdateGauge(InputAction.CallbackContext context)
+    public void UpdateGauge()
     {
-        if (allGaugesFull) return; // 이미 모두 찼다면 무시
+        // 각성 사용중일때 (true) + 모든 게이지가 찼을 때
+        if (PlayerManager.Instance.stateMachine.IsSkill && currentGaugeState == GaugeState.Full)
+            UseGauge();
 
-        // 플레이어쪽 현재스택을 읽어와서 게이지를 업데이트
+        if (currentGaugeState == GaugeState.Full) return; // 모두 찼다면 아래 과정은 무시
 
-        foreach (var comp in fillGauges)
+        // 플레이어쪽 각성수치 현재스택을 읽어와서 게이지를 업데이트
+        float amount = PlayerManager.Instance.Stats.AwakenGauge;
+
+        switch (currentGaugeState)
         {
-            if (comp.isFillImage == false)
-            {
-                comp.SetFillGauge();
-                break; // 하나만 적용 후 종료
-            }
-        }
+            case GaugeState.Fill:
 
-        // 모든 게이지가 찼다면
-        if (!allGaugesFull && fillGauges.TrueForAll(g => g.isFillImage))
-        {
-            allGaugesFull = true; // 상태 업데이트
+                // 게이지 채우기
+                for (int i = 0; i <= amount; i++)
+                {
+                    if (fillGauges[i].currentGaugeState == GaugeComponent.SetState.Off)
+                    {
+                        fillGauges[i].SetGauge(GaugeComponent.SetState.On);
+                    }
+                }
 
-            foreach (var comp in fillGauges)
-            {
-                // fillImage 알파값을 n으로 변경
-                comp.PopGaugeEffect();
-            }
+                // 게이지가 모두 찼을 때
+                if (amount >= 100f)
+                {
+                    currentGaugeState = GaugeState.Full; // 상태 변경
+                    foreach (var comp in fillGauges)
+                    {
+                        // fillImage 알파값을 n으로 변경
+                        comp.PopGaugeEffect();
+                    }
+                }
+                break;
+
+            case GaugeState.Use:
+
+                // 게이지 소비
+                for (int i = (int)amount - 1;  i >= 0; i--)
+                {
+                    if (fillGauges[i].currentGaugeState == GaugeComponent.SetState.On)
+                    {
+                        fillGauges[i].SetGauge(GaugeComponent.SetState.Off);
+                    }
+                }
+
+                if (amount <= 0f)
+                {
+                    currentGaugeState = GaugeState.Fill; // 상태 변경
+                }
+                break;
         }
     }
 
     // 게이지사용시 컬러 세팅 함수 (최초 한번만 호출해서 색바꾸고 상태 업데이트)
     public void UseGauge()
     {
-        if (!allGaugesFull) return; // 모두 찼을 때만 사용 가능
-
-        allGaugesFull = false; // 상태 업데이트
-
         // 전체 fillImage 컬러를 변경
         foreach (var comp in fillGauges)
         {
-            // fillImage 알파값을 0으로 변경
-            comp.SetColor(GaugeComponent.GaugeState.Use);
-        }
-    }
-
-    // 모든 로드 핸들 비활성화 (게이지 해방 후 초기화 시 호출)
-    public void ResetGaugeHandle()
-    {
-        foreach (var comp in fillGauges)
-        {
-            comp.gameObject.SetActive(false);
+            comp.SetGauge(GaugeComponent.SetState.Awaken);
         }
     }
 
