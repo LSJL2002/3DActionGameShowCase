@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SoundSettingUI : UIBase
@@ -54,7 +55,7 @@ public class SoundSettingUI : UIBase
 
             case "Quit":
                 // Home씬으로 돌아가기 (거기서 종료가능)
-                SceneLoadManager.Instance.LoadScene(1);
+                SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
                 Hide();
                 break;
 

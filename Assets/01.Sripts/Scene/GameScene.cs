@@ -15,9 +15,38 @@ public class GameScene : SceneBase
 
     bool hasData;
 
-    protected async override void Awake()
+    protected override void Awake()
     {
         base.Awake();
+
+        LoadingManager.Instance.SetLoadingPanel(true); // 로딩 UI 켜기
+
+        // 타임라인매니저 최초 인스턴스용 호출
+        TimeLineManager timeLineManager = TimeLineManager.Instance;
+    }
+
+    protected async override void Start()
+    {
+        base.Start();
+
+        await MapManager.Instance.LoadMap();
+        await Task.Yield();
+        LoadingManager.Instance.SetLoadingPanel(false); // 로딩 UI 끄기
+        OnGameSceneStart(); // 게임 씬 시작
+    }
+
+    public async void OnGameSceneStart()
+    {
+        hasData = SaveManager.Instance.LoadData();
+
+        AudioManager.Instance.PlayBGM("InGameBGM");
+
+        if (!hasData || SaveManager.Instance.playerData.LastClearStage == 0)
+        {
+            GameManager.Instance.gameMode = eGameMode.NewGame;
+        }
+        MapManager.Instance.ResetZones();
+        BattleManager.Instance.ResetBattleState();
 
         // 각 UI 로드
         await UIManager.Instance.Show<GameUI>();
@@ -28,31 +57,9 @@ public class GameScene : SceneBase
         gameUICanvasGroup = UIManager.Instance.Get<GameUI>().GetComponent<CanvasGroup>();
         miniMapCanvasGroup = UIManager.Instance.Get<MiniMapUI>().GetComponent<CanvasGroup>();
         attackGaugeCanvasGroup = UIManager.Instance.Get<AttackGaugeUI>().GetComponent<CanvasGroup>();
-    }
-
-    protected override async void Start()
-    {
-        base.Start();
-        hasData = SaveManager.Instance.LoadData();
 
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
-
-        AudioManager.Instance.PlayBGM("InGameBGM");
-
-        
-
-        // 타임라인매니저 최초 인스턴스용 호출
-        TimeLineManager timeLineManager = TimeLineManager.Instance;
-
-        await MapManager.Instance.LoadMap();
-        await Task.Yield();
-        if (!hasData || SaveManager.Instance.playerData.LastClearStage == 0)
-        {
-            GameManager.Instance.gameMode = eGameMode.NewGame;
-        }
-        MapManager.Instance.ResetZones();
-        BattleManager.Instance.ResetBattleState();
     }
 
     public async void DelayMethod()
