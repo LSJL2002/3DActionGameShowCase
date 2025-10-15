@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
 
 public class MapManager : Singleton<MapManager>
 {
@@ -107,7 +108,7 @@ public class MapManager : Singleton<MapManager>
 
         if (GameManager.Instance.gameMode != eGameMode.LoadGame)           //불러오기가 아닐때
         {
-            tutorialWall.SetActive(true);
+            //tutorialWall.SetActive(true);
 
             //if (zoneDict.TryGetValue(startingZoneId, out var startZone))
             //{
@@ -223,7 +224,7 @@ public class MapManager : Singleton<MapManager>
         SaveManager.Instance.SaveData();
 
         // 씬 리셋 or 엔딩씬
-        SceneLoadManager.Instance.LoadScene(0);
+        SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
     }
 
     public async Task<GameObject> LoadAscync(string str)
