@@ -212,7 +212,6 @@ public class DataUpdateScene : SceneBase
             total += labelToPatchDic.Sum(tmp => tmp.Value);
 
             // 다운로드 진행률 업데이트
-            // patchSize가 0일 경우 예외 방지 (if (patchSize > 0) 분기 때문에 사실상 0일 일은 없음)
             if (patchSize > 0)
             {
                 downSliders.value = total / patchSize;
@@ -220,11 +219,11 @@ public class DataUpdateScene : SceneBase
             downValueText.text = (int)(downSliders.value * 100) + "%";
 
             // 다운로드 완료 조건
-            if (total >= patchSize) // >= 로 안전하게 처리
+            if (total >= patchSize)
             {
-                yield return new WaitForSeconds(3f); // 완료 캐시 정리를 위한 일정시간 대기
+                yield return new WaitForSeconds(3f); // 캐시 정리를 위한 일정시간 대기
 
-                SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // 목표 씬으로 비동기 전환
+                SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // 목표 씬으로 Single 전환
                 break;
             }
         }
