@@ -17,7 +17,7 @@ public class PlayerFallState : PlayerAirState
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.FallBoolHash);
+        StartAnimation(sm.Player.AnimationData.FallBoolHash);
 
         airStartTime = Time.time;
     }
@@ -25,7 +25,7 @@ public class PlayerFallState : PlayerAirState
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.FallBoolHash);
+        StopAnimation(sm.Player.AnimationData.FallBoolHash);
     }
 
     public override void LogicUpdate()
@@ -39,23 +39,23 @@ public class PlayerFallState : PlayerAirState
         // 바닥 체크
         if (IsGrounded())
         {
-            if (stateMachine.MovementInput.sqrMagnitude > 0.01f)
-                stateMachine.ChangeState(stateMachine.WalkState);
+            if (sm.MovementInput.sqrMagnitude > 0.01f)
+                sm.ChangeState(sm.WalkState);
             else
-                stateMachine.ChangeState(stateMachine.IdleState);
+                sm.ChangeState(sm.IdleState);
         }
     }
 
     private bool IsGrounded()
     {
-        CharacterController cc = stateMachine.Player.Controller;
+        CharacterController cc = sm.Player.Controller;
 
         // 기본 isGrounded 체크
         if (cc.isGrounded)
             return true;
 
         // Raycast 체크
-        Ray ray = new Ray(stateMachine.Player.transform.position + Vector3.up * 0.1f, Vector3.down);
+        Ray ray = new Ray(sm.Player.transform.position + Vector3.up * 0.1f, Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit hit, 0.3f, groundLayer))
         {
             // 바닥 각도 확인

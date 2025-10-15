@@ -17,24 +17,23 @@ public class PlayerAttackState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
+        StartAnimation(sm.Player.AnimationData.AttackBoolHash);
 
-        stateMachine.IsAttacking = true;
+        sm.IsAttacking = true;
 
-        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
-        stateMachine.Player.Attack.SetAttackTarget(attackTarget);
-        if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
+        attackTarget = FindNearestMonster(sm.Player.InfoData.AttackData.AttackRange, true);
+        if (attackTarget != null) sm.Player._camera.ToggleLockOnTarget(attackTarget);
 
-        module = stateMachine.CurrentBattleModule;
+        module = sm.CurrentBattleModule;
         if (module != null) module.OnAttackEnd += HandleAttackEnd;
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.AttackBoolHash);
+        StopAnimation(sm.Player.AnimationData.AttackBoolHash);
 
-        stateMachine.IsAttacking = false;
+        sm.IsAttacking = false;
 
         if (module != null) module.OnAttackEnd -= HandleAttackEnd;
     }
@@ -53,31 +52,30 @@ public class PlayerAttackState : PlayerBaseState
         module?.OnAttack();
 
         // 공격 시작 시점에만 타겟 갱신
-        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
-        stateMachine.Player.Attack.SetAttackTarget(attackTarget);
-        if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
+        attackTarget = FindNearestMonster(sm.Player.InfoData.AttackData.AttackRange, true);
+        if (attackTarget != null) sm.Player._camera.ToggleLockOnTarget(attackTarget);
     }
 
     protected override void OnAttackCanceled(InputAction.CallbackContext context)
     {
         base.OnAttackCanceled(context);
 
-        if (stateMachine.CurrentBattleModule is BattleModule_Yuki yuki)
+        if (sm.CurrentBattleModule is BattleModule_Yuki yuki)
             yuki.OnAttackCanceled();
     }
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
     {
         base.OnDodgeStarted(context);
-        float normalizedTime = GetNormalizeTime(stateMachine.Player.Animator, "Attack");
+        float normalizedTime = GetNormalizeTime(sm.Player.Animator, "Attack");
         if (normalizedTime >= 0.1f)
         {
-            stateMachine.ChangeState(stateMachine.DodgeState);
+            sm.ChangeState(sm.DodgeState);
         }
     }
 
     private void HandleAttackEnd()
     {
-        stateMachine.ChangeState(stateMachine.IdleState);
+        sm.ChangeState(sm.IdleState);
     }
 }

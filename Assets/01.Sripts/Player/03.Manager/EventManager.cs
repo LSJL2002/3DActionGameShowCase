@@ -6,7 +6,7 @@ using UnityEngine.InputSystem.XR;
 
 public class EventManager : MonoBehaviour
 {
-    private PlayerManager player;
+    private PlayerCharacter player;
     private ForceReceiver force;
     private Transform playerTransform;
 
@@ -17,9 +17,9 @@ public class EventManager : MonoBehaviour
     public int pathPoints = 5;
 
 
-    public void Initialize(PlayerManager playermanager, Transform body, ForceReceiver forceReceiver)
+    public void Initialize(PlayerCharacter player, Transform body, ForceReceiver forceReceiver)
     {
-        player = playermanager;
+        this.player = player;
         playerTransform = body;
         force = forceReceiver;
     }
@@ -108,7 +108,7 @@ public class EventManager : MonoBehaviour
     // ================ 각성 공격 막타 이동 =================
     public void OnAwakenAttackStepMove()
     {
-        Vector2 input = player.stateMachine.MovementInput; // 현재 방향키 입력
+        Vector2 input = player.StateMachine.MovementInput; // 현재 방향키 입력
         Vector3 moveDir;
         if (input == Vector2.zero)
         {

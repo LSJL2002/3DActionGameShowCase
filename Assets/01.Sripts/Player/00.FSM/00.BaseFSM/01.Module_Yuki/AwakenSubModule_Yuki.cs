@@ -103,7 +103,7 @@ public class AwakenSubModule_Yuki
         sm.Player.ForceReceiver?.EndVerticalHold();
 
         sm.Player.Animator.SetTrigger("Base/Toggle_AwakenExit");
-        sm.Player.camera?.SetColorGradingEnabled(true);
+        sm.Player._camera?.SetColorGradingEnabled(true);
 
         await UniTask.CompletedTask;
         sm.ChangeState(sm.IdleState);
@@ -113,7 +113,7 @@ public class AwakenSubModule_Yuki
     {
         if (!isAwakened) return;
         isAwakened = false;
-        sm.Player.camera?.SetColorGradingEnabled(false);
+        sm.Player._camera?.SetColorGradingEnabled(false);
 
         OnAwakenEnd?.Invoke(); // FSM으로 알림
     }
