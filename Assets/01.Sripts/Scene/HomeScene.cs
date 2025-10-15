@@ -4,11 +4,10 @@ using UnityEngine.AddressableAssets;
 
 public class HomeScene : SceneBase
 {
-    protected async override void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
-        //await UIManager.Instance.Show<LoadingUI>(); // 로딩 UI 켜기
         LoadingManager.Instance.SetLoadingPanel(true); // 로딩 UI 켜기
     }
 
@@ -17,7 +16,6 @@ public class HomeScene : SceneBase
         base.Start();
 
         GameObject homeObject = await LoadAddress("HomeObject"); // 홈 씬 오브젝트 로드
-        //UIManager.Instance.Hide<LoadingUI>(); // 로딩 UI 끄기
         LoadingManager.Instance.SetLoadingPanel(false); // 로딩 UI 끄기
         OnHomeSceneStart(); // 홈 씬 시작
     }
