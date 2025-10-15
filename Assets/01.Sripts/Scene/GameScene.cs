@@ -19,7 +19,8 @@ public class GameScene : SceneBase
     {
         base.Awake();
 
-        await UIManager.Instance.Show<LoadingUI>(); // 로딩 UI 켜기
+        //await UIManager.Instance.Show<LoadingUI>(); // 로딩 UI 켜기
+        LoadingManager.Instance.SetLoadingPanel(true); // 로딩 UI 켜기
 
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
@@ -31,7 +32,8 @@ public class GameScene : SceneBase
 
         await MapManager.Instance.LoadMap();
         await Task.Yield();
-        UIManager.Instance.Hide<LoadingUI>(); // 로딩 UI 끄기
+        //UIManager.Instance.Hide<LoadingUI>(); // 로딩 UI 끄기
+        LoadingManager.Instance.SetLoadingPanel(false); // 로딩 UI 끄기
         OnGameSceneStart(); // 게임 씬 시작
     }
 
