@@ -24,7 +24,12 @@ public class BattleModule_Yuki : BattleModule
         // 하위 모듈의 이벤트를 받아서 자신 이벤트로 중계
         skillSub.OnSkillEnd += RaiseSkillEnd;
         comboSub.OnComboEnd += RaiseAttackEnd;
-        awakenSub.OnAwakenEnd += RaiseAttackEnd;
+        // 각성 종료 시 콤보 초기화 + AttackEnd 이벤트 전달
+        awakenSub.OnAwakenEnd += () =>
+        {
+            comboSub.ResetCombo();   // 콤보 상태 초기화
+            RaiseAttackEnd();        // FSM에 공격 종료 알림
+        };
     }
 
     // ================== 기본 공격 입력 =================

@@ -116,7 +116,7 @@ public class ComboHandler
         animator.CrossFade(attacks[currentIndex].AttackName, 0.05f);
     }
 
-    private void Reset()
+    public void Reset()
     {
         currentIndex = -1;
         queued = false;
