@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DataUpdateScene : SceneBase
@@ -16,13 +17,16 @@ public class DataUpdateScene : SceneBase
     [SerializeField] private TextMeshProUGUI downValueText;
 
     [Header("Label")]
-    [SerializeField] AssetLabelReference label;
+    [SerializeField] AssetLabelReference defaultLabel;
+    [SerializeField] AssetLabelReference uiLabel;
 
     private long patchSize;
     private Dictionary<string, long> patchMap = new Dictionary<string, long>();
 
     protected override void Awake()
     {
+        base.Awake();
+
         waitMessage.SetActive(true);
         downMessage.SetActive(false);
 
@@ -34,12 +38,27 @@ public class DataUpdateScene : SceneBase
     {
         var init = Addressables.InitializeAsync();
         yield return init;
+        // 1) 원격 카탈로그 체크
+        var check = Addressables.CheckForCatalogUpdates(false);
+        yield return check;
+        if (check.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded
+            && check.Result != null && check.Result.Count > 0)
+        {
+            // 2) 카탈로그 갱신
+            var update = Addressables.UpdateCatalogs(check.Result);
+            yield return update;
+            Debug.Log($"Catalogs updated: {string.Join(", ", check.Result)}");
+        }
+        else
+        {
+            Debug.Log("No catalog updates.");
+        }
     }
 
     #region Check DownLoad
     IEnumerator CheckUpdateFile()
     {
-        var labels = new List<string> { label.labelString };
+        var labels = new List<string> { defaultLabel.labelString, uiLabel.labelString };
 
         patchSize = default;
 
@@ -67,7 +86,7 @@ public class DataUpdateScene : SceneBase
             downValueText.text = $"다운로드 필요없음";
             downSliders.value = 1f;
             yield return new WaitForSeconds(2f);
-            SceneLoadManager.Instance.LoadScene(1);
+            SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
         }
     }
 
@@ -116,7 +135,7 @@ public class DataUpdateScene : SceneBase
 
     IEnumerator PatchFiles()
     {
-        var labels = new List<string> { label.labelString };
+        var labels = new List<string> { uiLabel.labelString };
 
         patchSize = default;
 
@@ -167,7 +186,7 @@ public class DataUpdateScene : SceneBase
 
             if (total == patchSize)
             {
-                SceneLoadManager.Instance.LoadScene(1);
+                SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
                 break;
             }
 
