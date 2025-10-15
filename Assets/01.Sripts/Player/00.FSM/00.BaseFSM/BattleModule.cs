@@ -31,7 +31,7 @@ public interface IBattleModule
 }
 
     // =============== 추상 기본 모듈 ===============
-    public abstract class BattleModule : IBattleModule
+public abstract class BattleModule : IBattleModule
 {
     protected PlayerStateMachine sm;
     protected ComboHandler comboHandler;

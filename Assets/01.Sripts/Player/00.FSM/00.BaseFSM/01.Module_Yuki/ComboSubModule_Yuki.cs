@@ -43,5 +43,17 @@ public class ComboSubModule_Yuki
     public void OnAttackCanceled() { }
     public void OnUpdate() => ComboHandler.Update();
     public void OnEnemyHit(IDamageable target) { }
-    public void ResetCombo() => ComboHandler = null;
+    public void ResetCombo()
+    {
+        if (ComboHandler == null) return;
+
+        // 기존 이벤트 해제
+        ComboHandler.OnComboFinished -= HandleComboEnd;
+
+        // 콤보 내부 상태 초기화 + OnComboFinished 호출
+        ComboHandler.Reset();
+
+        // 이벤트 다시 연결
+        ComboHandler.OnComboFinished += HandleComboEnd;
+    }
 }
