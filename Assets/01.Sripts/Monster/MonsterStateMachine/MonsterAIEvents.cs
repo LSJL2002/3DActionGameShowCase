@@ -50,7 +50,7 @@ public class MonsterAIEvents : MonoBehaviour
     {
         if (!processingEnabled || player == null || stateMachine == null) return;
 
-        if (PlayerManager.Stats.IsDead)
+        if (PlayerManager.Instance.ActiveCharacter.Stats.IsDead)
         {
             if (currentmode != AIMode.Idle)
             {

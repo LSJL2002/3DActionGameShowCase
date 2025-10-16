@@ -44,6 +44,10 @@ public class FlameTrigger : MonoBehaviour
         while (isPlayerInside && targetDamageable != null)
         {
             targetDamageable.OnTakeDamage(damage);
+            Vector3 sourcePos = transform.position;
+            float knockbackDistance = 0f;
+            float duration = 5f;
+            targetDamageable.ApplyEffect(MonsterEffectType.Burn, sourcePos, knockbackDistance, duration);
             yield return new WaitForSeconds(tickRate);
         }
     }
