@@ -4,27 +4,42 @@ using UnityEngine;
 
 public class BattleModule_Aoi : BattleModule
 {
-    private float charge = 0f;
-    private float maxCharge = 100f;
+    private ComboSubModule_Aoi comboSub;
+    private SkillSubModule_Aoi skillSub;
 
-    public BattleModule_Aoi(PlayerStateMachine sm) : base(sm) { }
-
-    public override void OnAttack()
+    public BattleModule_Aoi(PlayerStateMachine sm) : base(sm)
     {
-        // 원거리 기본 공격
-        sm.Player.skill.SpawnSkill("BasicShot", sm.Player.Body.position);
-        charge += 10f;
+        comboSub = new ComboSubModule_Aoi(sm);
+        skillSub = new SkillSubModule_Aoi(sm);
+
+        // 콤보 핸들러 연결
+        comboHandler = comboSub.ComboHandler;
+        comboSub.OnComboEnd += RaiseAttackEnd;
+        skillSub.OnSkillEnd += RaiseSkillEnd;
     }
 
-    public override void OnSkill()
-    {
-        if (charge < maxCharge) return;
-        sm.Player.skill.SpawnSkill("LaserBeam", sm.Player.Body.position);
-        charge = 0f;
-    }
+    // ================== 기본 공격 =================
+    public override void OnAttack() => comboSub.OnAttack();
+    public override void OnAttackCanceled() => comboSub.OnAttackCanceled();
 
+    // ================== 스킬 =================
+    public override void OnSkill() => skillSub.OnSkillStart();
+    public override void OnSkillCanceled() => skillSub.OnSkillCanceled();
+
+    // ================== 업데이트 =================
     public override void OnUpdate()
     {
-        // charge 게이지 UI 업데이트 등
+        comboSub.OnUpdate();
+        skillSub.OnUpdate();
     }
+
+    public override void OnSkillUpdate() => skillSub.OnSkillUpdate();
+
+    // ================== 기타 =================
+    public override void OnEnemyHit(IDamageable target)
+    {
+        comboSub.OnEnemyHit(target);
+        skillSub.OnEnemyHit(target);
+    }
+    public override void ResetCombo() => comboSub.ResetCombo();
 }
