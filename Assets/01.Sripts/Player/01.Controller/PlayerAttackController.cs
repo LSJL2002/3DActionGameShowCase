@@ -9,35 +9,36 @@ using static CartoonFX.CFXR_Effect;
 // 공격 처리 + 전투 대상 관리 + 기즈모 시각화
 public class PlayerAttackController : MonoBehaviour
 {
-    private PlayerManager player;
+    private PlayerCharacter player;
     private SkillManagers skill;
     private HitboxOverlap hit;
-    private new CameraManager camera;
+    private CameraManager _camera;
     private HitStopManager hitStop;
 
     private Transform spawnPoint;
 
     [Header("Debug / Gizmos")]
-    PlayerInfo playerInfo;
-    [SerializeField] private Transform currentAttackTarget; // 인스펙터용
+    private PlayerInfo playerInfo;
+    [SerializeField] private Transform debugAttackTarget;
     public Transform CurrentAttackTarget
     {
-        get => currentAttackTarget;
-        private set => currentAttackTarget = value;
+        get
+        {
+            if (_camera != null)
+                debugAttackTarget = _camera.GetLockOnTarget();
+            return debugAttackTarget;
+        }
     }
-    public void SetAttackTarget(Transform target) => CurrentAttackTarget = target;
-
-
 
     private void Awake()
     {
-        player = GetComponent<PlayerManager>();
+        player = GetComponent<PlayerCharacter>();
     }
 
     private void Start()
     {
         skill = player.skill;
-        camera = player.camera;
+        _camera = player._camera;
         hitStop = player.hitStop;
         hit = player.Hit;
         spawnPoint = player.Body;
@@ -112,11 +113,11 @@ public class PlayerAttackController : MonoBehaviour
         // 타격 효과 & 카메라 흔들림 & 사운드
         skill.SpawnSkill("Hit1", hitPoint);
         AudioManager.Instance?.PlaySFX("Hit1");
-        camera?.Shake(2f, 0.2f);
+        _camera?.Shake(2f, 0.2f);
         hitStop.DoHitStop();
 
         // 맞았다는 걸 BattleModule에 알림
-        player.stateMachine.CurrentBattleModule?.OnEnemyHit(target);
+        player.StateMachine.CurrentBattleModule?.OnEnemyHit(target);
     }
 
 
@@ -124,7 +125,7 @@ public class PlayerAttackController : MonoBehaviour
     // ========기즈모 시각화 (씬뷰에서 공격 범위/Force 확인용)==============
     private void OnDrawGizmosSelected()
     {
-        player = GetComponent<PlayerManager>();
+        player = GetComponent<PlayerCharacter>();
         playerInfo = player.InfoData;
 
 
@@ -146,7 +147,7 @@ public class PlayerAttackController : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * 1.5f);
 
         // 타겟 연결선
-        Transform target = currentAttackTarget; // 편집 모드에서 연결한 필드 사용
+        Transform target = CurrentAttackTarget; // 편집 모드에서 연결한 필드 사용
         if (target != null)
         {
             Gizmos.color = Color.yellow;

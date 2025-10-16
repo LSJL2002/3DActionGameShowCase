@@ -124,7 +124,7 @@ public class PreviewScene : MonoBehaviour
                 previewAnimator.SetBool("Base/Switch_Inven", true);
                 Time.timeScale = 1f;
                 PlayerManager.Instance.EnableInput(false);
-                SceneLoadManager.Instance.LoadScene(0); // Home씬으로 이동
+                SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // Home씬으로 이동
                 break;
         }
     }

@@ -84,29 +84,36 @@ public class AwakenSubModule_Yuki
         isAwakened = true;
         currentGauge = sm.Player.Stats.MaxAwakenGauge;
 
+        // 연출 시작
         sm.Player.Animator.CrossFade("Awaken", 0.1f);
         sm.Player.skill.SpawnSkill("Awaken", sm.Player.Body.position, sm.Player.Body.rotation);
 
-        // 공중 유지, 후퇴 힘
+        // 연출용 물리효과
         if (sm.Player.ForceReceiver != null)
         {
             sm.Player.ForceReceiver.AddForce(-sm.Player.transform.forward * 10f, horizontalOnly: true);
             sm.Player.ForceReceiver.BeginVerticalHold(1f, 1f);
         }
 
+        // 1초 연출 대기
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
 
+        // 후반 연출
         sm.Player.skill.SpawnSkill("Awaken2", sm.Player.Body.position, sm.Player.Body.rotation);
         sm.Player.ForceReceiver?.EndVerticalHold();
 
         sm.Player.Animator.SetTrigger("Base/Toggle_AwakenExit");
-        sm.Player.camera?.SetColorGradingEnabled(true);
+        sm.Player._camera?.SetColorGradingEnabled(true);
+
+        await UniTask.CompletedTask;
+        sm.ChangeState(sm.IdleState);
     }
 
     private void ExitAwakenedMode()
     {
+        if (!isAwakened) return;
         isAwakened = false;
-        sm.Player.camera?.SetColorGradingEnabled(false);
+        sm.Player._camera?.SetColorGradingEnabled(false);
 
         OnAwakenEnd?.Invoke(); // FSM으로 알림
     }

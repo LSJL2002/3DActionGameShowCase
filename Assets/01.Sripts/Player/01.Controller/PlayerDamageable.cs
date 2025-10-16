@@ -12,12 +12,12 @@ using static UnityEngine.Rendering.DebugUI;
 // 전투 대상 / 피해 처리 전용
 public class PlayerDamageable : MonoBehaviour, IDamageable
 {
-    private PlayerManager player;
+    private PlayerCharacter player;
 
 
     private void Awake()
     {
-        player ??= GetComponent<PlayerManager>();
+        player ??= GetComponent<PlayerCharacter>();
     }
 
 
@@ -35,13 +35,13 @@ public class PlayerDamageable : MonoBehaviour, IDamageable
         {
             case MonsterEffectType.Knockback:
                 var dir = (transform.position - sourcePos).normalized;
-                player.stateMachine.KnockbackState.Setup(dir, value, duration);
-                player.stateMachine.ChangeState(player.stateMachine.KnockbackState);
+                player.StateMachine.KnockbackState.Setup(dir, value, duration);
+                player.StateMachine.ChangeState(player.StateMachine.KnockbackState);
                 break;
 
             case MonsterEffectType.Groggy:
-                player.stateMachine.StunState.Setup(duration);
-                player.stateMachine.ChangeState(player.stateMachine.StunState);
+                player.StateMachine.StunState.Setup(duration);
+                player.StateMachine.ChangeState(player.StateMachine.StunState);
                 break;
         }
     }

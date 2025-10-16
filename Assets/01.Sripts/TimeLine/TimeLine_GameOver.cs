@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public class TimeLine_GameOver : TimeLineBase
 {
@@ -24,6 +25,6 @@ public class TimeLine_GameOver : TimeLineBase
     {
         TimeLineManager.Instance.Release(gameObject.name);
         
-        SceneLoadManager.Instance.LoadScene(0); // Home씬으로 전환
+        SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // Home씬으로 전환
     }
 }

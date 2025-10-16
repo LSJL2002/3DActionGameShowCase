@@ -19,8 +19,8 @@ public abstract class SceneBase : MonoBehaviour
             // 매개변수3 : Additive형식의 로드씬모드 지정 (한 씬에 두개이상의 씬이 존재가능, 매니저씬은 매니저만 생성후 바로 언로드씬)
             SceneLoadManager.Instance.ChangeScene
             (
-                2, // 매개변수1
-                () =>{SceneLoadManager.Instance.isManager = true; SceneLoadManager.Instance.UnLoadScene(2);}, // 매개변수2
+                3, // 매개변수1
+                () =>{SceneLoadManager.Instance.isManager = true; SceneLoadManager.Instance.UnLoadScene(3);}, // 매개변수2
                 LoadSceneMode.Additive // 매개변수3
             );
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -9,12 +10,21 @@ using Cursor = UnityEngine.Cursor;
 
 public abstract class PlayerBaseState : Istate
 {
-    protected PlayerStateMachine stateMachine;
+    protected PlayerStateMachine sm;
 
-    public PlayerBaseState(PlayerStateMachine stateMachine)
+    public PlayerBaseState(PlayerStateMachine sm)
     {
-        this.stateMachine = stateMachine;
+        this.sm = sm;
     }
+
+    // 상태 완료 이벤트
+    public event Action<PlayerBaseState> OnStateComplete;
+
+    protected void StateComplete()
+    {
+        OnStateComplete?.Invoke(this);
+    }
+
 
     // ============ 공통 설정 =============
     public virtual bool AllowRotation => true;
@@ -23,19 +33,22 @@ public abstract class PlayerBaseState : Istate
     // ============ 상태 진입 / 종료 =============
     public virtual void Enter() => AddInputActionCallbacks();
     public virtual void Exit() => RemoveInputActionCallbacks();
-    protected void StartAnimation(int animatorHash) => stateMachine.Player.Animator.SetBool(animatorHash, true);
-    protected void StopAnimation(int animatorHash) => stateMachine.Player.Animator.SetBool(animatorHash, false);
+    protected void StartAnimation(int animatorHash) => sm.Player.Animator.SetBool(animatorHash, true);
+    protected void StopAnimation(int animatorHash) => sm.Player.Animator.SetBool(animatorHash, false);
 
     // ============ 입력 콜백 등록 =============
     protected virtual void AddInputActionCallbacks()
     {
-        PlayerController input = stateMachine.Player.Input;
+        PlayerController input = sm.Player.Input;
         input.PlayerActions.Move.canceled += OnMoveCanceled;
         input.PlayerActions.Dodge.started += OnDodgeStarted;
         input.PlayerActions.Attack.started += OnAttackStarted;
         input.PlayerActions.Attack.canceled += OnAttackCanceled;
         input.PlayerActions.HeavyAttack.started += OnSkillStarted;
         input.PlayerActions.HeavyAttack.canceled += OnSkillCanceled;
+
+        input.PlayerActions.SwapNext.started += OnSwapNextStarted;
+        input.PlayerActions.SwapPrev.started += OnSwapPrevStarted;
 
         input.PlayerActions.Menu.performed += OnMenuToggle;
         input.PlayerActions.Camera.started += OnLockOnToggle;
@@ -44,13 +57,16 @@ public abstract class PlayerBaseState : Istate
 
     protected virtual void RemoveInputActionCallbacks()
     {
-        PlayerController input = stateMachine.Player.Input;
+        PlayerController input = sm.Player.Input;
         input.PlayerActions.Move.canceled -= OnMoveCanceled;
         input.PlayerActions.Dodge.started -= OnDodgeStarted;
         input.PlayerActions.Attack.started -= OnAttackStarted;
         input.PlayerActions.Attack.canceled -= OnAttackCanceled;
         input.PlayerActions.HeavyAttack.started -= OnSkillStarted;
         input.PlayerActions.HeavyAttack.canceled -= OnSkillCanceled;
+
+        input.PlayerActions.SwapNext.started -= OnSwapNextStarted;
+        input.PlayerActions.SwapPrev.started -= OnSwapPrevStarted;
 
         input.PlayerActions.Menu.performed -= OnMenuToggle;
         input.PlayerActions.Camera.started -= OnLockOnToggle;
@@ -63,13 +79,13 @@ public abstract class PlayerBaseState : Istate
         ReadZoomInput(); // 줌 값 읽기 추가
 
         // Animator에 입력값 전달 (공통 처리)
-        stateMachine.Player.Animator.SetFloat(
-            stateMachine.Player.AnimationData.HorizontalHash,
-            stateMachine.MovementInput.x
+        sm.Player.Animator.SetFloat(
+            sm.Player.AnimationData.HorizontalHash,
+            sm.MovementInput.x
         );
-        stateMachine.Player.Animator.SetFloat(
-            stateMachine.Player.AnimationData.VerticalHash,
-            stateMachine.MovementInput.y
+        sm.Player.Animator.SetFloat(
+            sm.Player.AnimationData.VerticalHash,
+            sm.MovementInput.y
         );
     }
     public virtual void LogicUpdate() { }
@@ -83,30 +99,40 @@ public abstract class PlayerBaseState : Istate
     {
         //내부적으로 어떤 모듈이 연결되어 있든, FSM이 알아서 처리하도록 맡김
         //지금 누가 연결되어있는지 모름
-        if (stateMachine.IsSkill) return;
-        stateMachine.HandleAttackInput(); // 기본 공격 입력 → 콤보 모듈로 전달
+        if (sm.IsSkill) return;
+        sm.HandleAttackInput(); // 기본 공격 입력 → 콤보 모듈로 전달
     }
     protected virtual void OnAttackCanceled(InputAction.CallbackContext context)
     {
         // BattleModule에 취소 알림 전달
-        stateMachine.CurrentBattleModule?.OnAttackCanceled();
+        sm.CurrentBattleModule?.OnAttackCanceled();
     }
     protected virtual void OnSkillStarted(InputAction.CallbackContext context)
     {
         // 스킬 입력 → 스킬 서브모듈 실행
-        if (stateMachine.IsAttacking) return;
-        stateMachine.HandleSkillInput();
+        if (sm.IsAttacking) return;
+        sm.HandleSkillInput();
     }
     protected virtual void OnSkillCanceled(InputAction.CallbackContext context)
     {
-        stateMachine.CurrentBattleModule?.OnSkillCanceled();
+        sm.CurrentBattleModule?.OnSkillCanceled();
     }
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
 
+    protected virtual void OnSwapNextStarted(InputAction.CallbackContext context)
+    {
+        sm.Player.PlayerManager.SwapNext();
+    }
+
+    protected virtual void OnSwapPrevStarted(InputAction.CallbackContext context)
+    {
+        sm.Player.PlayerManager.SwapPrev();
+    }
+
     protected virtual void OnLockOnToggle(InputAction.CallbackContext context)
     {
-        var cam = stateMachine.Player.camera;
+        var cam = sm.Player._camera;
         cam.ToggleLockOnTarget(null); // 무조건 락온 해제
     }
 
@@ -120,22 +146,22 @@ public abstract class PlayerBaseState : Istate
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            stateMachine.Player.camera.Volume.enabled = true;
+            sm.Player._camera.Volume.enabled = true;
         }
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            stateMachine.Player.camera.Volume.enabled = false;
+            sm.Player._camera.Volume.enabled = false;
         }
     }
 
     protected virtual void OnInvenToggle(InputAction.CallbackContext context)
     {
         if (!context.started) return;
-        if (stateMachine.Player.direction.inventory == null) return;
+        if (sm.Player.direction.inventory == null) return;
 
-        var inven = stateMachine.Player.direction.inventory;
+        var inven = sm.Player.direction.inventory;
         bool isActive = !inven.activeSelf;
         inven.SetActive(isActive);
 
@@ -150,14 +176,14 @@ public abstract class PlayerBaseState : Istate
     // ========== 개별 입력 읽기 ==========
     private void ReadMovementInput()
     {
-        var input = stateMachine.Player.Input.PlayerActions.Move.ReadValue<Vector2>();
-        stateMachine.MovementInput = input;
+        var input = sm.Player.Input.PlayerActions.Move.ReadValue<Vector2>();
+        sm.MovementInput = input;
     }
 
     private void ReadZoomInput()
     {
         float zoomDelta =
-            stateMachine.Player.Input.PlayerActions.Zoom.ReadValue<float>();
+            sm.Player.Input.PlayerActions.Zoom.ReadValue<float>();
 
         if (Mathf.Abs(zoomDelta) > 0.01f)
             OnZoom(zoomDelta);
@@ -166,7 +192,7 @@ public abstract class PlayerBaseState : Istate
     // ========== Zoom 처리 ==========
     private void OnZoom(float zoomDelta)
     {
-        var vcam = stateMachine.Player.camera.FreeLookCam;
+        var vcam = sm.Player._camera.FreeLookCam;
         if (vcam == null) return;
 
         float fov = vcam.m_Lens.FieldOfView;
@@ -189,10 +215,10 @@ public abstract class PlayerBaseState : Istate
         if (AllowRotation && moveDir.sqrMagnitude > 0.01f) // 회전 제어
         {
             Quaternion targetRot = Quaternion.LookRotation(moveDir);
-            stateMachine.Player.transform.rotation = Quaternion.Slerp(
-                stateMachine.Player.transform.rotation,
+            sm.Player.transform.rotation = Quaternion.Slerp(
+                sm.Player.transform.rotation,
                 targetRot,
-                Time.deltaTime * stateMachine.RotationDamping
+                Time.deltaTime * sm.RotationDamping
             );
         }
 
@@ -201,32 +227,32 @@ public abstract class PlayerBaseState : Istate
         {
             Vector3 move = Vector3.zero;
 
-            if (stateMachine.Player.Animator.applyRootMotion)
+            if (sm.Player.Animator.applyRootMotion)
             {
-                move = stateMachine.Player.Animator.deltaPosition + stateMachine.Player.ForceReceiver.Movement * Time.deltaTime;
+                move = sm.Player.Animator.deltaPosition + sm.Player.ForceReceiver.Movement * Time.deltaTime;
             }
             else
             {
-                float moveSpeed = stateMachine.MovementSpeed * stateMachine.MovementSpeedModifier;
-                move = moveDir * moveSpeed + stateMachine.Player.ForceReceiver.Movement;
+                float moveSpeed = sm.MovementSpeed * sm.MovementSpeedModifier;
+                move = moveDir * moveSpeed + sm.Player.ForceReceiver.Movement;
             }
 
-            stateMachine.Player.Controller.Move(move * Time.deltaTime);
+            sm.Player.Controller.Move(move * Time.deltaTime);
         }
     }
 
 
     protected Vector3 GetMovementDir()
     {
-        Vector3 forward = stateMachine.Player.camera.MainCamera.forward;
-        Vector3 right = stateMachine.Player.camera.MainCamera.right;
+        Vector3 forward = sm.Player._camera.MainCamera.forward;
+        Vector3 right = sm.Player._camera.MainCamera.right;
         
         forward.y = 0;
         right.y = 0;
         forward.Normalize();
         right.Normalize();
         
-        return forward * stateMachine.MovementInput.y + right * stateMachine.MovementInput.x;
+        return forward * sm.MovementInput.y + right * sm.MovementInput.x;
     }
 
 
@@ -257,7 +283,7 @@ public abstract class PlayerBaseState : Istate
     protected Transform FindNearestMonster(float radius, bool faceTarget = false)
     {
         Collider[] hits = Physics.OverlapSphere(
-            stateMachine.Player.transform.position,
+            sm.Player.transform.position,
             radius,
             LayerMask.GetMask("Enemy")
         );
@@ -269,7 +295,7 @@ public abstract class PlayerBaseState : Istate
             Transform target = hit.transform.parent ?? hit.transform;
 
             float dist = Vector3.Distance(
-                stateMachine.Player.transform.position,
+                sm.Player.transform.position,
                 target.position
             );
 
@@ -281,9 +307,9 @@ public abstract class PlayerBaseState : Istate
         }
         if (faceTarget && nearest != null)
         {
-            Vector3 dir = (nearest.position - stateMachine.Player.transform.position).normalized;
+            Vector3 dir = (nearest.position - sm.Player.transform.position).normalized;
             dir.y = 0;
-            stateMachine.Player.transform.forward = dir;
+            sm.Player.transform.forward = dir;
         }
         return nearest;
     }
