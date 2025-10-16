@@ -6,16 +6,18 @@ using UnityEngine.UI;
 
 public class GaugeComponent : MonoBehaviour
 {
-    public enum GaugeState
+    public enum SetState
     {
-        Fill, // 충전중
-        Use, // 사용중
+        On, // 켜짐
+        Off, // 꺼짐
+        Awaken, // 각성
     }
+
+    public SetState currentGaugeState { get; private set; } = SetState.Off;
 
     [SerializeField] private Image defaultImage;
     [SerializeField] private Image waveImage;
     [SerializeField] private Image popImage;
-    public bool isFillImage = false;
 
     private float startY = -80f;  // 하단 기준
     private float waveDuration = 1f; // 웨이브 주기 시간(게이지 1개 오르락 내리락 한번 기준)
@@ -26,6 +28,7 @@ public class GaugeComponent : MonoBehaviour
     private Tweener waveTween; // 웨이브 연출을 저장할 변수
     private Sequence popGaugeSequence; // 웨이브 보이게하는 시퀀스를 저장할 변수
 
+    private Color gaugeColor0 = new Color(1f, 1f, 1f, 0f); // 투명도0
     private Color gaugeColor1 = new Color(1f, 1f, 1f, 1f); // white 계열
     private Color gaugeColor2 = new Color(1f, 200f/255f, 0f, 1f); // yellow 계열
     private Color gaugeColor3 = new Color(1f, 0f, 1f, 1f); // red 계열
@@ -33,7 +36,7 @@ public class GaugeComponent : MonoBehaviour
     private void OnEnable()
     {
         defaultImage.color = gaugeColor1;
-        waveImage.color = new Color(gaugeColor1.r, gaugeColor1.g, gaugeColor1.b, 0f);
+        waveImage.color = gaugeColor0; // 웨이브 이미지 투명도 0으로 초기화
     }
 
     // Addressables 핸들을 설정하는 메서드 (생성 직후 호출됨)
@@ -42,28 +45,29 @@ public class GaugeComponent : MonoBehaviour
         creationHandle = handle;
     }
 
-    public void SetFillGauge()
-    {
-        defaultImage.color = gaugeColor2;
-        isFillImage = true;
-    }
-
-    // 게이지 사용시 호출 (색변화로 활성화 상태 시각적 효과)
-    public void SetColor(GaugeState state)
+    // 게이지 세팅
+    public void SetGauge(SetState state)
     {
         float randomColor = Random.Range(20f / 255f, 100f / 255f); // 투명도 랜덤
+        currentGaugeState = state;
 
         switch (state)
         {
             // 게이지 충전시
-            case GaugeState.Fill:
+            case SetState.On:
 
                 defaultImage.color = gaugeColor2;
                 waveImage.color = new Color(gaugeColor2.r, gaugeColor2.g, gaugeColor2.b, randomColor);
                 break;
 
+            // 게이지 비활성시
+            case SetState.Off:
+
+                defaultImage.color = gaugeColor0;
+                break;
+
             // 게이지 사용시
-            case GaugeState.Use:
+            case SetState.Awaken:
 
                 defaultImage.color = gaugeColor3;
                 waveImage.color = new Color(gaugeColor3.r, gaugeColor3.g, gaugeColor3.b, randomColor);
@@ -96,7 +100,7 @@ public class GaugeComponent : MonoBehaviour
         popGaugeSequence.Append(popImage.DOFade(0f, 0.1f)); // PopImage 사라지는 트윈 추가
         popGaugeSequence = null;
 
-        SetColor(GaugeState.Fill);
+        SetGauge(SetState.On);
     }
 
     // 객체가 파괴될 때 Addressables 인스턴스를 해제하는 메서드

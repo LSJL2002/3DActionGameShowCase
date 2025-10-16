@@ -34,37 +34,6 @@ public class MapManager : Singleton<MapManager>
         TutorialUI.endTutorial -= tutorialWallToggle;
     }
 
-    //protected override async void Start()
-    //{
-    //    GameObject map = await LoadAscync("Map");
-    //    if (map != null)
-    //    {
-    //        Debug.Log("Map 성공적으로 불러옴!");
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("Map 로드실패");
-    //    }
-
-    //    GameObject btZone = await LoadAscync("BattleZone");
-    //    if (btZone != null)
-    //    {
-    //        Debug.Log("BattleZone 성공적으로 불러옴!");
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("BattleZone 로드 실패");
-    //    }
-
-    //    // NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
-    //    await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
-    //    //생성
-    //    //AddressableManager.Instance.MakeGameObject("Map");
-
-
-    //    //배틀존 딕셔너리에 아이디를 키값으로 등록
-    //}
-
     public async Task LoadMap()
     {
         GameObject map = await LoadAscync("StatgeSceneMap");
@@ -108,16 +77,7 @@ public class MapManager : Singleton<MapManager>
 
         if (GameManager.Instance.gameMode != eGameMode.LoadGame)           //불러오기가 아닐때
         {
-            //tutorialWall.SetActive(true);
-
-            //if (zoneDict.TryGetValue(startingZoneId, out var startZone))
-            //{
-            //    startZone.gameObject.SetActive(true);
-            //    currentZone = startZone;
-            //}
-
-
-            //Debug.Log("맵 초기화 완료");
+            tutorialWall.SetActive(true);
             ReturnToStartZone();
             UIManager.Instance.tutorialEnabled = true;
             
@@ -129,13 +89,29 @@ public class MapManager : Singleton<MapManager>
             tutorialWall.SetActive(false);
             int lastClearStage = SaveManager.Instance.playerData.LastClearStage;
 
+            
             if (lastClearStage == BossZoneId)
             {
                 ReturnToStartZone();
             }
             else if (zoneDict.TryGetValue(lastClearStage, out var clearedZone))
             {
+                var controller = PlayerManager.Instance.ActiveCharacter.GetComponent<CharacterController>();
+                if (controller != null)
+                {
+                    controller.enabled = false; // 움직임 제어 잠깐 끄기
+                    PlayerManager.Instance.ActiveCharacter.transform.position = clearedZone.transform.position;
+                    controller.enabled = true;  // 다시 켜기
+                }
+                else
+                {
+                    PlayerManager.Instance.ActiveCharacter.transform.position = clearedZone.transform.position;
+                }
+                Debug.Log($"ClearedZonePos: {clearedZone.transform.position}");
                 OpenNextZone(clearedZone);
+                //await Task.Yield();
+                Debug.Log($"ClearedZonePos: {clearedZone.transform.position}");
+
             }
 
 

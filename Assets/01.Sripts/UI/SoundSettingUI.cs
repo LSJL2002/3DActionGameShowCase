@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -31,16 +32,16 @@ public class SoundSettingUI : UIBase
     {
         base.Start();
 
-        // 슬라이더 초기값 설정: SettingsManager로부터 저장된 값을 가져와서 설정
-        masterVolumeSlider.value = SettingsManager.Instance.GetMasterVolume();
-        bgmVolumeSlider.value = SettingsManager.Instance.GetBGMVolume();
-        sfxVolumeSlider.value = SettingsManager.Instance.GetSFXVolume();
+        // 슬라이더 초기값 설정: AudioManager로부터 저장된 값을 가져와서 설정
+        masterVolumeSlider.value = AudioManager.Instance.MasterVolume;
+        bgmVolumeSlider.value = AudioManager.Instance.BgmVolume;
+        sfxVolumeSlider.value = AudioManager.Instance.SfxVolume;
 
         // 슬라이더 이벤트 연결: 슬라이더 값이 변경되면 SettingsManager의 함수를 호출
         // (슬라이더 이벤트는 예약어)
-        masterVolumeSlider.onValueChanged.AddListener(SettingsManager.Instance.SetMasterVolume);
-        bgmVolumeSlider.onValueChanged.AddListener(SettingsManager.Instance.SetBGMVolume);
-        sfxVolumeSlider.onValueChanged.AddListener(SettingsManager.Instance.SetSFXVolume);
+        masterVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetMasterVolume);
+        bgmVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetBgmVolume);
+        sfxVolumeSlider.onValueChanged.AddListener(AudioManager.Instance.SetSfxVolume);
     }
 
     public async void OnClickButton(string str)
@@ -67,16 +68,16 @@ public class SoundSettingUI : UIBase
 
             // 사운드 초기설정으로 (0은 기본값, 1은 저장값)
             case "Reset":
-                SettingsManager.Instance.LoadVolumes(0);
-                masterVolumeSlider.value = SettingsManager.Instance.GetMasterVolume();
-                bgmVolumeSlider.value = SettingsManager.Instance.GetBGMVolume();
-                sfxVolumeSlider.value = SettingsManager.Instance.GetSFXVolume();
+                AudioManager.Instance.SetAllVolume(0);
+                masterVolumeSlider.value = AudioManager.Instance.MasterVolume;
+                bgmVolumeSlider.value = AudioManager.Instance.BgmVolume;
+                sfxVolumeSlider.value = AudioManager.Instance.SfxVolume;
                 break;
 
             // 사운드 설정 저장
             case "Save":
                 // Save 버튼을 누르면 SettingsManager에 저장 요청
-                SettingsManager.Instance.SaveVolumes();
+                SaveManager.Instance.SavePlayerPrefs(SaveManager.PlayerPrefsSaveType.Volume);
                 break;
         }
 

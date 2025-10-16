@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using Cysharp.Threading.Tasks.Triggers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -12,8 +14,10 @@ public class DataUpdateScene : SceneBase
 {
     [Header("UI")]
     [SerializeField] private GameObject waitMessage;
-    [SerializeField] private GameObject downMessage;
+    [SerializeField] private GameObject UpdateMessage;
     [SerializeField] private Slider downSliders;
+    [SerializeField] private TextMeshProUGUI waitMessageText;
+    [SerializeField] private TextMeshProUGUI versionCheckText;
     [SerializeField] private TextMeshProUGUI sizeInfoText;
     [SerializeField] private TextMeshProUGUI downValueText;
 
@@ -33,7 +37,7 @@ public class DataUpdateScene : SceneBase
         base.Awake();
 
         waitMessage.SetActive(true);
-        downMessage.SetActive(false);
+        UpdateMessage.SetActive(false);
         downSliders.gameObject.SetActive(false);
 
         StartCoroutine(InitAddressableAndCheck());
@@ -79,6 +83,7 @@ public class DataUpdateScene : SceneBase
     {
         patchSize = 0;
         labelsToDownload.Clear(); // 새 다운로드 목록 작성 전 초기화
+        string currentVersion = SaveManager.Instance.LoadBuildVersionPlayerPrefs();
 
         // 설정 된 AssetLabelReference를 순회하여 전체 다운로드 크기 확인
         foreach (var labelRef in labelList)
@@ -101,12 +106,15 @@ public class DataUpdateScene : SceneBase
         if (patchSize > 0)
         {
             waitMessage.SetActive(false);
-            downMessage.SetActive(true);
+            UpdateMessage.SetActive(true);
+            versionCheckText.text = $"현재 Ver.{currentVersion} / 최신 Ver.{Application.version}";
             sizeInfoText.text = GetFileSize(patchSize);
         }
         else
         {
-            yield return new WaitForSeconds(1f);
+            waitMessageText.text = $"최신 버전입니다.<br>현재 Ver.{currentVersion}<br>잠시만 기다려주세요.";
+
+            yield return new WaitForSeconds(3f);
             SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
         }
     }
@@ -144,7 +152,7 @@ public class DataUpdateScene : SceneBase
             case "DownLaod":
                 // 다운로드 시작
                 StartCoroutine(PatchFiles());
-                downMessage.SetActive(false);
+                UpdateMessage.SetActive(false);
                 downSliders.gameObject.SetActive(true);
                 break;
 
@@ -212,7 +220,6 @@ public class DataUpdateScene : SceneBase
             total += labelToPatchDic.Sum(tmp => tmp.Value);
 
             // 다운로드 진행률 업데이트
-            // patchSize가 0일 경우 예외 방지 (if (patchSize > 0) 분기 때문에 사실상 0일 일은 없음)
             if (patchSize > 0)
             {
                 downSliders.value = total / patchSize;
@@ -220,11 +227,12 @@ public class DataUpdateScene : SceneBase
             downValueText.text = (int)(downSliders.value * 100) + "%";
 
             // 다운로드 완료 조건
-            if (total >= patchSize) // >= 로 안전하게 처리
+            if (total >= patchSize)
             {
-                yield return new WaitForSeconds(3f); // 완료 캐시 정리를 위한 일정시간 대기
+                SaveManager.Instance.SavePlayerPrefs(SaveManager.PlayerPrefsSaveType.BuildVersion); // 다운로드한 버전정보 저장
+                yield return new WaitForSeconds(3f); // 캐시 정리를 위한 일정시간 대기
 
-                SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // 목표 씬으로 비동기 전환
+                SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // 목표 씬으로 Single 전환
                 break;
             }
         }

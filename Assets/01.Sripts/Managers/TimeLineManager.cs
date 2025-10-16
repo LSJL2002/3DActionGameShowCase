@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -13,8 +14,9 @@ public class TimeLineManager : Singleton<TimeLineManager>
     // 한번 생성한 핸들을 다시 생성하지 않도록 Dictionary로 관리
     private Dictionary<string, AsyncOperationHandle<GameObject>> timelineHandles = new Dictionary<string, AsyncOperationHandle<GameObject>>();
 
-    protected override void Start()
+    protected async override void Start()
     {
+        await Task.Yield();
         base.Start();
 
         PlayerManager.Instance.Stats.OnDie += OnGameOverTimeLine; // 플레이어 사망이벤트에 구독

@@ -60,7 +60,6 @@ public class SmileMachine_FireShoot : MonsterBaseState
         );
     }
 
-    // Called by each AOE circle when telegraph finishes
     public void ShootFireball(Vector3 targetPos)
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
@@ -83,7 +82,6 @@ public class SmileMachine_FireShoot : MonsterBaseState
             ps.Play();
         }
 
-        // Launch fireball to the center of the AOE
         stateMachine.Monster.StartCoroutine(MoveFireballToTarget(fireball, targetPos, 0.7f));
 
         circlesFinished++;
@@ -102,16 +100,14 @@ public class SmileMachine_FireShoot : MonsterBaseState
             yield return null;
         }
 
-        fireball.transform.position = targetPos; // snap to target precisely
+        fireball.transform.position = targetPos;
 
-        Object.Destroy(fireball); // remove fireball after landing
+        Object.Destroy(fireball);
 
         if (groundFirePrefab != null)
         {
             Object.Instantiate(groundFirePrefab, targetPos, groundFirePrefab.transform.rotation);
         }
-
-        // Exit state if all fireballs finished
         if (circlesFinished >= totalCircles)
         {
             stateMachine.ChangeState(stateMachine.MonsterIdleState);
@@ -123,7 +119,6 @@ public class SmileMachine_FireShoot : MonsterBaseState
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
         stateMachine.isAttacking = false;
 
-        // Clear AOEs
         foreach (var aoe in aoeInstances)
         {
             if (aoe != null)

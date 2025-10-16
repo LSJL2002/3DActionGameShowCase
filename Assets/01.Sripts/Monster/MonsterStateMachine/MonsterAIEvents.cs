@@ -35,10 +35,6 @@ public class MonsterAIEvents : MonoBehaviour
         if (playerObj != null)
         {
             player = playerObj.transform;
-            PlayerManager = playerObj.GetComponent<PlayerManager>();
-
-            if (PlayerManager == null)
-                Debug.LogError("PlayerManager component not found on Player object!");
         }
         else
         {
@@ -50,7 +46,7 @@ public class MonsterAIEvents : MonoBehaviour
     {
         if (!processingEnabled || player == null || stateMachine == null) return;
 
-        if (PlayerManager.Stats.IsDead)
+        if (PlayerManager.Instance.ActiveCharacter.Stats.IsDead)
         {
             if (currentmode != AIMode.Idle)
             {
