@@ -56,6 +56,9 @@ public class BaseMonster : MonoBehaviour, IDamageable
         stateMachine = new MonsterStateMachine(this);
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
         PlayerTarget = GameObject.FindWithTag("Player").transform;
+
+        PlayerManager.Instance.OnActiveCharacterChanged += OnActiveCharacterChanged;
+
         if (Agent != null) Agent.speed = stateMachine.MovementSpeed;
     }
 
@@ -63,6 +66,17 @@ public class BaseMonster : MonoBehaviour, IDamageable
     {
         stateMachine.HandleInput();
         stateMachine.LogicUpdate();
+    }
+    private void OnActiveCharacterChanged(PlayerCharacter newCharacter)
+    {
+        if (newCharacter != null)
+            PlayerTarget = newCharacter.transform;
+    }
+
+    private void OnDestroy()
+    {
+        if (PlayerManager.Instance != null)
+            PlayerManager.Instance.OnActiveCharacterChanged -= OnActiveCharacterChanged;
     }
 
     protected virtual void FixedUpdate() => stateMachine.Physicsupdate();
