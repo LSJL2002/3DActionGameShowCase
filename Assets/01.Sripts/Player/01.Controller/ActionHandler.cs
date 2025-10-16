@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class ActionHandler : MonoBehaviour
 {
-    private PlayerManager player;
+    private PlayerCharacter player;
     private EventManager eventManager;
     private ForceReceiver forceReceiver;
     private Transform playerTransform;
 
     private void Awake()
     {
-        player = GetComponent<PlayerManager>();
+        player = GetComponent<PlayerCharacter>();
     }
 
     private void Start()
     {
-        eventManager = player.eventManager;
+        eventManager = player._event;
         forceReceiver = player.ForceReceiver;
         playerTransform = transform;
 

@@ -19,25 +19,24 @@ public class PlayerSkillState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
-        var anim = stateMachine.Player.AnimationData;
+        var anim = sm.Player.AnimationData;
         StartAnimation(anim.SkillBoolHash);
 
-        stateMachine.IsSkill = true;
+        sm.IsSkill = true;
 
-        attackTarget = FindNearestMonster(stateMachine.Player.InfoData.AttackData.AttackRange, true);
-        stateMachine.Player.Attack.SetAttackTarget(attackTarget);
-        if (attackTarget != null) stateMachine.Player.camera.ToggleLockOnTarget(attackTarget);
+        attackTarget = FindNearestMonster(sm.Player.InfoData.AttackData.AttackRange, true);
+        if (attackTarget != null) sm.Player._camera.ToggleLockOnTarget(attackTarget);
 
-        module = stateMachine.CurrentBattleModule;
+        module = sm.CurrentBattleModule;
         if (module != null) module.OnSkillEnd += HandleSkillEnd;
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.SkillBoolHash);
+        StopAnimation(sm.Player.AnimationData.SkillBoolHash);
 
-        stateMachine.IsSkill = false;
+        sm.IsSkill = false;
 
         if (module != null) module.OnSkillEnd -= HandleSkillEnd;
     }
@@ -49,6 +48,6 @@ public class PlayerSkillState : PlayerBaseState
 
     private void HandleSkillEnd()
     {
-        stateMachine.ChangeState(stateMachine.IdleState);
+        sm.ChangeState(sm.IdleState);
     }
 }

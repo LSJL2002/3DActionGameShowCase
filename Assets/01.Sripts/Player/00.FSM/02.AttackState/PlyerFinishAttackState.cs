@@ -20,14 +20,14 @@ public class PlyerFinishAttackState : PlayerBaseState
 
         enterTime = Time.time; // 상태 진입 시간 기록
 
-        var anim = stateMachine.Player.Animator;
-        anim.SetTrigger(stateMachine.Player.AnimationData.FinishAttackHash);
+        var anim = sm.Player.Animator;
+        anim.SetTrigger(sm.Player.AnimationData.FinishAttackHash);
     }
 
     public override void Exit()
     {
         base.Exit();
-        stateMachine.ComboIndex = 0;
+        sm.ComboIndex = 0;
     }
 
     public override void LogicUpdate()
@@ -35,16 +35,16 @@ public class PlyerFinishAttackState : PlayerBaseState
         base.LogicUpdate();
 
         // 이동 입력 들어오면 바로 이동 상태
-        if (stateMachine.MovementInput.sqrMagnitude > 0.01f)
+        if (sm.MovementInput.sqrMagnitude > 0.01f)
         {
-            stateMachine.ChangeState(stateMachine.IdleState);
+            sm.ChangeState(sm.IdleState);
             return;
         }
 
         // 2초 뒤 Idle로 전환
         if (Time.time - enterTime >= finishDelay)
         {
-            stateMachine.ChangeState(stateMachine.IdleState);
+            sm.ChangeState(sm.IdleState);
         }
     }
 
@@ -52,7 +52,7 @@ public class PlyerFinishAttackState : PlayerBaseState
     protected override void OnAttackStarted(InputAction.CallbackContext context)
     {
         // 무기 집어넣기 중이더라도 공격 입력 → 바로 Attack 상태 진입
-        stateMachine.ComboIndex = 0;
-        stateMachine.ChangeState(stateMachine.AttackState);
+        sm.ComboIndex = 0;
+        sm.ChangeState(sm.AttackState);
     }
 }

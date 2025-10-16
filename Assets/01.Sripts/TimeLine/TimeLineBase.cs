@@ -19,7 +19,7 @@ public class TimeLineBase : MonoBehaviour
 
     protected virtual void Awake() 
     {
-        mainCamera = PlayerManager.Instance.camera.GetComponentInChildren<Camera>();
+        mainCamera = PlayerManager.Instance._camera.GetComponentInChildren<Camera>();
         gameUICanvasGroup = UIManager.Instance.Get<GameUI>().GetComponent<CanvasGroup>();
         miniMapUICanvasGroup = UIManager.Instance.Get<MiniMapUI>().GetComponent<CanvasGroup>();
         attackGaugeUICanvasGroup = UIManager.Instance.Get<AttackGaugeUI>().GetComponent<CanvasGroup>();

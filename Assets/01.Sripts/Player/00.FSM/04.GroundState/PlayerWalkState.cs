@@ -12,14 +12,14 @@ public class PlayerWalkState : PlayerGroundState
         base.Enter();
 
         // 이전 Blend가 있으면 복원, 없으면 0
-        if (stateMachine.LastWalkBlend > 0f)
+        if (sm.LastWalkBlend > 0f)
         {
-            blend = stateMachine.LastWalkBlend;
-            transitionTimer = stateMachine.LastWalkTimer;
+            blend = sm.LastWalkBlend;
+            transitionTimer = sm.LastWalkTimer;
 
             // 복원 후 한 번 사용했으니 초기화 (다음 전환 대비)
-            stateMachine.LastWalkBlend = 0f;
-            stateMachine.LastWalkTimer = 0f;
+            sm.LastWalkBlend = 0f;
+            sm.LastWalkTimer = 0f;
         }
         else
         {
@@ -29,7 +29,7 @@ public class PlayerWalkState : PlayerGroundState
 
         // Animator.speed 제거!
         // 대신 MovementSpeedModifier 파라미터만 업데이트
-        stateMachine.MovementSpeedModifier = blend;
+        sm.MovementSpeedModifier = blend;
     }
 
     public override void Exit()
@@ -47,26 +47,26 @@ public class PlayerWalkState : PlayerGroundState
         base.LogicUpdate();
 
 
-        float inputMagnitude = stateMachine.MovementInput.magnitude;
+        float inputMagnitude = sm.MovementInput.magnitude;
 
         // 입력 없으면 Idle 상태로 전환
         if (inputMagnitude <= 0.01f)
         {
-            stateMachine.ChangeState(stateMachine.IdleState);
+            sm.ChangeState(sm.IdleState);
             return;
         }
 
         // Blend 값 증가
         transitionTimer += Time.deltaTime;
-        float accelerationTime = stateMachine.GroundData.RunAccelerationTime;
+        float accelerationTime = sm.GroundData.RunAccelerationTime;
         blend = Mathf.Clamp01(transitionTimer / accelerationTime);
 
         // MovementSpeedModifier를 이용해 Blend Tree에 적용
-        stateMachine.MovementSpeedModifier = blend;
+        sm.MovementSpeedModifier = blend;
 
         // 루트모션 이동
-        Vector3 deltaPosition = stateMachine.Player.Animator.deltaPosition;
+        Vector3 deltaPosition = sm.Player.Animator.deltaPosition;
         deltaPosition.y = 0f;
-        stateMachine.Player.Controller.Move(deltaPosition);
+        sm.Player.Controller.Move(deltaPosition);
     }
 }

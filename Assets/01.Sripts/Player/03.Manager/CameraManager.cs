@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
@@ -11,36 +12,32 @@ public class CameraManager : MonoBehaviour
 {
     public Transform MainCamera { get; private set; }
     public Volume Volume { get; private set; }
-    public CinemachineFreeLook FreeLookCam { get; private set; }
-    [field:SerializeField]public Volume VisualVolume { get; private set; }
+    [field: SerializeField] public CinemachineFreeLook FreeLookCam { get; private set; }
+    [field:SerializeField] public Volume VisualVolume { get; private set; }
     private ColorAdjustments colorAdjustments;
 
-
-    public CinemachineTargetGroup targetGroup {  get; private set; }
-    public CinemachineVirtualCamera targetCam { get; private set; }
-    public CinemachineBasicMultiChannelPerlin noise {  get; private set; }
+    [field: SerializeField] public CinemachineTargetGroup TargetGroup {  get; private set; }
+    [field: SerializeField] public CinemachineVirtualCamera LockOnCam { get; private set; }
+    public CinemachineBasicMultiChannelPerlin Noise {  get; private set; }
     private float shakeTimer;
 
-    public Transform player; // 인스펙터에서 플레이어 위치 할당
+
+    private Transform player; // 기본 바닦임
+    private Transform playerFace;
     private Transform lockOnTarget;
+
+    public Transform GetLockOnTarget() => lockOnTarget;
+
 
     private void Awake()
     {
         MainCamera = Camera.main.transform;
         Volume = MainCamera.gameObject.GetComponent<Volume>();
-        var freeLooks = GetComponentsInChildren<CinemachineFreeLook>();
-        FreeLookCam = freeLooks[0]; // 첫 번째
-        // FreeLook = freeLooks.FirstOrDefault(f => f.name == "PlayerCam"); // 이름으로 골라내기
 
-        targetGroup = GetComponentInChildren<CinemachineTargetGroup>();
-        targetCam = targetGroup.GetComponentInChildren<CinemachineVirtualCamera>();
-        noise = targetCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        Noise = LockOnCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 
         if (VisualVolume != null)
-        {
-            // 프로필에서 Color Grading 가져오기
-            VisualVolume.profile.TryGet<ColorAdjustments>(out colorAdjustments);
-        }
+            VisualVolume.profile.TryGet(out colorAdjustments);
     }
 
 
@@ -49,66 +46,86 @@ public class CameraManager : MonoBehaviour
         if (shakeTimer > 0)
         {
             shakeTimer -= Time.deltaTime;
-            if (shakeTimer <= 0f)
-            {
-                // 흔들림 원상 복구
-                noise.m_AmplitudeGain = 0f;
-            }
+            if (shakeTimer <= 0f && Noise != null)
+                Noise.m_AmplitudeGain = 0f;
         }
     }
 
+    // ======================= 플레이어 타겟 설정 =========================
+    public void SetPlayerTarget(Transform body, Transform face)
+    {
+        if (body == null || face == null) return;
+
+        player = body;
+        playerFace = face;
+
+        // === FreeLook 카메라 타깃 변경 ===
+        if (FreeLookCam != null)
+        {
+            FreeLookCam.Follow = body; // 이동 기준 (Body)
+            FreeLookCam.LookAt = face; // 시선 기준 (Face)
+        }
+
+        // TargetGroup의 플레이어 타겟 갱신
+        if (TargetGroup != null)
+        {
+            var targets = TargetGroup.m_Targets;
+
+            if (targets.Length == 0)
+                targets = new CinemachineTargetGroup.Target[2]; // 플레이어 + 락온 슬롯
+
+            targets[0].target = face; // 시선 기준
+            targets[0].weight = 1f;
+            targets[0].radius = 1f;
+
+            TargetGroup.m_Targets = targets;
+        }
+    }
 
     // ======================== 카메라 Lock-On ========================
     public void ToggleLockOnTarget(Transform target)
     {
-        var groupCam = targetGroup.GetComponentInChildren<CinemachineVirtualCamera>(true);
+        if (TargetGroup == null) return;
 
         lockOnTarget = target;
+        var targets = TargetGroup.m_Targets;
 
-        // 0번(플레이어)은 항상 유지
-        var targets = targetGroup.m_Targets;
-
+        // 최소 2개의 타겟 슬롯 확보
         if (targets.Length < 2)
         {
-            // 초기 세팅: 플레이어 + 빈 슬롯
-            targets = new CinemachineTargetGroup.Target[2];
-            targets[0] = new CinemachineTargetGroup.Target { target = player, weight = 1f, radius = 1f };
-            targets[1] = new CinemachineTargetGroup.Target { target = null, weight = 0f, radius = 1f };
+            System.Array.Resize(ref targets, 2);
+            targets[0] = new CinemachineTargetGroup.Target { target = playerFace, weight = 1f, radius = 1f };
+            targets[1] = new CinemachineTargetGroup.Target();
         }
 
         if (target == null)
         {
-            // 해제: 보스 대신 weight 0으로 비활성
+            // 🔹 락온 해제
             targets[1].target = null;
             targets[1].weight = 0f;
 
-            if (groupCam != null) groupCam.Priority = 0;
+            if (LockOnCam != null) LockOnCam.Priority = 0;
             if (FreeLookCam != null) FreeLookCam.Priority = 20;
         }
         else
         {
-            // 설정: 보스 교체
+            // 🔹 락온 설정
             targets[1].target = target;
             targets[1].weight = 1f;
 
-            if (groupCam != null) groupCam.Priority = 20;
+            if (LockOnCam != null) LockOnCam.Priority = 20;
             if (FreeLookCam != null) FreeLookCam.Priority = 0;
         }
 
-        // 갱신
-        targetGroup.m_Targets = targets;
+        TargetGroup.m_Targets = targets;
     }
-
-
-    public bool HasTarget() => lockOnTarget != null;
-    public Transform GetLockOnTarget() => lockOnTarget;
 
     // ===================== 카메라 흔들기 =========================
     public void Shake(float intensity, float time)
     {
-        if (noise == null) return;
+        if (Noise == null) return;
 
-        noise.m_AmplitudeGain = intensity;
+        Noise.m_AmplitudeGain = intensity;
         shakeTimer = time;
     }
 

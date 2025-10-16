@@ -13,13 +13,13 @@ public class PlayerGroundState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.GroundBoolHash);
+        StartAnimation(sm.Player.AnimationData.GroundBoolHash);
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.GroundBoolHash);
+        StopAnimation(sm.Player.AnimationData.GroundBoolHash);
     }
 
     public override void LogicUpdate()
@@ -38,9 +38,9 @@ public class PlayerGroundState : PlayerBaseState
 
     protected override void OnMoveCanceled(InputAction.CallbackContext context)
     {
-        if (stateMachine.MovementInput == Vector2.zero) return;
+        if (sm.MovementInput == Vector2.zero) return;
 
-        stateMachine.ChangeState(stateMachine.IdleState);
+        sm.ChangeState(sm.IdleState);
 
         base.OnMoveCanceled(context);
     }
@@ -48,26 +48,26 @@ public class PlayerGroundState : PlayerBaseState
     protected override void OnJumpStarted(InputAction.CallbackContext context)
     {
         base.OnJumpStarted(context);
-        stateMachine.ChangeState(stateMachine.JumpState);
+        sm.ChangeState(sm.JumpState);
     }
 
     protected override void OnAttackStarted(InputAction.CallbackContext context)
     {
         base.OnAttackStarted(context);
-        if (!stateMachine.IsAttacking)
-            stateMachine.ChangeState(stateMachine.AttackState);
+        if (!sm.IsAttacking)
+            sm.ChangeState(sm.AttackState);
     }
 
     protected override void OnSkillStarted(InputAction.CallbackContext context)
     {
         base.OnSkillStarted(context);
-        if (stateMachine.Player.Stats.UseSkill())   // 성공했을 때만
-            stateMachine.ChangeState(stateMachine.SkillState);
+        if (sm.Player.Stats.UseSkill())   // 성공했을 때만
+            sm.ChangeState(sm.SkillState);
     }
 
     protected override void OnDodgeStarted(InputAction.CallbackContext context)
     {
-        if(stateMachine.Player.Stats.UseEvade())
-            stateMachine.ChangeState(stateMachine.DodgeState);
+        if(sm.Player.Stats.UseEvade())
+            sm.ChangeState(sm.DodgeState);
     }
 }

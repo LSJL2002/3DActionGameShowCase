@@ -75,7 +75,7 @@ public class SkillSubModule_Yuki
         }
     }
 
-    private void HandleDash(PlayerManager player)
+    private void HandleDash(PlayerCharacter player)
     {
         if (attackTarget != null)
         {
@@ -101,14 +101,14 @@ public class SkillSubModule_Yuki
             TransitionToPhase(Phase.Wait);
     }
 
-    private void HandleWait(PlayerManager player)
+    private void HandleWait(PlayerCharacter player)
     {
         player.ForceReceiver.Reset();
         if (phaseTimer >= WaitTime)
             TransitionToPhase(Phase.Return);
     }
 
-    private void HandleReturn(PlayerManager player)
+    private void HandleReturn(PlayerCharacter player)
     {
         player.ForceReceiver.AddForce(returnDir * ReturnPower);
         if (phaseTimer >= ReturnDuration)
@@ -125,7 +125,7 @@ public class SkillSubModule_Yuki
         sm.Player.ForceReceiver.Reset();
     }
 
-    private void ExitSkill(PlayerManager player)
+    private void ExitSkill(PlayerCharacter player)
     {
         if (phase == Phase.None) return;
 

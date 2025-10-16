@@ -7,7 +7,7 @@ using UnityEngine;
 public enum HitboxType { OverlapSphere, OverlapBox, RayCast, CapsuleCast }
 public class HitboxOverlap : MonoBehaviour
 {
-    private PlayerManager player;
+    private PlayerCharacter player;
     private Transform body;
 
     [Header("히트박스 기본 설정")]
@@ -26,7 +26,7 @@ public class HitboxOverlap : MonoBehaviour
 
     private void Awake()
     {
-        player = GetComponent<PlayerManager>();
+        player = GetComponent<PlayerCharacter>();
         body = player.Body;
     }
 
@@ -115,7 +115,7 @@ public class HitboxOverlap : MonoBehaviour
 
         if (bodyToUse == null)
         {
-            var player = GetComponent<PlayerManager>();
+            var player = GetComponent<PlayerCharacter>();
             if (player != null && player.Body != null)
                 bodyToUse = player.Body;
             else

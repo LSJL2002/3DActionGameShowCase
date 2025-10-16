@@ -163,6 +163,24 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwapPrev"",
+                    ""type"": ""Button"",
+                    ""id"": ""50d3094b-208f-4492-886a-a7153fbb27c5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwapNext"",
+                    ""type"": ""Button"",
+                    ""id"": ""0548549e-4870-42b8-9ede-fb44ac0b0b01"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -537,6 +555,28 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""DashR"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ca3e318-343b-4bd8-a64b-6c710465022a"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SwapPrev"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b507c084-2d8e-4dde-83b2-6ef4d20df2e7"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SwapNext"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1139,6 +1179,8 @@ namespace UnityEngine.InputSystem
             m_Player_Action = m_Player.FindAction("Action", throwIfNotFound: true);
             m_Player_DashL = m_Player.FindAction("DashL", throwIfNotFound: true);
             m_Player_DashR = m_Player.FindAction("DashR", throwIfNotFound: true);
+            m_Player_SwapPrev = m_Player.FindAction("SwapPrev", throwIfNotFound: true);
+            m_Player_SwapNext = m_Player.FindAction("SwapNext", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1227,6 +1269,8 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Action;
         private readonly InputAction m_Player_DashL;
         private readonly InputAction m_Player_DashR;
+        private readonly InputAction m_Player_SwapPrev;
+        private readonly InputAction m_Player_SwapNext;
         public struct PlayerActions
         {
             private @PlayerInput m_Wrapper;
@@ -1246,6 +1290,8 @@ namespace UnityEngine.InputSystem
             public InputAction @Action => m_Wrapper.m_Player_Action;
             public InputAction @DashL => m_Wrapper.m_Player_DashL;
             public InputAction @DashR => m_Wrapper.m_Player_DashR;
+            public InputAction @SwapPrev => m_Wrapper.m_Player_SwapPrev;
+            public InputAction @SwapNext => m_Wrapper.m_Player_SwapNext;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1300,6 +1346,12 @@ namespace UnityEngine.InputSystem
                 @DashR.started += instance.OnDashR;
                 @DashR.performed += instance.OnDashR;
                 @DashR.canceled += instance.OnDashR;
+                @SwapPrev.started += instance.OnSwapPrev;
+                @SwapPrev.performed += instance.OnSwapPrev;
+                @SwapPrev.canceled += instance.OnSwapPrev;
+                @SwapNext.started += instance.OnSwapNext;
+                @SwapNext.performed += instance.OnSwapNext;
+                @SwapNext.canceled += instance.OnSwapNext;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -1349,6 +1401,12 @@ namespace UnityEngine.InputSystem
                 @DashR.started -= instance.OnDashR;
                 @DashR.performed -= instance.OnDashR;
                 @DashR.canceled -= instance.OnDashR;
+                @SwapPrev.started -= instance.OnSwapPrev;
+                @SwapPrev.performed -= instance.OnSwapPrev;
+                @SwapPrev.canceled -= instance.OnSwapPrev;
+                @SwapNext.started -= instance.OnSwapNext;
+                @SwapNext.performed -= instance.OnSwapNext;
+                @SwapNext.canceled -= instance.OnSwapNext;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -1546,6 +1604,8 @@ namespace UnityEngine.InputSystem
             void OnAction(InputAction.CallbackContext context);
             void OnDashL(InputAction.CallbackContext context);
             void OnDashR(InputAction.CallbackContext context);
+            void OnSwapPrev(InputAction.CallbackContext context);
+            void OnSwapNext(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

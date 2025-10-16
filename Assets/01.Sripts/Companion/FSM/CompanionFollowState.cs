@@ -50,7 +50,7 @@ public class CompanionFollowState : ICompanionState
 
     public void PhysicsUpdate()
     {
-        if (Ctx.targetObject == null || Ctx.rb == null || PlayerManager.Instance.stateMachine.IsAttacking)
+        if (Ctx.targetObject == null || Ctx.rb == null || PlayerManager.Instance.StateMachine.IsAttacking)
             return;
 
         // 위치 이동
