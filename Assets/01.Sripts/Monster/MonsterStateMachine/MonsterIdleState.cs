@@ -13,7 +13,6 @@ public class MonsterIdleState : MonsterBaseState
 
     public override void PhysicsUpdate()
     {
-        Debug.Log("Idle PhysicsUpdate");
 
         base.PhysicsUpdate();
 

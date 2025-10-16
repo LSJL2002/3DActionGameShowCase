@@ -28,6 +28,9 @@ public class GameScene : SceneBase
         LoadingManager.Instance.SetLoadingPanel(true); // 로딩 UI 켜기
         await MapManager.Instance.LoadMap();
         await Task.Yield();
+        //await MapManager.Instance.LoadAscync("Character");
+        //await Task.Yield();
+        //await MapManager.Instance.LoadAscync("PlayerCamera");
         LoadingManager.Instance.SetLoadingPanel(false); // 로딩 UI 끄기
         OnGameSceneStart(); // 게임 씬 시작
     }
@@ -83,7 +86,9 @@ public class GameScene : SceneBase
         base.OnDestroy();
 
         // 미니맵 카메라, 플레이어 아이콘 오브젝트 언로드
-        Addressables.ReleaseInstance(minimapPlayerIconHandle);
-        Addressables.ReleaseInstance(minimapCameraHandle);
+        if (minimapPlayerIconHandle.IsValid())
+            Addressables.ReleaseInstance(minimapPlayerIconHandle);
+        if (minimapCameraHandle.IsValid())
+            Addressables.ReleaseInstance(minimapCameraHandle);
     }
 }

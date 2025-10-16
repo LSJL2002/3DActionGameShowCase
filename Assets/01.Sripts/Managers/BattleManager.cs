@@ -92,7 +92,7 @@ public class BattleManager : Singleton<BattleManager>
         if (isBattle) return;
         isBattle = true;
         currentZone = zone;
-
+        currentZone.triggerCollider.enabled = false;
         // 1. 벽 켜기 + 경고 이펙트 시작
         currentZone.SetWallsActive(true);
         //StartWarning();

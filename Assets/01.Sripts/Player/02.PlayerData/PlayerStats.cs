@@ -66,7 +66,7 @@ public class PlayerStats : IStats
 
     // ================= 모듈 데이터 ======================
     // ================== Yuki 각성 게이지 ======================
-    public float AwakenGauge { get; set; } = 0f; // 0~50
+    public float AwakenGauge { get; set; } = 0f; // 0~100
     public float MaxAwakenGauge { get; private set; } = 50f;
 
 

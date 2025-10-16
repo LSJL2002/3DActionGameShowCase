@@ -29,6 +29,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     public DirectionManager direction;
 
     // ==================== Actions =======================
+    public event Action<PlayerCharacter> OnActiveCharacterChanged;
 
     private void Awake()
     {
@@ -109,17 +110,10 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
 
         // 인덱스 갱신
         currentIndex = index;
+
+        OnActiveCharacterChanged?.Invoke(newChar);
     }
 
-    public void SwapNext()
-    {
-        int nextIndex = (currentIndex + 1) % characters.Length;
-        SwapTo(nextIndex);
-    }
-
-    public void SwapPrev()
-    {
-        int prevIndex = (currentIndex - 1 + characters.Length) % characters.Length;
-        SwapTo(prevIndex);
-    }
+    public void SwapNext() => SwapTo((currentIndex + 1) % characters.Length);
+    public void SwapPrev() => SwapTo((currentIndex - 1 + characters.Length) % characters.Length);
 }

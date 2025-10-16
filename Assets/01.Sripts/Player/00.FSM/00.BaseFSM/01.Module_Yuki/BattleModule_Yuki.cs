@@ -12,8 +12,6 @@ public class BattleModule_Yuki : BattleModule
     private SkillSubModule_Yuki skillSub;
     private AwakenSubModule_Yuki awakenSub;
 
-    public bool IsAwakened => awakenSub.IsAwakened;
-
     public BattleModule_Yuki(PlayerStateMachine sm) : base(sm)
     {
         comboSub = new ComboSubModule_Yuki(sm);
@@ -33,6 +31,23 @@ public class BattleModule_Yuki : BattleModule
             RaiseAttackEnd();        // FSM에 공격 종료 알림
         };
     }
+
+    // ====================== UI 접근용 프로퍼티 ======================
+
+    /// <summary>
+    /// 현재 각성 상태 여부
+    /// </summary>
+    public bool IsAwakened => awakenSub.IsAwakened;
+
+    /// <summary>
+    /// 현재 각성 게이지 (0~MaxAwakenGauge)
+    /// </summary>
+    public float AwakenGauge => sm.Player.Stats.AwakenGauge;
+
+    /// <summary>
+    /// 최대 각성 게이지
+    /// </summary>
+    public float MaxAwakenGauge => sm.Player.Stats.MaxAwakenGauge;
 
     // ================== 기본 공격 입력 =================
     public override void OnAttack()

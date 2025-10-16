@@ -27,11 +27,11 @@ Material:
   m_ValidKeywords:
   - _ALPHA_USEDISSOLVE
   - _BLENDBETWEENMASK_MULTIPLY
+  - _SURFACE_TYPE_TRANSPARENT
+  m_InvalidKeywords:
   - _BUILTIN_ALPHATEST_ON
   - _BUILTIN_AlphaClip
   - _BUILTIN_SURFACE_TYPE_TRANSPARENT
-  - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -158,7 +158,7 @@ Material:
     - _Dissolve_Falloff: 0.2
     - _Dissolve_Tex_Oneminus: 0
     - _DstBlend: 10
-    - _DstBlendAlpha: 0
+    - _DstBlendAlpha: 10
     - _EdgeWidth: 0
     - _Emission: 1.5
     - _EnvironmentReflections: 1
@@ -175,6 +175,7 @@ Material:
     - _OcclusionStrength: 1
     - _OneMinus: 0
     - _Opacity: 1
+    - _Override_Amount: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0

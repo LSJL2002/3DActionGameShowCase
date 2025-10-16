@@ -19,6 +19,8 @@ public class BattleZone : MonoBehaviour
     public float extraSpeed;
     public float extraAtkSpeed;
 
+    public BoxCollider triggerCollider;
+
     [Header("못나가게막는벽")]
     [SerializeField] private GameObject walls;
     [SerializeField] private BattleZoneSO ZoneData;
@@ -31,6 +33,7 @@ public class BattleZone : MonoBehaviour
 
     private void Awake()
     {
+        triggerCollider = GetComponent<BoxCollider>();
         if (ZoneData != null)
         {
             id = ZoneData.id;
@@ -45,6 +48,7 @@ public class BattleZone : MonoBehaviour
             extraSpeed = ZoneData.extraSpeed;
             extraAtkSpeed = ZoneData.extraAtkSpeed;
         }
+        
     }
 
     private async void OnTriggerEnter(Collider other)
