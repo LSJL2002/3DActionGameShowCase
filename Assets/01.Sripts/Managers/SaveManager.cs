@@ -2,26 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 [System.Serializable] // 직렬화하여 파일에 저장하거나 네트워크를통해 전송가능
 public class SaveData
 {
     public int LastClearStage = 0;
     public List<int> Inventory = new List<int>();
-    public string BuildVersion; // 현재 게임 빌드 버전(어드레서블도 동일)
 }
 
 public class SaveManager : Singleton<SaveManager>
 {
+    public enum PlayerPrefsSaveType
+    {
+        Volume,
+        BuildVersion,
+    }
+
     public SaveData playerData = new();
 
     private string path;
     private string fileName = "/save.json";
     private string keyWord = "projectEight";
 
-    // 볼륨 설정을 저장할 PlayerPrefs 키
+    // PlayerPrefs 키
     private const string Master_VOLUME_KEY = "MasterVolume";
-    private const string BGM_VOLUME_KEY = "BGMVolume";
-    private const string SFX_VOLUME_KEY = "SFXVolume";
+    private const string Bgm_VOLUME_KEY = "BgmVolume";
+    private const string Sfx_VOLUME_KEY = "SfxVolume";
+    private const string Build_Version_KEY = "BuildVersion";
 
     protected override void Awake()
     {
@@ -78,33 +85,51 @@ public class SaveManager : Singleton<SaveManager>
     public void AddStageData(int stageId) => playerData.LastClearStage = stageId;
     public void AddItemData(int itemId) => playerData.Inventory.Add(itemId);
 
+    #region PlayerPrefs
     // PlayerPrefs에 설정 저장하는 함수
-    public void SaveVolumes()
+    public void SavePlayerPrefs(PlayerPrefsSaveType saveType)
     {
-        PlayerPrefs.SetFloat(Master_VOLUME_KEY, AudioManager.Instance.MasterVolume);
-        PlayerPrefs.SetFloat(BGM_VOLUME_KEY, AudioManager.Instance.BgmVolume);
-        PlayerPrefs.SetFloat(SFX_VOLUME_KEY, AudioManager.Instance.SfxVolume);
+        switch(saveType)
+        {
+            case PlayerPrefsSaveType.Volume:
+                {
+                    PlayerPrefs.SetFloat(Master_VOLUME_KEY, AudioManager.Instance.MasterVolume);
+                    PlayerPrefs.SetFloat(Bgm_VOLUME_KEY, AudioManager.Instance.BgmVolume);
+                    PlayerPrefs.SetFloat(Sfx_VOLUME_KEY, AudioManager.Instance.SfxVolume);
+                    break;
+                }
+
+            case PlayerPrefsSaveType.BuildVersion:
+                {
+                    PlayerPrefs.SetString(Build_Version_KEY, Application.version);
+                    break;
+                }
+        }
         PlayerPrefs.Save();
     }
 
-    // PlayerPrefs에서 설정 가져오는 함수
-    public void LoadVolumes(int value)
+    // Volume 설정을 구조체로 정의
+    public struct VolumeSettings
     {
-        switch (value)
-        {
-            // 기본값 세팅
-            case 0:
-                AudioManager.Instance.SetMasterVolume(AudioManager.Instance.DefaultVolume);
-                AudioManager.Instance.SetBgmVolume(AudioManager.Instance.DefaultVolume);
-                AudioManager.Instance.SetSfxVolume(AudioManager.Instance.DefaultVolume);
-                break;
-
-            // 저장값 세팅
-            case 1:
-                AudioManager.Instance.SetMasterVolume(PlayerPrefs.GetFloat(Master_VOLUME_KEY, 0.5f));
-                AudioManager.Instance.SetBgmVolume(PlayerPrefs.GetFloat(BGM_VOLUME_KEY, 0.5f));
-                AudioManager.Instance.SetSfxVolume(PlayerPrefs.GetFloat(SFX_VOLUME_KEY, 0.5f));
-                break;
-        }
+        public float MasterVolume;
+        public float BgmVolume;
+        public float SfxVolume;
     }
+
+    // Volume 구조체를 반환하는 함수
+    public VolumeSettings LoadVolumePlayerPrefs() // 반환 타입을 VolumeSettings로 명확히 분리
+    {
+        return new VolumeSettings
+        {
+            MasterVolume = PlayerPrefs.GetFloat(Master_VOLUME_KEY, 0.5f),
+            BgmVolume = PlayerPrefs.GetFloat(Bgm_VOLUME_KEY, 0.5f),
+            SfxVolume = PlayerPrefs.GetFloat(Sfx_VOLUME_KEY, 0.5f)
+        };
+    }
+
+    public string LoadBuildVersionPlayerPrefs() // 반환 타입을 string으로 명확히 분리
+    {
+        return PlayerPrefs.GetString(Build_Version_KEY, "Version not found");
+    }
+    #endregion
 }

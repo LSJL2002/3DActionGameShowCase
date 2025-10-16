@@ -76,7 +76,7 @@ public class AudioManager : Singleton<AudioManager>
         InitSfxDictionary(sfxList);
 
         // 초기 볼륨 세팅
-        SaveManager.Instance.LoadVolumes(1);
+        SetAllVolume(1);
 
         // 테스트용 BGM 재생 (나중에 삭제 가능)
         PlayBGM("InGameBGM");
@@ -118,6 +118,24 @@ public class AudioManager : Singleton<AudioManager>
 
     #region Mixer Volume
     private float LinearToDecibel(float linear) => linear <= 0f ? -80f : Mathf.Log10(linear) * 20f;
+
+    public void SetAllVolume(int setType)
+    {
+        switch (setType)
+        {
+            case 0: // 기본값
+                SetMasterVolume(_defaultVolume);
+                SetBgmVolume(_defaultVolume);
+                SetSfxVolume(_defaultVolume);
+                break;
+
+            case 1: // 저장값
+                SetMasterVolume(SaveManager.Instance.LoadVolumePlayerPrefs().MasterVolume);
+                SetBgmVolume(SaveManager.Instance.LoadVolumePlayerPrefs().BgmVolume);
+                SetSfxVolume(SaveManager.Instance.LoadVolumePlayerPrefs().SfxVolume);
+                break;
+        }
+    }
 
     public void SetMasterVolume(float volume)
     {

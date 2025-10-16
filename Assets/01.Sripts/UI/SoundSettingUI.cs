@@ -68,7 +68,7 @@ public class SoundSettingUI : UIBase
 
             // 사운드 초기설정으로 (0은 기본값, 1은 저장값)
             case "Reset":
-                SaveManager.Instance.LoadVolumes(0);
+                AudioManager.Instance.SetAllVolume(0);
                 masterVolumeSlider.value = AudioManager.Instance.MasterVolume;
                 bgmVolumeSlider.value = AudioManager.Instance.BgmVolume;
                 sfxVolumeSlider.value = AudioManager.Instance.SfxVolume;
@@ -77,7 +77,7 @@ public class SoundSettingUI : UIBase
             // 사운드 설정 저장
             case "Save":
                 // Save 버튼을 누르면 SettingsManager에 저장 요청
-                SaveManager.Instance.SaveVolumes();
+                SaveManager.Instance.SavePlayerPrefs(SaveManager.PlayerPrefsSaveType.Volume);
                 break;
         }
 

@@ -31,7 +31,6 @@ public class DataUpdateScene : SceneBase
     private List<string> labelsToDownload = new List<string>();
 
     private long patchSize;
-    private float currentVersion;
 
     protected override void Awake()
     {
@@ -84,6 +83,7 @@ public class DataUpdateScene : SceneBase
     {
         patchSize = 0;
         labelsToDownload.Clear(); // 새 다운로드 목록 작성 전 초기화
+        string currentVersion = SaveManager.Instance.LoadBuildVersionPlayerPrefs();
 
         // 설정 된 AssetLabelReference를 순회하여 전체 다운로드 크기 확인
         foreach (var labelRef in labelList)
@@ -107,12 +107,12 @@ public class DataUpdateScene : SceneBase
         {
             waitMessage.SetActive(false);
             UpdateMessage.SetActive(true);
-            versionCheckText.text = $"현재 {currentVersion} / 최신 {Application.version}";
+            versionCheckText.text = $"현재 Ver.{currentVersion} / 최신 Ver.{Application.version}";
             sizeInfoText.text = GetFileSize(patchSize);
         }
         else
         {
-            waitMessageText.text = $"최신 버전입니다.<br>현재 ver.{currentVersion}<br>잠시만 기다려주세요.";
+            waitMessageText.text = $"최신 버전입니다.<br>현재 Ver.{currentVersion}<br>잠시만 기다려주세요.";
 
             yield return new WaitForSeconds(3f);
             SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
@@ -229,7 +229,7 @@ public class DataUpdateScene : SceneBase
             // 다운로드 완료 조건
             if (total >= patchSize)
             {
-                currentVersion = float.Parse(Application.version); // 현재 버전을 float로 변환하여 저장
+                SaveManager.Instance.SavePlayerPrefs(SaveManager.PlayerPrefsSaveType.BuildVersion); // 다운로드한 버전정보 저장
                 yield return new WaitForSeconds(3f); // 캐시 정리를 위한 일정시간 대기
 
                 SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // 목표 씬으로 Single 전환
