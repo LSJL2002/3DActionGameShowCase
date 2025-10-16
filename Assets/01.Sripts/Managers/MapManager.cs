@@ -96,11 +96,22 @@ public class MapManager : Singleton<MapManager>
             }
             else if (zoneDict.TryGetValue(lastClearStage, out var clearedZone))
             {
-                
+                var controller = PlayerManager.Instance.ActiveCharacter.GetComponent<CharacterController>();
+                if (controller != null)
+                {
+                    controller.enabled = false; // 움직임 제어 잠깐 끄기
+                    PlayerManager.Instance.ActiveCharacter.transform.position = clearedZone.transform.position;
+                    controller.enabled = true;  // 다시 켜기
+                }
+                else
+                {
+                    PlayerManager.Instance.ActiveCharacter.transform.position = clearedZone.transform.position;
+                }
                 Debug.Log($"ClearedZonePos: {clearedZone.transform.position}");
                 OpenNextZone(clearedZone);
                 //await Task.Yield();
-                //PlayerManager.Instance.transform.position = clearedZone.transform.position;
+                Debug.Log($"ClearedZonePos: {clearedZone.transform.position}");
+
             }
 
 
