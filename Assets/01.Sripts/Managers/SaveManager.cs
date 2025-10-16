@@ -20,7 +20,7 @@ public class SaveManager : Singleton<SaveManager>
 
     public SaveData playerData = new();
 
-    private string path;
+    public string path { get; private set; }
     private string fileName = "/save.json";
     private string keyWord = "projectEight";
 
