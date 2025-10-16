@@ -56,6 +56,7 @@ public class SaveManager : Singleton<SaveManager>
 
     public bool LoadData()
     {
+        if (GameManager.Instance.gameMode != eGameMode.LoadGame) return false;
         EnsurePath();
 
         if (!File.Exists(path))

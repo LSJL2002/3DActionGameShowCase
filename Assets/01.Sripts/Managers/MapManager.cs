@@ -77,7 +77,7 @@ public class MapManager : Singleton<MapManager>
 
         if (GameManager.Instance.gameMode != eGameMode.LoadGame)           //불러오기가 아닐때
         {
-            tutorialWall.SetActive(false);
+            tutorialWall.SetActive(true);
             ReturnToStartZone();
             UIManager.Instance.tutorialEnabled = true;
             
