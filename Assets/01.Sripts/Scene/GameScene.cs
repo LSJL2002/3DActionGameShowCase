@@ -86,7 +86,9 @@ public class GameScene : SceneBase
         base.OnDestroy();
 
         // 미니맵 카메라, 플레이어 아이콘 오브젝트 언로드
-        Addressables.ReleaseInstance(minimapPlayerIconHandle);
-        Addressables.ReleaseInstance(minimapCameraHandle);
+        if (minimapPlayerIconHandle.IsValid())
+            Addressables.ReleaseInstance(minimapPlayerIconHandle);
+        if (minimapCameraHandle.IsValid())
+            Addressables.ReleaseInstance(minimapCameraHandle);
     }
 }

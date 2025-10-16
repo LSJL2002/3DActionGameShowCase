@@ -37,6 +37,7 @@ public partial class GameUI : UIBase
 
     public void OnDisableSkill()
     {
+        if (PlayerManager.Instance == null) return;
         PlayerManager.Instance.Input.PlayerActions.HeavyAttack.started -= OnCoolTimeHeavyAttack; // 우클릭(헤비어택) 입력 이벤트 구독해제
         PlayerManager.Instance.Input.PlayerActions.Dodge.started -= OnCoolTimeEvade; // 스페이스(회피) 입력 이벤트 구독해제
     }
