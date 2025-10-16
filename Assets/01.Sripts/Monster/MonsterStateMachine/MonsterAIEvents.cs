@@ -27,7 +27,7 @@ public class MonsterAIEvents : MonoBehaviour
 
     private AIMode currentmode = AIMode.Idle;
     private bool processingEnabled = true;
-    private PlayerManager PlayerManager;
+    private PlayerManager playerManager;
 
     private void Awake()
     {
@@ -40,6 +40,8 @@ public class MonsterAIEvents : MonoBehaviour
         {
             Debug.LogError("Player object with tag 'Player' not found!");
         }
+
+        PlayerManager.Instance.StateMachine.SwapOutState.OnStateComplete += UpdatePlayerReference;    
     }
 
     private void Update()
@@ -112,6 +114,24 @@ public class MonsterAIEvents : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (PlayerManager.Instance != null && PlayerManager.Instance.StateMachine != null && PlayerManager.Instance.StateMachine.SwapOutState != null)
+            PlayerManager.Instance.StateMachine.SwapOutState.OnStateComplete -= UpdatePlayerReference;
+    }
+
+    private void UpdatePlayerReference(PlayerBaseState state)
+    {
+        var playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
+        else
+        {
+            Debug.LogError("Player object with tag 'Player' not found after swap!");
+        }
+    }
 
     public void SetStateMachine(MonsterStateMachine sm)
     {
