@@ -1,7 +1,4 @@
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class PlayerCharacter : MonoBehaviour
 {
