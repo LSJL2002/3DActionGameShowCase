@@ -88,7 +88,7 @@ public class SaveManager : Singleton<SaveManager>
 
     #region PlayerPrefs
     // PlayerPrefs에 설정 저장하는 함수
-    public void SavePlayerPrefs(PlayerPrefsSaveType saveType)
+    public void SavePlayerPrefs(PlayerPrefsSaveType saveType, string value = null)
     {
         switch(saveType)
         {
@@ -102,7 +102,10 @@ public class SaveManager : Singleton<SaveManager>
 
             case PlayerPrefsSaveType.BuildVersion:
                 {
-                    PlayerPrefs.SetString(Build_Version_KEY, Application.version);
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        PlayerPrefs.SetString(Build_Version_KEY, value);
+                    }
                     break;
                 }
         }
