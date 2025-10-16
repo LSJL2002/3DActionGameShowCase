@@ -35,10 +35,6 @@ public class MonsterAIEvents : MonoBehaviour
         if (playerObj != null)
         {
             player = playerObj.transform;
-            PlayerManager = playerObj.GetComponent<PlayerManager>();
-
-            if (PlayerManager == null)
-                Debug.LogError("PlayerManager component not found on Player object!");
         }
         else
         {
