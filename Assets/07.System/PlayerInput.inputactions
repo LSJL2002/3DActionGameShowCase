@@ -139,6 +139,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SwapPrev",
+                    "type": "Button",
+                    "id": "50d3094b-208f-4492-886a-a7153fbb27c5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwapNext",
+                    "type": "Button",
+                    "id": "0548549e-4870-42b8-9ede-fb44ac0b0b01",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -513,6 +531,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "DashR",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1ca3e318-343b-4bd8-a64b-6c710465022a",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SwapPrev",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b507c084-2d8e-4dde-83b2-6ef4d20df2e7",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SwapNext",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

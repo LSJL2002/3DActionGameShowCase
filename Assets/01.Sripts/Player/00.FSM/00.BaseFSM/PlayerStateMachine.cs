@@ -10,7 +10,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class PlayerStateMachine : StateMachine
 {
-    public PlayerManager Player { get; }
+    public PlayerCharacter Player { get; }
 
     public BattleModule CurrentBattleModule { get; private set; }
 
@@ -79,10 +79,13 @@ public class PlayerStateMachine : StateMachine
     public PlayerDodgeState DodgeState { get; }
     public PlayerKnockbackState KnockbackState { get;}
     public PlayerStunState StunState { get;}
+    // Swap 관리
+    public PlayerSwapOutState SwapOutState { get; }
+    public PlayerSwapInState SwapInState { get; }
 
 
 
-    public PlayerStateMachine(PlayerManager player)
+    public PlayerStateMachine(PlayerCharacter player)
     {
         this.Player = player;
 
@@ -98,6 +101,8 @@ public class PlayerStateMachine : StateMachine
         SkillState = new PlayerSkillState(this);
         KnockbackState = new PlayerKnockbackState(this);
         StunState = new PlayerStunState(this);
+        SwapOutState = new PlayerSwapOutState(this);
+        SwapInState = new PlayerSwapInState(this);
 
         MovementSpeed = player.InfoData.GroundData.BaseSpeed;
         RotationDamping = player.InfoData.GroundData.BaseRotationDamping;

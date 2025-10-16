@@ -33,8 +33,10 @@ public class PlayerAnimationHash
     private string knockbackParameterName = "HitStop/Switch_KnockbackState";
     private string stunParameterName = "HitStop/Switch_StunState";
 
-
+    [Header("Trigger")]
     private string dieParameterName = "Base/Toggle_DieState";
+    private string swapOutParameterName = "Base/Switch_Swap_Out";
+    private string swapInParameterName = "Base/Switch_Swap_In";
 
     [Header("Parameter")]
     private string horizontalFloatName = "Input/Horizontal";  //Blend
@@ -68,6 +70,8 @@ public class PlayerAnimationHash
     public int StunParameterHash { get; private set; }
 
     public int DieParameterHash { get; private set; }
+    public int SwapOutParameterHash { get; private set; }
+    public int SwapInParameterHash { get; private set; }
 
     public int HorizontalHash { get; private set; }
     public int VerticalHash { get; private set; }
@@ -79,7 +83,7 @@ public class PlayerAnimationHash
 
 
 
-    // ===== 초기화 =====
+    // ================== 초기화 ===================
     public void Initialize()
     {
         GroundBoolHash = Animator.StringToHash(groundBoolName);
@@ -105,6 +109,8 @@ public class PlayerAnimationHash
         StunParameterHash = Animator.StringToHash(stunParameterName);
 
         DieParameterHash = Animator.StringToHash(dieParameterName);
+        SwapOutParameterHash = Animator.StringToHash(swapOutParameterName);
+        SwapInParameterHash = Animator.StringToHash(swapInParameterName);
 
         HorizontalHash = Animator.StringToHash(horizontalFloatName);
         VerticalHash = Animator.StringToHash(verticalFloatName);

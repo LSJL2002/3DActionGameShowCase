@@ -10,12 +10,12 @@ public class PlayerAirState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.AirBoolHash);
+        StartAnimation(sm.Player.AnimationData.AirBoolHash);
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.AirBoolHash);
+        StopAnimation(sm.Player.AnimationData.AirBoolHash);
     }
 }

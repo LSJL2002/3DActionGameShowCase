@@ -1,121 +1,125 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
-public interface IPlayer
+public interface IPlayerManager
 {
 }
 
-public class PlayerManager : Singleton<PlayerManager>, IPlayer
+public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
 {
-    [SerializeField]
-    public CharacterType CharacterType { get; private set; } = CharacterType.Yuki;
+    [SerializeField] private PlayerCharacter[] characters; // 등록된 캐릭터들
+    [SerializeField] private int currentIndex = 0;
 
-    [field: SerializeField] public PlayerInfo InfoData { get; private set; }
+    // ===================== Proxy =====================
+    public PlayerCharacter ActiveCharacter => characters[currentIndex];
+    public PlayerStateMachine StateMachine => ActiveCharacter?.StateMachine;
+    public PlayerStats Stats => ActiveCharacter?.Stats;
+    public PlayerController Input => ActiveCharacter?.Input;
 
-    public PlayerStats Stats { get; private set; }
-
-
-    [field: Header("Animations")]
-    [field: SerializeField] public PlayerAnimationHash AnimationData { get; private set; }
-    //런타임 계산이 필요한 데이터는 이렇게 초기화
-
-
-    public Animator Animator { get; private set; } //루트모션은 본체에
-    public CharacterController Controller { get; private set; }
-    public PlayerController Input { get; private set; }
-    public PlayerAttackController Attack { get; private set; }
-    public ForceReceiver ForceReceiver { get; private set; }
-    public Interaction Interaction { get; private set; }
-    public HitboxOverlap Hit { get; private set; }
-    public PlayerDamageable Damageable { get; private set; }
-    public ActionHandler Action { get; private set; }
-    public PlayerVitals Vital { get; private set; }
-
-
-
-    public Transform Face;
-    public Transform Body;
-    public PlayerStateMachine stateMachine; //순수 C# 클래스
+    // ==================== Managers =====================
+    public CameraManager _camera;
     public SkillManagers skill;
-    public EventManager eventManager;
-    public CameraManager camera;
-    public DirectionManager direction;
+    public EventManager _event;
     public VFXManager vFX;
     public HitStopManager hitStop;
+    public DirectionManager direction;
 
+    // ==================== Actions =======================
 
     private void Awake()
     {
-        //임시함수
         Cursor.lockState = CursorLockMode.Locked;
         Application.targetFrameRate = 120;
 
-        AnimationData = new PlayerAnimationHash();
-        AnimationData.Initialize();
-
-        Animator ??= GetComponent<Animator>();
-        Controller ??= GetComponent<CharacterController>();
-        Input ??= GetComponent<PlayerController>();
-        Attack ??= GetComponent<PlayerAttackController>();
-        ForceReceiver ??= GetComponent<ForceReceiver>();
-        Interaction ??= GetComponent<Interaction>();
-        Damageable ??= GetComponent<PlayerDamageable>();
-        Hit ??= GetComponent<HitboxOverlap>();
-        Action ??= GetComponent<ActionHandler>();
-        Vital ??= GetComponent<PlayerVitals>();
-
-        Stats = new PlayerStats(InfoData.StatData);
-        stateMachine = new PlayerStateMachine(this);
-        skill ??= GetComponentInChildren<SkillManagers>();
-        camera ??= GetComponentInChildren<CameraManager>();
-        direction ??= GetComponentInChildren<DirectionManager>();
-        vFX ??= GetComponent<VFXManager>();
-        hitStop ??= GetComponent<HitStopManager>();
-
-        Stats.OnDie += OnDie;
+        // 각 캐릭터에 매니저 연결
+        foreach (var character in characters)
+        {
+            character.InitManagers(
+                        playerManager: this,
+                        cam: _camera,
+                        skl: skill,
+                        evt: _event,
+                        vfx: vFX,
+                        hit: hitStop,
+                        dir: direction
+                    );
+        }
     }
 
     void Start()
     {
-        stateMachine.ChangeState(stateMachine.IdleState);
+        // 모든 캐릭터 활성화 상태 초기화
+        for (int i = 0; i < characters.Length; i++)
+            characters[i].gameObject.SetActive(i == currentIndex);
+
+        // 시작 캐릭터 Idle 상태
+        var active = ActiveCharacter;
+        active.StateMachine.ChangeState(active.StateMachine.IdleState);
+        active.EnableCharacterInput(true);
+
+        // 카메라 타겟 초기화
+        _camera?.SetPlayerTarget(active.transform, active.Face);
     }
 
-    private void Update()
-    {
-        stateMachine.HandleInput();    // 플레이어 입력 처리
-        stateMachine.LogicUpdate();    // FSM 상태별 논리 업데이트
-        stateMachine.HandleUpdate();   // 현재 BattleModule 업데이트
-        stateMachine.HandleSkillUpdate();
-        Stats.Update();                // 스탯 처리    
-    }
-
-    private void FixedUpdate()
-    {
-        stateMachine.Physicsupdate();
-    }
-
-    void OnDie()
-    {
-        Animator.SetTrigger("Die");
-        gameObject.SetActive(false);
-    }
-
+    // ================ 플레이어 입력 제어 ====================
     public void EnableInput(bool active)
     {
-        if (active)
+        ActiveCharacter?.EnableCharacterInput(active);
+        _camera?.SetCameraInputEnabled(active);
+        Cursor.lockState = active ? CursorLockMode.Locked : CursorLockMode.None;
+    }
+
+    // ================ 플레이어 스왑 기능 ====================
+    private void SwapTo(int index)
+    {
+        if (index == currentIndex || index < 0 || index >= characters.Length) return;
+
+        var oldChar = ActiveCharacter;
+        var newChar = characters[index];
+
+        // 기존 캐릭터 입력 비활성화
+        oldChar.EnableCharacterInput(false);
+
+        // 방향 동기화 (예: 오른쪽/왼쪽 바라보는 방향)
+        Vector3 spawnOffset = oldChar.transform.right * 0.8f;
+        newChar.transform.position = oldChar.transform.position + spawnOffset;
+        newChar.transform.rotation = oldChar.transform.rotation;
+
+        // 새 캐릭터 즉시 등장 + 카메라 전환
+        newChar.gameObject.SetActive(true);
+        newChar.EnableCharacterInput(true);
+        _camera?.SetPlayerTarget(newChar.transform, newChar.Face);
+
+        // 새 캐릭터 SwapInState 진입
+        newChar.StateMachine.ChangeState(newChar.StateMachine.SwapInState);
+
+        // SwapOut 애니메이션 재생 후 기존 캐릭터 비활성화
+        void OnOldSwapOutComplete(PlayerBaseState state)
         {
-            Input.PlayerActions.Enable();
-            camera.SetCameraInputEnabled(true);
-            Cursor.lockState = CursorLockMode.Locked;
+            oldChar.StateMachine.SwapOutState.OnStateComplete -= OnOldSwapOutComplete;
+            oldChar.gameObject.SetActive(false);
         }
-        else
-        {
-            Input.PlayerActions.Disable();
-            camera.SetCameraInputEnabled(false);
-            Cursor.lockState = CursorLockMode.None;
-        }
+
+        oldChar.StateMachine.SwapOutState.OnStateComplete += OnOldSwapOutComplete;
+        oldChar.StateMachine.ChangeState(oldChar.StateMachine.SwapOutState);
+
+        // 인덱스 갱신
+        currentIndex = index;
+    }
+
+    public void SwapNext()
+    {
+        int nextIndex = (currentIndex + 1) % characters.Length;
+        SwapTo(nextIndex);
+    }
+
+    public void SwapPrev()
+    {
+        int prevIndex = (currentIndex - 1 + characters.Length) % characters.Length;
+        SwapTo(prevIndex);
     }
 }

@@ -15,7 +15,7 @@ public class LookAtCamera : MonoBehaviour
     private void Awake()
     {
         monsterTransform = transform.parent;
-        camTransform = PlayerManager.Instance.camera.MainCamera;
+        camTransform = PlayerManager.Instance._camera.MainCamera;
 
         // 인풋 시스템 설정
         playerInput = new @PlayerInput();

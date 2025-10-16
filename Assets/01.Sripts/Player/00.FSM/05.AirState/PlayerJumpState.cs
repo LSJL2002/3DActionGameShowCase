@@ -10,25 +10,25 @@ public class PlayerJumpState : PlayerAirState
 
     public override void Enter()
     {
-        stateMachine.JumpForce = stateMachine.Player.InfoData.AirData.JumpForce;
-        stateMachine.Player.ForceReceiver.Jump(stateMachine.JumpForce);
+        sm.JumpForce = sm.Player.InfoData.AirData.JumpForce;
+        sm.Player.ForceReceiver.Jump(sm.JumpForce);
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.JumpTriggerHash);
+        StartAnimation(sm.Player.AnimationData.JumpTriggerHash);
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.JumpTriggerHash);
+        StopAnimation(sm.Player.AnimationData.JumpTriggerHash);
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        if (stateMachine.Player.Controller.velocity.y <= 0)
+        if (sm.Player.Controller.velocity.y <= 0)
         {
-            stateMachine.ChangeState(stateMachine.FallState);
+            sm.ChangeState(sm.FallState);
             return;
         }
     }
