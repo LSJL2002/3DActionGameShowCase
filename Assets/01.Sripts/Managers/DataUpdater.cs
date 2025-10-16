@@ -14,6 +14,9 @@ using UnityEngine.UI;
 
 public class DataUpdater : MonoBehaviour
 {
+    // config.json 파일이 있는 서버 URL (정적으로 관리)
+    private const string CONFIG_URL = "https://s3.ap-southeast-2.amazonaws.com/project8.addressable/StandaloneWindows64/VersionConfig.json";
+
     [Header("UI")]
     [SerializeField] private GameObject waitMessage;
     [SerializeField] private GameObject UpdateMessage;
@@ -33,9 +36,10 @@ public class DataUpdater : MonoBehaviour
     private List<string> labelsToDownload = new List<string>();
 
     private long patchSize;
-
     private string currentVersion; // 로컬에 저장된 현재 버전
     private string latestVersion; // 서버에서 가져온 최신 버전
+
+    public VersionConfigData VersionConfig { get; private set; } = new VersionConfigData();
 
     public void Awake()
     {
@@ -46,19 +50,20 @@ public class DataUpdater : MonoBehaviour
         StartCoroutine(InitAddressableAndCheck());
     }
 
+    #region Initialize Addressables & Check Catalog Update
     // Addressables 초기화 및 카탈로그 업데이트 체크
     IEnumerator InitAddressableAndCheck()
     {
-        // 1. config.json 다운로드
+        // config.json 다운로드
         yield return LoadRemoteConfig().ToCoroutine();
 
-        // 2. Addressables 런타임 경로 재정의 (config.json에서 CDN_URL을 읽어와 적용)
+        // Addressables 런타임 경로 재정의 (config.json에서 CDN_URL을 읽어와 적용)
         string cdnUrl = VersionConfig.CDN_URL;
 
         if (!string.IsNullOrEmpty(cdnUrl))
         {
-            // Addressables가 애셋 번들/카탈로그를 찾을 기본 경로를 덮어씁니다.
-            // {0}은 플랫폼 빌드 타겟 등을 나타내는 플레이스 홀더입니다.
+            // 기본 경로 재정의 (Addressables 애셋 번들/카탈로그 경로)
+            // {0}은 플랫폼 빌드 타겟 등을 나타내는 플레이스 홀더
             string remotePathOverride = $"{cdnUrl}/{{0}}";
 
             Addressables.InternalIdTransformFunc = (IResourceLocation location) =>
@@ -105,8 +110,9 @@ public class DataUpdater : MonoBehaviour
 
         yield return CheckUpdateFile();
     }
+    #endregion Initialize Addressables & Check Catalog Update
 
-    #region Check DownLoad
+    #region Check File Update
     // 다운로드할 파일이 있는지 체크
     IEnumerator CheckUpdateFile()
     {
@@ -137,7 +143,7 @@ public class DataUpdater : MonoBehaviour
         // 패치사이즈가 0보다 크면 패치있음
         if (patchSize > 0)
         {
-            // 4. 강제 앱 업데이트 체크 (Optional, MinAppVersion이 현재 Application.version보다 높으면 처리)
+            // 강제 앱 업데이트 체크 (Optional, MinAppVersion이 현재 Application.version보다 높으면 처리)
             if (VersionConfig.MinimumAppVersion.CompareTo(Application.version) > 0)
             {
                 waitMessageText.text = $"앱의 버전이 너무 낮습니다.<br>최신 버전을 다시 설치해주세요.";
@@ -155,7 +161,7 @@ public class DataUpdater : MonoBehaviour
         {
             waitMessageText.text = $"최신 버전입니다.<br>현재 Version:{currentVersion}<br>잠시만 기다려주세요.";
 
-            // 🌟 6. 패치 사이즈가 0이면 최신 버전을 로컬에 저장 (패치 완료와 동일하게 처리)
+            // 패치 사이즈가 0이면 최신 버전을 로컬에 저장 (패치 완료와 동일하게 처리)
             SaveManager.Instance.SavePlayerPrefs(SaveManager.PlayerPrefsSaveType.BuildVersion, latestVersion);
 
             yield return new WaitForSeconds(3f);
@@ -186,7 +192,7 @@ public class DataUpdater : MonoBehaviour
 
         return size;
     }
-    #endregion Check DownLoad
+    #endregion Check File Update
 
     #region DownLoad
     public void OnClickDownButton(string str)
@@ -283,14 +289,7 @@ public class DataUpdater : MonoBehaviour
     }
     #endregion DownLoad
 
-    #region Version Config Parsing
-
-    // config.json 파일이 있는 서버 URL (정적으로 관리)
-    private const string CONFIG_URL 
-        = "https://s3.ap-southeast-2.amazonaws.com/project8.addressable/StandaloneWindows64/VersionConfig.json";
-
-    public VersionConfigData VersionConfig { get; private set; } = new VersionConfigData();
-
+    #region Parsing Version Config
     // config.json을 서버에서 다운로드하고 파싱하는 함수
     public async UniTask<bool> LoadRemoteConfig()
     {
@@ -318,5 +317,5 @@ public class DataUpdater : MonoBehaviour
             return false;
         }
     }
-    #endregion Version Config Parsing
+    #endregion Parsing Version Config
 }
