@@ -37,7 +37,7 @@ public class AwakenSubModule_Yuki
     public void OnEnemyHit(IDamageable target)
     {
         if (!isAwakened)
-            sm.Player.Stats.AddAwakenGauge(100f);
+            sm.Player.Stats.AddAwakenGauge(1f);
     }
 
     public void CheckAwakenHoldStart()

@@ -99,7 +99,7 @@ public class AttackGaugeUI : UIBase
             case GaugeState.Fill:
 
                 // 게이지 채우기
-                for (int i = 0; i <= amount; i++)
+                for (int i = 0; i < amount; i++)
                 {
                     if (fillGauges[i].currentGaugeState == GaugeComponent.SetState.Off)
                     {
