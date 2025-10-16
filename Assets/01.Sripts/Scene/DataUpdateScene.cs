@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using Cysharp.Threading.Tasks.Triggers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -12,8 +14,10 @@ public class DataUpdateScene : SceneBase
 {
     [Header("UI")]
     [SerializeField] private GameObject waitMessage;
-    [SerializeField] private GameObject downMessage;
+    [SerializeField] private GameObject UpdateMessage;
     [SerializeField] private Slider downSliders;
+    [SerializeField] private TextMeshProUGUI waitMessageText;
+    [SerializeField] private TextMeshProUGUI versionCheckText;
     [SerializeField] private TextMeshProUGUI sizeInfoText;
     [SerializeField] private TextMeshProUGUI downValueText;
 
@@ -27,13 +31,14 @@ public class DataUpdateScene : SceneBase
     private List<string> labelsToDownload = new List<string>();
 
     private long patchSize;
+    private float currentVersion;
 
     protected override void Awake()
     {
         base.Awake();
 
         waitMessage.SetActive(true);
-        downMessage.SetActive(false);
+        UpdateMessage.SetActive(false);
         downSliders.gameObject.SetActive(false);
 
         StartCoroutine(InitAddressableAndCheck());
@@ -101,12 +106,15 @@ public class DataUpdateScene : SceneBase
         if (patchSize > 0)
         {
             waitMessage.SetActive(false);
-            downMessage.SetActive(true);
+            UpdateMessage.SetActive(true);
+            versionCheckText.text = $"현재 {currentVersion} / 최신 {Application.version}";
             sizeInfoText.text = GetFileSize(patchSize);
         }
         else
         {
-            yield return new WaitForSeconds(1f);
+            waitMessageText.text = $"최신 버전입니다.<br>현재 ver.{currentVersion}<br>잠시만 기다려주세요.";
+
+            yield return new WaitForSeconds(3f);
             SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
         }
     }
@@ -144,7 +152,7 @@ public class DataUpdateScene : SceneBase
             case "DownLaod":
                 // 다운로드 시작
                 StartCoroutine(PatchFiles());
-                downMessage.SetActive(false);
+                UpdateMessage.SetActive(false);
                 downSliders.gameObject.SetActive(true);
                 break;
 
@@ -221,6 +229,7 @@ public class DataUpdateScene : SceneBase
             // 다운로드 완료 조건
             if (total >= patchSize)
             {
+                currentVersion = float.Parse(Application.version); // 현재 버전을 float로 변환하여 저장
                 yield return new WaitForSeconds(3f); // 캐시 정리를 위한 일정시간 대기
 
                 SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // 목표 씬으로 Single 전환
