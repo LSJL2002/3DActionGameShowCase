@@ -85,10 +85,16 @@ public class AttackGaugeUI : UIBase
     // 게이지 업데이트 함수 (추가/감소 함께 사용)
     public void UpdateGauge()
     {
-        // 각성 사용중일때 (true) + 모든 게이지가 찼을 때
-        if (PlayerManager.Instance.stateMachine.IsSkill && currentGaugeState == GaugeState.Full)
-            UseGauge();
+        // Yuki 전용 모듈을 가져옴
+        var battleModule = PlayerManager.Instance.StateMachine.CurrentBattleModule as BattleModule_Yuki;
 
+        if (battleModule != null)
+        {
+            // 각성 사용중일때 (true) + 모든 게이지가 찼을 때
+            if (battleModule.IsAwakened && currentGaugeState == GaugeState.Full)
+                UseGauge();
+        }
+        
         if (currentGaugeState == GaugeState.Full) return; // 모두 찼다면 아래 과정은 무시
 
         // 플레이어쪽 각성수치 현재스택을 읽어와서 게이지를 업데이트

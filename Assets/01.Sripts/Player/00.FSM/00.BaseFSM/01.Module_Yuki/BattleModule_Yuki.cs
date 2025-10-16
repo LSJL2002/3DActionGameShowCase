@@ -12,6 +12,8 @@ public class BattleModule_Yuki : BattleModule
     private SkillSubModule_Yuki skillSub;
     private AwakenSubModule_Yuki awakenSub;
 
+    public bool IsAwakened => awakenSub.IsAwakened;
+
     public BattleModule_Yuki(PlayerStateMachine sm) : base(sm)
     {
         comboSub = new ComboSubModule_Yuki(sm);
