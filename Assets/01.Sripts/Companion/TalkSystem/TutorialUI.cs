@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
 
 public enum SceneType
 {
@@ -38,6 +39,23 @@ public class TutorialUI : UIBase
     public List<TextSO> dialogues = new List<TextSO>();
 
     public static event Action endTutorial;
+
+    [SerializeField] CanvasGroup tutorialUICanvasGroup;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // UI매니저의 튜토리얼 재생 여부 확인 후 재생
+        if (UIManager.Instance.tutorialEnabled)
+        {
+            // n초 대기 후 실행
+            DOVirtual.DelayedCall(6f, () => 
+            {
+                UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
+            });            
+        }
+    }
 
     protected override void OnEnable()
     {

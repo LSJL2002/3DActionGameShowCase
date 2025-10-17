@@ -512,7 +512,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -650,7 +650,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -859,7 +859,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -891,6 +891,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6483188482646839676}
   - component: {fileID: 4202265558038063048}
+  - component: {fileID: 4003384056557023302}
   m_Layer: 0
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -1033,6 +1034,19 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d4e642eb9c655e740824702f6a59d085, type: 2}
   - {fileID: 11400000, guid: 1812a5fd218de0e43a34aeffaa185e59, type: 2}
   - {fileID: 11400000, guid: bc7226c352cbc124680ddcc1ac36a210, type: 2}
+  tutorialUICanvasGroup: {fileID: 4003384056557023302}
+--- !u!225 &4003384056557023302
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7886359810327032048}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &9146238496579555117
 GameObject:
   m_ObjectHideFlags: 0

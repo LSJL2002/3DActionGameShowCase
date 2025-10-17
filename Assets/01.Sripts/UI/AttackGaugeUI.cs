@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.InputSystem;
@@ -14,9 +15,10 @@ public class AttackGaugeUI : UIBase
         Full, // 만땅
         Use, // 사용중
     }
-
+    
     private GaugeState currentGaugeState = GaugeState.Fill;
 
+    [SerializeField] CanvasGroup attackGaugeCanvasGroup;
     [SerializeField] private GameObject gaugeContainer;
     [SerializeField] private List<GaugeComponent> fillGauges = new List<GaugeComponent>();
     [SerializeField] private string gaugePrefabAddress = "Gauge_Mask";
@@ -34,12 +36,13 @@ public class AttackGaugeUI : UIBase
 
         // 모든 게이지 애니메이션 시작 (알파값 0상태라 안보임)
         StartGaugeAnimation();
-    }
 
-    protected override void Start()
-    {
-        base.Start();
-
+        // n초 대기 후 실행
+        DOVirtual.DelayedCall(6f, () => 
+        { 
+            // 각 UI 알파값 1로 변경(페이드인 효과)
+            attackGaugeCanvasGroup.DOFade(1f, 1f);
+        });
     }
 
     protected override void Update()

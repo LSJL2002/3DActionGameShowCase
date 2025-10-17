@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.SceneManagement;
@@ -54,17 +55,17 @@ public class DataUpdater : MonoBehaviour
     // Addressables 초기화 및 카탈로그 업데이트 체크
     IEnumerator InitAddressableAndCheck()
     {
-        // config.json 다운로드
+        // VersionConfig.json 다운로드
         yield return LoadRemoteConfig().ToCoroutine();
 
-        // Addressables 런타임 경로 재정의 (config.json에서 CDN_URL을 읽어와 적용)
+        // Addressables 런타임 경로 재정의 (VersionConfig.json에서 CDN_URL을 읽어와 적용)
         string cdnUrl = VersionConfig.CDN_URL;
 
         if (!string.IsNullOrEmpty(cdnUrl))
         {
-            // 기본 경로 재정의 (Addressables 애셋 번들/카탈로그 경로)
+            // VersionConfig에 경로 정보가 있다면 어드레서블 프로필의 리모트 패스를 덮어쓰기(override) 함
             // {0}은 플랫폼 빌드 타겟 등을 나타내는 플레이스 홀더
-            string remotePathOverride = $"{cdnUrl}/{{0}}";
+            string remotePathOverride = $"{cdnUrl}{{0}}";
 
             Addressables.InternalIdTransformFunc = (IResourceLocation location) =>
             {

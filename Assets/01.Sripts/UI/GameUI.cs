@@ -1,4 +1,7 @@
 // GameUI의 Base
+using DG.Tweening;
+using UnityEngine;
+
 public partial class GameUI : UIBase
 {
     public enum eBattleState
@@ -9,6 +12,8 @@ public partial class GameUI : UIBase
 
     private eBattleState currentBattleState;
 
+    [SerializeField] CanvasGroup gameUICanvasGroup;
+
     protected override void Awake()
     {
         base.Awake();
@@ -18,6 +23,13 @@ public partial class GameUI : UIBase
         OnAwakePlayer();
 
         OnAwakeSkill();
+
+        // n초 대기 후 실행
+        DOVirtual.DelayedCall(6f, () => 
+        {
+            // 각 UI 알파값 1로 변경(페이드인 효과)
+            gameUICanvasGroup.DOFade(1f, 1f);
+        });
     }
 
     protected override void OnEnable()
