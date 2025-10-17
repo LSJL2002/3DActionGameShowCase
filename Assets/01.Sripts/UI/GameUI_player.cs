@@ -16,7 +16,7 @@ public partial class GameUI : UIBase
     private float playerMaxHP; // 플레이어 최대 체력
     private float previousHP; // 이전 체력 값을 저장하는 변수
 
-    private PlayerStats playerStats; // 플레이어의 stats에 접근가능한 변수
+    private PlayerAttribute playerStats; // 플레이어의 stats에 접근가능한 변수
     private Sequence playerDamageSequence;
     private Sequence playerHealSequence;
 

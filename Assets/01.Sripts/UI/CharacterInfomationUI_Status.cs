@@ -10,7 +10,7 @@ using UnityEngine.Rendering.PostProcessing;
 // CharacterInfomationUI의 Status Part
 public partial class CharacterInfomationUI : UIBase
 {
-    private PlayerStats playerStats; // 플레이어의 stats에 접근가능한 변수
+    private PlayerAttribute playerStats; // 플레이어의 stats에 접근가능한 변수
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI healthText;

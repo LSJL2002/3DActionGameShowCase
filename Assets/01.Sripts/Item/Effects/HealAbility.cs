@@ -13,7 +13,7 @@ public class HealAbility : ItemAbility
 
     public override void Use(ItemData itemData)
     {
-        PlayerStats stats = PlayerManager.Instance.Stats;
+        PlayerAttribute stats = PlayerManager.Instance.Stats;
         float healPercentage = itemData.effectValue; // 회복량 (n%)
         float duration = itemData.duration; // 지속시간 (n초)
         float totalHealAmount = stats.MaxHealth.Value * healPercentage / 100; // 총 회복량 계산: 최대 체력의 n%
