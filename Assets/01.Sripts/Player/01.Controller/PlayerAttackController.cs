@@ -24,8 +24,7 @@ public class PlayerAttackController : MonoBehaviour
     {
         get
         {
-            if (_camera != null)
-                debugAttackTarget = _camera.GetLockOnTarget();
+            if (_camera != null) debugAttackTarget = _camera.GetLockOnTarget();
             return debugAttackTarget;
         }
     }
@@ -57,17 +56,23 @@ public class PlayerAttackController : MonoBehaviour
         // 근접 스킬 발동
         hit.FireSkill();
 
-        // 근접 + 원거리 스킬 공용 호출
-        Vector3 dir = (CurrentAttackTarget != null)
-                        ? (CurrentAttackTarget.position - spawnPoint.position).normalized
-                        : spawnPoint.forward;
+        if (CurrentAttackTarget != null)
+        {
+            Vector3 targetPos = CurrentAttackTarget.position;
 
-        skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation,
-            (target, hitPoint) => HandleHit(target, hitPoint, 1f))
-            ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
+            // 타격 위치에 스킬 생성
+            skill.SpawnSkill(skillName, targetPos, Quaternion.identity,
+                (target, hitPoint) => HandleHit(target, hitPoint, 1f));
+        }
+        else
+        {
+            // 타겟 없으면 기존 방식대로
+            Vector3 dir = spawnPoint.forward;
 
-        // 근접/원거리 공용 SFX
-        AudioManager.Instance?.PlaySFX(skillName);
+            skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation,
+                (target, hitPoint) => HandleHit(target, hitPoint, 1f))
+                ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
+        }
     }
 
     /// <summary>

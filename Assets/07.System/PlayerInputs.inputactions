@@ -1,5 +1,6 @@
 {
-    "name": "PlayerInput",
+    "version": 1,
+    "name": "PlayerInputs",
     "maps": [
         {
             "name": "Player",
@@ -36,7 +37,7 @@
                     "name": "Dodge",
                     "type": "Button",
                     "id": "52d8e051-1f36-422a-b57b-d44205c16662",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -45,7 +46,7 @@
                     "name": "Attack",
                     "type": "Button",
                     "id": "6c2ab1b8-8984-453a-af3d-a3c78ae1679a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -63,7 +64,7 @@
                     "name": "Menu",
                     "type": "Button",
                     "id": "13088985-771f-4df9-b9ae-c0b474e1846e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -99,16 +100,7 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "7eae478f-d95d-49fe-a55b-fa3efcf9a752",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Flash",
-                    "type": "Button",
-                    "id": "0d1f1195-9395-42d8-b2fa-56be90195d2c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -117,7 +109,7 @@
                     "name": "Action",
                     "type": "Button",
                     "id": "4ed34c8b-dfa9-4beb-806e-68fe87344c4e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -153,7 +145,7 @@
                     "name": "SwapNext",
                     "type": "Button",
                     "id": "0548549e-4870-42b8-9ede-fb44ac0b0b01",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -289,17 +281,6 @@
                     "processors": "",
                     "groups": "Joystick",
                     "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7f072a80-c3e3-4b74-b2f3-e508f688a1f3",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Flash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
