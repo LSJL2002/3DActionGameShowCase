@@ -119,7 +119,7 @@ public class DataUpdater : MonoBehaviour
         patchSize = 0;
         labelsToDownload.Clear(); // 새 다운로드 목록 작성 전 초기화
 
-        // 3. 현재 로컬 버전과 서버 최신 버전 로드
+        // 현재 로컬 버전과 서버 최신 버전 로드
         currentVersion = SaveManager.Instance.LoadBuildVersionPlayerPrefs(); // PlayerPrefs에서 저장된 버전 가져옴
         latestVersion = VersionConfig.LatestContentVersion; // config.json에서 최신 버전 가져옴
 
@@ -153,7 +153,7 @@ public class DataUpdater : MonoBehaviour
             waitMessage.SetActive(false);
             UpdateMessage.SetActive(true);
 
-            // 5. UI 표시 시 서버에서 가져온 최신 버전을 사용
+            // UI 표시 시 서버에서 가져온 최신 버전을 사용
             versionCheckText.text = $"현재 Version:{currentVersion} / 최신 Version:{latestVersion}";
             sizeInfoText.text = GetFileSize(patchSize);
         }

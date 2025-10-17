@@ -1,23 +1,23 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Cinemachine;
+using Unity.Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Rendering.Universal;
 
 public class CameraManager : MonoBehaviour
 {
-    public Transform MainCamera { get; private set; }
-    public Volume Volume { get; private set; }
-    [field: SerializeField] public CinemachineFreeLook FreeLookCam { get; private set; }
-    [field:SerializeField] public Volume VisualVolume { get; private set; }
+    [field: SerializeField] public Transform MainCamera { get; private set; }
+    [field: SerializeField] public Volume Volume_Main { get; private set; }
+    [field: SerializeField] public CinemachineCamera FreeLookCam { get; private set; }
+    private CinemachineInputAxisController inputAxisController;
+    [field: SerializeField] public CinemachineCamera LockOnCam { get; private set; }
+    [field: SerializeField] public CinemachineTargetGroup TargetGroup { get; private set; }
+
+    public Volume Volume_Blur { get; private set; }
+
     private ColorAdjustments colorAdjustments;
 
-    [field: SerializeField] public CinemachineTargetGroup TargetGroup {  get; private set; }
-    [field: SerializeField] public CinemachineVirtualCamera LockOnCam { get; private set; }
     public CinemachineBasicMultiChannelPerlin Noise {  get; private set; }
     private float shakeTimer;
 
@@ -31,13 +31,13 @@ public class CameraManager : MonoBehaviour
 
     private void Awake()
     {
-        MainCamera = Camera.main.transform;
-        Volume = MainCamera.gameObject.GetComponent<Volume>();
+        MainCamera = Camera.main?.transform;
+        Volume_Blur = MainCamera.gameObject.GetComponent<Volume>();
 
-        Noise = LockOnCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        Noise = LockOnCam.GetComponent<CinemachineBasicMultiChannelPerlin>(); //이거null임
 
-        if (VisualVolume != null)
-            VisualVolume.profile.TryGet(out colorAdjustments);
+        if (Volume_Main != null && Volume_Main.profile != null)
+            Volume_Main.profile.TryGet(out colorAdjustments);
     }
 
 
@@ -46,8 +46,8 @@ public class CameraManager : MonoBehaviour
         if (shakeTimer > 0)
         {
             shakeTimer -= Time.deltaTime;
-            if (shakeTimer <= 0f && Noise != null)
-                Noise.m_AmplitudeGain = 0f;
+            if (shakeTimer <= 0f)
+                Noise.AmplitudeGain = 0f;
         }
     }
 
@@ -69,16 +69,27 @@ public class CameraManager : MonoBehaviour
         // TargetGroup의 플레이어 타겟 갱신
         if (TargetGroup != null)
         {
-            var targets = TargetGroup.m_Targets;
+            var targets = TargetGroup.Targets;
+            // targets가 비어있으면 2 슬롯 확보
+            if (targets == null || targets.Count == 0)
+            {
+                targets = new List<CinemachineTargetGroup.Target>
+        {
+            new CinemachineTargetGroup.Target { Object = face, Weight = 1f, Radius = 1f }, // 플레이어
+            new CinemachineTargetGroup.Target { Object = null, Weight = 0f, Radius = 0f }  // 락온 슬롯
+        };
+            }
+            else
+            {
+                // 0번 슬롯을 플레이어 얼굴로 갱신
+                var t0 = targets[0];
+                t0.Object = face;
+                t0.Weight = 1f;
+                t0.Radius = 1f;
+                targets[0] = t0;
+            }
 
-            if (targets.Length == 0)
-                targets = new CinemachineTargetGroup.Target[2]; // 플레이어 + 락온 슬롯
-
-            targets[0].target = face; // 시선 기준
-            targets[0].weight = 1f;
-            targets[0].radius = 1f;
-
-            TargetGroup.m_Targets = targets;
+            TargetGroup.Targets = targets; // List 재할당        
         }
     }
 
@@ -88,36 +99,37 @@ public class CameraManager : MonoBehaviour
         if (TargetGroup == null) return;
 
         lockOnTarget = target;
-        var targets = TargetGroup.m_Targets;
+        var targets = TargetGroup.Targets;
 
-        // 최소 2개의 타겟 슬롯 확보
-        if (targets.Length < 2)
+        if (targets == null || targets.Count < 2)
         {
-            System.Array.Resize(ref targets, 2);
-            targets[0] = new CinemachineTargetGroup.Target { target = playerFace, weight = 1f, radius = 1f };
-            targets[1] = new CinemachineTargetGroup.Target();
+            targets = new List<CinemachineTargetGroup.Target>
+            {
+                new CinemachineTargetGroup.Target { Object = playerFace, Weight = 1f, Radius = 1f },
+                new CinemachineTargetGroup.Target { Object = null, Weight = 0f, Radius = 0f }
+            };
         }
 
+        // 1번 슬롯 락온 대상 갱신
+        var t1 = targets[1];
+        t1.Object = target;
+        t1.Weight = target ? 1f : 0f;
+        t1.Radius = target ? 1f : 0f;
+        targets[1] = t1;
+
+        TargetGroup.Targets = targets;
+
+        // 카메라 우선순위 대신 enabled로 전환
         if (target == null)
         {
-            // 🔹 락온 해제
-            targets[1].target = null;
-            targets[1].weight = 0f;
-
-            if (LockOnCam != null) LockOnCam.Priority = 0;
-            if (FreeLookCam != null) FreeLookCam.Priority = 20;
+            if (LockOnCam != null) LockOnCam.enabled = false;
+            if (FreeLookCam != null) FreeLookCam.enabled = true;
         }
         else
         {
-            // 🔹 락온 설정
-            targets[1].target = target;
-            targets[1].weight = 1f;
-
-            if (LockOnCam != null) LockOnCam.Priority = 20;
-            if (FreeLookCam != null) FreeLookCam.Priority = 0;
+            if (LockOnCam != null) LockOnCam.enabled = true;
+            if (FreeLookCam != null) FreeLookCam.enabled = false;
         }
-
-        TargetGroup.m_Targets = targets;
     }
 
     // ===================== 카메라 흔들기 =========================
@@ -125,7 +137,7 @@ public class CameraManager : MonoBehaviour
     {
         if (Noise == null) return;
 
-        Noise.m_AmplitudeGain = intensity;
+        Noise.AmplitudeGain = intensity;
         shakeTimer = time;
     }
 
@@ -139,21 +151,8 @@ public class CameraManager : MonoBehaviour
     // ===================== 카메라 입력 잠금 =====================
     public void SetCameraInputEnabled(bool enabled)
     {
-        if (FreeLookCam == null) return;
-        // X, Y 축 입력 이름으로 받는 경우
-        if (enabled)
-        {
-            FreeLookCam.m_XAxis.m_InputAxisName = "Mouse X"; // 원래 입력 축 이름
-            FreeLookCam.m_YAxis.m_InputAxisName = "Mouse Y";
-        }
-        else
-        {
-            FreeLookCam.m_XAxis.m_InputAxisName = ""; // 빈 문자열로 입력 끊기
-            FreeLookCam.m_YAxis.m_InputAxisName = "";
-        }
-        // 만약 다른 방식(Input System 직접 제어)이라면 아래처럼도 가능
-        // FreeLook.m_XAxis.m_InputAxisValue = 0f;
-        // FreeLook.m_YAxis.m_InputAxisValue = 0f;
+        if (inputAxisController != null)
+            inputAxisController.enabled = enabled;
     }
 
     // =================== Visual Postprocess =================

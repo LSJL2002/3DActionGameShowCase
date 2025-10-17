@@ -36,7 +36,7 @@ public class BattleModule_Aoi : BattleModule
     public override void OnSkillUpdate() => skillSub.OnSkillUpdate();
 
     // ================== 기타 =================
-    public override void OnEnemyHit(IDamageable target)
+    public override void OnEnemyHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
     {
         comboSub.OnEnemyHit(target);
         skillSub.OnEnemyHit(target);

@@ -1,4 +1,4 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class InvenCallbackSystem : MonoBehaviour
@@ -7,7 +7,7 @@ public class InvenCallbackSystem : MonoBehaviour
     [SerializeField] private GameObject[] objectsToDeactivate;
 
     [Header("Virtual Cameras")]               // 버츄얼 카메라 배열
-    [SerializeField] private CinemachineVirtualCamera[] virtualCameras;
+    [SerializeField] private CinemachineCamera[] virtualCameras;
 
     [Header("Priority Settings")]
     [SerializeField] private int activePriority = 20;   // 켜질 때 우선순위
