@@ -78,7 +78,7 @@ public class BattleModule_Yuki : BattleModule
 
 
     // === 기타 ===
-    public override void OnEnemyHit(IDamageable target)
+    public override void OnEnemyHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
     {
         comboSub.OnEnemyHit(target);
         awakenSub.OnEnemyHit(target);

@@ -110,14 +110,22 @@ public class PlayerAttackController : MonoBehaviour
         int damage = Mathf.RoundToInt(player.Stats.Attack.Value * damageMultiplier);
         target.OnTakeDamage(damage);
 
-        // 타격 효과 & 카메라 흔들림 & 사운드
-        skill.SpawnSkill("Hit1", hitPoint);
-        AudioManager.Instance?.PlaySFX("Hit1");
+        // 타격 효과 & 카메라 흔들림
+        string fxName = player.CharacterType switch
+        {
+            CharacterType.Yuki => "Hit1",
+            CharacterType.Aoi => "Hit11",
+            CharacterType.Mika => "Hit21",
+            _ => "Hit1"
+        };
+        // FX 재생
+        skill.SpawnSkill(fxName, hitPoint);
+
         _camera?.Shake(2f, 0.2f);
         hitStop.DoHitStop();
 
         // 맞았다는 걸 BattleModule에 알림
-        player.StateMachine.CurrentBattleModule?.OnEnemyHit(target);
+        player.StateMachine.CurrentBattleModule?.OnEnemyHit(target, hitPoint, damageMultiplier);
     }
 
 

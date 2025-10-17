@@ -146,13 +146,13 @@ public abstract class PlayerBaseState : Istate
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            sm.Player._camera.Volume.enabled = true;
+            sm.Player._camera.Volume_Blur.enabled = true;
         }
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            sm.Player._camera.Volume.enabled = false;
+            sm.Player._camera.Volume_Blur.enabled = false;
         }
     }
 
@@ -195,12 +195,12 @@ public abstract class PlayerBaseState : Istate
         var vcam = sm.Player._camera.FreeLookCam;
         if (vcam == null) return;
 
-        float fov = vcam.m_Lens.FieldOfView;
+        float fov = vcam.Lens.FieldOfView;
         float zoomSpeed = 3f;
         float zoomAmount = Mathf.Sign(zoomDelta) * zoomSpeed; // 방향만 가져오기
         fov -= zoomAmount; 
         fov = Mathf.Clamp(fov, 10f, 70f);
-        vcam.m_Lens.FieldOfView = fov;
+        vcam.Lens.FieldOfView = fov;
     }
 
 

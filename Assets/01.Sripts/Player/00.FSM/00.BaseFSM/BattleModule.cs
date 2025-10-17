@@ -25,7 +25,7 @@ public interface IBattleModule
     void OnSkillCanceled();
     void OnSkillUpdate();                   
     void ResetCombo();                      // 콤보 초기화
-    void OnEnemyHit(IDamageable target);    // 타격 성공 시 호출
+    void OnEnemyHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f);    // 타격 성공 시 호출
 
     ComboHandler ComboHandler { get; }      // 외부 참조용
 }
@@ -55,6 +55,6 @@ public abstract class BattleModule : IBattleModule
     public virtual void OnSkillUpdate() { }
 
     // === 기타 ===
-    public virtual void OnEnemyHit(IDamageable target) { }
+    public virtual void OnEnemyHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f) { }
     public virtual void ResetCombo() => comboHandler = null;
 }
