@@ -61,6 +61,7 @@ public class MapManager : Singleton<MapManager>
 
     public void ResetZones()
     {
+        var controller = PlayerManager.Instance.ActiveCharacter.GetComponent<CharacterController>();
         zoneDict.Clear(); // 이전 존 정보 싹 비우기
 
         var zones = Object.FindObjectsByType<BattleZone>(FindObjectsSortMode.None);
@@ -80,7 +81,13 @@ public class MapManager : Singleton<MapManager>
             tutorialWall.SetActive(true);
             ReturnToStartZone();
             UIManager.Instance.tutorialEnabled = true;
-            
+
+            if (controller != null)
+            {
+                controller.enabled = false; // 움직임 제어 잠깐 끄기
+                PlayerManager.Instance.ActiveCharacter.transform.position = new Vector3(0,0,5);
+                controller.enabled = true;  // 다시 켜기
+            }
         }
 
         else if (GameManager.Instance.gameMode == eGameMode.LoadGame)
@@ -96,21 +103,15 @@ public class MapManager : Singleton<MapManager>
             }
             else if (zoneDict.TryGetValue(lastClearStage, out var clearedZone))
             {
-                var controller = PlayerManager.Instance.ActiveCharacter.GetComponent<CharacterController>();
+                
                 if (controller != null)
                 {
                     controller.enabled = false; // 움직임 제어 잠깐 끄기
                     PlayerManager.Instance.ActiveCharacter.transform.position = clearedZone.transform.position;
                     controller.enabled = true;  // 다시 켜기
                 }
-                else
-                {
-                    PlayerManager.Instance.ActiveCharacter.transform.position = clearedZone.transform.position;
-                }
-                Debug.Log($"ClearedZonePos: {clearedZone.transform.position}");
                 OpenNextZone(clearedZone);
                 //await Task.Yield();
-                Debug.Log($"ClearedZonePos: {clearedZone.transform.position}");
 
             }
 
@@ -137,6 +138,8 @@ public class MapManager : Singleton<MapManager>
             Debug.LogError("시작 스테이지를 찾을 수 없습니다!");
         }
         SaveManager.Instance.SaveData();
+
+
     }
 
     public void tutorialWallToggle()
