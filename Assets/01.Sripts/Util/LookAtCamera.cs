@@ -9,7 +9,7 @@ public class LookAtCamera : MonoBehaviour
     [SerializeField] private float yOffset = -1f;
 
     private Transform camTransform; // 메인 카메라의 트랜스폼
-    public @PlayerInput playerInput; // 인풋 시스템 액션 맵
+    public PlayerInputs playerInput; // 인풋 시스템 액션 맵
     private Transform monsterTransform;
 
     private void Awake()
@@ -18,7 +18,7 @@ public class LookAtCamera : MonoBehaviour
         camTransform = PlayerManager.Instance._camera.MainCamera;
 
         // 인풋 시스템 설정
-        playerInput = new @PlayerInput();
+        playerInput = new PlayerInputs();
         playerInput.Player.Camera.performed += SetRockOn; // 키입력('F')에 함수 구독
         playerInput.Player.Enable(); // Player 액션 맵 활성화
 

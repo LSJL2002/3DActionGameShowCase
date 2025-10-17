@@ -96,7 +96,7 @@ public class PlayerCharacter : MonoBehaviour
 
     public void EnableCharacterInput(bool active)
     {
-        if (active) Input.PlayerActions.Enable();
+        if (active) Input.PlayerActions.Enable(); 
         else Input.PlayerActions.Disable();
     }
 }

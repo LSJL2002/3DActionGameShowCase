@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum HitboxType { OverlapSphere, OverlapBox, RayCast, CapsuleCast }
+public enum HitboxType { OverlapSphere, OverlapBox, RayCast, RayAll, CapsuleCast }
+
 public class HitboxOverlap : MonoBehaviour
 {
     private PlayerCharacter player;
@@ -41,6 +42,7 @@ public class HitboxOverlap : MonoBehaviour
             case HitboxType.OverlapBox: FireBox(); break;
             case HitboxType.CapsuleCast: FireCapsule(); break;
             case HitboxType.RayCast: FireRay(); break;
+            case HitboxType.RayAll: break;
         }
     }
 

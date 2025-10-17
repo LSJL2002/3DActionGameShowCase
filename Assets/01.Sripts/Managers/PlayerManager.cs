@@ -60,7 +60,6 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
         // 시작 캐릭터 Idle 상태
         var active = ActiveCharacter;
         active.StateMachine.ChangeState(active.StateMachine.IdleState);
-        active.EnableCharacterInput(true);
 
         // 카메라 타겟 초기화
         _camera?.SetPlayerTarget(active.transform, active.Face);
