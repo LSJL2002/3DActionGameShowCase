@@ -24,9 +24,13 @@ public class ObjectFollow : MonoBehaviour
     [Header("ChatUI")]
     [SerializeField] public GameObject chatUI;
 
-    [Header("파티클")]
+    [Header("Particle")]
     [SerializeField] private GameObject moveFx;   // 파티클이 붙은 오브젝트(프리팹 인스턴스)
     [SerializeField] private float moveSpeedThreshold = 0.1f; // 이동 판정 기준
+
+    [Header("Event")]
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
 
     // G키를 다시 누렀을 때 원상복귀에 필요한 변수
     private bool isTalkMode = false;
@@ -44,14 +48,14 @@ public class ObjectFollow : MonoBehaviour
 
     private void OnEnable()
     {
-        BattleManager.OnBattleStart += DanceMove; // 구독했다
-        BattleManager.OnBattleClear += IdleMove;
+        OnBattleStart.OnActionRaised += DanceMove; // 구독했다
+        OnBattleClear.OnActionRaised += IdleMove;
     }
 
     private void OnDisable()
     {
-        BattleManager.OnBattleStart -= DanceMove; // 구독취소
-        BattleManager.OnBattleClear -= IdleMove;
+        OnBattleStart.OnActionRaised -= DanceMove; // 구독취소
+        OnBattleClear.OnActionRaised -= IdleMove;
     }
 
     private void Update()

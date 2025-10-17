@@ -8,6 +8,9 @@ public class LookAtCamera : MonoBehaviour
     [SerializeField] private float offsetDistance = 1.5f;
     [SerializeField] private float yOffset = -1f;
 
+    [Header("Event")]
+    [SerializeField] private BaseEventSO<BattleZone> OnMonsterDie;
+
     private Transform camTransform; // 메인 카메라의 트랜스폼
     public PlayerInputs playerInput; // 인풋 시스템 액션 맵
     private Transform monsterTransform;
@@ -22,7 +25,8 @@ public class LookAtCamera : MonoBehaviour
         playerInput.Player.Camera.performed += SetRockOn; // 키입력('F')에 함수 구독
         playerInput.Player.Enable(); // Player 액션 맵 활성화
 
-        BattleManager.OnMonsterDie += DisableRockOn;  //전투끝날시(몬스터사망시) 스텟 해제하기
+        OnMonsterDie.OnActionRaised -= DisableRockOn;  // 전투끝날시(몬스터사망시) 스텟 해제하기
+        OnMonsterDie.OnActionRaised += DisableRockOn;  // 전투끝날시(몬스터사망시) 스텟 구독하기
     }
 
     private void LateUpdate()
@@ -73,7 +77,5 @@ public class LookAtCamera : MonoBehaviour
         // 인풋 시스템 구독 해제 및 비활성화
         playerInput.Player.Camera.performed -= SetRockOn;
         playerInput.Player.Disable();
-
-        BattleManager.OnMonsterDie -= DisableRockOn;
     }
 }

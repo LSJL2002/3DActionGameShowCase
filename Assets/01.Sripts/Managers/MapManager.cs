@@ -20,17 +20,21 @@ public class MapManager : Singleton<MapManager>
 
     NavMeshDataInstance navMeshInstance;
 
+    [Header("Event")]
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
+
     protected override void OnEnable()
     {
-        BattleManager.OnBattleStart += OpenZone;
-        BattleManager.OnBattleClear += OpenNextZone;
+        OnBattleStart.OnActionRaised += OpenZone;
+        OnBattleClear.OnActionRaised += OpenNextZone;
         TutorialUI.endTutorial += tutorialWallToggle;
     }
 
     protected override void OnDisable()
     {
-        BattleManager.OnBattleStart -= OpenZone;
-        BattleManager.OnBattleClear -= OpenNextZone;
+        OnBattleStart.OnActionRaised -= OpenZone;
+        OnBattleClear.OnActionRaised -= OpenNextZone;
         TutorialUI.endTutorial -= tutorialWallToggle;
     }
 

@@ -15,10 +15,10 @@ public class BattleManager : Singleton<BattleManager>
     public BattleZone currentZone; // 지금 전투하는 방
     private bool isBattle;
 
-    public static event Action<BattleZone> OnBattleStart;
-    public static event Action<BattleZone> OnPlayerDie;
-    public static event Action<BattleZone> OnMonsterDie;
-    public static event Action<BattleZone> OnBattleClear;
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
+    [SerializeField] private BaseEventSO<BattleZone> OnPlayerDie;
+    [SerializeField] private BaseEventSO<BattleZone> OnMonsterDie;
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
 
     [SerializeField] private Material warningMaterial;
     private Tween emissionTween;
@@ -121,7 +121,7 @@ public class BattleManager : Singleton<BattleManager>
         }
 
         // 4. 전투 시작 이벤트 브로드캐스트
-        OnBattleStart?.Invoke(zone);
+        OnBattleStart.Raise(zone);
     }
 
 
@@ -179,7 +179,7 @@ public class BattleManager : Singleton<BattleManager>
         //    await TimeLineManager.Instance.PlayAndWait(currentZone.endBattleTimelineKey);
         //}
         var cutScene = await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.endBattleTimelineKey);
-        OnMonsterDie?.Invoke(currentZone);
+        OnMonsterDie.Raise(currentZone);
  
         //StopWarning();
     }
@@ -187,7 +187,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public void ClearBattle()
     {
-        OnBattleClear?.Invoke(currentZone);
+        OnBattleClear.Raise(currentZone);
         SaveManager.Instance.AddStageData(currentZone.id);
         SaveManager.Instance.SaveData();
 

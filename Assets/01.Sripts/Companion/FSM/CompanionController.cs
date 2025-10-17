@@ -20,6 +20,10 @@ public class CompanionController : MonoBehaviour
     [Header("VFX")]
     public GameObject moveFx;
 
+    [Header("Event")]
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
+
     [HideInInspector] public bool isAttack;
     [HideInInspector] public bool isTalkMode;
     [HideInInspector] public Vector3 cachedAnchorLocalPos; // 캐릭터 중심으로 처음에 고정한 오브젝트 위치
@@ -39,25 +43,25 @@ public class CompanionController : MonoBehaviour
 
     void OnEnable()
     {
-        BattleManager.OnBattleStart += OnBattleStart;
-        BattleManager.OnBattleClear += OnBattleClear;
+        OnBattleStart.OnActionRaised += BattleStart;
+        OnBattleClear.OnActionRaised += BattleClear;
     }
     void OnDisable()
     {
-        BattleManager.OnBattleStart -= OnBattleStart;
-        BattleManager.OnBattleClear -= OnBattleClear;
+        OnBattleStart.OnActionRaised -= BattleStart;
+        OnBattleClear.OnActionRaised -= BattleClear;
     }
 
     void Update() { Sm.HandleInput(); Sm.Update(); }
     void FixedUpdate() { Sm.PhysicsUpdate(); }
 
     // 전투 이벤트는 상태 전환만 담당 (행동은 BattleState가 함)
-    void OnBattleStart(BattleZone zone)
+    void BattleStart(BattleZone zone)
     {
         isAttack = true;
         Sm.ChangeState(new BattleState(Sm));
     }
-    void OnBattleClear(BattleZone zone)
+    void BattleClear(BattleZone zone)
     {
         isAttack = false;
         Sm.ChangeState(new CompanionFollowState(Sm));
