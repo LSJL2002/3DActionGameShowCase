@@ -52,6 +52,8 @@ MonoBehaviour:
   BossZoneId: 60000010
   round: 0
   tutorialWall: {fileID: 0}
+  OnBattleStart: {fileID: 11400000, guid: 89c6b4419402e2245aa93504f1d399a8, type: 2}
+  OnBattleClear: {fileID: 11400000, guid: a89dcfca8498af941853ffbfdfd3ea27, type: 2}
 --- !u!114 &8521040522662022671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <dropItem>k__BackingField: {fileID: 0}
+  OnMonsterDie: {fileID: 11400000, guid: 0d43f80353484b54680524673789e05e, type: 2}
+  OnBattleClear: {fileID: 11400000, guid: a89dcfca8498af941853ffbfdfd3ea27, type: 2}
 --- !u!114 &1061153404368884808
 MonoBehaviour:
   m_ObjectHideFlags: 0

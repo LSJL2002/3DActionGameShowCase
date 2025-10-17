@@ -24,7 +24,7 @@ public class MiniMapUI : UIBase
     public async void DelayMethod()
     {
         // 미니맵 카메라, 플레이어 아이콘 어드레서블로 생성
-        minimapPlayerIconHandle = Addressables.InstantiateAsync("Minimap_PlayerIcon", PlayerManager.Instance.transform);
+        minimapPlayerIconHandle = Addressables.InstantiateAsync("Minimap_PlayerIcon", PlayerManager.Instance.ActiveCharacter.transform);
         minimapCameraHandle = Addressables.InstantiateAsync("MinimapCamera");
 
         // 두 작업이 모두 완료될 때까지 기다림

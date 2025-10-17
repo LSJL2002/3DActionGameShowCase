@@ -14,6 +14,10 @@ public partial class GameUI : UIBase
 
     [SerializeField] CanvasGroup gameUICanvasGroup;
 
+    [Header("Event")]
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
+
     protected override void Awake()
     {
         base.Awake();
@@ -38,8 +42,11 @@ public partial class GameUI : UIBase
 
         uiType = UIType.GameUI;
 
-        BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯 불러오기
-        BattleManager.OnMonsterDie += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
+        OnBattleStart.OnActionRaised -= LoadMonsterStat;    //해제    
+        OnBattleClear.OnActionRaised -= ReleaseMonsterStat; //해제
+
+        OnBattleStart.OnActionRaised += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯 불러오기
+        OnBattleClear.OnActionRaised += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
 
         OnEnablePlayer();
         OnEnableEnemy();
@@ -53,9 +60,6 @@ public partial class GameUI : UIBase
         OnDisablePlayer();
         OnDisableEnemy();
         OnDisableSkill();
-
-        BattleManager.OnBattleStart -= LoadMonsterStat;    //해제    
-        BattleManager.OnBattleClear -= ReleaseMonsterStat; //해제
     }
 
     protected override void Update()

@@ -3,17 +3,19 @@ using UnityEngine;
 public class DropItemSpawner : MonoBehaviour
 {
     [field : SerializeField]public GameObject dropItem { get; set; }// 인스펙터에 드랍 아이템 넣어두기
+    
+    [Header("Event")]
+    [SerializeField] private BaseEventSO<BattleZone> OnMonsterDie;
+    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
+
 
     private void OnEnable()
     {
-        BattleManager.OnMonsterDie += SpawnItem;
-        BattleManager.OnBattleClear += HideItem;
-    }
+        OnMonsterDie.OnActionRaised -= SpawnItem;
+        OnBattleClear.OnActionRaised -= HideItem;
 
-    private void OnDisable()
-    {
-        BattleManager.OnMonsterDie -= SpawnItem;
-        BattleManager.OnBattleClear -= HideItem;
+        OnMonsterDie.OnActionRaised += SpawnItem;
+        OnBattleClear.OnActionRaised += HideItem;
     }
 
     private void SpawnItem(BattleZone zone)
