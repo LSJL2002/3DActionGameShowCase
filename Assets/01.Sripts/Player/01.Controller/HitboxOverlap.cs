@@ -5,6 +5,7 @@ using UnityEngine;
 
 
 public enum HitboxType { OverlapSphere, OverlapBox, RayCast, RayAll, CapsuleCast }
+public enum AttackType { Melee, Projectile, InstantRange }
 
 public class HitboxOverlap : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class HitboxOverlap : MonoBehaviour
     private Transform body;
 
     [Header("히트박스 기본 설정")]
+    [field: SerializeField] public AttackType attackType { get; private set; } = AttackType.Melee;
     [SerializeField] private HitboxType type = HitboxType.OverlapSphere;
     [SerializeField] private LayerMask targetLayer;
     [SerializeField] private float radius = 1f;

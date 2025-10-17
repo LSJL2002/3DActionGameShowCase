@@ -11,15 +11,15 @@ public class CameraManager : MonoBehaviour
     [field: SerializeField] public Volume Volume_Main { get; private set; }
     [field: SerializeField] public CinemachineCamera FreeLookCam { get; private set; }
     private CinemachineInputAxisController inputAxisController;
-    [field: SerializeField] public CinemachineCamera LockOnCam { get; private set; }
     [field: SerializeField] public CinemachineTargetGroup TargetGroup { get; private set; }
+    [field: SerializeField] public CinemachineCamera LockOnCam { get; private set; }
+    public CinemachineBasicMultiChannelPerlin Noise { get; private set; }
+    private float shakeTimer;
 
     public Volume Volume_Blur { get; private set; }
 
     private ColorAdjustments colorAdjustments;
 
-    public CinemachineBasicMultiChannelPerlin Noise {  get; private set; }
-    private float shakeTimer;
 
 
     private Transform player; // 기본 바닦임
@@ -34,7 +34,7 @@ public class CameraManager : MonoBehaviour
         MainCamera = Camera.main?.transform;
         Volume_Blur = MainCamera.gameObject.GetComponent<Volume>();
 
-        Noise = LockOnCam.GetComponent<CinemachineBasicMultiChannelPerlin>(); //이거null임
+        Noise = LockOnCam.GetComponent<CinemachineBasicMultiChannelPerlin>();
 
         if (Volume_Main != null && Volume_Main.profile != null)
             Volume_Main.profile.TryGet(out colorAdjustments);
@@ -65,7 +65,11 @@ public class CameraManager : MonoBehaviour
             FreeLookCam.Follow = body; // 이동 기준 (Body)
             FreeLookCam.LookAt = face; // 시선 기준 (Face)
         }
-
+        // === LockOn 카메라 타깃 설정 ===
+        if (LockOnCam != null)
+        {
+            LockOnCam.Follow = body;  // 이동 기준 → Body
+        }
         // TargetGroup의 플레이어 타겟 갱신
         if (TargetGroup != null)
         {

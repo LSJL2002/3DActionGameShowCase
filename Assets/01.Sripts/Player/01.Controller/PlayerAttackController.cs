@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using static CartoonFX.CFXR_Effect;
 
 
-// 공격 처리 + 전투 대상 관리 + 기즈모 시각화
 public class PlayerAttackController : MonoBehaviour
 {
     private PlayerCharacter player;
@@ -53,25 +51,27 @@ public class PlayerAttackController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(skillName)) return;
 
-        // 근접 스킬 발동
-        hit.FireSkill();
+        // 현재 스킬/캐릭터에 맞는 공격 타입 결정
+        AttackType currentType = hit.attackType;
 
-        if (CurrentAttackTarget != null)
+        switch (currentType)
         {
-            Vector3 targetPos = CurrentAttackTarget.position;
+            case AttackType.Melee:
+            case AttackType.InstantRange:
+                // HitboxOverlap 호출
+                hit.FireSkill();
+                break;
 
-            // 타격 위치에 스킬 생성
-            skill.SpawnSkill(skillName, targetPos, Quaternion.identity,
-                (target, hitPoint) => HandleHit(target, hitPoint, 1f));
-        }
-        else
-        {
-            // 타겟 없으면 기존 방식대로
-            Vector3 dir = spawnPoint.forward;
+            case AttackType.Projectile:
+                // ProjectileHitbox 생성
+                Vector3 dir = (CurrentAttackTarget != null)
+                    ? (CurrentAttackTarget.position - spawnPoint.position).normalized
+                    : spawnPoint.forward;
 
-            skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation,
-                (target, hitPoint) => HandleHit(target, hitPoint, 1f))
-                ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
+                skill.SpawnSkill(skillName, spawnPoint.position, Quaternion.LookRotation(dir),
+                    (target, hitPoint) => HandleHit(target, hitPoint, 1f))
+                    ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
+                break;
         }
     }
 
@@ -85,28 +85,61 @@ public class PlayerAttackController : MonoBehaviour
 
     private async UniTaskVoid ComboAttackAsync(string skillName, int hitCount, float interval, float damageMultiplier)
     {
+        // 1. 파티클 위치 & 회전 결정
+        Vector3 particlePos;
+        Quaternion particleRot;
+
+        switch (hit.attackType)
+        {
+            case AttackType.Melee:
+                // 근접은 spawnPoint 기준
+                particlePos = spawnPoint.position;
+                particleRot = spawnPoint.rotation;
+                break;
+
+            case AttackType.InstantRange:
+                // 즉발형: 타겟 있으면 타겟 위치, 없으면 캐릭터 앞쪽으로 offset
+                particlePos = (CurrentAttackTarget != null)
+                    ? CurrentAttackTarget.position
+                    : spawnPoint.position + spawnPoint.forward * 5f; // 앞쪽 offset
+                particleRot = (CurrentAttackTarget != null)
+                    ? Quaternion.LookRotation((CurrentAttackTarget.position - spawnPoint.position).normalized)
+                    : spawnPoint.rotation;
+                break;
+
+            case AttackType.Projectile:
+                // 투사체형: spawnPoint에서 발사, 방향 캐릭터 -> 타겟 또는 정면
+                particlePos = spawnPoint.position;
+                particleRot = (CurrentAttackTarget != null)
+                    ? Quaternion.LookRotation((CurrentAttackTarget.position - spawnPoint.position).normalized)
+                    : spawnPoint.rotation;
+                break;
+
+            default:
+                particlePos = spawnPoint.position;
+                particleRot = spawnPoint.rotation;
+                break;
+        }
+
+        // 2. 파티클 1회 재생
+        GameObject skillObj = skill.SpawnSkill(skillName, particlePos, particleRot,
+            (target, hitPoint) => HandleHit(target, hitPoint, damageMultiplier));
+
+        // 3. 투사체형이면 Launch 호출
+        Vector3 dir = (CurrentAttackTarget != null)
+            ? (CurrentAttackTarget.position - spawnPoint.position).normalized
+            : spawnPoint.forward;
+        skillObj?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
+
+        // 4. 타수만큼 HitboxOverlap 반복 (근접 + 즉발형 모두 적용)
         for (int i = 0; i < hitCount; i++)
         {
-            if (i == 0)
+            if (hit.attackType != AttackType.Projectile)
             {
-                // 첫 히트만 파티클 재생
-                hit.FireSkill();
-
-                Vector3 dir = (CurrentAttackTarget != null)
-                                ? (CurrentAttackTarget.position - spawnPoint.position).normalized
-                                : spawnPoint.forward;
-
-                skill.SpawnSkill(skillName, spawnPoint.position, spawnPoint.rotation,
-                    (target, hitPoint) => HandleHit(target, hitPoint, damageMultiplier))
-                    ?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
-            }
-            else
-            {
-                // 매 히트마다 근접 히트박스 발동
                 hit.FireSkill();
             }
 
-            await UniTask.Delay(TimeSpan.FromSeconds(interval)); // 논블로킹 대기
+            await UniTask.Delay(TimeSpan.FromSeconds(interval));
         }
     }
 
