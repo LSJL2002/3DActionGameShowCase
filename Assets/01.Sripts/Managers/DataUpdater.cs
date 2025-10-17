@@ -15,7 +15,7 @@ using UnityEngine.UI;
 public class DataUpdater : MonoBehaviour
 {
     // config.json 파일이 있는 서버 URL (정적으로 관리)
-    private const string CONFIG_URL = "https://s3.ap-southeast-2.amazonaws.com/project8.addressable/StandaloneWindows64/VersionConfig.json";
+    private const string CONFIG_URL = "https://s3.ap-southeast-2.amazonaws.com/project8.addressable/VersionConfig.json";
 
     [Header("UI")]
     [SerializeField] private GameObject waitMessage;

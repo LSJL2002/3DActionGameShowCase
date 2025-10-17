@@ -5,7 +5,7 @@ using System.IO;
 public class VersionConfigEditorTool
 {
     // config.json 파일을 저장할 프로젝트 내의 위치
-    private const string JSON_EXPORT_PATH = "Assets/Editor/VersionConfig/VersionConfig.json";
+    private const string JSON_EXPORT_PATH = "ServerData/VersionConfig.json";
 
     [MenuItem("Tools/Export VersionConfigData to JSON")]
     public static void ExportConfigJson()
