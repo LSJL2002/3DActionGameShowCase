@@ -52,7 +52,9 @@ public class TutorialUI : UIBase
             // n초 대기 후 실행
             DOVirtual.DelayedCall(6f, () => 
             {
-                UIManager.Instance.Get<TutorialUI>().PlayDialogue(SceneType.Tutorial);
+                // 각 UI 알파값 1로 변경(페이드인 효과)
+                tutorialUICanvasGroup.DOFade(1f, 1f);
+                PlayDialogue(SceneType.Tutorial);
             });            
         }
     }
