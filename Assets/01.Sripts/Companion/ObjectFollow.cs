@@ -28,10 +28,6 @@ public class ObjectFollow : MonoBehaviour
     [SerializeField] private GameObject moveFx;   // 파티클이 붙은 오브젝트(프리팹 인스턴스)
     [SerializeField] private float moveSpeedThreshold = 0.1f; // 이동 판정 기준
 
-    [Header("Event")]
-    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
-    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
-
     // G키를 다시 누렀을 때 원상복귀에 필요한 변수
     private bool isTalkMode = false;
     private Vector3 cachedAnchorLocalPos; // 캐릭터 중심으로 처음에 고정한 오브젝트 위치
@@ -48,14 +44,11 @@ public class ObjectFollow : MonoBehaviour
 
     private void OnEnable()
     {
-        OnBattleStart.OnActionRaised += DanceMove; // 구독했다
-        OnBattleClear.OnActionRaised += IdleMove;
-    }
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, DanceMove); // 구독해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, IdleMove); // 구독해제
 
-    private void OnDisable()
-    {
-        OnBattleStart.OnActionRaised -= DanceMove; // 구독취소
-        OnBattleClear.OnActionRaised -= IdleMove;
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, DanceMove); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, IdleMove); // 구독
     }
 
     private void Update()

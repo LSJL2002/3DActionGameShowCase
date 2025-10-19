@@ -20,22 +20,15 @@ public class MapManager : Singleton<MapManager>
 
     NavMeshDataInstance navMeshInstance;
 
-    [Header("Event")]
-    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
-    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
-
     protected override void OnEnable()
     {
-        OnBattleStart.OnActionRaised += OpenZone;
-        OnBattleClear.OnActionRaised += OpenNextZone;
-        TutorialUI.endTutorial += tutorialWallToggle;
-    }
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, OpenZone); // 구독해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, OpenNextZone); // 구독해제
+        TutorialUI.endTutorial -= tutorialWallToggle; // 구독해제
 
-    protected override void OnDisable()
-    {
-        OnBattleStart.OnActionRaised -= OpenZone;
-        OnBattleClear.OnActionRaised -= OpenNextZone;
-        TutorialUI.endTutorial -= tutorialWallToggle;
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, OpenZone); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, OpenNextZone); // 구독
+        TutorialUI.endTutorial += tutorialWallToggle; // 구독
     }
 
     public async Task LoadMap()

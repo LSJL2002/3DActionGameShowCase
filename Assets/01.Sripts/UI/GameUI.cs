@@ -1,7 +1,7 @@
-// GameUI의 Base
 using DG.Tweening;
 using UnityEngine;
 
+// GameUI의 Base
 public partial class GameUI : UIBase
 {
     public enum eBattleState
@@ -13,10 +13,6 @@ public partial class GameUI : UIBase
     private eBattleState currentBattleState;
 
     [SerializeField] CanvasGroup gameUICanvasGroup;
-
-    [Header("Event")]
-    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
-    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
 
     protected override void Awake()
     {
@@ -42,11 +38,11 @@ public partial class GameUI : UIBase
 
         uiType = UIType.GameUI;
 
-        OnBattleStart.OnActionRaised -= LoadMonsterStat;    //해제    
-        OnBattleClear.OnActionRaised -= ReleaseMonsterStat; //해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, LoadMonsterStat); // 구독해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, LoadMonsterStat); // 구독해제
 
-        OnBattleStart.OnActionRaised += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯 불러오기
-        OnBattleClear.OnActionRaised += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, LoadMonsterStat); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, LoadMonsterStat); // 구독
 
         OnEnablePlayer();
         OnEnableEnemy();

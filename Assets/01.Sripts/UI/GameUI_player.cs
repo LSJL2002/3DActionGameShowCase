@@ -55,7 +55,7 @@ public partial class GameUI : UIBase
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출
-    private async void OnPlayerHealthChanged()
+    private void OnPlayerHealthChanged()
     {
         playerDamageSequence.Kill(); // 기존 시퀀스가 있다면 종료
         playerHealSequence.Kill(); // 기존 시퀀스가 있다면 종료
