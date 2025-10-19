@@ -20,10 +20,6 @@ public class CompanionController : MonoBehaviour
     [Header("VFX")]
     public GameObject moveFx;
 
-    [Header("Event")]
-    [SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
-    [SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
-
     [HideInInspector] public bool isAttack;
     [HideInInspector] public bool isTalkMode;
     [HideInInspector] public Vector3 cachedAnchorLocalPos; // 캐릭터 중심으로 처음에 고정한 오브젝트 위치
@@ -43,13 +39,11 @@ public class CompanionController : MonoBehaviour
 
     void OnEnable()
     {
-        OnBattleStart.OnActionRaised += BattleStart;
-        OnBattleClear.OnActionRaised += BattleClear;
-    }
-    void OnDisable()
-    {
-        OnBattleStart.OnActionRaised -= BattleStart;
-        OnBattleClear.OnActionRaised -= BattleClear;
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, BattleStart); // 구독해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, BattleClear); // 구독해제
+
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, BattleStart); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, BattleClear); // 구독
     }
 
     void Update() { Sm.HandleInput(); Sm.Update(); }
