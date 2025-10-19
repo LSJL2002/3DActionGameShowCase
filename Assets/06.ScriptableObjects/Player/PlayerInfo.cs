@@ -69,7 +69,11 @@ public class PlayerAttackData
     [field: SerializeField, Tooltip("공격 정보 리스트")]
     public List<AttackInfoData> AttackInfoDatas { get; private set; } = new List<AttackInfoData>();
     public int GetAttackInfoCount() => AttackInfoDatas.Count;
+    // 리스트에 직접 접근하지 않고 안전하게 데이터를 가져오기 위한 접근자(Accessor) 역할
+    // 리스트에 몇 개의 스킬이 들어있는지 개수를 반환
+    // UI나 시스템에서 반복문을 돌며 모든 스킬 정보를 처리할 때 유용
     public AttackInfoData GetAttackInfoData(int index) => AttackInfoDatas[index];
+    // 리스트의 특정 인덱스에 있는 SkillInfoData를 반환
 }
 
 [Serializable]
@@ -193,9 +197,8 @@ public class PlayerStatData
     [field: SerializeField] public float AttackSpeed { get; private set; } = 1.0f;
     [field: SerializeField] public float MoveSpeed { get; private set; } = 1.0f;
     [field: SerializeField] public int JumpCount { get; private set; } = 1;
-    [field: SerializeField] public int DodgeCount { get; private set; } = 1;
-    [field: SerializeField] public string UsableSkillDicList { get; private set; } = "70000000";
-
+    [field: SerializeField] public int DodgeCount { get; private set; } = 4;
+    [field: SerializeField] public int DodgeCooldown { get; private set; } = 4;
 }
 
 

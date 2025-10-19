@@ -152,12 +152,12 @@ public class SelectAbilityUI : UIBase
         {
             case "Stat":
                 // 플레이어 스탯 증가 함수 호출
-                PlayerManager.Instance.Stats.AddModifier(StatType.MaxHealth, itemSlots[0].itemData.MaxHP);
-                PlayerManager.Instance.Stats.AddModifier(StatType.MaxEnergy, itemSlots[0].itemData.MaxMP);
-                PlayerManager.Instance.Stats.AddModifier(StatType.Attack, itemSlots[0].itemData.Attack);
-                PlayerManager.Instance.Stats.AddModifier(StatType.Defense, itemSlots[0].itemData.Defence);
-                PlayerManager.Instance.Stats.AddModifier(StatType.MoveSpeed, itemSlots[0].itemData.MoveSpeed);
-                PlayerManager.Instance.Stats.AddModifier(StatType.AttackSpeed, itemSlots[0].itemData.AttackSpeed);
+                PlayerManager.Instance.Attr.AddModifier(StatType.MaxHealth, itemSlots[0].itemData.MaxHP);
+                PlayerManager.Instance.Attr.AddModifier(StatType.MaxEnergy, itemSlots[0].itemData.MaxMP);
+                PlayerManager.Instance.Attr.AddModifier(StatType.Attack, itemSlots[0].itemData.Attack);
+                PlayerManager.Instance.Attr.AddModifier(StatType.Defense, itemSlots[0].itemData.Defence);
+                PlayerManager.Instance.Attr.AddModifier(StatType.MoveSpeed, itemSlots[0].itemData.MoveSpeed);
+                PlayerManager.Instance.Attr.AddModifier(StatType.AttackSpeed, itemSlots[0].itemData.AttackSpeed);
 
                 Debug.Log($"플레이어 스탯증가");
                 break;

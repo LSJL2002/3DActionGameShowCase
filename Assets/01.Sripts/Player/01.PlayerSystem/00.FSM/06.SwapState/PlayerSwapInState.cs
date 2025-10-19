@@ -9,6 +9,7 @@ public class PlayerSwapInState : PlayerBaseState
     {
         base.Enter();
         sm.Player.Animator.CrossFade("Swap_In", 0.1f, 0);
+        sm.Player.EnableCharacterInput(true);
     }
 
     public override void Exit()
@@ -20,18 +21,13 @@ public class PlayerSwapInState : PlayerBaseState
     {
         base.LogicUpdate();
 
-        // 이동 입력 들어오면 즉시 Idle
-        if (sm.MovementInput.sqrMagnitude > 0.01f)
-        {
-            sm.ChangeState(sm.IdleState);
-            return;
-        }
-
         float normalizedTime = GetNormalizeTime(sm.Player.Animator, "SwapIn");
         if (normalizedTime >= 1f)
         {
-            StateComplete(); // 이벤트 발생
-            sm.ChangeState(sm.IdleState);
+            sm.Player.Ability.FinishSwap();
         }
+
+        if (sm.MovementInput.sqrMagnitude > 0.01f)
+            sm.Player.Ability.FinishSwap();
     }
 }

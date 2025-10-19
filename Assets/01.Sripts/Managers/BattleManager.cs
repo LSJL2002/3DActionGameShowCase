@@ -143,7 +143,7 @@ public class BattleManager : Singleton<BattleManager>
         {
             if(currentZone != null)
             {
-                PlayerManager.Instance.Stats.TakeDamage(5000);
+                PlayerManager.Instance.Attr.Resource.TakeDamage(5000);
             }
         }
     }

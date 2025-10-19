@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class PlayerJumpState : PlayerAirState
 {
-    public PlayerJumpState(PlayerStateMachine stateMachine) : base(stateMachine)
-    {
-    }
+    public PlayerJumpState(PlayerStateMachine sm) : base(sm) { }
 
     public override void Enter()
     {
@@ -14,6 +12,8 @@ public class PlayerJumpState : PlayerAirState
         sm.Player.ForceReceiver.Jump(sm.JumpForce);
         base.Enter();
         StartAnimation(sm.Player.AnimationData.JumpTriggerHash);
+
+        sm.Player.Ability.StartJump();
     }
 
     public override void Exit()

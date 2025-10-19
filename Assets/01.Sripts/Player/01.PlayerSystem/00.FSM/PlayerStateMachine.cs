@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
-
-
-
 
 public class PlayerStateMachine : StateMachine
 {
@@ -14,15 +12,7 @@ public class PlayerStateMachine : StateMachine
 
     public BattleModule CurrentBattleModule { get; private set; }
 
-    public void SetBattleModule(BattleModule module)
-    {
-        CurrentBattleModule = module;
-    }
-
-    public void HandleAttackInput() => CurrentBattleModule?.OnAttack();
-    public void HandleSkillInput() => CurrentBattleModule?.OnSkill();
-    public void HandleUpdate() => CurrentBattleModule?.OnUpdate();
-    public void HandleSkillUpdate() => CurrentBattleModule?.OnSkillUpdate();
+    public void SetBattleModule(BattleModule module) => CurrentBattleModule = module;
 
 
     // 원본 데이터
@@ -31,6 +21,7 @@ public class PlayerStateMachine : StateMachine
     // 현재 공격 데이터 (SO에서 가져온 참조본)
     public AttackInfoData AttackInfo { get; private set; }
 
+    // 이동 관련
     public Vector2 MovementInput { get; set; } // 입력 방향 (WASD, 스틱)
     public float RotationDamping { get; set; } // 회전할 때 부드럽게 보정하는 값
     public float MovementSpeed { get; private set; } // 현재 이동 속도
@@ -51,17 +42,11 @@ public class PlayerStateMachine : StateMachine
     }
 
     public float JumpForce { get; set; } //점프력
-    public bool IsInvincible { get; set; } //무적상태
-    public bool IsDodge { get; set; } //회피상태
-    public bool IsAttacking { get; set; } //공격중인지
     public int ComboIndex { get; set; } //콤보인덱스
-    public bool IsKnockback { get; set; }
-    public bool IsStun { get; set; }
-    public bool IsSkill { get; set; }
 
 
 
-
+    // ================== 상태 오브젝트=====================
     //Ground 로직
     public PlayerIdleState IdleState { get;}
     public PlayerWalkState WalkState { get;}
@@ -79,6 +64,7 @@ public class PlayerStateMachine : StateMachine
     public PlayerDodgeState DodgeState { get; }
     public PlayerKnockbackState KnockbackState { get;}
     public PlayerStunState StunState { get;}
+    public PlayerDeathState DeathState { get;}
     // Swap 관리
     public PlayerSwapOutState SwapOutState { get; }
     public PlayerSwapInState SwapInState { get; }
@@ -87,7 +73,7 @@ public class PlayerStateMachine : StateMachine
 
     public PlayerStateMachine(PlayerCharacter player)
     {
-        this.Player = player;
+        Player = player;
 
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
@@ -101,6 +87,7 @@ public class PlayerStateMachine : StateMachine
         SkillState = new PlayerSkillState(this);
         KnockbackState = new PlayerKnockbackState(this);
         StunState = new PlayerStunState(this);
+        DeathState = new PlayerDeathState(this);
         SwapOutState = new PlayerSwapOutState(this);
         SwapInState = new PlayerSwapInState(this);
 
@@ -112,18 +99,12 @@ public class PlayerStateMachine : StateMachine
         ComboIndex = 0;
         SetAttackInfo(ComboIndex);
 
-        // 캐릭터 타입에 따른 전투 모듈 설정
+        // 캐릭터 타입별 BattleModule 연결
         switch (player.CharacterType)
         {
-            case CharacterType.Yuki:
-                SetBattleModule(new BattleModule_Yuki(this));
-                break;
-            case CharacterType.Aoi:
-                SetBattleModule(new BattleModule_Aoi(this));
-                break;
-            case CharacterType.Mika:
-                SetBattleModule(new BattleModule_Mika(this));
-                break;
+            case CharacterType.Yuki: SetBattleModule(new BattleModule_Yuki(this)); break;
+            case CharacterType.Aoi: SetBattleModule(new BattleModule_Aoi(this)); break;
+            case CharacterType.Mika: SetBattleModule(new BattleModule_Mika(this)); break;
         }
     }
 
@@ -131,5 +112,53 @@ public class PlayerStateMachine : StateMachine
     {
         ComboIndex = comboIndex;
         AttackInfo = Player.InfoData.AttackData.GetAttackInfoData(comboIndex);
+    }
+
+    // ===================== 타겟 탐지 (공통) =====================
+    /// <summary>
+    /// 반경 내 가장 가까운 Enemy 탐색
+    /// </summary>
+    /// <param name="radius">탐색 반경</param>
+    /// <param name="faceTarget">찾은 타겟을 바라볼지 여부</param>
+    /// <returns>가장 가까운 Enemy Transform</returns>
+    protected Transform FindNearestMonster(float radius, bool faceTarget = false)
+    {
+        Collider[] hits = Physics.OverlapSphere(
+            Player.transform.position,
+            radius,
+            LayerMask.GetMask("Enemy")
+        );
+        Transform nearest = null;
+        float minDist = float.MaxValue;
+        foreach (var hit in hits)
+        {
+            // 한 단계 위 부모 가져오기
+            Transform target = hit.transform.parent ?? hit.transform;
+
+            float dist = Vector3.Distance(
+                Player.transform.position,
+                target.position
+            );
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = target;
+            }
+        }
+        if (faceTarget && nearest != null)
+        {
+            Vector3 dir = (nearest.position - Player.transform.position).normalized;
+            dir.y = 0;
+            Player.transform.forward = dir;
+        }
+        return nearest;
+    }
+
+    public void UpdateAttackTarget()
+    {
+        var target = FindNearestMonster(Player.InfoData.AttackData.AttackRange, true);
+        if (target != null)
+            Player._camera.ToggleLockOnTarget(target);
     }
 }

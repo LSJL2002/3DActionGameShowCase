@@ -47,12 +47,4 @@ public class PlyerFinishAttackState : PlayerBaseState
             sm.ChangeState(sm.IdleState);
         }
     }
-
-    // 공격 입력 처리
-    protected override void OnAttackStarted(InputAction.CallbackContext context)
-    {
-        // 무기 집어넣기 중이더라도 공격 입력 → 바로 Attack 상태 진입
-        sm.ComboIndex = 0;
-        sm.ChangeState(sm.AttackState);
-    }
 }

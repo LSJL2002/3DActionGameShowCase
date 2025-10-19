@@ -28,28 +28,25 @@ public class PlayerKnockbackState : Istate
         knockDirection = direction;
         knockForce = force;
         duration = time;
+
+        // 이미 넉백 중이라면 → 다시 시작하도록 시간 초기화
         elapsed = 0f;
     }
 
     public void Enter()
     {
-        // 애니메이션 트리거
         var anim = stateMachine.Player.Animator;
         anim.SetBool(stateMachine.Player.AnimationData.KnockbackParameterHash, true);
         anim.SetLayerWeight(knockLayerIndex, 1);
-
-        // 제어 불가 상태 → 이동/회전 입력 무시
-        stateMachine.IsKnockback = true;
     }
 
     public void Exit()
     {
         var anim = stateMachine.Player.Animator;
         anim.SetBool(stateMachine.Player.AnimationData.KnockbackParameterHash, false);
-
         anim.SetLayerWeight(knockLayerIndex, 1);
 
-        stateMachine.IsKnockback = false;
+        stateMachine.Player.Ability.EndKnockback();
     }
 
     public void HandleInput() { /* 넉백 중 입력 무시 */ }
@@ -69,8 +66,6 @@ public class PlayerKnockbackState : Istate
         if (elapsed >= duration)
         {
             Exit();
-            // 넉백 종료 → Idle로 복귀
-            stateMachine.ChangeState(stateMachine.IdleState);
         }
     }
 

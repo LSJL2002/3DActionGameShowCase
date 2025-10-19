@@ -23,25 +23,25 @@ public partial class CharacterInfomationUI : UIBase
     public void AwakeStatus()
     {
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독해제 (중복구독 방지)
-        PlayerManager.Instance.Stats.OnPlayerHealthChanged -= () => SetPlayerStat(StatType.MaxHealth);
-        PlayerManager.Instance.Stats.OnStatChanged -= SetPlayerStat;
+        PlayerManager.Instance.Attr.Resource.OnHealthChanged -= () => SetPlayerStat(StatType.MaxHealth);
+        PlayerManager.Instance.Attr.OnStatChanged -= SetPlayerStat;
 
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
-        PlayerManager.Instance.Stats.OnPlayerHealthChanged += () => SetPlayerStat(StatType.MaxHealth);
-        PlayerManager.Instance.Stats.OnStatChanged += SetPlayerStat;
+        PlayerManager.Instance.Attr.Resource.OnHealthChanged += () => SetPlayerStat(StatType.MaxHealth);
+        PlayerManager.Instance.Attr.OnStatChanged += SetPlayerStat;
 
         // 초기 UI 갱신
-        playerStats = PlayerManager.Instance.Stats;
+        playerStats = PlayerManager.Instance.Attr;
         SetPlayerStat(StatType.MaxHealth);
     }
 
     // 플레이어 스탯 정보 초기화 함수
     public void SetPlayerStat(StatType statType)
     {
-        playerStats = PlayerManager.Instance.Stats;
+        playerStats = PlayerManager.Instance.Attr;
 
-        healthText.text = $"체력 : {playerStats.CurrentHealth} / {playerStats.MaxHealth.Value.ToString()}";
-        energyText.text = $"마력 : {playerStats.CurrentEnergy} / {playerStats.MaxEnergy.Value.ToString()}";
+        healthText.text = $"체력 : {playerStats.Resource.CurrentHealth} / {playerStats.Resource.MaxHealth.Value.ToString()}";
+        energyText.text = $"마력 : {playerStats.Resource.CurrentEnergy} / {playerStats.Resource.MaxEnergy.Value.ToString()}";
 
         attackText.text = $"공격력 : {playerStats.Attack.BaseValue.ToString()} + ({playerStats.Attack.Value.ToString()})";
         defenseText.text = $"방어력 : {playerStats.Defense.BaseValue.ToString()} + ({playerStats.Defense.Value.ToString()})";

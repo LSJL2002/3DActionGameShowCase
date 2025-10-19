@@ -3,8 +3,9 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerSwapOutState : PlayerBaseState
 {
-
     public PlayerSwapOutState(PlayerStateMachine sm) : base(sm) { }
+
+    public void SetNextCharacter(PlayerCharacter newChar) { }
 
     public override void Enter()
     {
@@ -25,7 +26,9 @@ public class PlayerSwapOutState : PlayerBaseState
         float normalizedTime = GetNormalizeTime(sm.Player.Animator, "SwapOut");
         if (normalizedTime >= 1f)
         {
-            StateComplete(); // 이벤트 발생
+            // FSM에 스왑 완료 알림
+            sm.Player.Ability.FinishSwap();
+            sm.Player.gameObject.SetActive(false);
         }
     }
 }

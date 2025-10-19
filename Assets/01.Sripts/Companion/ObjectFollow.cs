@@ -76,7 +76,7 @@ public class ObjectFollow : MonoBehaviour
 
     void FollowObject()
     {
-        if (targetObject == null || rb == null || PlayerManager.Instance.StateMachine.IsAttacking) return;
+        if (targetObject == null || rb == null || PlayerManager.Instance.Ability.IsAttacking) return;
         
         // Rigidbody를 이용한 부드러운 위치 이동
         Vector3 nextMove = Vector3.MoveTowards(rb.position, targetObject.position, moveSpeed * Time.deltaTime);

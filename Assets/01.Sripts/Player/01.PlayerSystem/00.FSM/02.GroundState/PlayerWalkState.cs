@@ -5,7 +5,7 @@ public class PlayerWalkState : PlayerGroundState
     private float transitionTimer = 0f; // 걷기 유지 시간 카운터
     private float blend = 0f;           // 0 -> 1 Blend
 
-    public PlayerWalkState(PlayerStateMachine stateMachine) : base(stateMachine) { }
+    public PlayerWalkState(PlayerStateMachine sm) : base(sm) { }
 
     public override void Enter()
     {
@@ -48,13 +48,6 @@ public class PlayerWalkState : PlayerGroundState
 
 
         float inputMagnitude = sm.MovementInput.magnitude;
-
-        // 입력 없으면 Idle 상태로 전환
-        if (inputMagnitude <= 0.01f)
-        {
-            sm.ChangeState(sm.IdleState);
-            return;
-        }
 
         // Blend 값 증가
         transitionTimer += Time.deltaTime;
