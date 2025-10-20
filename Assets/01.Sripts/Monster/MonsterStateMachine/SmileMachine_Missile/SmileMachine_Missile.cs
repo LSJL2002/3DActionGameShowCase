@@ -30,13 +30,13 @@ public class SmileMachine_Missile : MonsterBaseState
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         stateMachine.isAttacking = true;
         missileRoutine = stateMachine.Monster.StartCoroutine(MissileRoutine());
     }
 
     private IEnumerator MissileRoutine()
     {
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
 
@@ -81,7 +81,7 @@ public class SmileMachine_Missile : MonsterBaseState
             // Pass damage info
             if (missile.TryGetComponent<Missile>(out var missileScript))
             {
-                int dmg = stateMachine.Monster.Stats.AttackPower; // or whatever your damage stat name is
+                int dmg = stateMachine.Monster.Stats.AttackPower;
                 missileScript.Initialize(dmg, stateMachine.Monster.transform);
             }
         }
