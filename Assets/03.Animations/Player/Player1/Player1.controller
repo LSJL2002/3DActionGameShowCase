@@ -262,8 +262,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_AttackState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 215839574842034666}
@@ -1566,8 +1566,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_AttackState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 215839574842034666}
@@ -2652,8 +2652,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_Swap_In
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 6887063851152166653}
   m_DstState: {fileID: 0}
@@ -2734,8 +2734,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_AttackState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 215839574842034666}
@@ -3995,8 +3995,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_AttackState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 215839574842034666}
@@ -4020,8 +4020,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_AttackState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 215839574842034666}
@@ -5762,13 +5762,13 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   - m_Name: Base/Switch_Swap_In
-    m_Type: 9
+    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   - m_Name: Base/Switch_Swap_Out
-    m_Type: 9
+    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -7026,8 +7026,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_AttackState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 215839574842034666}
@@ -7091,8 +7091,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_SkillState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 0}
@@ -8043,8 +8043,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_SkillState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 0}
@@ -8718,8 +8718,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_SkillState
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 0}
@@ -9368,8 +9368,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Base/Toggle_Idle
+  - m_ConditionMode: 2
+    m_ConditionEvent: Base/Switch_Swap_Out
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 6887063851152166653}
   m_DstState: {fileID: 0}

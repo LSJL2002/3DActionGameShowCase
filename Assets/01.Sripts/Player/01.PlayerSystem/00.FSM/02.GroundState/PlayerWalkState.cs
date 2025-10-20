@@ -27,8 +27,6 @@ public class PlayerWalkState : PlayerGroundState
             transitionTimer = 0f;
         }
 
-        // Animator.speed 제거!
-        // 대신 MovementSpeedModifier 파라미터만 업데이트
         sm.MovementSpeedModifier = blend;
     }
 
@@ -46,20 +44,25 @@ public class PlayerWalkState : PlayerGroundState
     {
         base.LogicUpdate();
 
-
+        // 입력 방향 크기
         float inputMagnitude = sm.MovementInput.magnitude;
 
-        // Blend 값 증가
+        // Blend 증가 (가속)
         transitionTimer += Time.deltaTime;
-        float accelerationTime = sm.GroundData.RunAccelerationTime;
+        float accelerationTime = Mathf.Max(sm.GroundData.RunAccelerationTime, 0.01f);
         blend = Mathf.Clamp01(transitionTimer / accelerationTime);
-
-        // MovementSpeedModifier를 이용해 Blend Tree에 적용
+        // Blend Tree에 적용
         sm.MovementSpeedModifier = blend;
 
-        // 루트모션 이동
-        Vector3 deltaPosition = sm.Player.Animator.deltaPosition;
-        deltaPosition.y = 0f;
-        sm.Player.Controller.Move(deltaPosition);
+        // 이동 방향
+        Vector3 moveDir = GetMovementDir();
+        float moveSpeed = sm.MovementSpeed * sm.MovementSpeedModifier;
+
+        // 루트모션 + 외부 힘 적용
+        Vector3 deltaMove = sm.Player.Animator.deltaPosition;
+        deltaMove.y = 0f; // 수직 이동 제외
+        deltaMove += sm.Player.ForceReceiver.Movement;
+
+        sm.Player.Controller.Move(deltaMove);
     }
 }

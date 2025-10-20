@@ -94,8 +94,10 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Update()
     {
+        Input.Update(); // ReadValue Polling 폴링 입력 처리
+
         StateMachine.HandleInput(); // FSM 업데이트
-        StateMachine.LogicUpdate();  
+        StateMachine.LogicUpdate();
 
         Attr.Update(); // Attribute 계산 업데이트
     }

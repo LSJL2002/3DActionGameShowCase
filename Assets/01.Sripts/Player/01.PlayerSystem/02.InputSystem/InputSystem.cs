@@ -28,7 +28,6 @@ public class InputSystem
     public event Action OnSwapPrev;
     public Vector2 MoveInput { get; private set; }
 
-
     public InputSystem()
     {
         _playerInputs = new PlayerInputs();
@@ -42,11 +41,6 @@ public class InputSystem
         PlayerActions.HeavyAttack.started += ctx => OnSkillStarted?.Invoke();
         PlayerActions.HeavyAttack.canceled += ctx => OnSkillCanceled?.Invoke();
 
-        PlayerActions.Move.performed += ctx =>
-        {
-            MoveInput = ctx.ReadValue<Vector2>();
-            OnMove?.Invoke(MoveInput);
-        };
         PlayerActions.Move.canceled += _ =>
         {
             MoveInput = Vector2.zero;
@@ -67,7 +61,11 @@ public class InputSystem
         PlayerActions.Inventory.started += _ => OnInventoryToggle?.Invoke();
         PlayerActions.Camera.started += _ => OnCameraLockOn?.Invoke();
     }
-
+    public void Update()
+    {
+        MoveInput = PlayerActions.Move.ReadValue<Vector2>();
+        OnMove?.Invoke(MoveInput);
+    }
     public void Enable() => _playerInputs.Enable();
     public void Disable() => _playerInputs.Disable();
 }

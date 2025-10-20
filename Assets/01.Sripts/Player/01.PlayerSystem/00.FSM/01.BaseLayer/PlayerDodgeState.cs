@@ -65,14 +65,13 @@ public class PlayerDodgeState : Istate
         // Dodge 지속 시간 체크
         if (Time.time >= startTime + DodgeDuration)
         {
-            Exit();
+            sm.Player.Ability.EndDodge();
 
             if (sm.MovementInput.sqrMagnitude > 0.01f) // MovementInput이 있으면 WalkState로
             {
                 // 현재 SpeedModifier를 저장
                 sm.LastWalkBlend = sm.MovementSpeedModifier;
-                sm.LastWalkTimer = sm.LastWalkBlend *
-                                              sm.GroundData.RunAccelerationTime;
+                sm.LastWalkTimer = sm.LastWalkBlend * sm.GroundData.RunAccelerationTime;
             }
         }
 

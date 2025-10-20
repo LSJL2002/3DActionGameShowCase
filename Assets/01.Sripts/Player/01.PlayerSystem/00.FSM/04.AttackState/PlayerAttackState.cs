@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerAttackState : PlayerBaseState
 {
@@ -24,6 +23,7 @@ public class PlayerAttackState : PlayerBaseState
     {
         base.Exit();
         StopAnimation(sm.Player.AnimationData.AttackBoolHash);
+        sm.Player.Ability.EndAttack();
 
         module.OnAttackEnd -= HandleAttackEnd;
         module.OnAttackCanceled();

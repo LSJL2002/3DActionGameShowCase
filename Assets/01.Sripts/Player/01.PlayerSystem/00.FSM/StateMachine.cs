@@ -14,6 +14,7 @@ public interface Istate
 public abstract class StateMachine
 {
     protected Istate currentState;
+    public Istate CurrentState => currentState;
 
     public void ChangeState(Istate state)
     {
