@@ -25,9 +25,7 @@ public partial class CharacterInfomationUI : UIBase
     {
         base.OnDisable();
         if(EventsManager.Instance != null)
-        {
             EventsManager.Instance.StopListening(GameEvent.OnConsumableUIUpdate, UpdateUI);
-        }
     }
 
     private void UpdateUI()
