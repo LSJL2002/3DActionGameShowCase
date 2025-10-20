@@ -8,6 +8,7 @@ public class SmileMachine_Missile : MonsterBaseState
     private LineRenderer lineRenderer;
     private Transform firePoint;
     private Transform player;
+    private GameObject missileEffect;
 
     public SmileMachine_Missile(MonsterStateMachine ms, MonsterSkillSO missileSkill) : base(ms)
     {
@@ -18,6 +19,7 @@ public class SmileMachine_Missile : MonsterBaseState
         {
             lineRenderer = monster.lineRender;
             firePoint = monster.firepoint;
+            missileEffect = monster.missileEffect;
         }
 
         player = ms.Monster.PlayerTarget != null
@@ -74,6 +76,13 @@ public class SmileMachine_Missile : MonsterBaseState
             {
                 float missileSpeed = 10f;
                 rb.linearVelocity = fireDirection * missileSpeed;
+            }
+
+            // Pass damage info
+            if (missile.TryGetComponent<Missile>(out var missileScript))
+            {
+                int dmg = stateMachine.Monster.Stats.AttackPower; // or whatever your damage stat name is
+                missileScript.Initialize(dmg, stateMachine.Monster.transform);
             }
         }
 

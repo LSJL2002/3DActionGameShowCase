@@ -6,6 +6,7 @@ public class SmileMachine_UseMissile : BaseMonster
     public LineRenderer lineRender;
     [Header("Missile Effect")]
     public GameObject missile;
+    public GameObject missileEffect;
     public Transform firepoint;
 
     [Header("Gernade Effect")]
