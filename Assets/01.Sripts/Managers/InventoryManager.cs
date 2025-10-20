@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -46,6 +47,24 @@ public class InventoryManager : Singleton<InventoryManager>
 
         // Model에게 아이템 수량 감소를 요청
         inventoryModel.DecreaseItemCount(itemData, 1);
+    }
+
+    // 인벤토리 소비아이템 리스트를 가져오는 함수 (읽기전용)
+    public IReadOnlyList<InventoryItem> GetConsumableItems()
+    {
+        return inventoryViewModel.GetConsumableItems();
+    }
+
+    // 인벤토리 스킬카드아이템 리스트를 가져오는 함수 (읽기전용)
+    public IReadOnlyList<InventoryItem> GetSkillItems()
+    {
+        return inventoryViewModel.GetSkillItems();
+    }
+
+    // 인벤토리 코어아이템 리스트를 가져오는 함수 (읽기전용)
+    public IReadOnlyList<InventoryItem> GetCoreItems()
+    {
+        return inventoryViewModel.GetCoreItems();
     }
 
     // 플레이어 스탯 추가 함수 (능력선택시 호출)
