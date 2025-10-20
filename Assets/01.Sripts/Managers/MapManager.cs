@@ -134,9 +134,6 @@ public class MapManager : Singleton<MapManager>
         {
             Debug.LogError("시작 스테이지를 찾을 수 없습니다!");
         }
-        SaveManager.Instance.SaveData();
-
-
     }
 
     public void tutorialWallToggle()

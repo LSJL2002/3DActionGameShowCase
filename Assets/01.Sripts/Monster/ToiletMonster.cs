@@ -20,16 +20,12 @@ public class ToiletMonster : BaseMonster
 
     protected override float GetSkillRangeFromState(MonsterBaseState state)
     {
-        switch (state)
-        {
-            case SmileToiletSlamState:
-                return Stats.GetSkill("SmileMachine_Slam").range / 2f;
-            case SmileToiletSmashState:
-                return Stats.GetSkill("SmileMachine_Smash").range / 2f;
-            case SmileToiletChargeState:
-                return Stats.GetSkill("SmileMachine_Charge").range;
-            default:
-                return Stats.AttackRange;
-        }
+        if (state is SmileToiletSlamState)
+            return Stats.GetSkill("SmileMachine_Slam").range / 2f;
+        if (state is SmileToiletSmashState)
+            return Stats.GetSkill("SmileMachine_Smash").range / 2f;
+        if (state is SmileToiletChargeState)
+            return Stats.GetSkill("SmileMachine_Charge").range;
+        return Stats.AttackRange;
     }
 }

@@ -22,7 +22,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public MonsterAIEvents aiEvents { get; private set; }
     public Transform PlayerTarget { get; set; }
     public GameObject AreaEffectPoint;
-    public bool IsDead { get; private set; }
+    public bool IsDead { get; set; }
     [HideInInspector] public bool hasStartedCombat = false;
     public event Action OnAttackAnimationCompleteEvent;
     private readonly List<GameObject> activeAOEs = new List<GameObject>();
