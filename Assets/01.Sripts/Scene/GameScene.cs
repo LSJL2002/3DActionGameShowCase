@@ -39,7 +39,7 @@ public class GameScene : SceneBase
         MapManager.Instance.ResetZones();
         BattleManager.Instance.ResetBattleState();
 
-        if (GameManager.Instance.gameMode == eGameMode.LoadGame)
+        if (SaveManager.Instance.gameMode == eGameMode.LoadGame)
         {
             LoadInventoryFromSave();
             Debug.Log("[GameScene] NewGame 모드 - 기존 세이브 로드");

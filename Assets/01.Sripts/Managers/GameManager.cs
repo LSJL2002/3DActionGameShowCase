@@ -18,12 +18,7 @@ public enum eGameState
 }
 
 // 시작할 게임의 모드 (새게임, 불러오기)
-public enum eGameMode
-{
-    None,
-    NewGame,
-    LoadGame
-}
+
 
 // 제네릭 싱글톤 스크립트를 상속
 public class GameManager : Singleton<GameManager>
@@ -31,7 +26,7 @@ public class GameManager : Singleton<GameManager>
     private eGameState previousState; // 이전 상태를 저장할 변수
     private eGameState currentState; // 현재 게임 상태를 저장할 변수
 
-    public eGameMode gameMode; //게임 모드를 저장할 변수
+    
 
     // 상태 변경을 위한 Action 델리게이트
     public event Action<eGameState> changeState;

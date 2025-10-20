@@ -2673,7 +2673,7 @@ Transform:
   m_GameObject: {fileID: 781525872152166515}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -19.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5809,8 +5809,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2269065522077262493}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15001243, y: -0.047848932, z: 0.007268804, w: 0.9874988}
-  m_LocalPosition: {x: 1.5205514, y: 1.8, z: -293.28595}
+  m_LocalRotation: {x: 0.0012553101, y: 0.982799, z: -0.006684887, w: 0.18455322}
+  m_LocalPosition: {x: -0.64, y: 0.8730001, z: -290.569}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5848,14 +5848,14 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 100
-  field of view: 61.000004
+  far clip plane: 5000
+  field of view: 60
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 3511
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -23723,6 +23723,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9122034833826725913}
   - component: {fileID: 4047168720329285397}
+  - component: {fileID: -3810315108689894514}
   m_Layer: 0
   m_Name: TimeLine_SpiderBattleStart
   m_TagString: Untagged
@@ -23773,12 +23774,10 @@ PlayableDirector:
     value: {fileID: 8576343647937260243}
   - key: {fileID: -8911729424413592696, guid: e12e5fd6e6a98744e8a223f312951da6, type: 2}
     value: {fileID: 6398571196983403048}
-  - key: {fileID: -1999900687096298491, guid: e12e5fd6e6a98744e8a223f312951da6, type: 2}
+  - key: {fileID: -3307752686121973697, guid: e12e5fd6e6a98744e8a223f312951da6, type: 2}
     value: {fileID: 3384258850302791255}
-  - key: {fileID: 1726341165698951621, guid: e12e5fd6e6a98744e8a223f312951da6, type: 2}
+  - key: {fileID: 6578612666128663482, guid: e12e5fd6e6a98744e8a223f312951da6, type: 2}
     value: {fileID: 8576343647937260243}
-  - key: {fileID: 1509213374585319022, guid: e12e5fd6e6a98744e8a223f312951da6, type: 2}
-    value: {fileID: 6398571196983403048}
   m_ExposedReferences:
     m_References:
     - e7d04a5672bfa1148943c3a5d92e2200: {fileID: 0}
@@ -23787,6 +23786,19 @@ PlayableDirector:
     - b0e405cbbc9282f4c95fa9494c6a227e: {fileID: 0}
     - f2fe2b46d268c314f9fea062376eaf02: {fileID: 0}
     - 1aa09bbd710cecf46b08531335b0eb4c: {fileID: 3929076365302652074}
+--- !u!114 &-3810315108689894514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8791330281500131723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb1573bd7cd7b34386c3e6dbdc47dd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playableDirector: {fileID: 4047168720329285397}
 --- !u!1 &8795548124981036952
 GameObject:
   m_ObjectHideFlags: 0

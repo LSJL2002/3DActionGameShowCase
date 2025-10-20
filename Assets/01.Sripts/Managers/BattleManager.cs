@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -166,15 +167,19 @@ public class BattleManager : Singleton<BattleManager>
         return instance;
     }
 
-    public async void HandleMonsterDie()
+    public async UniTask HandleMonsterDie()
     {
-        if (monsterStats.CurrentHP > 0) return;
-        //if (!string.IsNullOrEmpty(currentZone.endBattleTimelineKey))
-        //{
-        //    Debug.Log($"몬스터사망 → Timeline 실행: {currentZone.endBattleTimelineKey}");
-        //    await TimeLineManager.Instance.PlayAndWait(currentZone.endBattleTimelineKey);
-        //}
-        var cutScene = await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.endBattleTimelineKey);
+        if (monsterStats == null || currentZone == null || monsterStats.CurrentHP > 0)
+            return;
+
+        if (currentZone.id == MapManager.Instance.bossZoneId)
+        {
+            await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.endBattleTimelineKey);
+            MapManager.Instance.HandleLastStageClear();
+            return;
+        }
+
+        await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.endBattleTimelineKey);
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
 
         //StopWarning();
