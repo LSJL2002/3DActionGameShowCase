@@ -28,11 +28,13 @@ public class InventoryViewModel : ScriptableObject
     {
         if (_model != null)
         {
-            EventsManager.Instance.StopListening(GameEvent.OnConsumableItemsChanged, OnConsumableItemsChanged);
-            EventsManager.Instance.StopListening(GameEvent.OnSkillItemsChanged, OnSkillItemsChanged);
-            EventsManager.Instance.StopListening(GameEvent.OnCoreItemsChanged, OnCoreItemsChanged);
             _model = null; // 참조 해제
+            return;
         }
+            
+        EventsManager.Instance.StopListening(GameEvent.OnConsumableItemsChanged, OnConsumableItemsChanged);
+        EventsManager.Instance.StopListening(GameEvent.OnSkillItemsChanged, OnSkillItemsChanged);
+        EventsManager.Instance.StopListening(GameEvent.OnCoreItemsChanged, OnCoreItemsChanged);
     }
 
     private void OnConsumableItemsChanged() => EventsManager.Instance.TriggerEvent(GameEvent.OnConsumableUIUpdate);

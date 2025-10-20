@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -24,7 +25,10 @@ public class UIBase : MonoBehaviour
 
     protected virtual void Awake() { }
 
-    protected virtual void OnEnable() { }
+    protected virtual void OnEnable() 
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
 
     protected virtual void Start() { }
 
