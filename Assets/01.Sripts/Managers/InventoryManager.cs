@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -8,33 +6,14 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
-    public InventoryViewModel inventoryViewModel;
-    public CharacterInfomationUI characterInventoryUI;
-    public CharacterSkillUI characterSkillUI;
-    public CharacterCoreUI characterCoreUI;
+    [SerializeField] private InventoryViewModel inventoryViewModel;
 
     protected override void Start()
     {
         base.Start();
 
         inventoryModel = new Inventory();
-        inventoryViewModel = new InventoryViewModel(inventoryModel);
-    }
-
-    // 인벤토리 시스템 최초 초기화시 호출될 함수 (각 UI에서 호출)
-    public void SetInventoryUI()
-    {
-        characterInventoryUI.Setup(inventoryViewModel);
-    }
-
-    public void SetSkillUI()
-    {
-        characterSkillUI.Setup(inventoryViewModel);
-    }
-
-    public void SetCoreUI()
-    {
-        characterCoreUI.Setup(inventoryViewModel);
+        inventoryViewModel.Init(inventoryModel);
     }
 
     // 아이템 추가 함수
@@ -70,15 +49,33 @@ public class InventoryManager : Singleton<InventoryManager>
         inventoryModel.DecreaseItemCount(itemData, 1);
     }
 
+    // 인벤토리 소비아이템 리스트를 가져오는 함수 (읽기전용)
+    public IReadOnlyList<InventoryItem> GetConsumableItems()
+    {
+        return inventoryViewModel.GetConsumableItems();
+    }
+
+    // 인벤토리 스킬카드아이템 리스트를 가져오는 함수 (읽기전용)
+    public IReadOnlyList<InventoryItem> GetSkillItems()
+    {
+        return inventoryViewModel.GetSkillItems();
+    }
+
+    // 인벤토리 코어아이템 리스트를 가져오는 함수 (읽기전용)
+    public IReadOnlyList<InventoryItem> GetCoreItems()
+    {
+        return inventoryViewModel.GetCoreItems();
+    }
+
     // 플레이어 스탯 추가 함수 (능력선택시 호출)
     public void StatUPAbility(ItemData itemData)
     {
         // 플레이어 스탯 증가 함수 호출
-        PlayerManager.Instance.Stats.AddModifier(StatType.MaxHealth, itemData.MaxHP);
-        PlayerManager.Instance.Stats.AddModifier(StatType.MaxEnergy, itemData.MaxMP);
-        PlayerManager.Instance.Stats.AddModifier(StatType.Attack, itemData.Attack);
-        PlayerManager.Instance.Stats.AddModifier(StatType.Defense, itemData.Defence);
-        PlayerManager.Instance.Stats.AddModifier(StatType.MoveSpeed, itemData.MoveSpeed);
-        PlayerManager.Instance.Stats.AddModifier(StatType.AttackSpeed, itemData.AttackSpeed);
+        PlayerManager.Instance.Attr.AddModifier(StatType.MaxHealth, itemData.MaxHP);
+        PlayerManager.Instance.Attr.AddModifier(StatType.MaxEnergy, itemData.MaxMP);
+        PlayerManager.Instance.Attr.AddModifier(StatType.Attack, itemData.Attack);
+        PlayerManager.Instance.Attr.AddModifier(StatType.Defense, itemData.Defence);
+        PlayerManager.Instance.Attr.AddModifier(StatType.MoveSpeed, itemData.MoveSpeed);
+        PlayerManager.Instance.Attr.AddModifier(StatType.AttackSpeed, itemData.AttackSpeed);
     }
 }

@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
-using System;
+using UnityEngine;
 [System.Serializable] // 직렬화하여 파일에 저장하거나 네트워크를통해 전송가능
 public class SaveData
 {
@@ -20,7 +18,7 @@ public class SaveManager : Singleton<SaveManager>
 
     public SaveData playerData = new();
 
-    private string path;
+    public string path { get; private set; }
     private string fileName = "/save.json";
     private string keyWord = "projectEight";
 
@@ -83,12 +81,38 @@ public class SaveManager : Singleton<SaveManager>
         return result;
     }
 
+    public void GetItemDataInList()
+    {
+        IReadOnlyList<InventoryItem> consumableitems = InventoryManager.Instance.GetConsumableItems();
+        IReadOnlyList<InventoryItem> skillItems = InventoryManager.Instance.GetConsumableItems();
+        IReadOnlyList<InventoryItem> coreItems = InventoryManager.Instance.GetConsumableItems();
+
+        // 리스트를 순회하며 아이템 데이터 안의 ID 값을 저장 (소비형)
+        foreach (InventoryItem item in consumableitems)
+        {
+            AddItemData(item.data.id);
+            AddItemData(item.stackCount);
+        }
+
+        // 리스트를 순회하며 아이템 데이터 안의 ID 값을 저장 (스킬카드)
+        foreach (InventoryItem item in skillItems)
+        {
+            AddItemData(item.data.id);
+        }
+
+        // 리스트를 순회하며 아이템 데이터 안의 ID 값을 저장 (코어)
+        foreach (InventoryItem item in coreItems)
+        {
+            AddItemData(item.data.id);
+        }
+    }
+
     public void AddStageData(int stageId) => playerData.LastClearStage = stageId;
     public void AddItemData(int itemId) => playerData.Inventory.Add(itemId);
 
     #region PlayerPrefs
     // PlayerPrefs에 설정 저장하는 함수
-    public void SavePlayerPrefs(PlayerPrefsSaveType saveType)
+    public void SavePlayerPrefs(PlayerPrefsSaveType saveType, string value = null)
     {
         switch(saveType)
         {
@@ -102,7 +126,10 @@ public class SaveManager : Singleton<SaveManager>
 
             case PlayerPrefsSaveType.BuildVersion:
                 {
-                    PlayerPrefs.SetString(Build_Version_KEY, Application.version);
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        PlayerPrefs.SetString(Build_Version_KEY, value);
+                    }
                     break;
                 }
         }

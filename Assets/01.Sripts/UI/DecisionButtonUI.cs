@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -54,7 +51,7 @@ public class DecisionButtonUI : UIBase
                 OnDecisionMade?.Invoke(false);
                 break;
         }
-        PlayerManager.Instance.EnableInput(true);
+        //PlayerManager.Instance.EnableInput(true);
         Hide(); // 현재 팝업창 닫기
     }
 }

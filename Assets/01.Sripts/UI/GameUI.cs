@@ -1,3 +1,6 @@
+using DG.Tweening;
+using UnityEngine;
+
 // GameUI의 Base
 public partial class GameUI : UIBase
 {
@@ -9,6 +12,8 @@ public partial class GameUI : UIBase
 
     private eBattleState currentBattleState;
 
+    [SerializeField] CanvasGroup gameUICanvasGroup;
+
     protected override void Awake()
     {
         base.Awake();
@@ -18,6 +23,13 @@ public partial class GameUI : UIBase
         OnAwakePlayer();
 
         OnAwakeSkill();
+
+        // n초 대기 후 실행
+        DOVirtual.DelayedCall(6f, () => 
+        {
+            // 각 UI 알파값 1로 변경(페이드인 효과)
+            gameUICanvasGroup.DOFade(1f, 1f);
+        });
     }
 
     protected override void OnEnable()
@@ -26,8 +38,11 @@ public partial class GameUI : UIBase
 
         uiType = UIType.GameUI;
 
-        BattleManager.OnBattleStart += LoadMonsterStat;     //전투시작시(ontriggerEnter) 스탯 불러오기
-        BattleManager.OnMonsterDie += ReleaseMonsterStat;  //전투끝날시(몬스터사망시) 스텟 해제하기
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, LoadMonsterStat); // 구독해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, LoadMonsterStat); // 구독해제
+
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, LoadMonsterStat); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, LoadMonsterStat); // 구독
 
         OnEnablePlayer();
         OnEnableEnemy();
@@ -41,9 +56,6 @@ public partial class GameUI : UIBase
         OnDisablePlayer();
         OnDisableEnemy();
         OnDisableSkill();
-
-        BattleManager.OnBattleStart -= LoadMonsterStat;    //해제    
-        BattleManager.OnBattleClear -= ReleaseMonsterStat; //해제
     }
 
     protected override void Update()

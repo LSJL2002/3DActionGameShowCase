@@ -1,7 +1,5 @@
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // 아이템 슬롯 하나하나의 상태를 시각적으로 보여주는 View 계층의 클래스 (아이콘, 수량숫자 넣고 빼기 등)
@@ -12,8 +10,7 @@ public class ItemSlotUI : MonoBehaviour
     [SerializeField] private Outline outline;
     [SerializeField] private TextMeshProUGUI emptyText;
     [SerializeField] private Sprite emptyImage;
-
-    private InventoryViewModel inventoryViewModel;
+    [SerializeField] private InventoryViewModel inventoryViewModel;
 
     public ItemData itemData;
     public string itemName;
@@ -22,14 +19,6 @@ public class ItemSlotUI : MonoBehaviour
 
     // 기본 컬러값 설정
     private Color defaultColor = new Color(0 / 255f, 0 / 255f, 0 / 255f, 200 / 255f);
-
-    public void OnEnable()
-    {
-        if (inventoryViewModel == null)
-        {
-            inventoryViewModel = InventoryManager.Instance.inventoryViewModel;
-        }
-    }
 
     public void SetData(ItemData data,  int count = default)
     {

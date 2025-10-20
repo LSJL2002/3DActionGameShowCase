@@ -6,14 +6,11 @@ public class DropItemSpawner : MonoBehaviour
 
     private void OnEnable()
     {
-        BattleManager.OnMonsterDie += SpawnItem;
-        BattleManager.OnBattleClear += HideItem;
-    }
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnMonsterDie, SpawnItem); // 구독해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, HideItem); // 구독해제
 
-    private void OnDisable()
-    {
-        BattleManager.OnMonsterDie -= SpawnItem;
-        BattleManager.OnBattleClear -= HideItem;
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnMonsterDie, SpawnItem); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, HideItem); // 구독
     }
 
     private void SpawnItem(BattleZone zone)

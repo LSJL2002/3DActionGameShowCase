@@ -1,15 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using static ItemData;
 
 public class Inventory
 {
-    public event Action OnConsumableItemsChanged;
-    public event Action OnSkillItemsChanged;
-    public event Action OnCoreItemsChanged;
-
     private Dictionary<ItemData, InventoryItem> consumableItems = new Dictionary<ItemData, InventoryItem>();
     private Dictionary<ItemData, InventoryItem> skillItems = new Dictionary<ItemData, InventoryItem>();
     private Dictionary<ItemData, InventoryItem> coreItems = new Dictionary<ItemData, InventoryItem>();
@@ -21,15 +15,15 @@ public class Inventory
         {
             case ItemType.Consumable:
                 AddItemToCollection(consumableItems, itemData, count);
-                OnConsumableItemsChanged?.Invoke();
+                EventsManager.Instance.TriggerEvent(GameEvent.OnConsumableItemsChanged);
                 break;
             case ItemType.SkillCard:
                 AddItemToCollection(skillItems, itemData, count);
-                OnSkillItemsChanged?.Invoke();
+                EventsManager.Instance.TriggerEvent(GameEvent.OnSkillItemsChanged);
                 break;
             case ItemType.Core:
                 AddItemToCollection(coreItems, itemData, count);
-                OnCoreItemsChanged?.Invoke();
+                EventsManager.Instance.TriggerEvent(GameEvent.OnCoreItemsChanged);
                 break;
         }
     }
@@ -56,7 +50,7 @@ public class Inventory
         {
             case ItemType.Consumable:
                 DecreaseItemFromCollection(consumableItems, itemData, count);
-                OnConsumableItemsChanged?.Invoke();
+                EventsManager.Instance.TriggerEvent(GameEvent.OnConsumableItemsChanged);
                 break;
         }
     }

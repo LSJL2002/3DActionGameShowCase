@@ -39,25 +39,23 @@ public class CompanionController : MonoBehaviour
 
     void OnEnable()
     {
-        BattleManager.OnBattleStart += OnBattleStart;
-        BattleManager.OnBattleClear += OnBattleClear;
-    }
-    void OnDisable()
-    {
-        BattleManager.OnBattleStart -= OnBattleStart;
-        BattleManager.OnBattleClear -= OnBattleClear;
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, BattleStart); // 구독해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, BattleClear); // 구독해제
+
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, BattleStart); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, BattleClear); // 구독
     }
 
     void Update() { Sm.HandleInput(); Sm.Update(); }
     void FixedUpdate() { Sm.PhysicsUpdate(); }
 
     // 전투 이벤트는 상태 전환만 담당 (행동은 BattleState가 함)
-    void OnBattleStart(BattleZone zone)
+    void BattleStart(BattleZone zone)
     {
         isAttack = true;
         Sm.ChangeState(new BattleState(Sm));
     }
-    void OnBattleClear(BattleZone zone)
+    void BattleClear(BattleZone zone)
     {
         isAttack = false;
         Sm.ChangeState(new CompanionFollowState(Sm));

@@ -13,7 +13,7 @@ public class ATKUPAbility : ItemAbility
 
     public override void Use(ItemData itemData)
     {
-        PlayerStats stats = PlayerManager.Instance.Stats;
+        PlayerAttribute stats = PlayerManager.Instance.Attr;
         float atkupPercentage = itemData.effectValue; // 추가 스탯
         float duration = itemData.duration;
         float totalATKUPAmount = stats.Attack.Value * atkupPercentage / 100; // 총 증가량 계산: 공격력의 n%

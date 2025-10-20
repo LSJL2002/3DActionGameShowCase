@@ -24,7 +24,7 @@ public class ObjectFollow : MonoBehaviour
     [Header("ChatUI")]
     [SerializeField] public GameObject chatUI;
 
-    [Header("파티클")]
+    [Header("Particle")]
     [SerializeField] private GameObject moveFx;   // 파티클이 붙은 오브젝트(프리팹 인스턴스)
     [SerializeField] private float moveSpeedThreshold = 0.1f; // 이동 판정 기준
 
@@ -44,14 +44,11 @@ public class ObjectFollow : MonoBehaviour
 
     private void OnEnable()
     {
-        BattleManager.OnBattleStart += DanceMove; // 구독했다
-        BattleManager.OnBattleClear += IdleMove;
-    }
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, DanceMove); // 구독해제
+        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, IdleMove); // 구독해제
 
-    private void OnDisable()
-    {
-        BattleManager.OnBattleStart -= DanceMove; // 구독취소
-        BattleManager.OnBattleClear -= IdleMove;
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, DanceMove); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, IdleMove); // 구독
     }
 
     private void Update()
@@ -72,7 +69,7 @@ public class ObjectFollow : MonoBehaviour
 
     void FollowObject()
     {
-        if (targetObject == null || rb == null || PlayerManager.Instance.StateMachine.IsAttacking) return;
+        if (targetObject == null || rb == null || PlayerManager.Instance.Ability.IsAttacking) return;
         
         // Rigidbody를 이용한 부드러운 위치 이동
         Vector3 nextMove = Vector3.MoveTowards(rb.position, targetObject.position, moveSpeed * Time.deltaTime);

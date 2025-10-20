@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class PlayerIntro : MonoBehaviour
@@ -9,8 +9,8 @@ public class PlayerIntro : MonoBehaviour
     public LetterBox letterBox;
 
     [Header("Intro Camera")]
-    public CinemachineFreeLook freeLook;
-    public CinemachineBlendListCamera introCam;
+    public CinemachineCamera freeLook;
+    public CinemachineSequencerCamera introCam;
 
     [Header("Intro Settings")]
     [SerializeField] private float introDuration = 5f; // 카메라 연출 길이

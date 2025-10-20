@@ -1,5 +1,3 @@
-using UnityEngine;
-
 [System.Serializable]
 public class InventoryItem // 인벤토리의 아이템 '하나'에 대한 정보를 가진 클래스 (Model 계층)
 {

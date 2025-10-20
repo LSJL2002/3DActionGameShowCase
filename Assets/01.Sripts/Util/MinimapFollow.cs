@@ -10,7 +10,7 @@ public class MinimapFollow : MonoBehaviour
 
     private void Awake()
     {
-        target = PlayerManager.Instance.transform;
+        target = PlayerManager.Instance.ActiveCharacter.transform;
     }
 
     // 모든 이동과 회전이 완료된 후 실행되도록 LateUpdate 사용

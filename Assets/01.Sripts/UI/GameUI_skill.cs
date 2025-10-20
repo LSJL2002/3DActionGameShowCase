@@ -21,10 +21,10 @@ public partial class GameUI : UIBase
     public void OnAwakeSkill()
     {
         evadeImage.fillAmount = 1;
-        evadeText.text = playerStats.EvadeBufferMax.ToString();
+        evadeText.text = playerStats.EvadeBuffer.BufferCurrent.ToString();
 
         skill1Image.fillAmount = 1;
-        skill1Text.text = playerStats.SkillBufferMax.ToString();
+        skill1Text.text = playerStats.SkillBuffer.BufferCurrent.ToString();
     }
 
     public void OnEnableSkill()
@@ -45,9 +45,9 @@ public partial class GameUI : UIBase
     // 회피 쿨타임
     public void OnCoolTimeEvade(InputAction.CallbackContext context)
     {
-        if (evadeCoolTimeSequence.IsActive() || playerStats.EvadeBufferCurrent == 0 && !PlayerManager.Instance.StateMachine.IsDodge) return;
+        if (evadeCoolTimeSequence.IsActive() || playerStats.EvadeBuffer.BufferCurrent == 0 && !PlayerManager.Instance.Ability.IsDodging) return;
 
-        float cooltimeDuration = playerStats.EvadeCooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
+        float cooltimeDuration = playerStats.EvadeBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
 
         evadeImage.fillAmount = 1f; // 시작 전 1f로 초기화
 
@@ -64,9 +64,9 @@ public partial class GameUI : UIBase
     // 스킬1 쿨타임
     public void OnCoolTimeHeavyAttack(InputAction.CallbackContext context)
     {
-        if (heavyAttackCoolTimeSequence.IsActive() || playerStats.SkillBufferCurrent == 0 || PlayerManager.Instance.StateMachine.IsSkill) return;
+        if (heavyAttackCoolTimeSequence.IsActive() || playerStats.SkillBuffer.BufferCurrent == 0 || PlayerManager.Instance.Ability.IsUsingSkill) return;
 
-        float cooltimeDuration = playerStats.SkillCooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
+        float cooltimeDuration = playerStats.SkillBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
 
         skill1Image.fillAmount = 1f; // 시작 전 1f로 초기화
 
@@ -83,7 +83,7 @@ public partial class GameUI : UIBase
     // 스킬 UI 스택 업데이트
     public void OnUpdateSkill()
     {
-        skill1Text.text = playerStats.SkillBufferCurrent.ToString(); // 스택을 업데이트
-        evadeText.text = playerStats.EvadeBufferCurrent.ToString(); // 스택을 업데이트
+        skill1Text.text = playerStats.SkillBuffer.BufferCurrent.ToString(); // 스택을 업데이트
+        evadeText.text = playerStats.EvadeBuffer.BufferCurrent.ToString(); // 스택을 업데이트
     }
 }

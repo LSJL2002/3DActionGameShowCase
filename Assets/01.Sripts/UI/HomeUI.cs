@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
+using System.IO;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +10,33 @@ public class HomeUI : UIBase
     [SerializeField] private CanvasGroup loadGameButton;
     [SerializeField] private CanvasGroup optionButton;
     [SerializeField] private CanvasGroup quitButton;
+
+    // 로드게임 활성화 관련 오브젝트들
+    [SerializeField] private ButtonHoverEffects buttonHoverEffects;
+    [SerializeField] private Button loadGameButtonComponent;
+    [SerializeField] private CanvasGroup loadGameButtonCanvasGroup;
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        // SaveData가 없다면,
+        if (!File.Exists(SaveManager.Instance.path))
+        {
+            loadGameButtonComponent.interactable = false;
+            buttonHoverEffects.enabled = false;
+
+            if (loadGameButtonCanvasGroup != null)
+            {
+                loadGameButtonCanvasGroup.DOFade(0f, 0f).OnComplete(() => { loadGameButtonCanvasGroup.DOFade(0.5f, 1f); });
+            }
+        }
+        else
+        {
+            loadGameButtonComponent.interactable = true;
+            buttonHoverEffects.enabled = true;
+        }
+    }
 
     public async void OnClickButton(string str)
     {
