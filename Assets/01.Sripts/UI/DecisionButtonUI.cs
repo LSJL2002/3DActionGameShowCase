@@ -17,8 +17,6 @@ public class DecisionButtonUI : UIBase
 
         Canvas canvas = GetComponentInParent<Canvas>();
         canvas.sortingOrder = 101;
-
-        PlayerManager.Instance.EnableInput(false);
     }
 
     public void SetGuideText()

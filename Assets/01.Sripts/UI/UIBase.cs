@@ -30,7 +30,10 @@ public class UIBase : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    protected virtual void Start() { }
+    protected virtual void Start() 
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
 
     protected virtual void Update() { }
 
