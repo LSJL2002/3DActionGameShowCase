@@ -28,7 +28,8 @@ public class CharacterCoreUI : UIBase
     protected override void OnDisable()
     {
         base.OnDisable();
-        EventsManager.Instance.StopListening(GameEvent.OnCoreUIUpdate, UpdateUI);
+        if(EventsManager.Instance != null)
+            EventsManager.Instance.StopListening(GameEvent.OnCoreUIUpdate, UpdateUI);
     }
 
     private void UpdateUI()
