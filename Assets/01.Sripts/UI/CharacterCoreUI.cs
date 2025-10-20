@@ -1,23 +1,16 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
 public class CharacterCoreUI : UIBase
 {
     // 인스펙터에서 직접 할당할 아이템 슬롯 목록
     [SerializeField] private List<ItemSlotUI> itemSlots;
-
-    private InventoryViewModel _viewModel;
+    [SerializeField] private InventoryViewModel inventoryViewModel;
 
     protected override void Awake()
     {
         base.Awake();
-
-        InventoryManager.Instance.characterCoreUI = this;
-
-        InventoryManager.Instance.SetCoreUI();
+        Setup();
     }
 
     protected override void OnEnable()
@@ -26,16 +19,22 @@ public class CharacterCoreUI : UIBase
         UIManager.Instance.ChangeState(DecisionState.UseItem);
     }
 
-    public void Setup(InventoryViewModel viewModel)
+    public void Setup()
     {
-        _viewModel = viewModel;
-        _viewModel.OnCoreUIUpdate += UpdateUI;
+        EventsManager.Instance.StartListening(GameEvent.OnCoreUIUpdate, UpdateUI);
         UpdateUI();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if(EventsManager.Instance != null)
+            EventsManager.Instance.StopListening(GameEvent.OnCoreUIUpdate, UpdateUI);
     }
 
     private void UpdateUI()
     {
-        var items = _viewModel.GetCoreItems();
+        var items = inventoryViewModel.GetCoreItems();
         int slotCount = itemSlots.Count;
         int itemCount = items.Count;
 

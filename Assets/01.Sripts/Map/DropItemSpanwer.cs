@@ -4,7 +4,7 @@ public class DropItemSpawner : MonoBehaviour
 {
     [field : SerializeField]public GameObject dropItem { get; set; }// 인스펙터에 드랍 아이템 넣어두기
 
-    private void OnEnable()
+    private void Start()
     {
         EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnMonsterDie, SpawnItem); // 구독해제
         EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, HideItem); // 구독해제

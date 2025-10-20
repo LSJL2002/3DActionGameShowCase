@@ -14,6 +14,7 @@ public partial class GameUI : UIBase
     
     private MonsterStatHandler monsterStats;       // 생성된 몬스터의 stats에 접근가능한 변수
     private Sequence enemyDamageSequence;
+    private Color defaultColor = new Color32 (255, 141, 40, 200);
 
     public void OnEnableEnemy()
     {
@@ -32,7 +33,7 @@ public partial class GameUI : UIBase
                 enemyHPText.text = default; // 적 최대체력 변수 클리어
 
                 enemyHPImage_Back.fillAmount = 1f; // 적 체력 슬라이더를 100%
-
+                
                 enemyInfoCanvasGroup.DOFade(0f, 0f);
 
                 monsterStats = null; // 스텟 변수 클리어
@@ -47,7 +48,9 @@ public partial class GameUI : UIBase
 
                 enemyHPText.text = monsterStats.monsterData.maxHp.ToString("#,##0"); // 적 최대체력 변수 초기화
 
+                enemyHPImage_Front.color = defaultColor;
                 enemyHPImage_Back.fillAmount = 1f; // 적 체력 슬라이더를 초기화
+                enemyHPImage_Front.fillAmount = 1f; // 적 체력 슬라이더를 초기화
 
                 break;
         }

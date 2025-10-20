@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using DG.Tweening;
-using UniRx;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewItemAbility", menuName = "Item Abilities/ATKUP")]

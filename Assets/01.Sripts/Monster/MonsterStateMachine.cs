@@ -31,6 +31,9 @@ public class MonsterStateMachine : StateMachine
     public SmileMachineFire SmileMachineFire { get; private set; }
     public SmileMachine_FireShoot SmileMachine_FireShoot { get; private set; }
 
+    //SmileMachine_UseMissile 스킬
+    public SmileMachine_Missile SmileMachine_Missile { get; private set; }
+
     private MonsterAIEvents aiEvents;
     public bool isAttacking = false;
 
@@ -83,6 +86,17 @@ public class MonsterStateMachine : StateMachine
             var fireShootSkill = monster.Stats.GetSkill("SmileMachine_FireShoot");
             SmileMachine_FireShoot = new SmileMachine_FireShoot(this, fireShootSkill);
         }
+        else if (monster is SmileMachine_UseMissile)
+        {
+            var slamSkill = monster.Stats.GetSkill("SmileMachine_Slam");
+            SmileToiletSlamState = new SmileToiletSlamState(this, slamSkill);
+            var smashSkill = monster.Stats.GetSkill("SmileMachine_Smash");
+            SmileToiletSmashState = new SmileToiletSmashState(this, smashSkill);
+            var chargeSkill = monster.Stats.GetSkill("SmileMachine_Charge");
+            SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
+            var missileSkill = monster.Stats.GetSkill("SmileMachine_Missile");
+            SmileMachine_Missile = new SmileMachine_Missile(this, missileSkill);
+        }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();
         aiEvents.SetStateMachine(this);
@@ -96,6 +110,10 @@ public class MonsterStateMachine : StateMachine
     {
         base.ChangeState(newState);
         currentStateInternal = newState;
+        if (Monster != null && Monster.IsDead)
+        {
+            return;
+        }
     }
 
     public void EnableAIEvents()
