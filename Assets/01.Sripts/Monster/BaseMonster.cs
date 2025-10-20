@@ -38,6 +38,9 @@ public class BaseMonster : MonoBehaviour, IDamageable
     // 체력이 변경될 때 호출될 이벤트
     public static event System.Action OnEnemyHealthChanged;
 
+    //OnDeath
+    public GameObject deathDrop;
+
     protected virtual void Awake()
     {
         animationData.Initialize();
@@ -46,6 +49,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         Agent = GetComponent<NavMeshAgent>();
         Stats = GetComponent<MonsterStatHandler>();
         Controller = GetComponent<CharacterController>();
+        deathDrop.SetActive(false);
 
         aiEvents = GetComponent<MonsterAIEvents>() ?? gameObject.AddComponent<MonsterAIEvents>();
         aiEvents.SetStateMachine(stateMachine);
@@ -238,7 +242,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnDeathAnimationComplete()
     {
-        BattleManager.Instance.HandleMonsterDie();
+        //BattleManager.Instance.HandleMonsterDie();
     }
 
     public void OnAttackAnimationComplete()
@@ -264,6 +268,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
             IsDead = true;
             Stats.CurrentHP = 0;
             stateMachine.ChangeState(stateMachine.MonsterDeathState);
+            deathDrop.SetActive(true);
         }
 
         OnEnemyHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출

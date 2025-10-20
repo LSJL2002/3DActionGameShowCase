@@ -738,17 +738,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2512720210794313222, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3177182589720266420, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
       propertyPath: m_Name
       value: SmileMachine
-      objectReference: {fileID: 0}
-    - target: {fileID: 3177182589720266420, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3822254260468104781, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11051,6 +11043,7 @@ MonoBehaviour:
   patternConfig: {fileID: 11400000, guid: 524bd95524077a6489680f4a56a9a90e, type: 2}
   AreaEffectPoint: {fileID: 497364040}
   hasStartedCombat: 0
+  deathDrop: {fileID: 0}
   baseAttackCollider: {fileID: 2050855765}
   lineRender: {fileID: 165722119}
   missile: {fileID: 936575497134010909, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
