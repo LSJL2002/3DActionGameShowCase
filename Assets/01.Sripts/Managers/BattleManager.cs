@@ -133,7 +133,7 @@ public class BattleManager : Singleton<BattleManager>
         if (Input.GetKeyDown(KeyCode.P))
         {
             if (currentZone != null)
-                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(50000);
+                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
@@ -184,7 +184,7 @@ public class BattleManager : Singleton<BattleManager>
     public void ClearBattle()
     {
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnBattleClear, currentZone);
-        SaveManager.Instance.AddStageData(currentZone.id);
+        SaveManager.Instance.SetStageData(currentZone.id);
         SaveManager.Instance.SaveData();
 
         Addressables.ReleaseInstance(currentMonster.gameObject); 

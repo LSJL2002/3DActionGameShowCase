@@ -45,6 +45,7 @@ public class HomeUI : UIBase
             case "NewGame":
                 // 새 게임 시작
                 GameManager.Instance.gameMode = eGameMode.NewGame;
+                SaveManager.Instance.DeleteSaveFile();
                 SceneLoadManager.Instance.ChangeScene(2, null, LoadSceneMode.Single);
                 break;
 
