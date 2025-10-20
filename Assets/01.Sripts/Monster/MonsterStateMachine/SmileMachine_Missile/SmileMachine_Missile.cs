@@ -66,25 +66,22 @@ public class SmileMachine_Missile : MonsterBaseState
         else
             fireDirection = firePoint.forward;
 
-        // --- Fire missile ---
         if (stateMachine.Monster is SmileMachine_UseMissile monster && monster.missile != null && firePoint != null)
         {
             GameObject missile = Object.Instantiate(monster.missile, firePoint.position, Quaternion.LookRotation(fireDirection));
 
             if (missile.TryGetComponent<Rigidbody>(out var rb))
             {
-                float missileSpeed = 10f; // tweak this for faster/slower missiles
+                float missileSpeed = 10f;
                 rb.linearVelocity = fireDirection * missileSpeed;
             }
         }
 
-        // --- Cleanup ---
         if (lineRenderer != null)
             lineRenderer.enabled = false;
 
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
 
-        // Short delay before switching back
         yield return new WaitForSeconds(0.5f);
 
         stateMachine.isAttacking = false;

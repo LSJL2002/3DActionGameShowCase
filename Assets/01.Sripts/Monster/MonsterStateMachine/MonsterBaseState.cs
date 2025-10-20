@@ -81,6 +81,10 @@ public class MonsterBaseState : Istate
 
     protected void StopMoving()
     {
+        if (stateMachine.Monster.IsDead)
+        {
+            return;
+        }
         var agent = stateMachine.Monster.Agent;
         var cc = stateMachine.Monster.GetComponent<CharacterController>();
         var forceReceiver = stateMachine.Monster.GetComponent<ForceReceiver>();
