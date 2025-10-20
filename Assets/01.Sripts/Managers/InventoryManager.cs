@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -8,33 +5,14 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
-    public InventoryViewModel inventoryViewModel;
-    public CharacterInfomationUI characterInventoryUI;
-    public CharacterSkillUI characterSkillUI;
-    public CharacterCoreUI characterCoreUI;
+    [SerializeField] private InventoryViewModel inventoryViewModel;
 
     protected override void Start()
     {
         base.Start();
 
         inventoryModel = new Inventory();
-        inventoryViewModel = new InventoryViewModel(inventoryModel);
-    }
-
-    // 인벤토리 시스템 최초 초기화시 호출될 함수 (각 UI에서 호출)
-    public void SetInventoryUI()
-    {
-        characterInventoryUI.Setup(inventoryViewModel);
-    }
-
-    public void SetSkillUI()
-    {
-        characterSkillUI.Setup(inventoryViewModel);
-    }
-
-    public void SetCoreUI()
-    {
-        characterCoreUI.Setup(inventoryViewModel);
+        inventoryViewModel.Init(inventoryModel);
     }
 
     // 아이템 추가 함수

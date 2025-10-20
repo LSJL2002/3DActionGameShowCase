@@ -1,16 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 // CharacterInfomationUI의 Status Part
 public partial class CharacterInfomationUI : UIBase
 {
     private PlayerAttribute playerStats; // 플레이어의 stats에 접근가능한 변수
+    private Action HealthChanged;
+    private Action<StatType> StatChanged;
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI healthText;
@@ -22,16 +19,11 @@ public partial class CharacterInfomationUI : UIBase
 
     public void AwakeStatus()
     {
-        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독해제 (중복구독 방지)
-        PlayerManager.Instance.Attr.Resource.OnHealthChanged -= () => SetPlayerStat(StatType.MaxHealth);
-        PlayerManager.Instance.Attr.OnStatChanged -= SetPlayerStat;
-
-        // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
-        PlayerManager.Instance.Attr.Resource.OnHealthChanged += () => SetPlayerStat(StatType.MaxHealth);
-        PlayerManager.Instance.Attr.OnStatChanged += SetPlayerStat;
-
-        // 초기 UI 갱신
         playerStats = PlayerManager.Instance.Attr;
+        HealthChanged = () => { SetPlayerStat(StatType.MaxHealth); };
+        StatChanged = SetPlayerStat;
+        playerStats.Resource.OnHealthChanged += HealthChanged;
+        playerStats.OnStatChanged += StatChanged;
         SetPlayerStat(StatType.MaxHealth);
     }
 

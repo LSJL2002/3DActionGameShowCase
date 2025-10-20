@@ -4,7 +4,13 @@ using System.Collections.Generic;
 // 매개변수 없는 타입의 이벤트들
 public enum GameEvent
 {
-
+    // Inventory
+    OnConsumableItemsChanged, // 발생 : 모델(Inventory) , 구독 : 뷰모델(InventoryViewModel)
+    OnSkillItemsChanged,      // 발생 : 모델(Inventory) , 구독 : 뷰모델(InventoryViewModel)
+    OnCoreItemsChanged,       // 발생 : 모델(Inventory) , 구독 : 뷰모델(InventoryViewModel)
+    OnConsumableUIUpdate,     // 발생 : 뷰모델(InventoryViewModel) , 구독 : View(UI)
+    OnSkillUIUpdate,          // 발생 : 뷰모델(InventoryViewModel) , 구독 : View(UI)
+    OnCoreUIUpdate,           // 발생 : 뷰모델(InventoryViewModel) , 구독 : View(UI)
 }
 
 // 매개변수 있는 타입의 이벤트들
@@ -20,19 +26,11 @@ public class EventsManager : Singleton<EventsManager>
     private Dictionary<GameEvent, Action> eventDictionary; // 매개변수 없는 이벤트용 딕셔너리
     private Dictionary<GameEventT, object> eventTDictionary; // 매개변수 있는 이벤트용 딕셔너리
 
-    protected override void Awake()
-    {
-        base.Awake();
-        Init();
-        InitT();
-    }
-
     #region 매개변수 없는 로직
     // enum의 모든 값을 딕셔너리에 미리 등록
     private void Init()
     {
-        if (eventDictionary == null)
-            eventDictionary = new Dictionary<GameEvent, Action>();
+        eventDictionary = new Dictionary<GameEvent, Action>();
 
         foreach (GameEvent eventType in Enum.GetValues(typeof(GameEvent)))
         {
@@ -44,6 +42,9 @@ public class EventsManager : Singleton<EventsManager>
     // 구독
     public void StartListening(GameEvent targetEvent, Action listener)
     {
+        if (eventDictionary == null)
+            Init();
+
         if (Instance != null && eventDictionary.ContainsKey(targetEvent))
         {
             eventDictionary[targetEvent] += listener;
@@ -76,13 +77,15 @@ public class EventsManager : Singleton<EventsManager>
     #region 매개변수 있는 로직
     private void InitT()
     {
-        if (eventTDictionary == null)
-            eventTDictionary = new Dictionary<GameEventT, object>();
+        eventTDictionary = new Dictionary<GameEventT, object>();
     }
 
     // 구독
     public void StartListening<T>(GameEventT targetEvent, Action<T> listener)
     {
+        if (eventTDictionary == null)
+            InitT();
+
         if (eventTDictionary.TryGetValue(targetEvent, out object currentEvent))
         {
             Action<T> thisEvent = currentEvent as Action<T>;

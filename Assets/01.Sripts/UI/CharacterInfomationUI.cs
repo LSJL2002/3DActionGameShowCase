@@ -1,10 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
-using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
-
 // CharacterInfomationUI의 Base Part
 public partial class CharacterInfomationUI : UIBase
 {
@@ -12,7 +5,7 @@ public partial class CharacterInfomationUI : UIBase
     {
         base.Awake();
 
-        AwakeInventory();
+        Setup();
         AwakeStatus();
     }
 
