@@ -25,7 +25,6 @@ public class MonsterBaseState : Istate
     public virtual void OnControllerColliderHit(ControllerColliderHit hit) { }
     public virtual void Update()
     {
-        Debug.Log("Apply Gravity");
         ApplyForcesOnly();
     }
     public virtual void OnAttackHit() { }
