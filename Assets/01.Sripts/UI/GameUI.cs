@@ -38,11 +38,8 @@ public partial class GameUI : UIBase
 
         uiType = UIType.GameUI;
 
-        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, LoadMonsterStat); // 구독해제
-        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, LoadMonsterStat); // 구독해제
-
         EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, LoadMonsterStat); // 구독
-        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, LoadMonsterStat); // 구독
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, ReleaseMonsterStat); // 구독
 
         OnEnablePlayer();
         OnEnableEnemy();
@@ -56,6 +53,12 @@ public partial class GameUI : UIBase
         OnDisablePlayer();
         OnDisableEnemy();
         OnDisableSkill();
+
+        if(EventsManager.Instance != null)
+        {
+            EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, LoadMonsterStat); // 구독해제
+            EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, ReleaseMonsterStat); // 구독해제
+        }
     }
 
     protected override void Update()
@@ -69,7 +72,6 @@ public partial class GameUI : UIBase
     {
         monsterStats = BattleManager.Instance.monsterStats;
         ChangeState(eBattleState.Battle);
-        SetEnemyInfo(1);
         monsterStats.OnHealthChanged += OnEnemyHealthChanged;
     }
 
@@ -81,7 +83,6 @@ public partial class GameUI : UIBase
             monsterStats = null;
         }
         ChangeState(eBattleState.Idle);
-        SetEnemyInfo(0);
     }
 
     // 전투종료시 Idle로 호출할 함수

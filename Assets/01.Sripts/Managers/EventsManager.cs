@@ -119,4 +119,12 @@ public class EventsManager : Singleton<EventsManager>
         }
     }
     #endregion 매개변수 있는 로직
+
+    protected override void OnDestroy()
+    {
+        eventDictionary = null;
+        eventTDictionary = null;
+
+        base.OnDestroy();
+    }
 }

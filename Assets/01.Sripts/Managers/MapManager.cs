@@ -20,7 +20,7 @@ public class MapManager : Singleton<MapManager>
 
     NavMeshDataInstance navMeshInstance;
 
-    protected override void OnEnable()
+    protected override void Start()
     {
         EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, OpenZone); // 구독해제
         EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, OpenNextZone); // 구독해제
