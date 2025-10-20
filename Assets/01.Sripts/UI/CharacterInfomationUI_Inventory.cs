@@ -24,7 +24,10 @@ public partial class CharacterInfomationUI : UIBase
     protected override void OnDisable()
     {
         base.OnDisable();
-        EventsManager.Instance.StopListening(GameEvent.OnConsumableUIUpdate, UpdateUI);
+        if(EventsManager.Instance != null)
+        {
+            EventsManager.Instance.StopListening(GameEvent.OnConsumableUIUpdate, UpdateUI);
+        }
     }
 
     private void UpdateUI()
