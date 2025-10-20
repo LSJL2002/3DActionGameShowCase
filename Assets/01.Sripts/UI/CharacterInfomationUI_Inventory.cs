@@ -18,18 +18,19 @@ public partial class CharacterInfomationUI : UIBase
     public void Setup()
     {
         EventsManager.Instance.StartListening(GameEvent.OnConsumableUIUpdate, UpdateUI);
+        Debug.Log("인벤토리UI 구독");
         UpdateUI();
     }
 
-    protected override void OnDisable()
+    public void OnDestroyInventory()
     {
-        base.OnDisable();
         if(EventsManager.Instance != null)
             EventsManager.Instance.StopListening(GameEvent.OnConsumableUIUpdate, UpdateUI);
     }
 
     private void UpdateUI()
     {
+        Debug.Log("인벤토리UI 업데이트");
         var items = inventoryViewModel.GetConsumableItems();
         int slotCount = itemSlots.Count;
         int itemCount = items.Count;

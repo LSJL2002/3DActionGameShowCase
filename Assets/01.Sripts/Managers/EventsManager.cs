@@ -26,6 +26,8 @@ public class EventsManager : Singleton<EventsManager>
     private Dictionary<GameEvent, Action> eventDictionary; // 매개변수 없는 이벤트용 딕셔너리
     private Dictionary<GameEventT, object> eventTDictionary; // 매개변수 있는 이벤트용 딕셔너리
 
+    // -----------------------------------------------------------------------------------------------------
+
     #region 매개변수 없는 로직
     // enum의 모든 값을 딕셔너리에 미리 등록
     private void Init()
@@ -120,6 +122,9 @@ public class EventsManager : Singleton<EventsManager>
     }
     #endregion 매개변수 있는 로직
 
+    // -----------------------------------------------------------------------------------------------------
+
+    #region 구독전체 해제
     protected override void OnDestroy()
     {
         eventDictionary = null;
@@ -127,4 +132,5 @@ public class EventsManager : Singleton<EventsManager>
 
         base.OnDestroy();
     }
+    #endregion 구독전체 해제
 }

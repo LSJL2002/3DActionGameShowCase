@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.UI;
 
 public class SelectAbilityUI : UIBase
 {
@@ -140,27 +137,6 @@ public class SelectAbilityUI : UIBase
         {
             Addressables.Release(coreLoadHandle);
             Debug.Log("코어 데이터 해제 완료");
-        }
-    }
-
-    public void OnClickButton(string str)
-    {
-        InventoryManager.Instance.LoadData_Addressables("20000000");
-        Debug.Log("회복약 획득");
-
-        switch (str)
-        {
-            case "Stat":
-                // 플레이어 스탯 증가 함수 호출
-                PlayerManager.Instance.Attr.AddModifier(StatType.MaxHealth, itemSlots[0].itemData.MaxHP);
-                PlayerManager.Instance.Attr.AddModifier(StatType.MaxEnergy, itemSlots[0].itemData.MaxMP);
-                PlayerManager.Instance.Attr.AddModifier(StatType.Attack, itemSlots[0].itemData.Attack);
-                PlayerManager.Instance.Attr.AddModifier(StatType.Defense, itemSlots[0].itemData.Defence);
-                PlayerManager.Instance.Attr.AddModifier(StatType.MoveSpeed, itemSlots[0].itemData.MoveSpeed);
-                PlayerManager.Instance.Attr.AddModifier(StatType.AttackSpeed, itemSlots[0].itemData.AttackSpeed);
-
-                Debug.Log($"플레이어 스탯증가");
-                break;
         }
     }
 }

@@ -42,7 +42,7 @@ public class PreviewScene : MonoBehaviour
 
     private void OnDisable()
     {
-        if (UIManager.Instance.currentUI != null)
+        if (UIManager.Instance != null)
         {
             string uiName = UIManager.Instance.currentUI.gameObject.name;
             UIManager.Instance.Hide(uiName);

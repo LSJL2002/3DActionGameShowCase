@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -6,8 +5,6 @@ using UnityEngine;
 public partial class CharacterInfomationUI : UIBase
 {
     private PlayerAttribute playerStats; // 플레이어의 stats에 접근가능한 변수
-    private Action HealthChanged;
-    private Action<StatType> StatChanged;
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI healthText;
@@ -20,18 +17,20 @@ public partial class CharacterInfomationUI : UIBase
     public void AwakeStatus()
     {
         playerStats = PlayerManager.Instance.Attr;
-        HealthChanged = () => { SetPlayerStat(StatType.MaxHealth); };
-        StatChanged = SetPlayerStat;
-        playerStats.Resource.OnHealthChanged += HealthChanged;
-        playerStats.OnStatChanged += StatChanged;
+
+        // 구독해제
+        playerStats.OnStatChanged -= SetPlayerStat;
+        //PlayerManager.Instance.OnActiveCharacterChanged -= SetPlayerStat
+
+        // 구독
+        playerStats.OnStatChanged += SetPlayerStat;
+
         SetPlayerStat(StatType.MaxHealth);
     }
 
     // 플레이어 스탯 정보 초기화 함수
     public void SetPlayerStat(StatType statType)
     {
-        playerStats = PlayerManager.Instance.Attr;
-
         healthText.text = $"체력 : {playerStats.Resource.CurrentHealth} / {playerStats.Resource.MaxHealth.Value.ToString()}";
         energyText.text = $"마력 : {playerStats.Resource.CurrentEnergy} / {playerStats.Resource.MaxEnergy.Value.ToString()}";
 

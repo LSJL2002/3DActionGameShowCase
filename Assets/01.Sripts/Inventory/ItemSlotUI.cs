@@ -75,7 +75,7 @@ public class ItemSlotUI : MonoBehaviour
                         // !ountline.enabled <- 현재 상태의 반대값 : !(반대) + outline.enabled(현재상태)
                         outline.enabled = !outline.enabled;
                         break;
-                }    
+                }
                 break;
 
             // 능력 선택 상황

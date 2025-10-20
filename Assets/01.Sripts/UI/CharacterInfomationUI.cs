@@ -15,6 +15,14 @@ public partial class CharacterInfomationUI : UIBase
         OnEnableInventory();
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        OnDestroyInventory();
+    }
+
+    // 테스트용 (추후 삭제)
     public void OnClickButton(string str)
     {
         switch (str)
