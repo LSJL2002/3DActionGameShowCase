@@ -26,15 +26,21 @@ public class InventoryViewModel : ScriptableObject
 
     private void OnDisable()
     {
+        if (!Application.isPlaying)
+            return;
+
         if (_model != null)
         {
-            _model = null; // 참조 해제
-            return;
+            if (EventsManager.Instance != null)
+            {
+                // 구독 해제 로직
+                EventsManager.Instance.StopListening(GameEvent.OnConsumableItemsChanged, OnConsumableItemsChanged);
+                EventsManager.Instance.StopListening(GameEvent.OnSkillItemsChanged, OnSkillItemsChanged);
+                EventsManager.Instance.StopListening(GameEvent.OnCoreItemsChanged, OnCoreItemsChanged);
+            }
         }
-            
-        EventsManager.Instance.StopListening(GameEvent.OnConsumableItemsChanged, OnConsumableItemsChanged);
-        EventsManager.Instance.StopListening(GameEvent.OnSkillItemsChanged, OnSkillItemsChanged);
-        EventsManager.Instance.StopListening(GameEvent.OnCoreItemsChanged, OnCoreItemsChanged);
+
+        _model = null; // 참조 해제
     }
 
     private void OnConsumableItemsChanged() => EventsManager.Instance.TriggerEvent(GameEvent.OnConsumableUIUpdate);
