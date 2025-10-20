@@ -13,7 +13,7 @@ public class TresureBox : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
-        PlayerManager.Instance.Stats.TakeDamage(1000);
+        PlayerManager.Instance.Attr.Resource.TakeDamage(1000);
     }
 
 }

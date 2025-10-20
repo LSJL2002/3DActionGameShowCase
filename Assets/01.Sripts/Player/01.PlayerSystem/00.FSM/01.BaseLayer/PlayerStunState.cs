@@ -6,16 +6,15 @@ public class PlayerStunState : Istate
 {
     private readonly PlayerStateMachine stateMachine;
 
-    private  float duration;
     private readonly int stunLayerIndex;
 
+    private float duration;
     private float elapsed;
 
     public PlayerStunState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
 
-        // Layer 이름 → Animator에서 찾기
         stunLayerIndex = stateMachine.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
     }
 
@@ -25,34 +24,28 @@ public class PlayerStunState : Istate
     public void Setup(float time)
     {
         duration = time;
+
+        // 이미 넉백 중이라면 → 다시 시작하도록 시간 초기화
         elapsed = 0f;
     }
 
     public void Enter()
     {
-        // 애니메이션 트리거
         var anim = stateMachine.Player.Animator;
         anim.SetBool(stateMachine.Player.AnimationData.StunParameterHash, true);
         anim.SetLayerWeight(stunLayerIndex, 1);
-
-        stateMachine.IsStun = true;
     }
 
     public void Exit()
     {
         var anim = stateMachine.Player.Animator;
         anim.SetBool(stateMachine.Player.AnimationData.StunParameterHash, false);
-
         anim.SetLayerWeight(stunLayerIndex, 0);
 
-        stateMachine.IsStun = false;
+        stateMachine.Player.Ability.EndStun();
     }
 
-    public void HandleInput()
-    {
-        // 스턴 중 입력 무시
-    }
-
+    public void HandleInput() { }
 
     public void LogicUpdate()
     {
@@ -63,13 +56,8 @@ public class PlayerStunState : Istate
         if (elapsed >= duration)
         {
             Exit();
-            // 스턴 종료 → Idle로 복귀
-            stateMachine.ChangeState(stateMachine.IdleState);
         }
     }
 
-    public void PhysicsUpdate()
-    {
-        // 스턴 중 이동 없음 (ForceReceiver 사용 안 함)
-    }
+    public void PhysicsUpdate() { }
 }

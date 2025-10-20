@@ -13,7 +13,7 @@ public class DEFUPAbility : ItemAbility
 
     public override void Use(ItemData itemData)
     {
-        PlayerAttribute stats = PlayerManager.Instance.Stats;
+        PlayerAttribute stats = PlayerManager.Instance.Attr;
         float defupPercentage = itemData.effectValue; // 추가 스탯
         float duration = itemData.duration;
         float totalDEFUPAmount = stats.Defense.Value * defupPercentage / 100; // 총 증가량 계산: 공격력의 n%

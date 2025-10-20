@@ -22,16 +22,16 @@ public partial class GameUI : UIBase
 
     public void OnAwakePlayer()
     {
-        playerStats = PlayerManager.Instance.Stats;
+        playerStats = PlayerManager.Instance.Attr;
 
         // 플레이어 변수 초기화
-        playerMaxHP = playerStats.MaxHealth.Value;
-        previousHP = playerStats.MaxHealth.Value;
+        playerMaxHP = playerStats.Resource.MaxHealth.Value;
+        previousHP = playerStats.Resource.MaxHealth.Value;
 
         // 플레이어 이미지 fillAmount를 초기화
         playerHPImage_Back.fillAmount = 1f;
 
-        playerHPText.text = playerStats.CurrentHealth.ToString("#,##0");
+        playerHPText.text = playerStats.Resource.CurrentHealth.ToString("#,##0");
     }
 
     public void OnEnablePlayer()
@@ -39,12 +39,12 @@ public partial class GameUI : UIBase
         playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
 
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독해제 (중복구독 방지)
-        PlayerManager.Instance.Stats.OnPlayerHealthChanged -= OnPlayerHealthChanged;
-        PlayerManager.Instance.Stats.OnStatChanged -= UpdateStat;
+        PlayerManager.Instance.Attr.Resource.OnHealthChanged -= OnPlayerHealthChanged;
+        PlayerManager.Instance.Attr.OnStatChanged -= UpdateStat;
 
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
-        PlayerManager.Instance.Stats.OnPlayerHealthChanged += OnPlayerHealthChanged;
-        PlayerManager.Instance.Stats.OnStatChanged += UpdateStat;
+        PlayerManager.Instance.Attr.Resource.OnHealthChanged += OnPlayerHealthChanged;
+        PlayerManager.Instance.Attr.OnStatChanged += UpdateStat;
     }
 
     public void OnDisablePlayer()
@@ -55,7 +55,7 @@ public partial class GameUI : UIBase
     }
 
     // 플레이어 체력 변경 이벤트 발생 시 호출
-    private async void OnPlayerHealthChanged()
+    private void OnPlayerHealthChanged()
     {
         playerDamageSequence.Kill(); // 기존 시퀀스가 있다면 종료
         playerHealSequence.Kill(); // 기존 시퀀스가 있다면 종료
@@ -63,19 +63,19 @@ public partial class GameUI : UIBase
         float duration = 0.2f;
 
         // 체력 텍스트 업데이트
-        playerHPText.text = playerStats.CurrentHealth.ToString("#,##0");
-        float playerHPpercentage = playerStats.CurrentHealth / playerMaxHP;
+        playerHPText.text = playerStats.Resource.CurrentHealth.ToString("#,##0");
+        float playerHPpercentage = playerStats.Resource.CurrentHealth / playerMaxHP;
 
         // 체력이 감소
-        if (playerStats.CurrentHealth < previousHP)
+        if (playerStats.Resource.CurrentHealth < previousHP)
         {
             audioSource.Stop();
 
             playerDamageSequence = DOTween.Sequence();
             playerDamageSequence.Append(playerHPText.DOColor(Color.red, duration));
             playerDamageSequence.Append(playerHPText.DOColor(Color.white, duration));
-            playerDamageSequence.Append(playerHPImage_Front.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 0f));
-            playerDamageSequence.Append(playerHPImage_Back.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 3.0f).SetEase(Ease.OutQuad));
+            playerDamageSequence.Append(playerHPImage_Front.DOFillAmount(playerStats.Resource.CurrentHealth / playerMaxHP, 0f));
+            playerDamageSequence.Append(playerHPImage_Back.DOFillAmount(playerStats.Resource.CurrentHealth / playerMaxHP, 3.0f).SetEase(Ease.OutQuad));
 
             // 플레이어 체력이 40% 이하가 되면 닷트윈 효과(지속)
             if (playerHPpercentage <= 0.4)
@@ -91,24 +91,24 @@ public partial class GameUI : UIBase
         }
 
         // 체력이 증가
-        else if (playerStats.CurrentHealth > previousHP)
+        else if (playerStats.Resource.CurrentHealth > previousHP)
         {
             audioSource.Stop();
 
             playerHealSequence = DOTween.Sequence();
             playerHealSequence.Append(playerHPText.DOColor(Color.green, duration));
             playerHealSequence.Append(playerHPText.DOColor(Color.white, duration));
-            playerHealSequence.Append(playerHPImage_Front.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 0f));
-            playerHealSequence.Append(playerHPImage_Back.DOFillAmount(playerStats.CurrentHealth / playerMaxHP, 3.0f).SetEase(Ease.OutQuad));
+            playerHealSequence.Append(playerHPImage_Front.DOFillAmount(playerStats.Resource.CurrentHealth / playerMaxHP, 0f));
+            playerHealSequence.Append(playerHPImage_Back.DOFillAmount(playerStats.Resource.CurrentHealth / playerMaxHP, 3.0f).SetEase(Ease.OutQuad));
         }
 
-        previousHP = playerStats.CurrentHealth;
+        previousHP = playerStats.Resource.CurrentHealth;
     }
 
     // 플레이어 스탯이 변화했을때 호출 할 함수
     public void UpdateStat(StatType statType)
     {
         // 플레이어 맥스체력,마력을 업데이트
-        playerMaxHP = playerStats.MaxHealth.Value;
+        playerMaxHP = playerStats.Resource.MaxHealth.Value;
     }
 }

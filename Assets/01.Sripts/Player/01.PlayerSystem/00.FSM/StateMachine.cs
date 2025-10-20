@@ -17,6 +17,7 @@ public abstract class StateMachine
 
     public void ChangeState(Istate state)
     {
+        //if (currentState == state) return;
         currentState?.Exit();
         currentState = state;
         currentState?.Enter();

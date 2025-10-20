@@ -8,7 +8,7 @@ public class PlayerFallState : PlayerAirState
     private float fallDelay = 0.15f; // 잠깐 지연
     private float airStartTime;
 
-    public PlayerFallState(PlayerStateMachine stateMachine) : base(stateMachine)
+    public PlayerFallState(PlayerStateMachine sm) : base(sm)
     {
         // 바닥 레이어 설정 (필요에 맞게 수정)
         groundLayer = LayerMask.GetMask("Default");
@@ -39,10 +39,7 @@ public class PlayerFallState : PlayerAirState
         // 바닥 체크
         if (IsGrounded())
         {
-            if (sm.MovementInput.sqrMagnitude > 0.01f)
-                sm.ChangeState(sm.WalkState);
-            else
-                sm.ChangeState(sm.IdleState);
+            sm.Player.Ability.EndJump();
         }
     }
 

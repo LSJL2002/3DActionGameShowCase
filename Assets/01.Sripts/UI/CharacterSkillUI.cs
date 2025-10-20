@@ -1,23 +1,16 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
 public class CharacterSkillUI : UIBase
 {
     // 인스펙터에서 직접 할당할 아이템 슬롯 목록
     [SerializeField] private List<ItemSlotUI> itemSlots;
-
-    private InventoryViewModel _viewModel;
+    [SerializeField] private InventoryViewModel inventoryViewModel;
 
     protected override void Awake()
     {
         base.Awake();
-
-        InventoryManager.Instance.characterSkillUI = this;
-
-        InventoryManager.Instance.SetSkillUI();
+        Setup();
     }
 
     protected override void OnEnable()
@@ -26,16 +19,21 @@ public class CharacterSkillUI : UIBase
         UIManager.Instance.ChangeState(DecisionState.UseItem);
     }
 
-    public void Setup(InventoryViewModel viewModel)
+    public void Setup()
     {
-        _viewModel = viewModel;
-        _viewModel.OnSkillUIUpdate += UpdateUI;
+        EventsManager.Instance.StartListening(GameEvent.OnSkillUIUpdate, UpdateUI);
         UpdateUI();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        EventsManager.Instance.StopListening(GameEvent.OnSkillUIUpdate, UpdateUI);
     }
 
     private void UpdateUI()
     {
-        var items = _viewModel.GetSkillItems();
+        var items = inventoryViewModel.GetSkillItems();
         int slotCount = itemSlots.Count;
         int itemCount = items.Count;
 
