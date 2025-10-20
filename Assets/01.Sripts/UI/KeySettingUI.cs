@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +9,7 @@ public class KeySettingUI : UIBase
     {
         base.OnEnable();
 
-        if (SceneLoadManager.Instance.nowSceneIndex == 0)
+        if (SceneLoadManager.Instance.nowSceneIndex == 1)
         {
             returnButton.SetActive(true);
         }
