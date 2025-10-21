@@ -117,13 +117,6 @@ public class AttackInfoData
 }
 
 
-public enum EffectType
-{
-    None,
-    knockback,
-    groggy,
-}
-
 [Serializable]
 public class PlayerSkillData
 {

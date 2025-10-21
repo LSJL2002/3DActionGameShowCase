@@ -44,6 +44,8 @@ public class AbilitySystem : MonoBehaviour
         Input.OnSkillCanceled += CancelSkill;
         Input.OnSwapNext += () => TrySwap(true);  // E
         Input.OnSwapPrev += () => TrySwap(false); // Q
+
+        sm.CurrentBattleModule?.Initialize(inputSystem);
     }
 
     private void OnDestroy()
@@ -56,6 +58,8 @@ public class AbilitySystem : MonoBehaviour
         Input.OnJump -= TryJump;
         Input.OnSkillStarted -= TrySkill;
         Input.OnSkillCanceled -= CancelSkill;
+
+        sm.CurrentBattleModule?.Dispose();
     }
 
     // =============== 상태 전환 로직 ===============

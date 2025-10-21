@@ -62,7 +62,7 @@ public class AwakenSubModule_Yuki
             holdStartTime = Time.time;
 
             await UniTask.WaitUntil(() =>
-                !isHoldingAttack || Time.time - holdStartTime >= 0.5f
+                !isHoldingAttack || Time.time - holdStartTime >= 0.8f
             );
 
             if (isHoldingAttack)

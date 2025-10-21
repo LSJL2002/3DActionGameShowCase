@@ -32,13 +32,32 @@ public class BattleModule_Yuki : BattleModule
         };
     }
 
+    // AbilitySystem 초기화 후 BattleModule도 초기화할 때 호출
+    public override void Initialize(InputSystem input)
+    {
+        base.Initialize(input);
+        // Attack Hold 입력 구독
+        input.HoldSystem.OnHoldTriggered += OnAttackHoldTriggered;
+    }
+
+    public override void Dispose()
+    {
+        input.HoldSystem.OnHoldTriggered -= OnAttackHoldTriggered;
+    }
+
+    private void OnAttackHoldTriggered(string actionName)
+    {
+        if (actionName != "Attack") return;
+
+        // → Yuki 각성 Hold 시작 로직 호출
+        awakenSub.CheckAwakenHoldStart();
+    }
 
     // ================== 기본 공격 입력 =================
     public override void OnAttack()
     {
         comboSub.SetAwakened(awakenSub.IsAwakened);
         comboSub.OnAttack();
-        awakenSub.CheckAwakenHoldStart();
     }
 
     public override void OnAttackCanceled()
