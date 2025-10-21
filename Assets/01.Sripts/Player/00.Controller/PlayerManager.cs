@@ -34,7 +34,8 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     public DirectionManager direction;
 
     // ==================== Actions =======================
-    public event Action<PlayerCharacter> OnActiveCharacterChanged;
+    public event Action<PlayerCharacter> OnActiveCharacterChanged; // 캐릭터 Swap
+    public event Action OnAllCharactersDead;                       // 캐릭터 All Death
 
     private void Awake()
     {
@@ -67,7 +68,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
         // 카메라 타겟 초기화 & 첫 시작시 초기화용 이후 상태변환 책임은 AbilitySystem에게 위임함
         _camera?.SetPlayerTarget(active.transform, active.Face);
         StateMachine.ChangeState(StateMachine.IdleState);
-        EnableInput(true);
+        //EnableInput(true); // letterbox 연출
     }
 
     // ================ 플레이어 입력 제어 ====================
@@ -98,4 +99,59 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
 
     public void SwapNext() => SwapTo((currentIndex + 1) % characters.Length);
     public void SwapPrev() => SwapTo((currentIndex - 1 + characters.Length) % characters.Length);
+
+    // ==================== 플레이어 상태 체크 =======================
+    public void HandleCharacterDeath(PlayerCharacter deadCharacter)
+    {
+        // 1) 다음 살아있는 캐릭터 있으면 스왑
+        var next = GetNextAliveCharacter();
+        if (next != null)
+        {
+            SwapTo(Array.IndexOf(characters, next));
+        }
+
+        // 2) 모두 죽었는지 확인
+        CheckAllCharactersDead();
+    }
+
+    public void CheckAllCharactersDead()
+    {
+        // 모든 캐릭터가 죽었는지 확인
+        bool allDead = true;
+        foreach (var character in characters)
+        {
+            if (!character.Ability.IsDeath)
+            {
+                allDead = false;
+                break;
+            }
+        }
+        if (allDead)
+        {
+            OnAllCharactersDead?.Invoke();
+        }
+    }
+
+    public PlayerCharacter GetNextAliveCharacter()
+    {
+        for (int i = 0; i < characters.Length; i++)
+        {
+            int idx = (currentIndex + 1 + i) % characters.Length;
+            if (!characters[idx].Ability.IsDeath)
+                return characters[idx];
+        }
+        return null;
+    }
+
+    public void ReviveCharacter(PlayerCharacter character)
+    {
+        character.Revive();
+    }
+    public void ReviveAll()
+    {
+        foreach (var character in characters)
+            character.Revive();
+        currentIndex = 0;
+        SwapTo(0);
+    }
 }

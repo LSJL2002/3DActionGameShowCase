@@ -7,12 +7,12 @@ public class PlayerSwapOutState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
+        StartAnimation(sm.Player.AnimationData.SwapOutParameterHash);
+        sm.Player.Animator.CrossFade("Swap_Out", 0.1f, 0);
+
         // 입력 초기화
         sm.MovementInput = Vector2.zero;
         sm.Player.EnableCharacterInput(false);
-
-        StartAnimation(sm.Player.AnimationData.SwapOutParameterHash);
-        sm.Player.Animator.CrossFade("Swap_Out", 0.1f, 0);
     }
 
     public override void Exit()
