@@ -50,8 +50,6 @@ public class PlayerAttribute
     public Stat MoveSpeed { get; private set; }
     public Stat AttackSpeed { get; private set; }
 
-    public event Action<StatType> OnStatChanged;
-
     public PlayerAttribute(PlayerInfo info, EventHub hub)
     {
         var data = info.StatData;
@@ -97,7 +95,6 @@ public class PlayerAttribute
             case StatType.MoveSpeed: MoveSpeed.AddModifier(value); break;
             case StatType.AttackSpeed: AttackSpeed.AddModifier(value); break;
         }
-        OnStatChanged?.Invoke(statType);
     }
 
     public void RemoveModifier(StatType statType, float value)
@@ -109,6 +106,5 @@ public class PlayerAttribute
             case StatType.MoveSpeed: MoveSpeed.RemoveModifier(value); break;
             case StatType.AttackSpeed: AttackSpeed.RemoveModifier(value); break;
         }
-        OnStatChanged?.Invoke(statType);
     }
 }

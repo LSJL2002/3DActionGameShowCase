@@ -11,6 +11,8 @@ public enum GameEvent
     OnConsumableUIUpdate,     // 발생 : 뷰모델(InventoryViewModel) , 구독 : View(UI)
     OnSkillUIUpdate,          // 발생 : 뷰모델(InventoryViewModel) , 구독 : View(UI)
     OnCoreUIUpdate,           // 발생 : 뷰모델(InventoryViewModel) , 구독 : View(UI)
+    OnUsedItem,               // 발생 : 인벤토리매니저, 구독 : 플레이어 스탯UI
+    OnStatChanged,            // 발생 : 능력치 변경하는 곳들, 구독 : 캐릭터스테이터스UI
 }
 
 // 매개변수 있는 타입의 이벤트들

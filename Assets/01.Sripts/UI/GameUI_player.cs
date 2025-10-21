@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -40,11 +39,11 @@ public partial class GameUI : UIBase
 
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독해제 (중복구독 방지)
         PlayerManager.Instance.Attr.Resource.OnHealthChanged -= OnPlayerHealthChanged;
-        PlayerManager.Instance.Attr.OnStatChanged -= UpdateStat;
+        EventsManager.Instance.StopListening(GameEvent.OnStatChanged, UpdateStat);
 
         // 플레이어 체력,마력 증감 이벤트, 스탯증감 이벤트 구독
         PlayerManager.Instance.Attr.Resource.OnHealthChanged += OnPlayerHealthChanged;
-        PlayerManager.Instance.Attr.OnStatChanged += UpdateStat;
+        EventsManager.Instance.StartListening(GameEvent.OnStatChanged, UpdateStat);
     }
 
     public void OnDisablePlayer()
@@ -106,7 +105,7 @@ public partial class GameUI : UIBase
     }
 
     // 플레이어 스탯이 변화했을때 호출 할 함수
-    public void UpdateStat(StatType statType)
+    public void UpdateStat()
     {
         // 플레이어 맥스체력,마력을 업데이트
         playerMaxHP = playerStats.Resource.MaxHealth.Value;

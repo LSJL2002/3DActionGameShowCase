@@ -18,7 +18,6 @@ public partial class CharacterInfomationUI : UIBase
     public void Setup()
     {
         EventsManager.Instance.StartListening(GameEvent.OnConsumableUIUpdate, UpdateUI);
-        Debug.Log("인벤토리UI 구독");
         UpdateUI();
     }
 
@@ -30,7 +29,6 @@ public partial class CharacterInfomationUI : UIBase
 
     private void UpdateUI()
     {
-        Debug.Log("인벤토리UI 업데이트");
         var items = inventoryViewModel.GetConsumableItems();
         int slotCount = itemSlots.Count;
         int itemCount = items.Count;

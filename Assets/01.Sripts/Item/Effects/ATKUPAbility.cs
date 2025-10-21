@@ -20,15 +20,27 @@ public class ATKUPAbility : ItemAbility
         // 새로운 Sequence 생성
         ATKUPSequence = DOTween.Sequence();
 
-        ATKUPSequence.AppendCallback(() => stats.AddModifier(StatType.Attack, totalATKUPAmount));
-        ATKUPSequence.AppendInterval(duration);
-        ATKUPSequence.AppendCallback(() => stats.RemoveModifier(StatType.Attack, totalATKUPAmount));
+        // 능력치 증가 부분
+        ATKUPSequence.AppendCallback(() =>
+        {
+            stats.AddModifier(StatType.Attack, totalATKUPAmount);
+            EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+            Debug.Log($"물약 사용 시작: 총 {duration}초 동안 공격력 {atkupPercentage}% 증가(+{totalATKUPAmount})");
+        }); 
 
+        ATKUPSequence.AppendInterval(duration);
+
+        // 능력치 원상복구
+        ATKUPSequence.AppendCallback(() =>
+        {
+            stats.RemoveModifier(StatType.Attack, totalATKUPAmount);
+            EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+            Debug.Log($"능력치 복구");
+        });
+        
         // Sequence 재생 및 Auto파괴옵션세팅 호출
         ATKUPSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
                     .OnKill(() => ATKUPSequence = null) // Sequence가 Kill 될 때 참조 해제
                     .Play(); // Sequence 시작
-
-        Debug.Log($"물약 사용 시작: 총 {duration}초 동안 공격력 {atkupPercentage}% 증가(+{totalATKUPAmount})");
     }
 }

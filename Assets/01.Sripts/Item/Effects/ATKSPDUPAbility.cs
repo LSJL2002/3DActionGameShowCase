@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using DG.Tweening;
-using UniRx;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewItemAbility", menuName = "Item Abilities/ATKSPDUP")]
@@ -24,15 +20,27 @@ public class ATKSPDUPAbility : ItemAbility
         // 새로운 Sequence 생성
         atkspdupSequence = DOTween.Sequence();
 
-        atkspdupSequence.AppendCallback(() => stats.AddModifier(StatType.AttackSpeed, totalATKSPDUPAmount));
+        // 능력치 증가부분
+        atkspdupSequence.AppendCallback(() =>
+        {
+            stats.AddModifier(StatType.AttackSpeed, totalATKSPDUPAmount);
+            EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+            Debug.Log($"물약 사용 시작: 총 {duration}초 동안 공격속도 {stkspdupPercentage}% 증가(+{totalATKSPDUPAmount})");
+        });
+        
         atkspdupSequence.AppendInterval(duration);
-        atkspdupSequence.AppendCallback(() => stats.RemoveModifier(StatType.AttackSpeed, totalATKSPDUPAmount));
+
+        // 공격력 다시 원상복구 부분
+        atkspdupSequence.AppendCallback(() =>
+        {
+            stats.RemoveModifier(StatType.AttackSpeed, totalATKSPDUPAmount);
+            EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+            Debug.Log($"능력치 복구");
+        });
 
         // Sequence 재생 및 Auto파괴옵션세팅 호출
         atkspdupSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
                     .OnKill(() => atkspdupSequence = null) // Sequence가 Kill 될 때 참조 해제
-                    .Play(); // Sequence 시작
-
-        Debug.Log($"물약 사용 시작: 총 {duration}초 동안 공격력 {stkspdupPercentage}% 증가(+{totalATKSPDUPAmount})");
+                    .Play(); // Sequence 시작        
     }
 }

@@ -24,7 +24,7 @@ public class SelectAbilityUI : UIBase
     {
         base.OnEnable();
 
-        // 마우스 커서 보이게
+        // 플레이어 입력 제어
         PlayerManager.Instance.EnableInput(false);
 
         canvasGroup.DOFade(0f, 0f).OnComplete(() => { canvasGroup.DOFade(1f, 1.5f); });
@@ -52,9 +52,9 @@ public class SelectAbilityUI : UIBase
         // 로드했던 데이터 해제
         ReleaseHandles();
 
-        // 마우스 커서 다시 락
+        // 플레이어 입력 제어 해제
         PlayerManager.Instance.EnableInput(true);
-        
+
         BattleManager.Instance.ClearBattle();
     }
 

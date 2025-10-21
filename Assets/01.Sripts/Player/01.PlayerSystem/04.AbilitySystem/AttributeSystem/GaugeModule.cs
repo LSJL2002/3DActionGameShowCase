@@ -31,7 +31,7 @@ public class GaugeModule
     {
         float prev = Current;
         Current = Mathf.Min(Current + value, Max);
-
+        OnChanged?.Invoke(Current);
         if (Current >= Max)
             OnFull?.Invoke();
     }

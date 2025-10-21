@@ -47,6 +47,8 @@ public class InventoryManager : Singleton<InventoryManager>
 
         // Model에게 아이템 수량 감소를 요청
         inventoryModel.DecreaseItemCount(itemData, 1);
+
+        EventsManager.Instance.TriggerEvent(GameEvent.OnUsedItem);
     }
 
     // 인벤토리 소비아이템 리스트를 가져오는 함수 (읽기전용)
@@ -77,5 +79,7 @@ public class InventoryManager : Singleton<InventoryManager>
         PlayerManager.Instance.Attr.AddModifier(StatType.Defense, itemData.Defence);
         PlayerManager.Instance.Attr.AddModifier(StatType.MoveSpeed, itemData.MoveSpeed);
         PlayerManager.Instance.Attr.AddModifier(StatType.AttackSpeed, itemData.AttackSpeed);
+
+        EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
     }
 }
