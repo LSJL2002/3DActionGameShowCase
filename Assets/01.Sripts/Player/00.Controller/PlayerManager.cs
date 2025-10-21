@@ -49,11 +49,12 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
         ActivateFirstCharacter();
     }
 
-    // =================== Player Data Driven =====================
+    // =================== Injection + Initialization =====================
     private void InitializeCharacters()
     {
         foreach (var character in characters)
         {
+            character.gameObject.SetActive(true);
             character.InitManagers(this, _camera, skill, _event, vFX, hitStop, direction);
         }
     }
@@ -143,6 +144,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
         return null;
     }
 
+    // ============== 부활 ============
     public void ReviveCharacter(PlayerCharacter character)
     {
         character.Revive();

@@ -8,6 +8,7 @@ public class PlayerDeathState : PlayerBaseState
     {
         base.Enter();
         StartAnimation(sm.Player.AnimationData.DieParameterHash);
+        sm.Player.Animator.CrossFade("Die", 0.1f, 0);
 
         sm.MovementInput = Vector2.zero;
         sm.Player.EnableCharacterInput(false);
@@ -16,7 +17,8 @@ public class PlayerDeathState : PlayerBaseState
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(sm.Player.AnimationData.DieParameterHash);
+        //StopAnimation(sm.Player.AnimationData.DieParameterHash);
+        // 나중에 부활은 고민좀 해봐야될듯
     }
 
     public override void LogicUpdate()

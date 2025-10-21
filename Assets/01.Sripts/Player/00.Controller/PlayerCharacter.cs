@@ -136,6 +136,7 @@ public class PlayerCharacter : MonoBehaviour
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isPaused;
         _camera.Volume_Blur.enabled = isPaused;
+        Time.timeScale = isPaused ? 0f : 1f;
     }
     private void OnInventoryToggle()
     {

@@ -114,6 +114,7 @@ public class AbilitySystem : MonoBehaviour
     private void TrySkill()
     {
         if (BlockInput()) return;
+        if (IsUsingSkill) return;
         if (IsAttacking) return;
         if (!Attr.SkillBuffer.Use()) return; // 리소스 체크 등
 
@@ -174,6 +175,8 @@ public class AbilitySystem : MonoBehaviour
     public void EndStun() => IsStun = false;
     public void ApplyDeath()
     {
+        if (IsDeath) return;
+
         IsDeath = true;
         sm.ChangeState(sm.DeathState);
     }
