@@ -23,7 +23,6 @@ public partial class GameUI : UIBase
     [SerializeField] private CanvasGroup playerInfoCanvasGroup;
     [SerializeField] private AudioSource audioSource;
 
-    // 현재 활성화된 캐릭터의 UI 요소를 가리키는 변수 (동적으로 참조를 할당받음)
     private Image activeHPImage_Back;
     private Image activeHPImage_Front;
     private TextMeshProUGUI activeHPText;
@@ -78,7 +77,7 @@ public partial class GameUI : UIBase
     }
 
     // 구독갱신
-    public void ResetEvent()
+    public void ResetEventPlayer()
     {
         // 구독해제
         PlayerManager.Instance.Attr.Resource.OnHealthChanged -= PlayerHPDecrease;
@@ -107,23 +106,21 @@ public partial class GameUI : UIBase
             activeHPText = playerUIElements[playerIndex].hpText;
         }
 
-        ResetEvent();
+        ResetEventPlayer();
     }
 
     private float PreprocessHPUpdate()
     {
         playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
 
-        // 시퀀스 종료는 유지
         playerDamageSequence.Kill();
         playerHealSequence.Kill();
 
         float currentHealth = PlayerManager.Instance.Attr.Resource.CurrentHealth;
 
-        // 텍스트 업데이트 (중복 제거)
         activeHPText.text = currentHealth.ToString("#,##0");
 
-        audioSource.Stop(); // 오디오 중복 제거
+        audioSource.Stop();
 
         return currentHealth / playerMaxHP;
     }
