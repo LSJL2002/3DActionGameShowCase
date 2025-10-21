@@ -31,6 +31,10 @@ public partial class CharacterInfomationUI : UIBase
                 InventoryManager.Instance.LoadData_Addressables(str, 1);
                 break;
 
+            case "20000002":
+                InventoryManager.Instance.LoadData_Addressables(str, 1);
+                break;
+
             case "20010008":
                 InventoryManager.Instance.LoadData_Addressables(str);
                 break;

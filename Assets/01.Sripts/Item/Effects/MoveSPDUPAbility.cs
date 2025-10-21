@@ -24,9 +24,21 @@ public class MoveSPDUPAbility : ItemAbility
         // 새로운 Sequence 생성
         movespdupSequence = DOTween.Sequence();
 
-        movespdupSequence.AppendCallback(() => stats.AddModifier(StatType.MoveSpeed, totalMoveSPDUPAmount));
+        movespdupSequence.AppendCallback(() =>
+        {
+            stats.AddModifier(StatType.MoveSpeed, totalMoveSPDUPAmount);
+            EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+            Debug.Log($"물약 사용 시작: 총 {duration}초 동안 이동속도 {movespdupPercentage}% 증가(+{totalMoveSPDUPAmount})");
+        }); 
+
         movespdupSequence.AppendInterval(duration);
-        movespdupSequence.AppendCallback(() => stats.RemoveModifier(StatType.MoveSpeed, totalMoveSPDUPAmount));
+
+        movespdupSequence.AppendCallback(() =>
+        {
+            stats.RemoveModifier(StatType.MoveSpeed, totalMoveSPDUPAmount);
+            EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+            Debug.Log($"능력치 복구");
+        });
 
         // Sequence 재생 및 Auto파괴옵션세팅 호출
         movespdupSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
