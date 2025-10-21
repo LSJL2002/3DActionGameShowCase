@@ -68,7 +68,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
         // 카메라 타겟 초기화 & 첫 시작시 초기화용 이후 상태변환 책임은 AbilitySystem에게 위임함
         _camera?.SetPlayerTarget(active.transform, active.Face);
         StateMachine.ChangeState(StateMachine.IdleState);
-        EnableInput(true); // letterbox 연출
+        //EnableInput(true); // letterbox 연출
     }
 
     // ================ 플레이어 입력 제어 ====================
