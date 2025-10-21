@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -6,7 +5,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Playables;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.Timeline;
 
 // 해당 씬에만 존재할 타임라인 매니저
 public class TimeLineManager : Singleton<TimeLineManager>
@@ -19,13 +17,13 @@ public class TimeLineManager : Singleton<TimeLineManager>
         await Task.Yield();
         base.Start();
 
-        PlayerManager.Instance.Attr.Resource.OnDie += OnGameOverTimeLine; // 플레이어 사망이벤트에 구독
+        PlayerManager.Instance.OnAllCharactersDead += OnGameOverTimeLine; // 플레이어 사망이벤트에 구독
     }
 
     // 게임오버 타임라인 호출하는 함수
     private async void OnGameOverTimeLine()
     {
-        PlayerManager.Instance.Attr.Resource.OnDie -= OnGameOverTimeLine; // 플레이어 사망이벤트에 구독해제
+        PlayerManager.Instance.OnAllCharactersDead -= OnGameOverTimeLine; // 플레이어 사망이벤트에 구독해제
 
         await OnTimeLine<PlayableDirector>("TimeLine_GameOver");
     }
