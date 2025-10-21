@@ -19,9 +19,6 @@ public partial class GameUI : UIBase
         base.Awake();
 
         ChangeState(eBattleState.Idle); // 상태를 'Idle'로 설정
-
-        OnAwakePlayer();
-
         OnAwakeSkill();
 
         // n초 대기 후 실행
@@ -30,6 +27,13 @@ public partial class GameUI : UIBase
             // 각 UI 알파값 1로 변경(페이드인 효과)
             gameUICanvasGroup.DOFade(1f, 1f);
         });
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        OnStartPlayer();
     }
 
     protected override void OnEnable()

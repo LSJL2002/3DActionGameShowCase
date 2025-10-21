@@ -13,14 +13,15 @@ public enum GameEvent
     OnCoreUIUpdate,           // 발생 : 뷰모델(InventoryViewModel) , 구독 : View(UI)
     OnUsedItem,               // 발생 : 인벤토리매니저, 구독 : 플레이어 스탯UI
     OnStatChanged,            // 발생 : 능력치 변경하는 곳들, 구독 : 캐릭터스테이터스UI
+    OnPlayerHeal,             // 발생 : 회복기믹, 구독 : GameUI
 }
 
 // 매개변수 있는 타입의 이벤트들
 public enum GameEventT
 {
-    OnBattleStart,
-    OnBattleClear,
-    OnMonsterDie,
+    OnBattleStart, // <BattleZone>
+    OnBattleClear, // <BattleZone>
+    OnMonsterDie, // <BattleZone>
 }
 
 public class EventsManager : Singleton<EventsManager>
