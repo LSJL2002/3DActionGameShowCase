@@ -23,7 +23,6 @@ public partial class GameUI : UIBase
         base.Start();
 
         OnStartPlayer();
-        OnStartSkill();
     }
 
     protected override void OnDisable()

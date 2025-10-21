@@ -21,20 +21,11 @@ public partial class GameUI : UIBase
         skillInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { skillInfoCanvasGroup.DOFade(1f, 1f); });
 
         PlayerCharacter activeCharacter = PlayerManager.Instance.ActiveCharacter;
-        UpdatePlayerUI(activeCharacter);
+        UpdateSkillUI(activeCharacter);
 
         // 이벤트 구독 / 해제
         PlayerManager.Instance.OnActiveCharacterChanged -= UpdateSkillUI;
         PlayerManager.Instance.OnActiveCharacterChanged += UpdateSkillUI;
-    }
-
-    public void OnStartSkill()
-    {
-        evadeImage.fillAmount = 1;
-        evadeText.text = PlayerManager.Instance.Attr.EvadeBuffer.BufferCurrent.ToString();
-
-        skill1Image.fillAmount = 1;
-        skill1Text.text = PlayerManager.Instance.Attr.SkillBuffer.BufferCurrent.ToString();
     }
 
     public void OnDisableSkill()
@@ -59,6 +50,15 @@ public partial class GameUI : UIBase
     // SkillUI 업데이트시 호출 (최초, 플레이어 교체시)
     public void UpdateSkillUI(PlayerCharacter playerCharacter)
     {
+        evadeCoolTimeSequence.Complete();
+        skillCoolTimeSequence.Complete();
+
+        evadeImage.fillAmount = 1;
+        evadeText.text = PlayerManager.Instance.Attr.EvadeBuffer.BufferCurrent.ToString();
+
+        skill1Image.fillAmount = 1;
+        skill1Text.text = PlayerManager.Instance.Attr.SkillBuffer.BufferCurrent.ToString();
+
         ResetEventSkill();
     }
 
@@ -67,6 +67,9 @@ public partial class GameUI : UIBase
     {
         float cooltimeDuration = PlayerManager.Instance.Attr.EvadeBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
         evadeText.text = PlayerManager.Instance.Attr.EvadeBuffer.BufferCurrent.ToString(); // 스택을 업데이트
+
+        if (PlayerManager.Instance.Attr.EvadeBuffer.BufferCurrent == PlayerManager.Instance.Attr.EvadeBuffer.BufferMax)
+            return;
 
         evadeImage.fillAmount = 1f; // 시작 전 1f로 초기화
 
@@ -85,6 +88,9 @@ public partial class GameUI : UIBase
     {
         float cooltimeDuration = PlayerManager.Instance.Attr.SkillBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
         skill1Text.text = PlayerManager.Instance.Attr.SkillBuffer.BufferCurrent.ToString(); // 스택을 업데이트
+
+        if (PlayerManager.Instance.Attr.SkillBuffer.BufferCurrent == PlayerManager.Instance.Attr.SkillBuffer.BufferMax)
+            return;
 
         skill1Image.fillAmount = 1f; // 시작 전 1f로 초기화
 
