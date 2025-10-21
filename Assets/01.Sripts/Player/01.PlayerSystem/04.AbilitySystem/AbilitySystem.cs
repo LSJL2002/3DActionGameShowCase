@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
@@ -6,7 +7,12 @@ public class AbilitySystem : MonoBehaviour
 {
     // 다른 오브젝트나 테스트 환경에서도 단독 실행 가능
     // 유지보수 시 PlayerCharacter가 너무 커지는 것을 방지
+    private PlayerStateMachine sm;
     public PlayerAttribute Attr { get; private set; }
+    public InputSystem Input { get; private set; }
+
+    // ========== Actions ================
+    public event Action OnDeath;
 
     // ========== 상태 플래그 ==========
     public bool IsWalking { get; private set; }
@@ -17,17 +23,14 @@ public class AbilitySystem : MonoBehaviour
     public bool IsUsingSkill { get; private set; }
     public bool IsKnockback { get; private set; }
     public bool IsStun { get; private set; }
-    public bool IsDead { get; private set; }
+    public bool IsDeath { get; private set; }
     public bool IsSwapping { get; private set; }
     public bool IsInvincible { get; private set; }
-
-
-    private PlayerStateMachine sm;
-    public InputSystem Input { get; private set; }
 
     public void Initialize(PlayerAttribute stats, PlayerStateMachine sm, InputSystem inputSystem)
     {
         Attr = stats;
+        Attr.Resource.OnDie += ApplyDeath;
         this.sm = sm;
         Input = inputSystem;
 
@@ -72,7 +75,7 @@ public class AbilitySystem : MonoBehaviour
 
     private void TryJump()
     {
-        if (IsStun || IsKnockback || IsDead) return;  // 스턴, 넉백, 죽음 등
+        if (IsStun || IsKnockback || IsDeath) return;  // 스턴, 넉백, 죽음 등
         sm.ChangeState(sm.JumpState);
     }
 
@@ -165,6 +168,15 @@ public class AbilitySystem : MonoBehaviour
         sm.ChangeState(sm.StunState);
     }
     public void EndStun() => IsStun = false;
+    public void ApplyDeath()
+    {
+        IsDeath = true;
+        sm.ChangeState(sm.DeathState);
+    }
+    public void EndDeath()
+    {
+        OnDeath?.Invoke();
+    }
 
     // 상태 초기화용
     public void ResetStateFlags()
@@ -180,7 +192,7 @@ public class AbilitySystem : MonoBehaviour
     private bool BlockInput()
     {
         // 입력을 막는 모든 조건
-        return IsStun || IsKnockback || IsDead || IsJumping || IsDodging || IsSwapping;
+        return IsStun || IsKnockback || IsDeath || IsJumping || IsDodging || IsSwapping;
     }
 
     public void StartDodge() { IsDodging = true; IsInvincible = true; }
