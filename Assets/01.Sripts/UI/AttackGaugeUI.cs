@@ -77,7 +77,6 @@ public class AttackGaugeUI : UIBase
                 attackGaugeCanvasGroup.DOFade(0f, 1f);
                 break;
         }
-        
     }
 
     // 게이지핸들 로드 함수 (어드레서블 로드 및 List 관리 방식)
