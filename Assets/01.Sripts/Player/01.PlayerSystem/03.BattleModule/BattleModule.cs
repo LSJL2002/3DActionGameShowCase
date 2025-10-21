@@ -35,6 +35,8 @@ public abstract class BattleModule : IBattleModule
 {
     protected PlayerStateMachine sm;
     protected ComboHandler comboHandler;
+    protected InputSystem input;
+
     public ComboHandler ComboHandler => comboHandler; // 외부 참조용
 
     public event Action OnAttackEnd;
@@ -57,4 +59,15 @@ public abstract class BattleModule : IBattleModule
     // === 기타 ===
     public virtual void OnEnemyHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f) { }
     public virtual void ResetCombo() => comboHandler = null;
+
+    // === 입력 ===
+    public virtual void Initialize(InputSystem inputSystem)
+    {
+        input = inputSystem;
+    }
+
+    public virtual void Dispose()
+    {
+        // 구독 해제용
+    }
 }

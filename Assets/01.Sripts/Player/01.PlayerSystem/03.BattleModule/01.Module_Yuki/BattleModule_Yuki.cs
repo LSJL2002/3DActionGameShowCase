@@ -32,13 +32,30 @@ public class BattleModule_Yuki : BattleModule
         };
     }
 
+    // AbilitySystem 초기화 후 BattleModule도 초기화할 때 호출
+    public override void Initialize(InputSystem input)
+    {
+        base.Initialize(input);
+        // Attack Hold 입력 구독
+        input.HoldSystem.OnHoldTriggered += OnAttackHoldTriggered;
+    }
 
-    // ================== 기본 공격 입력 =================
+    public override void Dispose()
+    {
+        input.HoldSystem.OnHoldTriggered -= OnAttackHoldTriggered;
+    }
+
+    private void OnAttackHoldTriggered(string actionName)
+    {
+        if (actionName == "Attack")
+            awakenSub.TryEnterAwakenedMode().Forget();
+    }
+
+    // ================== 기본 공격 =================
     public override void OnAttack()
     {
         comboSub.SetAwakened(awakenSub.IsAwakened);
         comboSub.OnAttack();
-        awakenSub.CheckAwakenHoldStart();
     }
 
     public override void OnAttackCanceled()
@@ -47,12 +64,12 @@ public class BattleModule_Yuki : BattleModule
         awakenSub.OnAttackCanceled();
     }
 
-    // === 스킬 ===
+    // ================== 스킬 =================
     public override void OnSkill() => skillSub.OnSkill();
     public override void OnSkillCanceled() => skillSub.OnSkillCanceled();
 
 
-    // === 업데이트 ===
+    // ================== 업데이트 =================
     public override void OnUpdate()
     {
         comboSub.OnUpdate();
@@ -61,7 +78,7 @@ public class BattleModule_Yuki : BattleModule
     public override void OnSkillUpdate() => skillSub.OnSkillUpdate();
 
 
-    // === 기타 ===
+    // ================== 기타 =================
     public override void OnEnemyHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
     {
         comboSub.OnEnemyHit(target);

@@ -133,7 +133,6 @@ public class PlayerCharacter : MonoBehaviour
     private void OnMenuToggle()
     {
         isPaused = !isPaused;
-        GameManager.Instance.PauseGame(isPaused);
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isPaused;
         _camera.Volume_Blur.enabled = isPaused;
