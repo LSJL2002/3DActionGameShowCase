@@ -47,13 +47,11 @@ public class BattleModule_Yuki : BattleModule
 
     private void OnAttackHoldTriggered(string actionName)
     {
-        if (actionName != "Attack") return;
-
-        // → Yuki 각성 Hold 시작 로직 호출
-        awakenSub.CheckAwakenHoldStart();
+        if (actionName == "Attack")
+            awakenSub.TryEnterAwakenedMode().Forget();
     }
 
-    // ================== 기본 공격 입력 =================
+    // ================== 기본 공격 =================
     public override void OnAttack()
     {
         comboSub.SetAwakened(awakenSub.IsAwakened);
@@ -66,12 +64,12 @@ public class BattleModule_Yuki : BattleModule
         awakenSub.OnAttackCanceled();
     }
 
-    // === 스킬 ===
+    // ================== 스킬 =================
     public override void OnSkill() => skillSub.OnSkill();
     public override void OnSkillCanceled() => skillSub.OnSkillCanceled();
 
 
-    // === 업데이트 ===
+    // ================== 업데이트 =================
     public override void OnUpdate()
     {
         comboSub.OnUpdate();
@@ -80,7 +78,7 @@ public class BattleModule_Yuki : BattleModule
     public override void OnSkillUpdate() => skillSub.OnSkillUpdate();
 
 
-    // === 기타 ===
+    // ================== 기타 =================
     public override void OnEnemyHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
     {
         comboSub.OnEnemyHit(target);
