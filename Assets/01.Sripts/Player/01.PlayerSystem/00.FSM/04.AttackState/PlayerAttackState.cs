@@ -27,6 +27,7 @@ public class PlayerAttackState : PlayerBaseState
 
         module.OnAttackEnd -= HandleAttackEnd;
         module.OnAttackCanceled();
+        module.ResetCombo();
     }
 
     public override void LogicUpdate()

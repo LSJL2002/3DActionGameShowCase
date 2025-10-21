@@ -55,9 +55,12 @@ public class AwakenSubModule_Yuki
         isAwakened = true;
 
         // 연출 시작
-        sm.Player.Animator.CrossFade("Awaken", 0.1f);
+        var awakenLayerIndex = sm.Player.Animator.GetLayerIndex("Overall/Toggle_SpecialLayer");
+        sm.Player.Animator.SetLayerWeight(awakenLayerIndex, 1f);
+        sm.Player.Animator.SetTrigger("Action/Toggle_AwakenExit");
+
         sm.Player.skill.SpawnSkill("Awaken", sm.Player.Body.position, sm.Player.Body.rotation);
-        sm.Player.ForceReceiver?.AddForce(-sm.Player.transform.forward * 10f, horizontalOnly: true);
+        sm.Player.ForceReceiver?.AddForce(-sm.Player.transform.forward * 15f, horizontalOnly: true);
         sm.Player.ForceReceiver?.BeginVerticalHold(1f, 1f);
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
@@ -66,7 +69,7 @@ public class AwakenSubModule_Yuki
         sm.Player.skill.SpawnSkill("Awaken2", sm.Player.Body.position, sm.Player.Body.rotation);
         sm.Player.ForceReceiver?.EndVerticalHold();
 
-        sm.Player.Animator.SetTrigger("Base/Toggle_AwakenExit");
+        sm.Player.Animator.SetLayerWeight(awakenLayerIndex, 0f);
         sm.Player._camera?.SetColorGradingEnabled(true);
     }
 

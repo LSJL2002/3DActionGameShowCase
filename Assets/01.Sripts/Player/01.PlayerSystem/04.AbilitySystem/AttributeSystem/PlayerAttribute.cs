@@ -65,8 +65,8 @@ public class PlayerAttribute
 
         // 버퍼
         var skill = info.SkillData.SkillInfoDatas[0];
-        SkillBuffer = new BufferModule(1, skill.Cooldown);
-        EvadeBuffer = new BufferModule(data.DodgeCount, data.DodgeCooldown);
+        SkillBuffer = new BufferModule(1, skill.Cooldown, startValue: 0);
+        EvadeBuffer = new BufferModule(data.DodgeCount, data.DodgeCooldown, startValue: data.DodgeCount);
         hub.Connect(SkillBuffer, true);
         hub.Connect(EvadeBuffer, false);
 

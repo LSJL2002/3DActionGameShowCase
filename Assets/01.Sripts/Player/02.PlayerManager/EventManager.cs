@@ -11,9 +11,9 @@ public class EventManager : MonoBehaviour
     private Transform playerTransform;
 
     [Header("타겟 뒤 이동 설정")]
-    public float sideOffset = 1.5f;
-    public float behindOffset = 3f;
-    public float moveDuration = 0.25f;
+    public float sideOffset = 1f;
+    public float behindOffset = 0.5f;
+    public float moveDuration = 0.5f;
     public int pathPoints = 5;
 
 
@@ -24,6 +24,7 @@ public class EventManager : MonoBehaviour
         force = forceReceiver;
     }
 
+    // ======================== Yuki ==========================
     // ==================== 타겟 뒤 이동 =====================
     public void MoveBehindTarget(Transform target)
     {
@@ -121,6 +122,6 @@ public class EventManager : MonoBehaviour
                        player.transform.right * input.x).normalized;
         }
 
-        player.ForceReceiver?.AddForce(moveDir * 25f, horizontalOnly: true);
+        player.ForceReceiver?.AddForce(moveDir * 20f, horizontalOnly: true);
     }
 }

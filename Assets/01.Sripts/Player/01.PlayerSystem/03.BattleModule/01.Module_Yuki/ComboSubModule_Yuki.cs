@@ -29,6 +29,8 @@ public class ComboSubModule_Yuki
         if (isAwakened == value) return;
         isAwakened = value;
         var list = isAwakened ? awakenedAttacks : normalAttacks;
+
+        // 새 ComboHandler 생성
         ComboHandler = new ComboHandler(list, sm.Player.Animator, sm.Player.Attack);
 
         ComboHandler.OnComboFinished += HandleComboEnd; // 새 핸들러에 이벤트 재연결
