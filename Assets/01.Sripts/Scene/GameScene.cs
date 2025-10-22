@@ -18,14 +18,14 @@ public class GameScene : SceneBase
     protected async override void Start()
     {
         base.Start();
-        LoadingManager.Instance.SetLoadingPanel(true); // 로딩 UI 켜기
+        await UIManager.Instance.Show<LoadingUI>(); // 로딩 UI 켜기
         await MapManager.Instance.LoadMap();
         await Task.Yield();
 
         //await MapManager.Instance.LoadAscync("Character");
         //await Task.Yield();
         //await MapManager.Instance.LoadAscync("PlayerCamera");
-        LoadingManager.Instance.SetLoadingPanel(false); // 로딩 UI 끄기
+        UIManager.Instance.Hide<LoadingUI>(); // 로딩 UI 끄기
         OnGameSceneStart(); // 게임 씬 시작
     }
 
