@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9151461527403532447}
   - component: {fileID: 7940108837697969775}
+  - component: {fileID: 3557144313339246921}
   m_Layer: 5
   m_Name: Gauge_Container2
   m_TagString: Untagged
@@ -60,6 +61,18 @@ MonoBehaviour:
   m_Spacing: {x: 5, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!225 &3557144313339246921
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585117976646369920}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8649792106320968471
 GameObject:
   m_ObjectHideFlags: 0
@@ -70,6 +83,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3668373656438025908}
   - component: {fileID: 4476809800029221787}
+  - component: {fileID: 7528472843413500486}
   m_Layer: 5
   m_Name: Gauge_Container3
   m_TagString: Untagged
@@ -120,6 +134,18 @@ MonoBehaviour:
   m_Spacing: {x: 5, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!225 &7528472843413500486
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8649792106320968471}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &9009852231516090782
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,6 +156,7 @@ GameObject:
   m_Component:
   - component: {fileID: 741384903763731669}
   - component: {fileID: 6950564140612225747}
+  - component: {fileID: 6413098312648783766}
   m_Layer: 5
   m_Name: Gauge_Container1
   m_TagString: Untagged
@@ -180,6 +207,18 @@ MonoBehaviour:
   m_Spacing: {x: 5, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!225 &6413098312648783766
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9009852231516090782}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &9031700828551998716
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,12 +287,15 @@ MonoBehaviour:
   uiType: 0
   awakenUIElements:
   - gaugeContainer: {fileID: 9009852231516090782}
+    canvasGroup: {fileID: 6413098312648783766}
     fillGauges: []
     characterType: 0
   - gaugeContainer: {fileID: 2585117976646369920}
+    canvasGroup: {fileID: 3557144313339246921}
     fillGauges: []
     characterType: 1
   - gaugeContainer: {fileID: 8649792106320968471}
+    canvasGroup: {fileID: 7528472843413500486}
     fillGauges: []
     characterType: 2
   awakenGaugeCanvasGroup: {fileID: 2408677543825045273}

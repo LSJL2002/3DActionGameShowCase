@@ -9,6 +9,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class AwakenUIElement
 {
     public GameObject gaugeContainer;
+    public CanvasGroup canvasGroup;
     public List<GaugeComponent> fillGauges = new List<GaugeComponent>();
     public CharacterType characterType;
 }
@@ -39,12 +40,12 @@ public class AwakenUI : UIBase
     {
         base.OnEnable();
 
-        PlayerCharacter activeCharacter = PlayerManager.Instance.ActiveCharacter;
-        UpdateGaugeUI(activeCharacter);
-
         // 이벤트 구독 / 해제
         PlayerManager.Instance.OnActiveCharacterChanged -= UpdateGaugeUI;
         PlayerManager.Instance.OnActiveCharacterChanged += UpdateGaugeUI;
+
+        PlayerCharacter activeCharacter = PlayerManager.Instance.ActiveCharacter;
+        UpdateGaugeUI(activeCharacter);
 
         InstanceFillGauge(); // 게이지 종류별로 FillGauge 인스턴스 (gaugeCount만큼)
 
@@ -59,6 +60,12 @@ public class AwakenUI : UIBase
     public void UpdateGaugeUI(PlayerCharacter playerCharacter)
     {
         playerIndex = (int)playerCharacter.CharacterType; // 현재 플레이어 번호 갱신
+
+        for (int i = 0; i < awakenUIElements.Length; i++)
+        {
+            if (playerIndex == i) awakenUIElements[i].canvasGroup.alpha = 1f;
+            else awakenUIElements[i].canvasGroup.alpha = 0f;
+        }
 
         ResetEventAwakenGauge();
     }
@@ -196,7 +203,7 @@ public class AwakenUI : UIBase
         // 새로운 시퀀스 생성
         Sequence sequence = DOTween.Sequence();
 
-        // 인덱스를 뒤에서부터 순회하며 시퀀스에 작업을 추가합니다.
+        // 인덱스를 뒤에서부터 순회하며 시퀀스에 작업을 추가
         for (int i = awakenUIElements[playerIndex].fillGauges.Count - 1; i >= 0; i--)
         {
             GaugeComponent gauge = awakenUIElements[playerIndex].fillGauges[i];
@@ -225,23 +232,6 @@ public class AwakenUI : UIBase
         // 시퀀스 시작 (자동 재생)
         return sequence;
     }
-
-    // 캐릭터 변경시 UI 숨기고 켜는 함수 (수정 예정)
-    //public void OnActiveGaugeUI(PlayerCharacter playerCharacter)
-    //{
-    //    switch (playerCharacter.CharacterType)
-    //    {
-    //        case CharacterType.Yuki:
-    //            awakenGaugeCanvasGroup.DOFade(1f, 1f);
-    //            break;
-    //        case CharacterType.Aoi:
-    //            awakenGaugeCanvasGroup.DOFade(0f, 1f);
-    //            break;
-    //        case CharacterType.Mika:
-    //            awakenGaugeCanvasGroup.DOFade(0f, 1f);
-    //            break;
-    //    }
-    //}
 
     #region 해제 파트
     protected override void OnDestroy()
