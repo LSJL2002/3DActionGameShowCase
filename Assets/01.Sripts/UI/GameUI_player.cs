@@ -30,7 +30,6 @@ public partial class GameUI : UIBase
     private int playerIndex;
     private Sequence playerDamageSequence;
     private Sequence playerHealSequence;
-    private CharacterType currentCharacterType = CharacterType.Yuki;
 
     public void OnEnablePlayer()
     {
@@ -94,10 +93,8 @@ public partial class GameUI : UIBase
     public void UpdatePlayerUI(PlayerCharacter playerCharacter)
     {
         // 현재 캐릭터의 정보를 가져오는 곳 재정의
-        currentCharacterType = playerCharacter.CharacterType;
         playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
-
-        playerIndex = (int)currentCharacterType;
+        playerIndex = (int)playerCharacter.CharacterType;
 
         if (playerIndex >= 0 && playerIndex < playerUIElements.Length)
         {

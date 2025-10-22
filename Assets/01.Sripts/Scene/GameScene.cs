@@ -18,14 +18,14 @@ public class GameScene : SceneBase
     protected async override void Start()
     {
         base.Start();
-        LoadingManager.Instance.SetLoadingPanel(true); // 로딩 UI 켜기
+        await UIManager.Instance.Show<LoadingUI>(); // 로딩 UI 켜기
         await MapManager.Instance.LoadMap();
         await Task.Yield();
 
         //await MapManager.Instance.LoadAscync("Character");
         //await Task.Yield();
         //await MapManager.Instance.LoadAscync("PlayerCamera");
-        LoadingManager.Instance.SetLoadingPanel(false); // 로딩 UI 끄기
+        UIManager.Instance.Hide<LoadingUI>(); // 로딩 UI 끄기
         OnGameSceneStart(); // 게임 씬 시작
     }
 
@@ -39,7 +39,7 @@ public class GameScene : SceneBase
         MapManager.Instance.ResetZones();
         BattleManager.Instance.ResetBattleState();
 
-        if (GameManager.Instance.gameMode == eGameMode.LoadGame)
+        if (SaveManager.Instance.gameMode == eGameMode.LoadGame)
         {
             LoadInventoryFromSave();
             Debug.Log("[GameScene] NewGame 모드 - 기존 세이브 로드");
@@ -52,7 +52,7 @@ public class GameScene : SceneBase
 
         // 각 UI 로드
         await UIManager.Instance.Show<GameUI>();
-        await UIManager.Instance.Show<AttackGaugeUI>();
+        await UIManager.Instance.Show<AwakenUI>();
         await UIManager.Instance.Show<MiniMapUI>();
         await UIManager.Instance.Show<TutorialUI>();
     }

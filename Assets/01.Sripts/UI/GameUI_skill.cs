@@ -26,6 +26,25 @@ public partial class GameUI : UIBase
         // 이벤트 구독 / 해제
         PlayerManager.Instance.OnActiveCharacterChanged -= UpdateSkillUI;
         PlayerManager.Instance.OnActiveCharacterChanged += UpdateSkillUI;
+
+        float evadeCooltimeDuration = PlayerManager.Instance.Attr.EvadeBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
+        float skillCooltimeDuration = PlayerManager.Instance.Attr.SkillBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
+
+        // 회피 쿨타임 시퀀스 초기 생성
+        evadeCoolTimeSequence = DOTween.Sequence();
+        evadeCoolTimeSequence.Append(evadeImage.DOFillAmount(0f, evadeCooltimeDuration));
+        evadeCoolTimeSequence.AppendCallback(() => { evadeImage.fillAmount = 1f; });
+        evadeCoolTimeSequence.SetAutoKill(false);
+
+        // 스킬 쿨타임 시퀀스 초기 생성
+        skillCoolTimeSequence = DOTween.Sequence();
+        skillCoolTimeSequence.Append(skill1Image.DOFillAmount(0f, skillCooltimeDuration));
+        skillCoolTimeSequence.AppendCallback(() => { skill1Image.fillAmount = 1f; });
+        skillCoolTimeSequence.SetAutoKill(false);
+
+        // 최초엔 정지
+        evadeCoolTimeSequence.Pause();
+        skillCoolTimeSequence.Pause();
     }
 
     public void OnDisableSkill()
@@ -50,8 +69,10 @@ public partial class GameUI : UIBase
     // SkillUI 업데이트시 호출 (최초, 플레이어 교체시)
     public void UpdateSkillUI(PlayerCharacter playerCharacter)
     {
-        evadeCoolTimeSequence.Complete();
-        skillCoolTimeSequence.Complete();
+        if (evadeCoolTimeSequence.IsActive())
+            evadeCoolTimeSequence.Rewind(); // 처음으로 되감기 + Pause
+        if (skillCoolTimeSequence.IsActive())
+            skillCoolTimeSequence.Rewind(); // 처음으로 되감기 + Pause
 
         evadeImage.fillAmount = 1;
         evadeText.text = PlayerManager.Instance.Attr.EvadeBuffer.BufferCurrent.ToString();
@@ -65,42 +86,26 @@ public partial class GameUI : UIBase
     // 회피 쿨타임
     public void OnCoolTimeEvade()
     {
-        float cooltimeDuration = PlayerManager.Instance.Attr.EvadeBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
-        evadeText.text = PlayerManager.Instance.Attr.EvadeBuffer.BufferCurrent.ToString(); // 스택을 업데이트
+        BufferModule evadeBuffer = PlayerManager.Instance.Attr.EvadeBuffer;
+        evadeText.text = evadeBuffer.BufferCurrent.ToString(); // 스택을 업데이트
 
-        if (PlayerManager.Instance.Attr.EvadeBuffer.BufferCurrent == PlayerManager.Instance.Attr.EvadeBuffer.BufferMax)
+        if (evadeBuffer.BufferCurrent == evadeBuffer.BufferMax || evadeCoolTimeSequence.IsPlaying())
             return;
 
         evadeImage.fillAmount = 1f; // 시작 전 1f로 초기화
-
-        evadeCoolTimeSequence = DOTween.Sequence(); // 새로운 시퀀스 생성
-        evadeCoolTimeSequence.Append(evadeImage.DOFillAmount(0f, cooltimeDuration)); // 시퀀스에 트윈 추가 (쿨타임 이미지 시각효과)
-        evadeCoolTimeSequence.AppendCallback(() => { evadeImage.fillAmount = 1f; });
-
-        // Sequence 재생 및 Auto파괴옵션세팅 호출
-        evadeCoolTimeSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
-                    .OnKill(() => evadeCoolTimeSequence = null) // Sequence가 Kill 될 때 참조 해제
-                    .Play(); // Sequence 시작
+        evadeCoolTimeSequence.Restart();
     }
 
-    // 스킬1 쿨타임
+    // 스킬 쿨타임
     public void OnCoolTimeSkill()
     {
-        float cooltimeDuration = PlayerManager.Instance.Attr.SkillBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
-        skill1Text.text = PlayerManager.Instance.Attr.SkillBuffer.BufferCurrent.ToString(); // 스택을 업데이트
+        BufferModule skillBuffer = PlayerManager.Instance.Attr.EvadeBuffer;
+        skill1Text.text = skillBuffer.BufferCurrent.ToString(); // 스택을 업데이트
 
-        if (PlayerManager.Instance.Attr.SkillBuffer.BufferCurrent == PlayerManager.Instance.Attr.SkillBuffer.BufferMax)
+        if (skillBuffer.BufferCurrent == skillBuffer.BufferMax || skillCoolTimeSequence.IsPlaying())
             return;
 
         skill1Image.fillAmount = 1f; // 시작 전 1f로 초기화
-
-        skillCoolTimeSequence = DOTween.Sequence(); // 새로운 시퀀스 생성
-        skillCoolTimeSequence.Append(skill1Image.DOFillAmount(0f, cooltimeDuration)); // 시퀀스에 트윈 추가 (쿨타임 이미지 시각효과)
-        skillCoolTimeSequence.AppendCallback(() => { skill1Image.fillAmount = 1f; });
-
-        // Sequence 재생 및 Auto파괴옵션세팅 호출
-        skillCoolTimeSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정
-                    .OnKill(() => skillCoolTimeSequence = null) // Sequence가 Kill 될 때 참조 해제
-                    .Play(); // Sequence 시작
+        skillCoolTimeSequence.Restart();
     }
 }

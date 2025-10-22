@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 public class TimeLine_GameOver : TimeLineBase
@@ -12,11 +9,6 @@ public class TimeLine_GameOver : TimeLineBase
 
         AudioManager.Instance.PlayBGM("3");
 
-        // 타임라인의 위치를 현재 플레이어 캐릭터 위치로 이동
-        //float height = PlayerManager.Instance.Stats.OnDie += ;
-        //Vector3 playerPosition = PlayerManager.Instance.transform.position;
-        //Vector3 newposition = new Vector3(playerPosition.x, playerPosition.y + height, playerPosition.z);
-        
         this.transform.position = BattleManager.Instance.currentZone.transform.position + Vector3.up*2;
 
         playableDirector.Play();

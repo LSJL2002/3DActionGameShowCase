@@ -7,9 +7,9 @@ public class HomeScene : SceneBase
     protected async override void Start()
     {
         base.Start();
-        LoadingManager.Instance.SetLoadingPanel(true); // 로딩 UI 켜기
+        await UIManager.Instance.Show<LoadingUI>(); // 로딩 UI 켜기
         GameObject homeObject = await LoadAddress("HomeObject"); // 홈 씬 오브젝트 로드
-        LoadingManager.Instance.SetLoadingPanel(false); // 로딩 UI 끄기
+        UIManager.Instance.Hide<LoadingUI>(); // 로딩 UI 끄기
         OnHomeSceneStart(); // 홈 씬 시작
     }
 

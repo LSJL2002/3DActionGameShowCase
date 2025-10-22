@@ -33,6 +33,7 @@ public class MonsterStateMachine : StateMachine
 
     //SmileMachine_UseMissile 스킬
     public SmileMachine_Missile SmileMachine_Missile { get; private set; }
+    public SmileMachine_Gernade SmileMachine_Gernade { get; private set; }
 
     private MonsterAIEvents aiEvents;
     public bool isAttacking = false;
@@ -96,6 +97,8 @@ public class MonsterStateMachine : StateMachine
             SmileToiletChargeState = new SmileToiletChargeState(this, chargeSkill);
             var missileSkill = monster.Stats.GetSkill("SmileMachine_Missile");
             SmileMachine_Missile = new SmileMachine_Missile(this, missileSkill);
+            var gernadeSkill = monster.Stats.GetSkill("SmileMachine_Grenade");
+            SmileMachine_Gernade = new SmileMachine_Gernade(this, gernadeSkill);
         }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();
