@@ -4,7 +4,7 @@ public class ExplosionDamage : MonoBehaviour
 {
     private int damage;
     private Transform owner;
-    private float lifeTime = 2f;
+    private float lifeTime = 4f;
     private float activeTime = 0.3f;
 
     private Collider triggerCollider;
