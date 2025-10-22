@@ -18,6 +18,26 @@ public class BattleModule_Aoi : BattleModule
         skillSub.OnSkillEnd += RaiseSkillEnd;
     }
 
+    // AbilitySystem 초기화 후 BattleModule도 초기화할 때 호출
+    public override void Initialize(InputSystem input)
+    {
+        base.Initialize(input);
+        // Attack Hold 입력 구독
+        //input.HoldSystem.OnHoldTriggered += OnAttackHoldTriggered;
+    }
+
+    public override void Dispose()
+    {
+        //input.HoldSystem.OnHoldTriggered -= OnAttackHoldTriggered;
+    }
+
+    private void OnAttackHoldTriggered(string actionName)
+    {
+        if (actionName == "Attack") { }
+            //awakenSub.TryEnterAwakenedMode().Forget();
+    }
+
+
     // ================== 기본 공격 =================
     public override void OnAttack() => comboSub.OnAttack();
     public override void OnAttackCanceled() => comboSub.OnAttackCanceled();

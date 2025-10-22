@@ -4,8 +4,31 @@ using UnityEngine;
 [System.Serializable] // 직렬화하여 파일에 저장하거나 네트워크를통해 전송가능
 public class SaveData
 {
+    public int round = 0;
     public int LastClearStage = 0;
-    public List<int> Inventory = new List<int>();
+    public List<InventorySaveData> ConsumableInventory = new();  // 아이템 ID + 수량
+    public List<int> SkillInventory = new();                     // ID만
+    public List<int> CoreInventory = new();                      // ID만
+}
+
+[System.Serializable]
+public class InventorySaveData
+{
+    public int id;
+    public int count;
+
+    public InventorySaveData(int id, int count)
+    {
+        this.id = id;
+        this.count = count;
+    }
+}
+
+public enum eGameMode
+{
+    None,
+    NewGame,
+    LoadGame
 }
 
 public class SaveManager : Singleton<SaveManager>
@@ -15,6 +38,7 @@ public class SaveManager : Singleton<SaveManager>
         Volume,
         BuildVersion,
     }
+    public eGameMode gameMode; //게임 모드를 저장할 변수
 
     public SaveData playerData = new();
 
@@ -47,6 +71,7 @@ public class SaveManager : Singleton<SaveManager>
     public void SaveData()
     {
         EnsurePath();
+        GetItemDataInList();
         string data = JsonUtility.ToJson(playerData);
         File.WriteAllText(path, EncryptAndDecrypt(data));
         Debug.Log($"{data}를 저장했습니다");
@@ -54,7 +79,7 @@ public class SaveManager : Singleton<SaveManager>
 
     public bool LoadData()
     {
-        if (GameManager.Instance.gameMode != eGameMode.LoadGame) return false;
+        if (SaveManager.Instance.gameMode != eGameMode.LoadGame) return false;
         EnsurePath();
 
         if (!File.Exists(path))
@@ -83,32 +108,51 @@ public class SaveManager : Singleton<SaveManager>
 
     public void GetItemDataInList()
     {
-        IReadOnlyList<InventoryItem> consumableitems = InventoryManager.Instance.GetConsumableItems();
-        IReadOnlyList<InventoryItem> skillItems = InventoryManager.Instance.GetConsumableItems();
-        IReadOnlyList<InventoryItem> coreItems = InventoryManager.Instance.GetConsumableItems();
+        playerData.ConsumableInventory.Clear();
+        playerData.SkillInventory.Clear();
+        playerData.CoreInventory.Clear();
+        IReadOnlyList<InventoryItem> consumableItems = InventoryManager.Instance.GetConsumableItems();
+        IReadOnlyList<InventoryItem> skillItems = InventoryManager.Instance.GetSkillItems();
+        IReadOnlyList<InventoryItem> coreItems = InventoryManager.Instance.GetCoreItems();
 
         // 리스트를 순회하며 아이템 데이터 안의 ID 값을 저장 (소비형)
-        foreach (InventoryItem item in consumableitems)
+        foreach (InventoryItem item in consumableItems)
         {
-            AddItemData(item.data.id);
-            AddItemData(item.stackCount);
+            playerData.ConsumableInventory.Add(new InventorySaveData(item.data.id, item.stackCount));
         }
 
         // 리스트를 순회하며 아이템 데이터 안의 ID 값을 저장 (스킬카드)
         foreach (InventoryItem item in skillItems)
         {
-            AddItemData(item.data.id);
+            playerData.SkillInventory.Add(item.data.id);
         }
 
         // 리스트를 순회하며 아이템 데이터 안의 ID 값을 저장 (코어)
         foreach (InventoryItem item in coreItems)
         {
-            AddItemData(item.data.id);
+            playerData.CoreInventory.Add(item.data.id);
         }
     }
 
-    public void AddStageData(int stageId) => playerData.LastClearStage = stageId;
-    public void AddItemData(int itemId) => playerData.Inventory.Add(itemId);
+
+    //public void ResetData()
+    //{
+    //    playerData = new SaveData(); // 완전 새 데이터로 교체
+    //    SaveData();                  // 즉시 저장 (새로 빈 파일 생성)
+    //    Debug.Log("[SaveManager] 세이브 데이터 초기화 완료 (NewGame)");
+    //}
+
+    public void DeleteSaveFile()
+    {
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log("[SaveManager] Save 파일 삭제 완료");
+        }
+        //ResetData(); // 새 데이터로 다시 저장 (빈 파일 생성)
+    }
+
+    public void SetStageData(int stageId) => playerData.LastClearStage = stageId;
 
     #region PlayerPrefs
     // PlayerPrefs에 설정 저장하는 함수

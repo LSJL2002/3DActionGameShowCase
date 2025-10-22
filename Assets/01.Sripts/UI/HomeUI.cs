@@ -44,13 +44,14 @@ public class HomeUI : UIBase
         {
             case "NewGame":
                 // 새 게임 시작
-                GameManager.Instance.gameMode = eGameMode.NewGame;
+                SaveManager.Instance.gameMode = eGameMode.NewGame;
+                SaveManager.Instance.DeleteSaveFile();
                 SceneLoadManager.Instance.ChangeScene(2, null, LoadSceneMode.Single);
                 break;
 
             case "LoadStart":
                 // 기존 게임을 로드
-                GameManager.Instance.gameMode = eGameMode.LoadGame;
+                SaveManager.Instance.gameMode = eGameMode.LoadGame;
                 SceneLoadManager.Instance.ChangeScene(2, null, LoadSceneMode.Single);
                 break;
 

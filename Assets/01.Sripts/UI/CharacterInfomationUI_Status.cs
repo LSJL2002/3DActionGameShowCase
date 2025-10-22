@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -6,8 +5,6 @@ using UnityEngine;
 public partial class CharacterInfomationUI : UIBase
 {
     private PlayerAttribute playerStats; // 플레이어의 stats에 접근가능한 변수
-    private Action HealthChanged;
-    private Action<StatType> StatChanged;
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI healthText;
@@ -20,18 +17,40 @@ public partial class CharacterInfomationUI : UIBase
     public void AwakeStatus()
     {
         playerStats = PlayerManager.Instance.Attr;
-        HealthChanged = () => { SetPlayerStat(StatType.MaxHealth); };
-        StatChanged = SetPlayerStat;
-        playerStats.Resource.OnHealthChanged += HealthChanged;
-        playerStats.OnStatChanged += StatChanged;
-        SetPlayerStat(StatType.MaxHealth);
+
+        // 구독해제
+        PlayerManager.Instance.Attr.Resource.OnHealthChanged -= SetPlayerStat;
+        PlayerManager.Instance.OnActiveCharacterChanged -= OnActiveCharacterChanged;
+        EventsManager.Instance.StopListening(GameEvent.OnStatChanged, SetPlayerStat);
+        EventsManager.Instance.StopListening(GameEvent.OnUsedItem, SetPlayerStat);
+
+        // 구독
+        PlayerManager.Instance.Attr.Resource.OnHealthChanged += SetPlayerStat;
+        PlayerManager.Instance.OnActiveCharacterChanged += OnActiveCharacterChanged;
+        EventsManager.Instance.StartListening(GameEvent.OnStatChanged, SetPlayerStat);
+        EventsManager.Instance.StartListening(GameEvent.OnUsedItem, SetPlayerStat);
+
+        SetPlayerStat();
+    }
+
+    // 캐릭터 변경에 대응하는 함수
+    private void OnActiveCharacterChanged(PlayerCharacter newCharacter)
+    {
+        // 이전 캐릭터의 스탯 이벤트 구독 해제
+        if (playerStats != null)
+            EventsManager.Instance.StopListening(GameEvent.OnStatChanged, SetPlayerStat);
+
+        // 새로운 캐릭터의 스탯 이벤트 구독
+        if (playerStats != null)
+            EventsManager.Instance.StartListening(GameEvent.OnStatChanged, SetPlayerStat);
+
+        // UI 업데이트
+        SetPlayerStat();
     }
 
     // 플레이어 스탯 정보 초기화 함수
-    public void SetPlayerStat(StatType statType)
+    public void SetPlayerStat()
     {
-        playerStats = PlayerManager.Instance.Attr;
-
         healthText.text = $"체력 : {playerStats.Resource.CurrentHealth} / {playerStats.Resource.MaxHealth.Value.ToString()}";
         energyText.text = $"마력 : {playerStats.Resource.CurrentEnergy} / {playerStats.Resource.MaxEnergy.Value.ToString()}";
 

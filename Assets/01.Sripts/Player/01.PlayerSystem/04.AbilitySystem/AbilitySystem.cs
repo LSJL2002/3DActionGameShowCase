@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
@@ -6,27 +7,30 @@ public class AbilitySystem : MonoBehaviour
 {
     // 다른 오브젝트나 테스트 환경에서도 단독 실행 가능
     // 유지보수 시 PlayerCharacter가 너무 커지는 것을 방지
+    private PlayerStateMachine sm;
     public PlayerAttribute Attr { get; private set; }
-    public ResourceModule Resources => Attr.Resource;
+    public InputSystem Input { get; private set; }
+
+    // ========== Actions ================
+    public event Action OnDeath;
 
     // ========== 상태 플래그 ==========
+    public bool IsWalking { get; private set; }
+    public bool IsRunning { get; private set; }
     public bool IsDodging { get; private set; }
     public bool IsJumping { get; private set; }
     public bool IsAttacking { get; private set; }
     public bool IsUsingSkill { get; private set; }
-    public bool IsInvincible { get; private set; }
     public bool IsKnockback { get; private set; }
     public bool IsStun { get; private set; }
-    public bool IsDead { get; private set; }
+    public bool IsDeath { get; private set; }
     public bool IsSwapping { get; private set; }
-
-
-    private PlayerStateMachine sm;
-    public InputSystem Input { get; private set; }
+    public bool IsInvincible { get; private set; }
 
     public void Initialize(PlayerAttribute stats, PlayerStateMachine sm, InputSystem inputSystem)
     {
         Attr = stats;
+        Attr.Resource.OnDie += ApplyDeath;
         this.sm = sm;
         Input = inputSystem;
 
@@ -40,6 +44,8 @@ public class AbilitySystem : MonoBehaviour
         Input.OnSkillCanceled += CancelSkill;
         Input.OnSwapNext += () => TrySwap(true);  // E
         Input.OnSwapPrev += () => TrySwap(false); // Q
+
+        sm.CurrentBattleModule?.Initialize(inputSystem);
     }
 
     private void OnDestroy()
@@ -52,27 +58,28 @@ public class AbilitySystem : MonoBehaviour
         Input.OnJump -= TryJump;
         Input.OnSkillStarted -= TrySkill;
         Input.OnSkillCanceled -= CancelSkill;
-        Input.OnSwapNext -= () => TrySwap(true);
-        Input.OnSwapPrev -= () => TrySwap(false);
+
+        sm.CurrentBattleModule?.Dispose();
     }
 
     // =============== 상태 전환 로직 ===============
     private void TryMove(Vector2 moveInput)
     {
+        Debug.Log(sm.CurrentState);
         if (BlockInput()) return;
         if (IsUsingSkill) return;
         if (IsAttacking) return;
         sm.MovementInput = moveInput;
 
-        if (moveInput.sqrMagnitude > 0.01f)
+        if (moveInput.sqrMagnitude > 0.01f && sm.CurrentState != sm.WalkState)
             sm.ChangeState(sm.WalkState);
-        else
+        else if (moveInput.sqrMagnitude <= 0.01f && sm.CurrentState != sm.IdleState)
             sm.ChangeState(sm.IdleState);
     }
 
     private void TryJump()
     {
-        if (IsStun || IsKnockback || IsDead) return;  // 스턴, 넉백, 죽음 등
+        if (IsStun || IsKnockback || IsDeath) return;  // 스턴, 넉백, 죽음 등
         sm.ChangeState(sm.JumpState);
     }
 
@@ -107,11 +114,12 @@ public class AbilitySystem : MonoBehaviour
     private void TrySkill()
     {
         if (BlockInput()) return;
+        if (IsUsingSkill) return;
         if (IsAttacking) return;
         if (!Attr.SkillBuffer.Use()) return; // 리소스 체크 등
 
         sm.ChangeState(sm.SkillState);
-        sm.CurrentBattleModule?.OnAttack();
+        sm.CurrentBattleModule?.OnSkill();
         sm.UpdateAttackTarget();
     }
 
@@ -120,7 +128,8 @@ public class AbilitySystem : MonoBehaviour
     public void TrySwap(bool next)
     {
         if (BlockInput()) return;
-        if (IsSwapping) return;
+        if (IsAttacking) return;
+        if (IsUsingSkill) return;
 
         IsSwapping = true;
 
@@ -164,6 +173,17 @@ public class AbilitySystem : MonoBehaviour
         sm.ChangeState(sm.StunState);
     }
     public void EndStun() => IsStun = false;
+    public void ApplyDeath()
+    {
+        if (IsDeath) return;
+
+        IsDeath = true;
+        sm.ChangeState(sm.DeathState);
+    }
+    public void EndDeath()
+    {
+        OnDeath?.Invoke();
+    }
 
     // 상태 초기화용
     public void ResetStateFlags()
@@ -179,7 +199,7 @@ public class AbilitySystem : MonoBehaviour
     private bool BlockInput()
     {
         // 입력을 막는 모든 조건
-        return IsStun || IsKnockback || IsDead || IsJumping || IsDodging;
+        return IsStun || IsKnockback || IsDeath || IsJumping || IsDodging || IsSwapping;
     }
 
     public void StartDodge() { IsDodging = true; IsInvincible = true; }

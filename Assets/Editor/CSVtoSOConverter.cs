@@ -165,7 +165,7 @@ public class CSVtoSOConverter : EditorWindow
             return;
         }
 
-        Type soType = Type.GetType(soTypeName);
+        Type soType = GetTypeByName(soTypeName);
         if (soType == null || !typeof(ScriptableObject).IsAssignableFrom(soType))
         {
             Debug.LogError("SO Type not found or not a ScriptableObject: " + soTypeName);
@@ -339,4 +339,28 @@ public class CSVtoSOConverter : EditorWindow
             Debug.LogWarning($"ID {spriteName}에 해당하는 스프라이트를 '{spriteFolderPath}'에서 찾을 수 없습니다.");
         }
     }
+
+    private static Type GetTypeByName(string typeName)
+{
+    // 우선 완전한 이름으로 시도
+    var type = Type.GetType(typeName);
+    if (type != null) return type;
+
+    // 모든 로드된 어셈블리 탐색
+    foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+    {
+        type = asm.GetType(typeName);
+        if (type != null) return type;
+    }
+
+    // Unity6에서는 Assembly-CSharp 이름 붙여야 하는 경우가 많음
+    if (!typeName.Contains(", Assembly-CSharp"))
+    {
+        type = Type.GetType($"{typeName}, Assembly-CSharp");
+        if (type != null) return type;
+    }
+
+    Debug.LogError($"❌ Failed to find type: {typeName}");
+    return null;
+}
 }

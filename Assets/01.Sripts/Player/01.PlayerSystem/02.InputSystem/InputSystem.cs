@@ -7,46 +7,67 @@ using UnityEngine.InputSystem;
 
 // UI, AI, 리플레이 시스템 같은 데서도 가짜 입력 이벤트만 쏴주면 재활용 가능
 // InputSystem만 교체하면 전체 입력 로직 변경 가능 (패드/키보드/모바일 전환 쉬움)
+public interface IInput
+{
+    Vector2 Move { get; }
+    bool AttackHeld { get; }
+    bool DodgePressed { get; }
+}
 public class InputSystem
 {
     private PlayerInputs _playerInputs;
     public PlayerInputs.PlayerActions PlayerActions { get; private set; }
+    public InputHoldSystem HoldSystem { get; private set; }
 
     public event Action OnAttackStarted;
     public event Action OnAttackCanceled;
-    public event Action OnDodge;
-    public event Action OnJump;
     public event Action OnSkillStarted;
     public event Action OnSkillCanceled;
+    public event Action OnDodge;
+    public event Action OnJump;
 
     public event Action<Vector2> OnMove;     // 이동 입력 이벤트
     public event Action<float> OnZoom;       // 줌 입력 이벤트
-    public event Action OnMenuToggle;
-    public event Action OnInventoryToggle;
-    public event Action OnCameraLockOn;
-    public event Action OnSwapNext;
-    public event Action OnSwapPrev;
+    public event Action OnMenuToggle;        // 메뉴 토글 이벤트
+    public event Action OnInventoryToggle;   // 인벤 토글 이벤트
+    public event Action OnCameraLockOn;      // 시점 토글 이벤트
+    public event Action OnSwapNext;          // 캐릭터 스왑 Next
+    public event Action OnSwapPrev;          // 캐릭터 스왑 Prev
     public Vector2 MoveInput { get; private set; }
-
 
     public InputSystem()
     {
         _playerInputs = new PlayerInputs();
         PlayerActions = _playerInputs.Player;
+        HoldSystem = new InputHoldSystem(0.5f);
 
         // ====== 입력 바인딩 ======
-        PlayerActions.Attack.started += ctx => OnAttackStarted?.Invoke();
-        PlayerActions.Attack.canceled += ctx => OnAttackCanceled?.Invoke();
+        PlayerActions.Attack.started += ctx =>
+        {
+            OnAttackStarted?.Invoke();
+            HoldSystem.Pressed("Attack");
+        };
+
+        PlayerActions.Attack.canceled += ctx =>
+        {
+            OnAttackCanceled?.Invoke();
+            HoldSystem.Released("Attack");
+        };
+
+        PlayerActions.HeavyAttack.started += ctx =>
+        {
+            OnSkillStarted?.Invoke();
+            HoldSystem.Pressed("Skill");
+        };
+        PlayerActions.HeavyAttack.canceled += ctx =>
+        {
+            OnSkillCanceled?.Invoke();
+            HoldSystem.Released("Skill");
+        };
+
         PlayerActions.Dodge.started += ctx => OnDodge?.Invoke();
         PlayerActions.Jump.started += ctx => OnJump?.Invoke();
-        PlayerActions.HeavyAttack.started += ctx => OnSkillStarted?.Invoke();
-        PlayerActions.HeavyAttack.canceled += ctx => OnSkillCanceled?.Invoke();
 
-        PlayerActions.Move.performed += ctx =>
-        {
-            MoveInput = ctx.ReadValue<Vector2>();
-            OnMove?.Invoke(MoveInput);
-        };
         PlayerActions.Move.canceled += _ =>
         {
             MoveInput = Vector2.zero;
@@ -67,7 +88,13 @@ public class InputSystem
         PlayerActions.Inventory.started += _ => OnInventoryToggle?.Invoke();
         PlayerActions.Camera.started += _ => OnCameraLockOn?.Invoke();
     }
+    public void Update()
+    {
+        MoveInput = PlayerActions.Move.ReadValue<Vector2>();
+        OnMove?.Invoke(MoveInput);
 
+        HoldSystem.Update();
+    }
     public void Enable() => _playerInputs.Enable();
     public void Disable() => _playerInputs.Disable();
 }

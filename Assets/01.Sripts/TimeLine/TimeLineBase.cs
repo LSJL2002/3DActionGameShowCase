@@ -27,6 +27,7 @@ public class TimeLineBase : MonoBehaviour
 
     protected virtual void OnEnable() 
     {
+        if(mainCamera != null) 
         mainCamera.gameObject.SetActive(false);
         gameUICanvasGroup.alpha = 0f;
         miniMapUICanvasGroup.alpha = 0f;
@@ -46,6 +47,7 @@ public class TimeLineBase : MonoBehaviour
 
     protected virtual void OnDisable() 
     {
+        if(mainCamera != null)
         mainCamera.gameObject.SetActive(true);
         gameUICanvasGroup.alpha = 1f;
         miniMapUICanvasGroup.alpha = 1f;

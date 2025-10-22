@@ -12,7 +12,8 @@ public class MapManager : Singleton<MapManager>
     public BattleZone currentZone;
 
     [SerializeField] private int startingZoneId; //처음 켜줄 Zone 아이디
-    [SerializeField] private int BossZoneId; //마지막 Zone 아이디
+    [SerializeField] private int _bossZoneId = 60000010; //마지막 Zone 아이디
+    public int bossZoneId => _bossZoneId;
 
     [SerializeField] private int round;  // 회차
 
@@ -20,7 +21,7 @@ public class MapManager : Singleton<MapManager>
 
     NavMeshDataInstance navMeshInstance;
 
-    protected override void OnEnable()
+    protected override void Start()
     {
         EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, OpenZone); // 구독해제
         EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, OpenNextZone); // 구독해제
@@ -73,8 +74,9 @@ public class MapManager : Singleton<MapManager>
             tutorialWall = GameObject.Find("TutorialWall");
         }
 
-        if (GameManager.Instance.gameMode != eGameMode.LoadGame)           //불러오기가 아닐때
+        if (SaveManager.Instance.gameMode != eGameMode.LoadGame)           //불러오기가 아닐때
         {
+            round = SaveManager.Instance.playerData.round;
             tutorialWall.SetActive(true);
             ReturnToStartZone();
             UIManager.Instance.tutorialEnabled = true;
@@ -87,14 +89,14 @@ public class MapManager : Singleton<MapManager>
             }
         }
 
-        else if (GameManager.Instance.gameMode == eGameMode.LoadGame)
+        else if (SaveManager.Instance.gameMode == eGameMode.LoadGame)
         {
             
             tutorialWall.SetActive(false);
             int lastClearStage = SaveManager.Instance.playerData.LastClearStage;
 
             
-            if (lastClearStage == BossZoneId)
+            if (lastClearStage == _bossZoneId)
             {
                 ReturnToStartZone();
             }
@@ -134,9 +136,6 @@ public class MapManager : Singleton<MapManager>
         {
             Debug.LogError("시작 스테이지를 찾을 수 없습니다!");
         }
-        SaveManager.Instance.SaveData();
-
-
     }
 
     public void tutorialWallToggle()
@@ -167,10 +166,7 @@ public class MapManager : Singleton<MapManager>
     private void OpenNextZone(BattleZone zone) // 클리어시
     {
         if (zone.moveAbleStage == null || zone.moveAbleStage.Count == 0)
-        {
-            HandleLastStageClear();
             return;
-        }
 
         foreach (var nextId in zone.moveAbleStage)
         {
@@ -192,13 +188,13 @@ public class MapManager : Singleton<MapManager>
 
     }
 
-    private void HandleLastStageClear()
+    public void HandleLastStageClear()
     {
-        round++;
+        SaveManager.Instance.playerData.round++;
         Debug.Log($"마지막 스테이지 클리어! 현재 회차: {round}");
 
         // 필요시 세이브 추가
-        SaveManager.Instance.SaveData();
+        SaveManager.Instance.SaveData();       
 
         // 씬 리셋 or 엔딩씬
         SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);

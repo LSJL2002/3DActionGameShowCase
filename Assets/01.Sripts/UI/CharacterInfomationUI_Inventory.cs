@@ -21,10 +21,10 @@ public partial class CharacterInfomationUI : UIBase
         UpdateUI();
     }
 
-    protected override void OnDisable()
+    public void OnDestroyInventory()
     {
-        base.OnDisable();
-        EventsManager.Instance.StopListening(GameEvent.OnConsumableUIUpdate, UpdateUI);
+        if(EventsManager.Instance != null)
+            EventsManager.Instance.StopListening(GameEvent.OnConsumableUIUpdate, UpdateUI);
     }
 
     private void UpdateUI()

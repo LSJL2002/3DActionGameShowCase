@@ -6,10 +6,9 @@ public class AwakenSubModule_Yuki
 {
     public event Action OnAwakenEnd;
 
-    private PlayerStateMachine sm;
+    private readonly PlayerStateMachine sm;
     private bool isAwakened;
 
-    private const float DecayRate = 10f;
     private const float AwakenThreshold = 50f;
 
     public bool IsAwakened => isAwakened;
@@ -23,10 +22,7 @@ public class AwakenSubModule_Yuki
     {
         if (!isAwakened) return;
 
-        // 각성 상태에서 게이지 감소
         var gauge = sm.Player.Attr.AwakenGauge;
-        gauge.Add(-DecayRate * Time.deltaTime);
-
         if (gauge.Current <= 0f)
             ExitAwakenedMode();
     }
@@ -39,49 +35,17 @@ public class AwakenSubModule_Yuki
         gauge.Add(3f);
     }
 
-    public void CheckAwakenHoldStart()
-    {
-        if (!isCheckingHold)
-            HoldCheckAsync().Forget();
-    }
+    public void OnAttackCanceled() { }
 
-    public void OnAttackCanceled() => isHoldingAttack = false;
 
-    private bool isHoldingAttack;
-    private bool isCheckingHold;
-    private float holdStartTime;
 
-    private async UniTask HoldCheckAsync()
-    {
-        if (isCheckingHold) return;
-        isCheckingHold = true;
-
-        try
-        {
-            isHoldingAttack = true;
-            holdStartTime = Time.time;
-
-            await UniTask.WaitUntil(() =>
-                !isHoldingAttack || Time.time - holdStartTime >= 0.5f
-            );
-
-            if (isHoldingAttack)
-                await TryEnterAwakenedMode();
-        }
-        finally
-        {
-            isCheckingHold = false;
-        }
-    }
-
-    private async UniTask TryEnterAwakenedMode()
+    public async UniTask TryEnterAwakenedMode()
     {
         var gauge = sm.Player.Attr.AwakenGauge;
-        if (gauge.Current >= AwakenThreshold && !isAwakened)
-        {
-            await EnterAwakenedMode();
-            gauge.Use(); // 사용 시작 → 자동 감소 시작
-        }
+        if (gauge.Current < AwakenThreshold || isAwakened) return;
+
+        await EnterAwakenedMode();
+        gauge.Use();
     }
 
     private async UniTask EnterAwakenedMode()
@@ -91,14 +55,13 @@ public class AwakenSubModule_Yuki
         isAwakened = true;
 
         // 연출 시작
-        sm.Player.Animator.CrossFade("Awaken", 0.1f);
-        sm.Player.skill.SpawnSkill("Awaken", sm.Player.Body.position, sm.Player.Body.rotation);
+        var awakenLayerIndex = sm.Player.Animator.GetLayerIndex("Overall/Toggle_SpecialLayer");
+        sm.Player.Animator.SetLayerWeight(awakenLayerIndex, 1f);
+        sm.Player.Animator.SetTrigger("Action/Toggle_AwakenExit");
 
-        if (sm.Player.ForceReceiver != null)
-        {
-            sm.Player.ForceReceiver.AddForce(-sm.Player.transform.forward * 10f, horizontalOnly: true);
-            sm.Player.ForceReceiver.BeginVerticalHold(1f, 1f);
-        }
+        sm.Player.skill.SpawnSkill("Awaken", sm.Player.Body.position, sm.Player.Body.rotation);
+        sm.Player.ForceReceiver?.AddForce(-sm.Player.transform.forward * 15f, horizontalOnly: true);
+        sm.Player.ForceReceiver?.BeginVerticalHold(1f, 1f);
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
 
@@ -106,7 +69,7 @@ public class AwakenSubModule_Yuki
         sm.Player.skill.SpawnSkill("Awaken2", sm.Player.Body.position, sm.Player.Body.rotation);
         sm.Player.ForceReceiver?.EndVerticalHold();
 
-        sm.Player.Animator.SetTrigger("Base/Toggle_AwakenExit");
+        sm.Player.Animator.SetLayerWeight(awakenLayerIndex, 0f);
         sm.Player._camera?.SetColorGradingEnabled(true);
     }
 
@@ -116,7 +79,6 @@ public class AwakenSubModule_Yuki
 
         isAwakened = false;
         sm.Player._camera?.SetColorGradingEnabled(false);
-
         OnAwakenEnd?.Invoke();
     }
 }

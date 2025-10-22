@@ -26,13 +26,21 @@ public class InventoryViewModel : ScriptableObject
 
     private void OnDisable()
     {
+        if (!Application.isPlaying)
+            return;
+
         if (_model != null)
         {
-            EventsManager.Instance.StopListening(GameEvent.OnConsumableItemsChanged, OnConsumableItemsChanged);
-            EventsManager.Instance.StopListening(GameEvent.OnSkillItemsChanged, OnSkillItemsChanged);
-            EventsManager.Instance.StopListening(GameEvent.OnCoreItemsChanged, OnCoreItemsChanged);
-            _model = null; // 참조 해제
+            if (EventsManager.Instance != null)
+            {
+                // 구독 해제 로직
+                EventsManager.Instance.StopListening(GameEvent.OnConsumableItemsChanged, OnConsumableItemsChanged);
+                EventsManager.Instance.StopListening(GameEvent.OnSkillItemsChanged, OnSkillItemsChanged);
+                EventsManager.Instance.StopListening(GameEvent.OnCoreItemsChanged, OnCoreItemsChanged);
+            }
         }
+
+        _model = null; // 참조 해제
     }
 
     private void OnConsumableItemsChanged() => EventsManager.Instance.TriggerEvent(GameEvent.OnConsumableUIUpdate);
@@ -94,7 +102,8 @@ public class InventoryViewModel : ScriptableObject
                         
                         //UI매니저에서 '능력선택UI'를 가져와서 끄기
                         UIManager.Instance.Hide<SelectAbilityUI>();
-
+                        InventoryManager.Instance.LoadData_Addressables("20000000", 5); // 회복물약 5스택 추가
+                        InventoryManager.Instance.LoadData_Addressables("20000002", 5); // 공격력 증가물약 5스택 추가
                         await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_DrainAbility");
                         break;
                 }

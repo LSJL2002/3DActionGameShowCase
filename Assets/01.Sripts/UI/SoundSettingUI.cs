@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -18,7 +14,7 @@ public class SoundSettingUI : UIBase
     {
         base.OnEnable();
 
-        if (SceneLoadManager.Instance.nowSceneIndex == 0)
+        if (SceneLoadManager.Instance.nowSceneIndex == 1)
         {
             returnButton.SetActive(true);
         }

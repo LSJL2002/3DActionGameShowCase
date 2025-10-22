@@ -28,7 +28,9 @@ public class CharacterSkillUI : UIBase
     protected override void OnDisable()
     {
         base.OnDisable();
-        EventsManager.Instance.StopListening(GameEvent.OnSkillUIUpdate, UpdateUI);
+
+        if(EventsManager.Instance != null)
+            EventsManager.Instance.StopListening(GameEvent.OnSkillUIUpdate, UpdateUI);
     }
 
     private void UpdateUI()

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -94,10 +95,10 @@ public class BattleManager : Singleton<BattleManager>
         //StartWarning();
 
         // 2. 컷씬 실행 & 종료 대기 (스킵 포함)
-        if (!string.IsNullOrEmpty(zone.startBattleTimelineKey))
+        if (!string.IsNullOrEmpty(zone.TimeLineOP))
         {
-            Debug.Log($"Battle Start → Timeline 실행: {currentZone.startBattleTimelineKey}");
-            await TimeLineManager.Instance.PlayAndWait(currentZone.startBattleTimelineKey);
+            Debug.Log($"Battle Start → Timeline 실행: {currentZone.TimeLineOP}");
+            await TimeLineManager.Instance.PlayAndWait(currentZone.TimeLineOP);
         }
 
         // 게임 종료 중이면 리턴
@@ -133,7 +134,7 @@ public class BattleManager : Singleton<BattleManager>
         if (Input.GetKeyDown(KeyCode.P))
         {
             if (currentZone != null)
-                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(50000);
+                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
@@ -166,15 +167,19 @@ public class BattleManager : Singleton<BattleManager>
         return instance;
     }
 
-    public async void HandleMonsterDie()
+    public async UniTask HandleMonsterDie()
     {
-        if (monsterStats.CurrentHP > 0) return;
-        //if (!string.IsNullOrEmpty(currentZone.endBattleTimelineKey))
-        //{
-        //    Debug.Log($"몬스터사망 → Timeline 실행: {currentZone.endBattleTimelineKey}");
-        //    await TimeLineManager.Instance.PlayAndWait(currentZone.endBattleTimelineKey);
-        //}
-        var cutScene = await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.endBattleTimelineKey);
+        if (monsterStats == null || currentZone == null || monsterStats.CurrentHP > 0)
+            return;
+
+        if (currentZone.id == MapManager.Instance.bossZoneId)
+        {
+            await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.TimeLineED);
+            MapManager.Instance.HandleLastStageClear();
+            return;
+        }
+
+        await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.TimeLineED);
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
 
         //StopWarning();
@@ -184,7 +189,7 @@ public class BattleManager : Singleton<BattleManager>
     public void ClearBattle()
     {
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnBattleClear, currentZone);
-        SaveManager.Instance.AddStageData(currentZone.id);
+        SaveManager.Instance.SetStageData(currentZone.id);
         SaveManager.Instance.SaveData();
 
         Addressables.ReleaseInstance(currentMonster.gameObject); 

@@ -24,9 +24,22 @@ public class DEFUPAbility : ItemAbility
         // 새로운 Sequence 생성
         DEFUPSequence = DOTween.Sequence();
 
-        DEFUPSequence.AppendCallback(() => stats.AddModifier(StatType.Defense, totalDEFUPAmount));
+        DEFUPSequence.AppendCallback(() =>
+        {
+            stats.AddModifier(StatType.Defense, totalDEFUPAmount);
+            EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+            Debug.Log($"물약 사용 시작: 총 {duration}초 동안 방어력 {defupPercentage}% 증가(+{totalDEFUPAmount})");
+        });
+        
         DEFUPSequence.AppendInterval(duration);
-        DEFUPSequence.AppendCallback(() => stats.RemoveModifier(StatType.Defense, totalDEFUPAmount));
+
+        DEFUPSequence.AppendCallback(() =>
+        {
+            stats.RemoveModifier(StatType.Defense, totalDEFUPAmount);
+            EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+            Debug.Log($"능력치 원상복구");
+        });
+        
 
         // Sequence 재생 및 Auto파괴옵션세팅 호출
         DEFUPSequence.SetAutoKill(true) // 기본값(true)을 명시적으로 설정

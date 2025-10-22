@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 public class GaugeComponent : MonoBehaviour
 {
-    public enum SetState
+    public enum GaugeState2
     {
         On, // 켜짐
         Off, // 꺼짐
         Awaken, // 각성
     }
 
-    public SetState currentGaugeState { get; private set; } = SetState.Off;
+    public GaugeState2 currentGaugeState { get; private set; } = GaugeState2.Off;
 
     [SerializeField] private Image defaultImage;
     [SerializeField] private Image waveImage;
@@ -35,6 +35,11 @@ public class GaugeComponent : MonoBehaviour
 
     private void OnEnable()
     {
+        SetOriginGauge();
+    }
+
+    public void SetOriginGauge()
+    {
         defaultImage.color = gaugeColor1;
         waveImage.color = gaugeColor0; // 웨이브 이미지 투명도 0으로 초기화
     }
@@ -46,7 +51,7 @@ public class GaugeComponent : MonoBehaviour
     }
 
     // 게이지 세팅
-    public void SetGauge(SetState state)
+    public void SetGauge(GaugeState2 state)
     {
         float randomColor = Random.Range(20f / 255f, 100f / 255f); // 투명도 랜덤
         currentGaugeState = state;
@@ -54,20 +59,20 @@ public class GaugeComponent : MonoBehaviour
         switch (state)
         {
             // 게이지 충전시
-            case SetState.On:
+            case GaugeState2.On:
 
                 defaultImage.color = gaugeColor2;
                 waveImage.color = new Color(gaugeColor2.r, gaugeColor2.g, gaugeColor2.b, randomColor);
                 break;
 
             // 게이지 비활성시
-            case SetState.Off:
+            case GaugeState2.Off:
 
-                defaultImage.color = gaugeColor0;
+                SetOriginGauge();
                 break;
 
             // 게이지 사용시
-            case SetState.Awaken:
+            case GaugeState2.Awaken:
 
                 defaultImage.color = gaugeColor3;
                 waveImage.color = new Color(gaugeColor3.r, gaugeColor3.g, gaugeColor3.b, randomColor);
@@ -100,7 +105,7 @@ public class GaugeComponent : MonoBehaviour
         popGaugeSequence.Append(popImage.DOFade(0f, 0.1f)); // PopImage 사라지는 트윈 추가
         popGaugeSequence = null;
 
-        SetGauge(SetState.On);
+        SetGauge(GaugeState2.On);
     }
 
     // 객체가 파괴될 때 Addressables 인스턴스를 해제하는 메서드
