@@ -54,14 +54,15 @@ public class MonsterBaseAttackAlt : MonsterBaseState
             {
                 int attackPower = stateMachine.Monster.Stats.AttackPower;
                 int finalDamage = Mathf.RoundToInt(attackPower);
-
-                trigger.damage = finalDamage;
+                trigger.SetDamage(finalDamage);
 
                 trigger.onHit = () =>
                 {
                     hasHit = true;
                     attackCollider.enabled = false;
                 };
+
+                Debug.Log($"[MonsterBaseAttack] Passed {finalDamage} damage to AttackTrigger.");
             }
 
             attackCollider.enabled = true;
