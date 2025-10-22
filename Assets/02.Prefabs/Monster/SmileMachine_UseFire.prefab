@@ -1158,6 +1158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3103904349277345993}
   - component: {fileID: 1018224373736016886}
+  - component: {fileID: 6963701309090002239}
   m_Layer: 6
   m_Name: BaseAttack
   m_TagString: Untagged
@@ -1201,6 +1202,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.8712809}
   m_Center: {x: 0, y: 0, z: -0.064359546}
+--- !u!114 &6963701309090002239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806093250194746402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43cf8dbcf93b1e44d882be9597e4db66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
 --- !u!1 &940812702440702915
 GameObject:
   m_ObjectHideFlags: 0
@@ -9723,7 +9737,7 @@ GameObject:
   - component: {fileID: 5121958914599976558}
   - component: {fileID: 6023728704834963099}
   - component: {fileID: 7684823969566816923}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SmileMachine_UseFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9762,7 +9776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704eb743def2e004db513091d8608ce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterData: {fileID: 11400000, guid: 67ee1e230b46d3440ae3b151008fd123, type: 2}
+  monsterData: {fileID: 11400000, guid: a940b531c46eb1246ae7904f476df4d9, type: 2}
   maxHp: 0
   maxMp: 0
   CurrentHP: 0
@@ -9852,9 +9866,9 @@ MonoBehaviour:
     - type: 6
       parameterName: Attack2
     - type: 7
-      parameterName: Smash
-    - type: 8
       parameterName: Slam
+    - type: 8
+      parameterName: Smash
     - type: 9
       parameterName: Charge
     - type: 10
@@ -9869,7 +9883,7 @@ MonoBehaviour:
   flameThrowerEffect: {fileID: 4898589903230457354}
   baseAttackCollider: {fileID: 1018224373736016886}
   firePoint: {fileID: 1660095912670615619}
-  fireball: {fileID: 3283067671705698780, guid: fbbcbf8389420944da64b5e182bde73b, type: 3}
+  fireball: {fileID: 3283067671705698780, guid: 74541954fef0d3942a1f851742a7ea46, type: 3}
   groundFire: {fileID: 2865081712857513855, guid: 3de08fc0c5f30d049a91d653abb7e7c4, type: 3}
 --- !u!95 &5121958914599976558
 Animator:

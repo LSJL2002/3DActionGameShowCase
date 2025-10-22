@@ -38,6 +38,8 @@ public class BaseMonster : MonoBehaviour, IDamageable
     // 체력이 변경될 때 호출될 이벤트
     public static event System.Action OnEnemyHealthChanged;
 
+    public Collider baseAttackCollider;
+
     protected virtual void Awake()
     {
         animationData.Initialize();
@@ -180,7 +182,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
                 if (!inRange)
                 {
-                    Debug.Log($"{name} stopped pattern {currentPattern.id} after 5s timeout");
+                    //Debug.Log($"{name} stopped pattern {currentPattern.id} after 5s timeout");
                     break;
                 }
             }
@@ -231,7 +233,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     //Virtual, 각 몬스터에게 스킬을 연결할떄
     protected virtual MonsterBaseState GetStateFromEnum(States stateEnum)
     {
-        Debug.LogWarning($"{name} - BaseMonster.GetStateFromEnum not overridden!");
+        //Debug.LogWarning($"{name} - BaseMonster.GetStateFromEnum not overridden!");
         return null;
     }
 

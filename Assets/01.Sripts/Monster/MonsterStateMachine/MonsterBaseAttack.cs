@@ -1,19 +1,16 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class MonsterBaseAttack : MonsterBaseState
 {
-    private int damage;
     private BoxCollider attackCollider;
     private bool hasHit;
 
     public MonsterBaseAttack(MonsterStateMachine stateMachine) : base(stateMachine)
     {
-        damage = stateMachine.Monster.Stats.AttackPower;
-
-        // Get reference to the collider from ToiletMonster
-        if (stateMachine.Monster is ToiletMonster toilet && toilet.baseAttackCollider != null)
+        if (stateMachine.Monster is BaseMonster bm && bm.baseAttackCollider != null)
         {
-            attackCollider = toilet.baseAttackCollider as BoxCollider;
+            attackCollider = bm.baseAttackCollider as BoxCollider;
             if (attackCollider != null)
             {
                 attackCollider.isTrigger = true;
@@ -27,7 +24,6 @@ public class MonsterBaseAttack : MonsterBaseState
         StopMoving();
         hasHit = false;
         stateMachine.isAttacking = true;
-        // Start attack animation
         StartAnimation(stateMachine.Monster.animationData.GetHash(
             MonsterAnimationData.MonsterAnimationType.BaseAttack));
     }
@@ -36,7 +32,6 @@ public class MonsterBaseAttack : MonsterBaseState
     {
         stateMachine.isAttacking = false;
 
-        // Stop animation and disable collider
         StopAnimation(stateMachine.Monster.animationData.GetHash(
             MonsterAnimationData.MonsterAnimationType.BaseAttack));
 
@@ -44,36 +39,36 @@ public class MonsterBaseAttack : MonsterBaseState
             attackCollider.enabled = false;
     }
 
-    // Call this from an animation event
     public override void OnAttackHit()
     {
         if (attackCollider != null && !hasHit)
         {
-            // Set the damage
             AttackTrigger trigger = attackCollider.GetComponent<AttackTrigger>();
             if (trigger != null)
             {
-                trigger.damage = damage;
+                int attackPower = stateMachine.Monster.Stats.AttackPower;
+                Debug.Log(attackPower);
+                int finalDamage = Mathf.RoundToInt(attackPower);
+                trigger.SetDamage(finalDamage);
+
                 trigger.onHit = () =>
                 {
                     hasHit = true;
                     attackCollider.enabled = false;
-                    Debug.Log("Attack Hit Once");
                 };
+
+                Debug.Log($"[MonsterBaseAttack] Passed {finalDamage} damage to AttackTrigger.");
             }
-            
+
             attackCollider.enabled = true;
-            Debug.Log("Attack collider enabled!");
         }
     }
-
 
     public override void OnAnimationComplete()
     {
         if (attackCollider != null)
             attackCollider.enabled = false;
 
-        Debug.Log($"{stateMachine.Monster.name} finished base attack.");
         stateMachine.isAttacking = false;
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }

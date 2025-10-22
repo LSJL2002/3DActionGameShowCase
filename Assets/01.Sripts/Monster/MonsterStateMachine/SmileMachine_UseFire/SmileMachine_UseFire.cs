@@ -6,7 +6,6 @@ public class SmileMachine_UseFire : BaseMonster
 {
     [Header("FlameThrower Effect")]
     public GameObject flameThrowerEffect;
-    public Collider baseAttackCollider;
     public GameObject firePoint;
 
     [Header("Fireball Effects")]

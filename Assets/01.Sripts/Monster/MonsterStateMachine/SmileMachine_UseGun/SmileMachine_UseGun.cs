@@ -6,7 +6,6 @@ public class SmileMachine_UseGun : BaseMonster
 {
     public GameObject rifleParticleEffect;
     public GameObject groggyParticleEffect;
-    public Collider baseAttackCollider;
 
     protected override void Awake()
     {

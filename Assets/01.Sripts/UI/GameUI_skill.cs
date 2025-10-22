@@ -99,7 +99,7 @@ public partial class GameUI : UIBase
     // 스킬 쿨타임
     public void OnCoolTimeSkill()
     {
-        BufferModule skillBuffer = PlayerManager.Instance.Attr.EvadeBuffer;
+        BufferModule skillBuffer = PlayerManager.Instance.Attr.SkillBuffer;
         skill1Text.text = skillBuffer.BufferCurrent.ToString(); // 스택을 업데이트
 
         if (skillBuffer.BufferCurrent == skillBuffer.BufferMax || skillCoolTimeSequence.IsPlaying())

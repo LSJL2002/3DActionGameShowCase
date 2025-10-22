@@ -136,6 +136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4164454167683869945}
   - component: {fileID: 6822000184812816250}
+  - component: {fileID: 2522534725453942144}
   m_Layer: 6
   m_Name: BaseAttack
   m_TagString: Untagged
@@ -179,6 +180,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.8712809}
   m_Center: {x: 0, y: 0, z: -0.064359546}
+--- !u!114 &2522534725453942144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157912776484231417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43cf8dbcf93b1e44d882be9597e4db66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &180038018229541480
 GameObject:
   m_ObjectHideFlags: 0
@@ -8454,7 +8467,7 @@ GameObject:
   - component: {fileID: 7295982123017148033}
   - component: {fileID: 18588292402395172}
   - component: {fileID: 8379250178715168306}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SmileMachine_UseMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8648,7 +8661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704eb743def2e004db513091d8608ce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterData: {fileID: 11400000, guid: 05e3b98d6cd073d479c9e6a2c441bf11, type: 2}
+  monsterData: {fileID: 11400000, guid: d2190ad72ebec254a920374a86a28794, type: 2}
   maxHp: 0
   maxMp: 0
   CurrentHP: 0
@@ -8661,13 +8674,7 @@ MonoBehaviour:
   AttackRange: 0
   StatusEffect: []
   DropItem: 
-  MonsterSkills:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  MonsterSkills: []
 --- !u!1 &6877063891898121407
 GameObject:
   m_ObjectHideFlags: 0

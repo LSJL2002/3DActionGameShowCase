@@ -12,9 +12,9 @@ public class MonsterBaseAttackAlt : MonsterBaseState
         damage = stateMachine.Monster.Stats.AttackPower;
         animationType = animType;
 
-        if (stateMachine.Monster is ToiletMonster toilet && toilet.baseAttackCollider != null)
+        if (stateMachine.Monster is BaseMonster bm && bm.baseAttackCollider != null)
         {
-            attackCollider = toilet.baseAttackCollider as BoxCollider;
+            attackCollider = bm.baseAttackCollider as BoxCollider;
             if (attackCollider != null)
             {
                 attackCollider.isTrigger = true;
@@ -49,20 +49,23 @@ public class MonsterBaseAttackAlt : MonsterBaseState
     {
         if (attackCollider != null && !hasHit)
         {
-            // Set the damage
             AttackTrigger trigger = attackCollider.GetComponent<AttackTrigger>();
             if (trigger != null)
             {
-                trigger.damage = damage;
+                int attackPower = stateMachine.Monster.Stats.AttackPower;
+                int finalDamage = Mathf.RoundToInt(attackPower);
+                trigger.SetDamage(finalDamage);
+
                 trigger.onHit = () =>
                 {
                     hasHit = true;
                     attackCollider.enabled = false;
                 };
+
+                Debug.Log($"[MonsterBaseAttack] Passed {finalDamage} damage to AttackTrigger.");
             }
 
             attackCollider.enabled = true;
-            Debug.Log("Alt attack collider enabled!");
         }
     }
 
