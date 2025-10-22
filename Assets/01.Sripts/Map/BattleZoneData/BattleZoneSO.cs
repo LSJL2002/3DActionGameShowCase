@@ -17,6 +17,8 @@ public class BattleZoneSO : ScriptableObject
     public int extraDEF;
     public float extraSpeed;
     public float extraAtkSpeed;
+    public string TimeLineOP;
+    public string TimeLineED;
 }
 //public int id;
 //public int MonsterId;
