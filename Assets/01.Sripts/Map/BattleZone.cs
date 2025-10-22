@@ -18,18 +18,14 @@ public class BattleZone : MonoBehaviour
     public int extraDEF;
     public float extraSpeed;
     public float extraAtkSpeed;
+    public string TimeLineOP;
+    public string TimeLineED;
 
     public BoxCollider triggerCollider;
 
     [Header("못나가게막는벽")]
     [SerializeField] private GameObject walls;
     [SerializeField] private BattleZoneSO ZoneData;
-
-
-    [Header("타임라인키")]
-     public string startBattleTimelineKey;
-     public string endBattleTimelineKey;
-
 
     private void Awake()
     {
@@ -47,6 +43,8 @@ public class BattleZone : MonoBehaviour
             extraDEF = ZoneData.extraDEF;
             extraSpeed = ZoneData.extraSpeed;
             extraAtkSpeed = ZoneData.extraAtkSpeed;
+            TimeLineOP = ZoneData.TimeLineOP;
+            TimeLineED = ZoneData.TimeLineED;
         }
         
     }

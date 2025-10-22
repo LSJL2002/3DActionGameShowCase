@@ -4,6 +4,7 @@ using UnityEngine;
 [System.Serializable] // 직렬화하여 파일에 저장하거나 네트워크를통해 전송가능
 public class SaveData
 {
+    public int round = 0;
     public int LastClearStage = 0;
     public List<InventorySaveData> ConsumableInventory = new();  // 아이템 ID + 수량
     public List<int> SkillInventory = new();                     // ID만
@@ -23,6 +24,13 @@ public class InventorySaveData
     }
 }
 
+public enum eGameMode
+{
+    None,
+    NewGame,
+    LoadGame
+}
+
 public class SaveManager : Singleton<SaveManager>
 {
     public enum PlayerPrefsSaveType
@@ -30,6 +38,7 @@ public class SaveManager : Singleton<SaveManager>
         Volume,
         BuildVersion,
     }
+    public eGameMode gameMode; //게임 모드를 저장할 변수
 
     public SaveData playerData = new();
 
@@ -70,7 +79,7 @@ public class SaveManager : Singleton<SaveManager>
 
     public bool LoadData()
     {
-        if (GameManager.Instance.gameMode != eGameMode.LoadGame) return false;
+        if (SaveManager.Instance.gameMode != eGameMode.LoadGame) return false;
         EnsurePath();
 
         if (!File.Exists(path))
@@ -126,12 +135,12 @@ public class SaveManager : Singleton<SaveManager>
     }
 
 
-    public void ResetData()
-    {
-        playerData = new SaveData(); // 완전 새 데이터로 교체
-        SaveData();                  // 즉시 저장 (새로 빈 파일 생성)
-        Debug.Log("[SaveManager] 세이브 데이터 초기화 완료 (NewGame)");
-    }
+    //public void ResetData()
+    //{
+    //    playerData = new SaveData(); // 완전 새 데이터로 교체
+    //    SaveData();                  // 즉시 저장 (새로 빈 파일 생성)
+    //    Debug.Log("[SaveManager] 세이브 데이터 초기화 완료 (NewGame)");
+    //}
 
     public void DeleteSaveFile()
     {
@@ -140,7 +149,7 @@ public class SaveManager : Singleton<SaveManager>
             File.Delete(path);
             Debug.Log("[SaveManager] Save 파일 삭제 완료");
         }
-        ResetData(); // 새 데이터로 다시 저장 (빈 파일 생성)
+        //ResetData(); // 새 데이터로 다시 저장 (빈 파일 생성)
     }
 
     public void SetStageData(int stageId) => playerData.LastClearStage = stageId;
