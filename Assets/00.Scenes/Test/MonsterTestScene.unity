@@ -666,6 +666,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &601660112
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 601660113}
+  m_Layer: 0
+  m_Name: GernadeFirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &601660113
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601660112}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.09, z: 0.335}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 118258701659111230}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &997933055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1416,7 +1447,8 @@ Transform:
   m_LocalPosition: {x: -0, y: -2.2103848, z: -0.13522722}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 601660113}
   m_Father: {fileID: 5814836145622986189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &197971202707140153
@@ -11052,8 +11084,8 @@ MonoBehaviour:
   missile: {fileID: 936575497134010909, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
   missileEffect: {fileID: 100010, guid: e0609132424a24844b1d53ad3d704fd9, type: 3}
   firepoint: {fileID: 165722118}
-  gernade: {fileID: 0}
-  firepointGernade: {fileID: 0}
+  gernade: {fileID: 8360643399878825330, guid: bcde193076b2c6447a49593b0f5eff24, type: 3}
+  firepointGernade: {fileID: 601660113}
 --- !u!114 &8353343287903993441
 MonoBehaviour:
   m_ObjectHideFlags: 0

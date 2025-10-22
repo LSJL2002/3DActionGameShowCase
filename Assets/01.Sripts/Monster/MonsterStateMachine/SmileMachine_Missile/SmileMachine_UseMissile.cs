@@ -31,7 +31,7 @@ public class SmileMachine_UseMissile : BaseMonster
             case States.Skill2: return stateMachine.SmileToiletSlamState;
             case States.Skill3: return stateMachine.SmileToiletChargeState;
             case States.Skill4: return stateMachine.SmileMachine_Missile;
-            //
+            case States.Skill5: return stateMachine.SmileMachine_Gernade;
             case States.BaseAttack: return stateMachine.MonsterBaseAttack;
             case States.BaseAttack2: return stateMachine.MonsterBaseAttackAlt;
             default: return null;
@@ -44,7 +44,7 @@ public class SmileMachine_UseMissile : BaseMonster
         if (state is SmileToiletSmashState) return Stats.GetSkill("SmileMachine_Smash").range / 2f;
         if (state is SmileToiletChargeState) return Stats.GetSkill("SmileMachine_Charge").range;
         if (state is SmileMachine_Missile) return Stats.GetSkill("SmileMachine_Missile").skillUseRange;
-        //
+        if (state is SmileMachine_Gernade) return Stats.GetSkill("SmileMachine_Grenade").skillUseRange;
         return Stats.AttackRange;
     }
     
