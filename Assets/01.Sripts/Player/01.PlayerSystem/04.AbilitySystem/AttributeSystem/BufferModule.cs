@@ -15,11 +15,11 @@ public class BufferModule
 
     public event Action OnBufferChanged;
 
-    public BufferModule(int max, float cooldown)
+    public BufferModule(int max, float cooldown, int? startValue = null)
     {
         BufferMax = max;
         Cooldown = cooldown;
-        BufferCurrent = BufferMax;
+        BufferCurrent = startValue ?? 0;
         lastTime = 0f;
     }
 

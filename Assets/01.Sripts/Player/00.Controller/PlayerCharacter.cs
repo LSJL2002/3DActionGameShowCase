@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
@@ -36,6 +37,8 @@ public class PlayerCharacter : MonoBehaviour
     public HitStopManager hitStop { get; private set; }
     public DirectionManager direction { get; private set; }
 
+    // ================ Actions ====================
+
     public void InitManagers(
     PlayerManager playerManager,
     CameraManager cam,
@@ -73,7 +76,6 @@ public class PlayerCharacter : MonoBehaviour
         Input = new InputSystem();
         Hub = new EventHub();
         Attr = new PlayerAttribute(InfoData, Hub);
-        Attr.Resource.OnDie += OnDie;
 
         StateMachine = new PlayerStateMachine(this);
         Ability = gameObject.AddComponent<AbilitySystem>();
@@ -83,6 +85,10 @@ public class PlayerCharacter : MonoBehaviour
         Input.OnMenuToggle += OnMenuToggle;
         Input.OnInventoryToggle += OnInventoryToggle;
         Input.OnCameraLockOn += OnLockOnToggle;
+    }
+    private void Start()
+    {
+        Ability.OnDeath += () => PlayerManager.HandleCharacterDeath(this);
     }
     private void OnDestroy()
     {
@@ -94,8 +100,10 @@ public class PlayerCharacter : MonoBehaviour
 
     private void Update()
     {
+        Input.Update(); // ReadValue Polling 폴링 입력 처리
+
         StateMachine.HandleInput(); // FSM 업데이트
-        StateMachine.LogicUpdate();  
+        StateMachine.LogicUpdate();
 
         Attr.Update(); // Attribute 계산 업데이트
     }
@@ -103,13 +111,6 @@ public class PlayerCharacter : MonoBehaviour
     private void FixedUpdate()
     {
         StateMachine.Physicsupdate();
-    }
-
-    void OnDie()
-    {
-        Animator.SetTrigger("Die");
-        EnableCharacterInput(false);
-        gameObject.SetActive(false);
     }
 
     public void EnableCharacterInput(bool active)
@@ -132,10 +133,10 @@ public class PlayerCharacter : MonoBehaviour
     private void OnMenuToggle()
     {
         isPaused = !isPaused;
-        GameManager.Instance.PauseGame(isPaused);
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isPaused;
         _camera.Volume_Blur.enabled = isPaused;
+        Time.timeScale = isPaused ? 0f : 1f;
     }
     private void OnInventoryToggle()
     {
@@ -155,5 +156,26 @@ public class PlayerCharacter : MonoBehaviour
     {
         var cam = _camera;
         cam.ToggleLockOnTarget(null); // 무조건 락온 해제
+    }
+
+    public void Revive()
+    {
+        // 1) 게임 오브젝트 활성화
+        gameObject.SetActive(true);
+
+        // 2) Ability 상태 초기화
+        //Ability.IsDeath = false;
+
+        // 3) 체력 복구
+        //Attr.Resource.CurrentHealth = Attr.Resource.MaxHP;
+
+        // 4) FSM 초기화
+        StateMachine.ChangeState(StateMachine.IdleState);
+
+        // 5) 입력 & 이동 복구
+        EnableCharacterInput(true);
+
+        // 6) 애니메이션 초기화
+        Animator.Play("Idle", 0, 0f);
     }
 }

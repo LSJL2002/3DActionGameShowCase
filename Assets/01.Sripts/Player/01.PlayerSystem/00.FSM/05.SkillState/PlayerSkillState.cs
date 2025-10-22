@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
 public class PlayerSkillState : PlayerBaseState
@@ -26,6 +23,7 @@ public class PlayerSkillState : PlayerBaseState
     {
         base.Exit();
         StopAnimation(sm.Player.AnimationData.SkillBoolHash);
+        sm.Player.Ability.EndSkill();
 
         module.OnSkillEnd -= HandleSkillEnd;
         module.OnSkillCanceled();

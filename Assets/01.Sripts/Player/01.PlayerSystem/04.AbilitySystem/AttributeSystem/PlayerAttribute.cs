@@ -50,8 +50,6 @@ public class PlayerAttribute
     public Stat MoveSpeed { get; private set; }
     public Stat AttackSpeed { get; private set; }
 
-    public event Action<StatType> OnStatChanged;
-
     public PlayerAttribute(PlayerInfo info, EventHub hub)
     {
         var data = info.StatData;
@@ -67,8 +65,8 @@ public class PlayerAttribute
 
         // 버퍼
         var skill = info.SkillData.SkillInfoDatas[0];
-        SkillBuffer = new BufferModule(1, skill.Cooldown);
-        EvadeBuffer = new BufferModule(data.DodgeCount, data.DodgeCooldown);
+        SkillBuffer = new BufferModule(1, skill.Cooldown, startValue: 0);
+        EvadeBuffer = new BufferModule(data.DodgeCount, data.DodgeCooldown, startValue: data.DodgeCount);
         hub.Connect(SkillBuffer, true);
         hub.Connect(EvadeBuffer, false);
 
@@ -97,7 +95,6 @@ public class PlayerAttribute
             case StatType.MoveSpeed: MoveSpeed.AddModifier(value); break;
             case StatType.AttackSpeed: AttackSpeed.AddModifier(value); break;
         }
-        OnStatChanged?.Invoke(statType);
     }
 
     public void RemoveModifier(StatType statType, float value)
@@ -109,6 +106,5 @@ public class PlayerAttribute
             case StatType.MoveSpeed: MoveSpeed.RemoveModifier(value); break;
             case StatType.AttackSpeed: AttackSpeed.RemoveModifier(value); break;
         }
-        OnStatChanged?.Invoke(statType);
     }
 }

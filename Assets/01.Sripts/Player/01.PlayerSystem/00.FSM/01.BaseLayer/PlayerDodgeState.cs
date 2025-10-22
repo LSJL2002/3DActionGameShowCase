@@ -14,16 +14,12 @@ public class PlayerDodgeState : Istate
     private PlayerStateMachine sm;
 
     // ---- 설정 값 ----
-    private readonly float DodgeDuration;   // 상태 유지 시간(초)
+    private readonly float DodgeDuration;     // 상태 유지 시간(초)
     private readonly float DodgeStrength;     // 밀려나는 힘 크기
-    private readonly float LayerBlendSpeed;   // 레이어 페이드 속도
 
     // ---- 내부 상태 ----
     private float startTime;
     private int dodgeLayerIndex;
-    private float currentLayerWeight = 0f;
-    private bool targetLayerOn = false;
-
 
     public PlayerDodgeState(PlayerStateMachine sm)
     {
@@ -34,7 +30,6 @@ public class PlayerDodgeState : Istate
         // GroundData에서 값 가져오기
         DodgeDuration = sm.Player.InfoData.GroundData.DodgeDuration;
         DodgeStrength = sm.Player.InfoData.GroundData.DodgeStrength;
-        LayerBlendSpeed = sm.Player.InfoData.GroundData.DodgeLayerBlendSpeed;
     }
 
     public void Enter()
@@ -44,7 +39,9 @@ public class PlayerDodgeState : Istate
         sm.Player.Ability.StartDodge();
 
         startTime = Time.time; // 시작 시간 기록
-        targetLayerOn = true;
+
+        // 레이어 즉시 켬
+        sm.Player.Animator.SetLayerWeight(dodgeLayerIndex, 1f);
 
         // 이동 방향 + 힘
         Vector3 dodgeDir = GetDodgeDirection();
@@ -55,7 +52,8 @@ public class PlayerDodgeState : Istate
     {
         sm.Player.Ability.EndDodge();
 
-        targetLayerOn = false;
+        // 레이어 즉시 끔
+        sm.Player.Animator.SetLayerWeight(dodgeLayerIndex, 0f);
     }
 
     public void HandleInput() { }
@@ -65,18 +63,15 @@ public class PlayerDodgeState : Istate
         // Dodge 지속 시간 체크
         if (Time.time >= startTime + DodgeDuration)
         {
-            Exit();
+            sm.Player.Ability.EndDodge();
 
             if (sm.MovementInput.sqrMagnitude > 0.01f) // MovementInput이 있으면 WalkState로
             {
                 // 현재 SpeedModifier를 저장
                 sm.LastWalkBlend = sm.MovementSpeedModifier;
-                sm.LastWalkTimer = sm.LastWalkBlend *
-                                              sm.GroundData.RunAccelerationTime;
+                sm.LastWalkTimer = sm.LastWalkBlend * sm.GroundData.RunAccelerationTime;
             }
         }
-
-        UpdateLayerWeight();
     }
 
     public void PhysicsUpdate()
@@ -93,19 +88,5 @@ public class PlayerDodgeState : Istate
             return -sm.Player.transform.forward; // 뒤로 회피
         else
             return sm.Player.transform.forward;  // 바라보는 방향
-    }
-
-    private void UpdateLayerWeight()
-    {
-        float target = targetLayerOn ? 1f : 0f;
-
-        // MoveTowards: 목표값까지 일정 속도로 이동
-        currentLayerWeight = Mathf.MoveTowards(
-            currentLayerWeight,
-            target,
-            LayerBlendSpeed * Time.deltaTime
-        );
-
-        sm.Player.Animator.SetLayerWeight(dodgeLayerIndex, currentLayerWeight);
     }
 }

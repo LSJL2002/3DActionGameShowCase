@@ -37,7 +37,7 @@ public class PlayerIntro : MonoBehaviour
         letterBox.LetterBoxOut();
 
         // 카메라 원래 우선순위로 복귀
-        introCam.Priority = 0;
+        introCam.enabled = false;
 
         PlayerManager.Instance.EnableInput(true);
     }

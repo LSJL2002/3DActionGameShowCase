@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum UIType
@@ -30,7 +26,10 @@ public class UIBase : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    protected virtual void Start() { }
+    protected virtual void Start() 
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
 
     protected virtual void Update() { }
 

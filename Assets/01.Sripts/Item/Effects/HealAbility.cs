@@ -36,8 +36,11 @@ public class HealAbility : ItemAbility
             if (i < duration - 1)
             {
                 // interval초씩 대기 (회복은 바로 돼서 0초걸리고, 1초 쉬고, 다시 회복 0초 이런식)
+
                 healSequence.AppendInterval(interval);
             }
+
+            EventsManager.Instance.TriggerEvent(GameEvent.OnPlayerHeal);
         }
 
         // Sequence 재생 및 Auto파괴옵션세팅 호출

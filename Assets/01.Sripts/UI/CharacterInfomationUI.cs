@@ -15,11 +15,23 @@ public partial class CharacterInfomationUI : UIBase
         OnEnableInventory();
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        OnDestroyInventory();
+    }
+
+    // 테스트용 (추후 삭제)
     public void OnClickButton(string str)
     {
         switch (str)
         {
             case "20000000":
+                InventoryManager.Instance.LoadData_Addressables(str, 1);
+                break;
+
+            case "20000002":
                 InventoryManager.Instance.LoadData_Addressables(str, 1);
                 break;
 

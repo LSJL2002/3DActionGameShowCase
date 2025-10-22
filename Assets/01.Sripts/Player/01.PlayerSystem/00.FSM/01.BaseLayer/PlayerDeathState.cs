@@ -1,31 +1,34 @@
 using UnityEngine;
 
-public class PlayerDeathState : Istate
+public class PlayerDeathState : PlayerBaseState
 {
-    private readonly PlayerStateMachine stateMachine;
+    public PlayerDeathState(PlayerStateMachine sm) : base(sm) { }
 
-    public PlayerDeathState(PlayerStateMachine stateMachine)
+    public override void Enter()
     {
-        this.stateMachine = stateMachine;
+        base.Enter();
+        StartAnimation(sm.Player.AnimationData.DieParameterHash);
+        sm.Player.Animator.CrossFade("Die", 0.1f, 0);
+
+        sm.MovementInput = Vector2.zero;
+        sm.Player.EnableCharacterInput(false);
     }
 
-    public void Enter()
+    public override void Exit()
     {
+        base.Exit();
+        //StopAnimation(sm.Player.AnimationData.DieParameterHash);
+        // 나중에 부활은 고민좀 해봐야될듯
     }
 
-    public void Exit()
+    public override void LogicUpdate()
     {
-    }
-
-    public void HandleInput()
-    {
-    }
-
-    public void LogicUpdate()
-    {
-    }
-
-    public void PhysicsUpdate()
-    {
+        base.LogicUpdate();
+        float normalizedTime = GetNormalizeTime(sm.Player.Animator, "Die");
+        if (normalizedTime >= 1f)
+        {
+            sm.Player.Ability.EndDeath();
+            sm.Player.gameObject.SetActive(false);
+        }
     }
 }

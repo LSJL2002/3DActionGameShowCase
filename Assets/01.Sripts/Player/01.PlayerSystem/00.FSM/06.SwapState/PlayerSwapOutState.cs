@@ -1,22 +1,24 @@
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerSwapOutState : PlayerBaseState
 {
     public PlayerSwapOutState(PlayerStateMachine sm) : base(sm) { }
 
-    public void SetNextCharacter(PlayerCharacter newChar) { }
-
     public override void Enter()
     {
         base.Enter();
+        StartAnimation(sm.Player.AnimationData.SwapOutParameterHash);
         sm.Player.Animator.CrossFade("Swap_Out", 0.1f, 0);
+
+        // 입력 초기화
+        sm.MovementInput = Vector2.zero;
         sm.Player.EnableCharacterInput(false);
     }
 
     public override void Exit()
     {
         base.Exit();
+        StopAnimation(sm.Player.AnimationData.SwapOutParameterHash);
     }
 
     public override void LogicUpdate()
