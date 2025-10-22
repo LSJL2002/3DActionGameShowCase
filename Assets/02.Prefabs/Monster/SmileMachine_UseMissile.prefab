@@ -8454,13 +8454,13 @@ GameObject:
   - component: {fileID: 7295982123017148033}
   - component: {fileID: 18588292402395172}
   - component: {fileID: 8379250178715168306}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SmileMachine_UseMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6107069407818884981
 Transform:
   m_ObjectHideFlags: 0
@@ -8647,7 +8647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 704eb743def2e004db513091d8608ce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterData: {fileID: 11400000, guid: 05e3b98d6cd073d479c9e6a2c441bf11, type: 2}
+  monsterData: {fileID: 11400000, guid: d2190ad72ebec254a920374a86a28794, type: 2}
   maxHp: 0
   maxMp: 0
   CurrentHP: 0
@@ -8660,13 +8660,7 @@ MonoBehaviour:
   AttackRange: 0
   StatusEffect: []
   DropItem: 
-  MonsterSkills:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  MonsterSkills: []
 --- !u!1 &6877063891898121407
 GameObject:
   m_ObjectHideFlags: 0

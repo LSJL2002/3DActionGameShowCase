@@ -6,7 +6,7 @@ public class TestingHit : MonoBehaviour, IDamageable
 {
     public virtual void OnTakeDamage(int amount)
     {
-        Debug.Log("object is hit");
+        //Debug.Log("object is hit");
     }
     public void ApplyEffect(MonsterEffectType effectType, Vector3 sourcePosition, float effectValue = 0f, float duration = 0f)
     {
