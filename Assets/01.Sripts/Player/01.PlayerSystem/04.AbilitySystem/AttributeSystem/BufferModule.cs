@@ -21,6 +21,14 @@ public class BufferModule
         Cooldown = cooldown;
         BufferCurrent = startValue ?? 0;
         lastTime = 0f;
+
+        // 자동 회복 모드: startValue < max면 첫 회복 예약 생성
+        if (BufferCurrent < BufferMax)
+        {
+            float firstRecover = Time.time + Cooldown;
+            recoveryTimes.Enqueue(firstRecover);
+            lastTime = firstRecover;
+        }
     }
 
     public bool Use()

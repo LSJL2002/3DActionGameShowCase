@@ -143,4 +143,21 @@ public class ForceReceiver : MonoBehaviour
         FreezeVertical = true;
         holdActive = true;
     }
+
+    // 즉시 Y를 목표 위치로 올리고 끝까지 고정
+    public void BeginVerticalHoldImmediate(float heightOffset, float duration)
+    {
+        if (controller == null) return;
+
+        Vector3 pos = controller.transform.position;
+        pos.y += heightOffset;
+        controller.transform.position = pos;   // 바로 올림
+
+        holdTargetY = pos.y;
+        holdEndTime = Time.time + duration;
+        holdActive = true;
+
+        verticalVelocity = 0f;
+        FreezeVertical = true; // 루트모션 끄고 중력 무효
+    }
 }

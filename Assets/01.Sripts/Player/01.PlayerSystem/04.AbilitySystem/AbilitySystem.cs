@@ -65,7 +65,6 @@ public class AbilitySystem : MonoBehaviour
     // =============== 상태 전환 로직 ===============
     private void TryMove(Vector2 moveInput)
     {
-        Debug.Log(sm.CurrentState);
         if (BlockInput()) return;
         if (IsUsingSkill) return;
         if (IsAttacking) return;
@@ -100,13 +99,13 @@ public class AbilitySystem : MonoBehaviour
         // 이미 공격 상태라면 FSM 바꾸지 않고, 모듈로 입력만 전달
         if (IsAttacking)
         {
-            sm.CurrentBattleModule?.OnAttack();
+            sm.CurrentBattleModule?.OnAttackStart();
             sm.UpdateAttackTarget();
             return;
         }
         // 처음 공격 진입일 때
         sm.ChangeState(sm.AttackState);
-        sm.CurrentBattleModule?.OnAttack();
+        sm.CurrentBattleModule?.OnAttackStart();
         sm.UpdateAttackTarget();
     }
     private void CancelAttack() { }
@@ -119,7 +118,7 @@ public class AbilitySystem : MonoBehaviour
         if (!Attr.SkillBuffer.Use()) return; // 리소스 체크 등
 
         sm.ChangeState(sm.SkillState);
-        sm.CurrentBattleModule?.OnSkill();
+        sm.CurrentBattleModule?.OnSkillStart();
         sm.UpdateAttackTarget();
     }
 

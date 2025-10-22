@@ -9,13 +9,10 @@ public class ActionHandler : MonoBehaviour
     private ForceReceiver forceReceiver;
     private Transform playerTransform;
 
-    private void Awake()
+    public void Inject(PlayerCharacter player)
     {
-        player = GetComponent<PlayerCharacter>();
-    }
+        this.player = player;
 
-    private void Start()
-    {
         eventManager = player._event;
         forceReceiver = player.ForceReceiver;
         playerTransform = transform;

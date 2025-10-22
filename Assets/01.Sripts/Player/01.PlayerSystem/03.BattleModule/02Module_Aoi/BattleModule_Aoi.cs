@@ -39,20 +39,15 @@ public class BattleModule_Aoi : BattleModule
 
 
     // ================== 기본 공격 =================
-    public override void OnAttack() => comboSub.OnAttack();
+    public override void OnAttackStart() => comboSub.OnAttackStart();
     public override void OnAttackCanceled() => comboSub.OnAttackCanceled();
 
     // ================== 스킬 =================
-    public override void OnSkill() => skillSub.OnSkillStart();
+    public override void OnSkillStart() => skillSub.OnSkillStart();
     public override void OnSkillCanceled() => skillSub.OnSkillCanceled();
 
     // ================== 업데이트 =================
-    public override void OnUpdate()
-    {
-        comboSub.OnUpdate();
-        skillSub.OnUpdate();
-    }
-
+    public override void OnUpdate() => comboSub.OnUpdate();
     public override void OnSkillUpdate() => skillSub.OnSkillUpdate();
 
     // ================== 기타 =================

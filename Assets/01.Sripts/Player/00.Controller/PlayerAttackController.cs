@@ -27,17 +27,14 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    private void Awake()
+    public void Inject(PlayerCharacter player)
     {
-        player = GetComponent<PlayerCharacter>();
-    }
+        this.player = player;
 
-    private void Start()
-    {
         skill = player.skill;
         _camera = player._camera;
         hitStop = player.hitStop;
-        hit = player.Hit;
+        hit = player.Hitbox;
         spawnPoint = player.Body;
         playerInfo = player.InfoData;
 
@@ -85,7 +82,7 @@ public class PlayerAttackController : MonoBehaviour
 
     private async UniTaskVoid ComboAttackAsync(string skillName, int hitCount, float interval, float damageMultiplier)
     {
-        // 1. 파티클 위치 & 회전 결정
+        // 파티클 위치 & 회전 결정
         Vector3 particlePos;
         Quaternion particleRot;
 
@@ -121,17 +118,17 @@ public class PlayerAttackController : MonoBehaviour
                 break;
         }
 
-        // 2. 파티클 1회 재생
+        // 파티클 1회 재생
         GameObject skillObj = skill.SpawnSkill(skillName, particlePos, particleRot,
             (target, hitPoint) => HandleHit(target, hitPoint, damageMultiplier));
 
-        // 3. 투사체형이면 Launch 호출
+        // 투사체형이면 Launch 호출
         Vector3 dir = (CurrentAttackTarget != null)
             ? (CurrentAttackTarget.position - spawnPoint.position).normalized
             : spawnPoint.forward;
         skillObj?.GetComponentInChildren<ProjectileHitbox>()?.Launch(spawnPoint.position, dir);
 
-        // 4. 타수만큼 HitboxOverlap 반복 (근접 + 즉발형 모두 적용)
+        // 타수만큼 HitboxOverlap 반복 (근접 + 즉발형 모두 적용)
         for (int i = 0; i < hitCount; i++)
         {
             if (hit.attackType != AttackType.Projectile)
@@ -143,7 +140,7 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    private void HandleHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
+    public void HandleHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
     {
         int damage = Mathf.RoundToInt(player.Attr.Attack.Value * damageMultiplier);
         target.OnTakeDamage(damage);

@@ -21,7 +21,7 @@ public class ComboSubModule_Aoi
 
     private void HandleComboEnd() => OnComboEnd?.Invoke();
 
-    public void OnAttack() => ComboHandler.RegisterInput();
+    public void OnAttackStart() => ComboHandler.RegisterInput();
     public void OnAttackCanceled() { }
     public void OnUpdate() => ComboHandler.Update();
     public void OnEnemyHit(IDamageable target) { }
