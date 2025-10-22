@@ -52,7 +52,7 @@ public class GameScene : SceneBase
 
         // 각 UI 로드
         await UIManager.Instance.Show<GameUI>();
-        await UIManager.Instance.Show<AttackGaugeUI>();
+        await UIManager.Instance.Show<AwakenUI>();
         await UIManager.Instance.Show<MiniMapUI>();
         await UIManager.Instance.Show<TutorialUI>();
     }
