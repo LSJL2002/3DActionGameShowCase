@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -26,7 +25,7 @@ public class AwakenUI : UIBase
     private GaugeState1 currentGaugeState = GaugeState1.Fill;
 
     [Header("[Awaken UI Group]")]
-    [SerializeField] private AwakenUIElement[] awakenUIElements = new AwakenUIElement[2];
+    [SerializeField] private AwakenUIElement[] awakenUIElements = new AwakenUIElement[3];
 
     [SerializeField] CanvasGroup awakenGaugeCanvasGroup;
     [SerializeField] private string gaugePrefabAddress = "Gauge_Mask";
@@ -56,20 +55,43 @@ public class AwakenUI : UIBase
         });
     }
 
-    // 캐릭터 변경시 UI 숨기고 켜는 함수 (수정 예정)
-    public void OnActiveGaugeUI(PlayerCharacter playerCharacter)
+    // 최초, 플레이어 교체시 호출하여 각성게이지 참조들을 갱신
+    public void UpdateGaugeUI(PlayerCharacter playerCharacter)
     {
-        switch (playerCharacter.CharacterType)
+        playerIndex = (int)playerCharacter.CharacterType; // 현재 플레이어 번호 갱신
+
+        ResetEventAwakenGauge();
+    }
+
+    // 이벤트 갱신
+    public void ResetEventAwakenGauge()
+    {
+        // 구독해제
+        PlayerManager.Instance.Attr.AwakenGauge.OnChanged -= IncreaseGauge;
+        PlayerManager.Instance.Attr.AwakenGauge.OnFull -= ChangeFullState;
+        PlayerManager.Instance.Attr.AwakenGauge.OnUsed -= UseGauge;
+        PlayerManager.Instance.OnActiveCharacterChanged -= UpdateGaugeUI;
+
+        // 구독
+        PlayerManager.Instance.Attr.AwakenGauge.OnChanged += IncreaseGauge;
+        PlayerManager.Instance.Attr.AwakenGauge.OnFull += ChangeFullState;
+        PlayerManager.Instance.Attr.AwakenGauge.OnUsed += UseGauge;
+        PlayerManager.Instance.OnActiveCharacterChanged += UpdateGaugeUI;
+    }
+
+    // 초기에 게이지컨테이너 하위에 Fill 게이지 컴포넌트 전체 추가하는 함수
+    public async void InstanceFillGauge()
+    {
+        // AwakenUIElement 개수만큼 순회
+        for (int i = 0; i < awakenUIElements.Length; i++)
         {
-            case CharacterType.Yuki:
-                awakenGaugeCanvasGroup.DOFade(1f, 1f);
-                break;
-            case CharacterType.Aoi:
-                awakenGaugeCanvasGroup.DOFade(0f, 1f);
-                break;
-            case CharacterType.Mika:
-                awakenGaugeCanvasGroup.DOFade(0f, 1f);
-                break;
+            // 최대 게이지 개수만큼 Gauge Component 생성 및 List에 추가
+            for (int j = 0; j < gaugeCount; j++)
+            {
+                await AddGaugeAsync(i);
+            }
+
+            StartGaugeAnimation(i); // 모든 게이지 애니메이션 시작 (알파값 0상태라 안보임)
         }
     }
 
@@ -90,46 +112,6 @@ public class AwakenUI : UIBase
             return gaugeComp; // GaugeComponent 객체를 반환
         }
         return null;
-    }
-
-    // 처음에 게이지컨테이너 하위에 Fill 게이지 컴포넌트 전체 추가하는 함수
-    public async void InstanceFillGauge()
-    {
-        // AwakenUIElement 개수만큼 순회
-        for (int i = 0; i < awakenUIElements.Length; i++)
-        {
-            // 최대 게이지 개수만큼 Gauge Component 생성 및 List에 추가
-            for (int j = 0; j < gaugeCount; j++)
-            {
-                await AddGaugeAsync(i);
-            }
-
-            StartGaugeAnimation(i); // 모든 게이지 애니메이션 시작 (알파값 0상태라 안보임)
-        }
-    }
-
-    // 최초, 플레이어 교체시 호출하여 각성게이지 참조들을 갱신
-    public void UpdateGaugeUI(PlayerCharacter playerCharacter)
-    {
-        playerIndex = (int)playerCharacter.CharacterType; // 현재 플레이어 번호 갱신
-
-        ResetEventAwakenGauge();
-    }
-
-    // 이벤트 갱신
-    public void ResetEventAwakenGauge()
-    {
-        // 구독해제
-        PlayerManager.Instance.Attr.AwakenGauge.OnChanged -= IncreaseGauge;
-        PlayerManager.Instance.Attr.AwakenGauge.OnFull -= FullGauge;
-        PlayerManager.Instance.Attr.AwakenGauge.OnUsed -= UseGauge;
-        PlayerManager.Instance.OnActiveCharacterChanged -= OnActiveGaugeUI;
-
-        // 구독
-        PlayerManager.Instance.Attr.AwakenGauge.OnChanged += IncreaseGauge;
-        PlayerManager.Instance.Attr.AwakenGauge.OnFull += FullGauge;
-        PlayerManager.Instance.Attr.AwakenGauge.OnUsed += UseGauge;
-        PlayerManager.Instance.OnActiveCharacterChanged += OnActiveGaugeUI;
     }
 
     // 웨이브 연출 시작 함수
@@ -157,7 +139,7 @@ public class AwakenUI : UIBase
     }
 
     // 게이지 Full 상태변경 함수
-    public void FullGauge()
+    public void ChangeFullState()
     {
         currentGaugeState = GaugeState1.Full; // 상태 변경
         foreach (var comp in awakenUIElements[playerIndex].fillGauges)
@@ -243,6 +225,23 @@ public class AwakenUI : UIBase
         // 시퀀스 시작 (자동 재생)
         return sequence;
     }
+
+    // 캐릭터 변경시 UI 숨기고 켜는 함수 (수정 예정)
+    //public void OnActiveGaugeUI(PlayerCharacter playerCharacter)
+    //{
+    //    switch (playerCharacter.CharacterType)
+    //    {
+    //        case CharacterType.Yuki:
+    //            awakenGaugeCanvasGroup.DOFade(1f, 1f);
+    //            break;
+    //        case CharacterType.Aoi:
+    //            awakenGaugeCanvasGroup.DOFade(0f, 1f);
+    //            break;
+    //        case CharacterType.Mika:
+    //            awakenGaugeCanvasGroup.DOFade(0f, 1f);
+    //            break;
+    //    }
+    //}
 
     #region 해제 파트
     protected override void OnDestroy()
