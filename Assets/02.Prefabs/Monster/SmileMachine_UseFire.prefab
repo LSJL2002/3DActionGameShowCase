@@ -1158,6 +1158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3103904349277345993}
   - component: {fileID: 1018224373736016886}
+  - component: {fileID: 6963701309090002239}
   m_Layer: 6
   m_Name: BaseAttack
   m_TagString: Untagged
@@ -1201,6 +1202,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.8712809}
   m_Center: {x: 0, y: 0, z: -0.064359546}
+--- !u!114 &6963701309090002239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806093250194746402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43cf8dbcf93b1e44d882be9597e4db66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
 --- !u!1 &940812702440702915
 GameObject:
   m_ObjectHideFlags: 0
