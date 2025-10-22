@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Playables;
@@ -11,6 +12,7 @@ public class BattleManager : Singleton<BattleManager>
     public MonsterStatHandler monsterStats; //그몬스터 스텟
     public BattleZone currentZone; // 지금 전투하는 방
     private bool isBattle;
+    private float battleStartTime;
 
     //[SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
     //[SerializeField] private BaseEventSO<BattleZone> OnPlayerDie;
@@ -42,7 +44,6 @@ public class BattleManager : Singleton<BattleManager>
          .SetTarget(warningMaterial);
     }
 
-
     private void StopWarning()
     {
         emissionTween?.Kill();
@@ -50,49 +51,18 @@ public class BattleManager : Singleton<BattleManager>
         warningMaterial.SetColor("_EmissionColor", safeEmission);
     }
 
-
-    //public async void StartBattle(BattleZone zone)
-    //{
-    //    var cutScene =  await TimeLineManager.Instance.OnTimeLine<PlayableDirector>("TimeLine_SMachineBattleStart");
-
-    //    if (isBattle) return;
-    //    isBattle = true;
-    //    currentZone = zone;
-
-    //    // 1. 벽 켜기
-    //    currentZone.SetWallsActive(true);
-    //    StartWarning();
-
-
-    //    // 플레이 상태 체크 (연출 시작 직후)
-    //    if (!Application.isPlaying || this == null) return;
-
-    //    // Timeline 끝날 때까지 대기
-    //    await Task.Delay(TimeSpan.FromSeconds(cutScene.duration));
-
-    //    // 플레이 상태 체크 (대기 후)
-    //    if (!Application.isPlaying || this == null) return;
-
-    //    // 3. 몬스터 소환
-    //    currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
-
-    //    // 플레이 상태 체크 (몬스터 로드 끝난 뒤)
-    //    if (!Application.isPlaying || this == null || currentMonster == null) return;
-
-    //    currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
-
-    //    OnBattleStart?.Invoke(zone);
-    //}
-
     public async void StartBattle(BattleZone zone)
     {
         if (isBattle) return;
         isBattle = true;
+
+        battleStartTime = Time.time;
+
         currentZone = zone;
         currentZone.triggerCollider.enabled = false;
         // 1. 벽 켜기 + 경고 이펙트 시작
         currentZone.SetWallsActive(true);
-        //StartWarning();
+        StartWarning();
 
         // 2. 컷씬 실행 & 종료 대기 (스킵 포함)
         if (!string.IsNullOrEmpty(zone.TimeLineOP))
@@ -119,31 +89,38 @@ public class BattleManager : Singleton<BattleManager>
 
         // 4. 전투 시작 이벤트 브로드캐스트
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnBattleStart, zone);
+
+        var evt = new CustomEvent("battle_start")
+        {
+            { "zoneName", currentZone.stageName },
+            { "timestamp", System.DateTime.UtcNow.ToString("o") }
+        };
+        AnalyticsService.Instance.RecordEvent(evt);
     }
 
 
 
 
-    protected override void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            if (currentZone == null) return;
-            HandleMonsterDie();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            if (currentZone != null)
-                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            if(currentZone != null)
-            {
-                PlayerManager.Instance.Attr.Resource.TakeDamage(5000);
-            }
-        }
-    }
+    //protected override void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.O))
+    //    {
+    //        if (currentZone == null) return;
+    //        HandleMonsterDie();
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        if (currentZone != null)
+    //            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.L))
+    //    {
+    //        if(currentZone != null)
+    //        {
+    //            PlayerManager.Instance.Attr.Resource.TakeDamage(5000);
+    //        }
+    //    }
+    //}
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
     {
@@ -172,6 +149,21 @@ public class BattleManager : Singleton<BattleManager>
         if (monsterStats == null || currentZone == null || monsterStats.CurrentHP > 0)
             return;
 
+        float elapsed = Time.time - battleStartTime; // 전투 시작 후 경과 시간
+
+        // 아날리틱스 전송
+        var evt = new CustomEvent("monster_death")
+    {
+        { "zoneName", currentZone.stageName },                
+        { "monsterName", currentMonster.name },
+        { "elapsedTime", elapsed },                           // 몬스터를 죽이는데 걸린시간
+        { "timestamp", System.DateTime.UtcNow.ToString("o") } // 실제시간 - 언제 이벤트가 발생했는지
+    };
+        AnalyticsService.Instance.RecordEvent(evt);
+        AnalyticsService.Instance.Flush();
+        Debug.Log($"[Analytics] monster_death → {currentMonster.name}, time={elapsed:F2}s, zone={currentZone.stageName}");
+
+        // 
         if (currentZone.id == MapManager.Instance.bossZoneId)
         {
             await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.TimeLineED);
@@ -181,9 +173,9 @@ public class BattleManager : Singleton<BattleManager>
 
         await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.TimeLineED);
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
-
-        //StopWarning();
+        StopWarning();
     }
+
 
 
     public void ClearBattle()
