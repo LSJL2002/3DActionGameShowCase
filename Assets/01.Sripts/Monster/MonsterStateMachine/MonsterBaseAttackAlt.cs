@@ -49,11 +49,14 @@ public class MonsterBaseAttackAlt : MonsterBaseState
     {
         if (attackCollider != null && !hasHit)
         {
-            // Set the damage
             AttackTrigger trigger = attackCollider.GetComponent<AttackTrigger>();
             if (trigger != null)
             {
-                trigger.damage = damage;
+                int attackPower = stateMachine.Monster.Stats.AttackPower;
+                int finalDamage = Mathf.RoundToInt(attackPower);
+
+                trigger.damage = finalDamage;
+
                 trigger.onHit = () =>
                 {
                     hasHit = true;
@@ -62,7 +65,6 @@ public class MonsterBaseAttackAlt : MonsterBaseState
             }
 
             attackCollider.enabled = true;
-            Debug.Log("Alt attack collider enabled!");
         }
     }
 

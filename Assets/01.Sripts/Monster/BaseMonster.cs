@@ -180,7 +180,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
                 if (!inRange)
                 {
-                    Debug.Log($"{name} stopped pattern {currentPattern.id} after 5s timeout");
+                    //Debug.Log($"{name} stopped pattern {currentPattern.id} after 5s timeout");
                     break;
                 }
             }
@@ -231,7 +231,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     //Virtual, 각 몬스터에게 스킬을 연결할떄
     protected virtual MonsterBaseState GetStateFromEnum(States stateEnum)
     {
-        Debug.LogWarning($"{name} - BaseMonster.GetStateFromEnum not overridden!");
+        //Debug.LogWarning($"{name} - BaseMonster.GetStateFromEnum not overridden!");
         return null;
     }
 
