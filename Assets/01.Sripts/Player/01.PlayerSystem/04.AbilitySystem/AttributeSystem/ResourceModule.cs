@@ -30,6 +30,7 @@ public class ResourceModule
     {
         CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
         OnHealthChanged?.Invoke();
+        Debug.Log($"플레이어 현재체력 : {CurrentHealth}");
         if (CurrentHealth <= 0) OnDie?.Invoke();
     }
 
