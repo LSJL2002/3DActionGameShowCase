@@ -66,6 +66,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
     {
         stateMachine.HandleInput();
         stateMachine.LogicUpdate();
+        if (!isRunningPattern && !IsDead && stateMachine.CurrentState is MonsterIdleState)
+        {
+            PickPatternByCondition();
+        }
     }
     private void OnActiveCharacterChanged(PlayerCharacter newCharacter)
     {
