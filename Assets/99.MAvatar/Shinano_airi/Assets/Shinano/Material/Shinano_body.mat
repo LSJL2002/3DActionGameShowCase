@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Shinano_body
-  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+  m_Shader: {fileID: 4800000, guid: 8c17b56f4bf084c47872edcb95237e4a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -308,11 +308,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _OutlineWidthTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Outline_Sampler:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Ramp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReceiveShadowTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -329,6 +341,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RimShadeMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RimTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -352,7 +368,15 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadeTexture:
+        m_Texture: {fileID: 2800000, guid: 4713dad57c3d5e148aabba1ecfd75ea5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadingGradeMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadingGradeTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -392,6 +416,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SphereAdd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SubsurfaceMaskMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -409,6 +437,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TransmittanceColorMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _UvAnimMaskTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -567,6 +599,7 @@ Material:
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
+    - _DebugMode: 0
     - _DepthOffsetEnable: 0
     - _DetailAlbedoMapScale: 1
     - _DetailAlbedoScale: 1
@@ -628,6 +661,8 @@ Material:
     - _EnableFogOnTransparent: 1
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
+    - _EnvRimBlur: 0.35
+    - _EnvRimBorder: 3
     - _EnvironmentReflections: 1
     - _Farthest_Distance: 100
     - _FirstShadeOverridden: 0
@@ -693,6 +728,7 @@ Material:
     - _IDMaskPrior7: 0
     - _IDMaskPrior8: 0
     - _IgnoreEncryption: 0
+    - _IndirectLightIntensity: 0.1
     - _InvTilingScale: 1
     - _Inverse_Clipping: 0
     - _Inverse_MatcapMask: 0
@@ -731,10 +767,12 @@ Material:
     - _Is_UseTweakMatCapOnShadow: 0
     - _Is_ViewCoord_Scroll: 0
     - _Is_ViewShift: 0
+    - _LightColorAttenuation: 0
     - _LightDirection_MaskOn: 0
     - _LightMaxLimit: 1
     - _LightMinLimit: 0.05
     - _LinkDetailsWithBase: 1
+    - _MToonVersion: 39
     - _Main2ndDissolveNoiseStrength: 0.1
     - _Main2ndEnableLighting: 1
     - _Main2ndTexAlphaMode: 0
@@ -813,7 +851,9 @@ Material:
     - _OutlineBlendOpAlphaFA: 4
     - _OutlineBlendOpFA: 4
     - _OutlineColorMask: 15
+    - _OutlineColorMode: 0
     - _OutlineCull: 1
+    - _OutlineCullMode: 1
     - _OutlineDeleteMesh: 0
     - _OutlineDisableInVR: 0
     - _OutlineDstBlend: 0
@@ -822,6 +862,7 @@ Material:
     - _OutlineDstBlendFA: 1
     - _OutlineEnableLighting: 1
     - _OutlineFixWidth: 0
+    - _OutlineLightingMix: 1
     - _OutlineLitApplyTex: 0
     - _OutlineLitOffset: -8
     - _OutlineLitScale: 10
@@ -829,6 +870,7 @@ Material:
     - _OutlineOffsetFactor: 0
     - _OutlineOffsetUnits: 0
     - _OutlineOverridden: 0
+    - _OutlineScaledMaxDistance: 1
     - _OutlineSrcBlend: 1
     - _OutlineSrcBlendAlpha: 1
     - _OutlineSrcBlendAlphaFA: 0
@@ -845,6 +887,7 @@ Material:
     - _OutlineVertexR2Width: 0
     - _OutlineVisible: 1
     - _OutlineWidth: 0.04
+    - _OutlineWidthMode: 0
     - _OutlineZBias: 0.01
     - _OutlineZClip: 1
     - _OutlineZTest: 2
@@ -858,6 +901,7 @@ Material:
     - _Parallax: 0.02
     - _ParallaxOffset: 0.5
     - _QueueOffset: 0
+    - _ReceiveShadowRate: 1
     - _ReceiveShadows: 1
     - _ReceivesSSR: 1
     - _Reflectance: 0.04
@@ -879,12 +923,14 @@ Material:
     - _RimIndirBlur: 0.1
     - _RimIndirBorder: 0.5
     - _RimIndirRange: 0
+    - _RimLift: 0
     - _RimLight: 0
     - _RimLightOverridden: 0
     - _RimLightVisible: 1
     - _RimLight_FeatherOff: 0
     - _RimLight_InsideMask: 0.0001
     - _RimLight_Power: 0.1
+    - _RimLightingMix: 0
     - _RimMainStrength: 1
     - _RimNormalStrength: 1
     - _RimShadeBlur: 1
@@ -906,6 +952,9 @@ Material:
     - _SecondShadeVisible: 1
     - _Set_SystemShadowsToBase: 1
     - _ShadeColor_Step: 0
+    - _ShadeShift: 0
+    - _ShadeToony: 0.9
+    - _ShadingGradeRate: 1
     - _Shadow2ndBlur: 0.3
     - _Shadow2ndBorder: 0.45
     - _Shadow2ndNormalStrength: 1
@@ -1049,6 +1098,10 @@ Material:
     - _UseShadowThreshold: 0
     - _Use_1stAs2nd: 0
     - _Use_BaseAs1st: 0
+    - _UvAnimRotation: 0
+    - _UvAnimScrollX: 0
+    - _UvAnimScrollY: 0
+    - _VColBlendMode: 0
     - _VertexLightStrength: 0
     - _WorkflowMode: 1
     - _ZClip: 1
@@ -1067,7 +1120,7 @@ Material:
     - _isUnityToonshader: 1
     - _lilDirectionalLightStrength: 1
     - _lilShadowCasterBias: 0
-    - _lilToonVersion: 44
+    - _lilToonVersion: 45
     - _simpleUI: 0
     - _utsTechnique: 0
     - _utsVersionX: 0
@@ -1163,6 +1216,7 @@ Material:
     - _RimLightMaskColor: {r: 1, g: 0, b: 1, a: 1}
     - _RimShadeColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _SecondShadeMaskColor: {r: 0, g: 0, b: 1, a: 1}
+    - _ShadeColor: {r: 0.96999997, g: 0.81, b: 0.86, a: 1}
     - _Shadow2ndColor: {r: 0.9622641, g: 0.9123354, b: 0.949125, a: 1}
     - _Shadow3rdColor: {r: 0, g: 0, b: 0, a: 0}
     - _ShadowAOShift: {r: 1, g: 0, b: 1, a: 0}

@@ -260,6 +260,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Ramp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ReflectionColorTex:
         m_Texture: {fileID: 2800000, guid: 19111ceac21d2964989f37873494ebbc, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -463,6 +467,8 @@ Material:
     - _EmissionMap_UVMode: 0
     - _EmissionParallaxDepth: 0
     - _EmissionUseGrad: 0
+    - _EnvRimBlur: 0.35
+    - _EnvRimBorder: 3
     - _Farthest_Distance: 100
     - _FlipNormal: 0
     - _GI_Intensity: 0
@@ -814,7 +820,7 @@ Material:
     - _egci: 2
     - _lilDirectionalLightStrength: 1
     - _lilShadowCasterBias: 0
-    - _lilToonVersion: 44
+    - _lilToonVersion: 45
     - _simpleUI: 0
     - _utsTechnique: 0
     - _utsVersion: 2.08
@@ -933,3 +939,4 @@ Material:
     - _egc6: {r: 1, g: 1, b: 1, a: 0}
     - _egc7: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
