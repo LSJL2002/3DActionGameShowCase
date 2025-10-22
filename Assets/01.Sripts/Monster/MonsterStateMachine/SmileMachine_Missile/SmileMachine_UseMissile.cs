@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class SmileMachine_UseMissile : BaseMonster
 {
-    public Collider baseAttackCollider;
     public LineRenderer lineRender;
     [Header("Missile Effect")]
     public GameObject missile;

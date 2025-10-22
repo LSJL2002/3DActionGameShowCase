@@ -8,9 +8,9 @@ public class MonsterBaseAttack : MonsterBaseState
 
     public MonsterBaseAttack(MonsterStateMachine stateMachine) : base(stateMachine)
     {
-        if (stateMachine.Monster is ToiletMonster toilet && toilet.baseAttackCollider != null)
+        if (stateMachine.Monster is BaseMonster bm && bm.baseAttackCollider != null)
         {
-            attackCollider = toilet.baseAttackCollider as BoxCollider;
+            attackCollider = bm.baseAttackCollider as BoxCollider;
             if (attackCollider != null)
             {
                 attackCollider.isTrigger = true;
@@ -47,6 +47,7 @@ public class MonsterBaseAttack : MonsterBaseState
             if (trigger != null)
             {
                 int attackPower = stateMachine.Monster.Stats.AttackPower;
+                Debug.Log(attackPower);
                 int finalDamage = Mathf.RoundToInt(attackPower);
                 trigger.SetDamage(finalDamage);
 

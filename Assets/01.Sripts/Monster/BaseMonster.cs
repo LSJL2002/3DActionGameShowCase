@@ -38,6 +38,8 @@ public class BaseMonster : MonoBehaviour, IDamageable
     // 체력이 변경될 때 호출될 이벤트
     public static event System.Action OnEnemyHealthChanged;
 
+    public Collider baseAttackCollider;
+
     protected virtual void Awake()
     {
         animationData.Initialize();

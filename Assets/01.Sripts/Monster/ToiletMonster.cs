@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ToiletMonster : BaseMonster
 {
-    public Collider baseAttackCollider;
     protected override MonsterBaseState GetStateFromEnum(States stateEnum)
     {
         switch (stateEnum)

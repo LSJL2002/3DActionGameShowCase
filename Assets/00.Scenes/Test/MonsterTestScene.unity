@@ -560,24 +560,6 @@ Transform:
   - {fileID: 2049705435}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1358148068 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 157912776484231417, guid: d1e5acdb498f8574cabb8f0b1c635716, type: 3}
-  m_PrefabInstance: {fileID: 1860148954}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1358148071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1358148068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43cf8dbcf93b1e44d882be9597e4db66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 0
 --- !u!1001 &1444827730
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -589,6 +571,10 @@ PrefabInstance:
     - target: {fileID: 3177182589720266420, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
       propertyPath: m_Name
       value: SmileMachine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3177182589720266420, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3822254260468104781, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -779,13 +765,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmileMachine_UseMissile
       objectReference: {fileID: 0}
+    - target: {fileID: 6855971741374199306, guid: d1e5acdb498f8574cabb8f0b1c635716, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 157912776484231417, guid: d1e5acdb498f8574cabb8f0b1c635716, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1358148071}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1e5acdb498f8574cabb8f0b1c635716, type: 3}
 --- !u!1 &2039789322
 GameObject:
@@ -2406,6 +2393,10 @@ PrefabInstance:
     - target: {fileID: 8267726345693005202, guid: 0059cb4da6a8bca41ad1e44df6310e19, type: 3}
       propertyPath: m_Name
       value: SmileMachine_UseFire
+      objectReference: {fileID: 0}
+    - target: {fileID: 8267726345693005202, guid: 0059cb4da6a8bca41ad1e44df6310e19, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4769,6 +4760,10 @@ PrefabInstance:
     - target: {fileID: 4096753740676932879, guid: 2f94b136d9372af4d9e0828a8534eae1, type: 3}
       propertyPath: m_Name
       value: SmileMachin_UseGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096753740676932879, guid: 2f94b136d9372af4d9e0828a8534eae1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
