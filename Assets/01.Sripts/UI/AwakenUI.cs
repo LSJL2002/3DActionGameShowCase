@@ -38,9 +38,13 @@ public class AwakenUI : UIBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        // 이벤트 구독 / 해제
-        PlayerManager.Instance.OnActiveCharacterChanged -= UpdateGaugeUI;
+
+        // 구독
+        PlayerManager.Instance.Attr.AwakenGauge.OnChanged += IncreaseGauge;
+        PlayerManager.Instance.Attr.AwakenGauge.OnFull += ChangeFullState;
+        PlayerManager.Instance.Attr.AwakenGauge.OnUsed += UseGauge;
         PlayerManager.Instance.OnActiveCharacterChanged += UpdateGaugeUI;
+
         PlayerCharacter activeCharacter = PlayerManager.Instance.ActiveCharacter;
         InstanceFillGauge(); // 게이지 종류별로 FillGauge 인스턴스 (gaugeCount만큼)
         UpdateGaugeUI(activeCharacter);
@@ -57,22 +61,6 @@ public class AwakenUI : UIBase
             if (playerIndex == i) awakenUIElements[i].canvasGroup.alpha = 1f;
             else awakenUIElements[i].canvasGroup.alpha = 0f;
         }
-        ResetEventAwakenGauge();
-    }
-
-    // 이벤트 갱신
-    public void ResetEventAwakenGauge()
-    {
-        // 구독해제
-        PlayerManager.Instance.Attr.AwakenGauge.OnChanged -= IncreaseGauge;
-        PlayerManager.Instance.Attr.AwakenGauge.OnFull -= ChangeFullState;
-        PlayerManager.Instance.Attr.AwakenGauge.OnUsed -= UseGauge;
-        PlayerManager.Instance.OnActiveCharacterChanged -= UpdateGaugeUI;
-        // 구독
-        PlayerManager.Instance.Attr.AwakenGauge.OnChanged += IncreaseGauge;
-        PlayerManager.Instance.Attr.AwakenGauge.OnFull += ChangeFullState;
-        PlayerManager.Instance.Attr.AwakenGauge.OnUsed += UseGauge;
-        PlayerManager.Instance.OnActiveCharacterChanged += UpdateGaugeUI;
     }
 
     // 초기에 게이지컨테이너 하위에 Fill 게이지 컴포넌트 전체 추가하는 함수
@@ -211,6 +199,20 @@ public class AwakenUI : UIBase
     }
 
     #region 해제 파트
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        if (PlayerManager.Instance != null )
+        {
+            // 구독해제
+            PlayerManager.Instance.Attr.AwakenGauge.OnChanged -= IncreaseGauge;
+            PlayerManager.Instance.Attr.AwakenGauge.OnFull -= ChangeFullState;
+            PlayerManager.Instance.Attr.AwakenGauge.OnUsed -= UseGauge;
+            PlayerManager.Instance.OnActiveCharacterChanged -= UpdateGaugeUI;
+        }
+    }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
