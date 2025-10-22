@@ -20,7 +20,7 @@ public class PlayerCharacter : MonoBehaviour
     public PlayerAttackController Attack { get; private set; }
     public ForceReceiver ForceReceiver { get; private set; }
     public Interaction Interaction { get; private set; }
-    public HitboxOverlap Hit { get; private set; }
+    public HitboxOverlap Hitbox { get; private set; }
     public PlayerDamageable Damageable { get; private set; }
     public ActionHandler Action { get; private set; }
     public PlayerVitals Vital { get; private set; }
@@ -65,12 +65,12 @@ public class PlayerCharacter : MonoBehaviour
 
         Animator ??= GetComponent<Animator>();
         Controller ??= GetComponent<CharacterController>();
-        Attack ??= GetComponent<PlayerAttackController>();
+        Attack ??= GetComponent<PlayerAttackController>(); 
         ForceReceiver ??= GetComponent<ForceReceiver>();
-        Interaction ??= GetComponent<Interaction>();
-        Damageable ??= GetComponent<PlayerDamageable>();
-        Hit ??= GetComponent<HitboxOverlap>();
-        Action ??= GetComponent<ActionHandler>();
+        Interaction ??= GetComponent<Interaction>(); 
+        Damageable ??= GetComponent<PlayerDamageable>(); 
+        Hitbox ??= GetComponent<HitboxOverlap>(); 
+        Action ??= GetComponent<ActionHandler>(); 
         Vital ??= GetComponent<PlayerVitals>();
 
         Input = new InputSystem();
@@ -88,6 +88,12 @@ public class PlayerCharacter : MonoBehaviour
     }
     private void Start()
     {
+        Attack.Inject(this);
+        Interaction.Inject(this);
+        Damageable.Inject(this);
+        Hitbox.Inject(this);
+        Action.Inject(this);
+
         Ability.OnDeath += () => PlayerManager.HandleCharacterDeath(this);
     }
     private void OnDestroy()

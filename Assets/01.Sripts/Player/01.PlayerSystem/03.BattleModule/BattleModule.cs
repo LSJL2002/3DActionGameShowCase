@@ -18,10 +18,10 @@ public interface IBattleModule
     event Action OnAttackEnd;
     event Action OnSkillEnd;
 
-    void OnAttack();                        // 기본 공격
+    void OnAttackStart();                        // 기본 공격
     void OnAttackCanceled();                
     void OnUpdate();                  
-    void OnSkill();                         // 스킬 입력
+    void OnSkillStart();                         // 스킬 입력
     void OnSkillCanceled();
     void OnSkillUpdate();                   
     void ResetCombo();                      // 콤보 초기화
@@ -47,12 +47,12 @@ public abstract class BattleModule : IBattleModule
     protected void RaiseAttackEnd() => OnAttackEnd?.Invoke();
     protected void RaiseSkillEnd() => OnSkillEnd?.Invoke();
     // === 공격 ===
-    public virtual void OnAttack() => comboHandler?.RegisterInput();
+    public virtual void OnAttackStart() => comboHandler?.RegisterInput();
     public virtual void OnAttackCanceled() { }
     public virtual void OnUpdate() => comboHandler?.Update();
 
     // === 스킬 ===
-    public abstract void OnSkill();
+    public abstract void OnSkillStart();
     public virtual void OnSkillCanceled() { }
     public virtual void OnSkillUpdate() { }
 

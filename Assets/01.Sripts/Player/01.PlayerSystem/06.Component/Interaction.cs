@@ -19,7 +19,7 @@ public class Interaction : MonoBehaviour //itemobject랑 상호작용만 하는 
     public float interactionRadius = 1f; // 상호작용 범위
     private IInteractable nearestItem;
 
-    private void Start()
+    public void Inject(PlayerCharacter player)
     {
         if (promptPanel != null)
             promptPanel.SetActive(false);

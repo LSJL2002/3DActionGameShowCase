@@ -27,9 +27,9 @@ public class HitboxOverlap : MonoBehaviour
     private readonly HashSet<IDamageable> alreadyHit = new();
     public event Action<IDamageable, Vector3> OnHit;
 
-    private void Awake()
+    public void Inject(PlayerCharacter player)
     {
-        player = GetComponent<PlayerCharacter>();
+        this.player = player;
         body = player.Body;
     }
 

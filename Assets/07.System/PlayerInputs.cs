@@ -143,7 +143,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""HeavyAttack"",
                     ""type"": ""Button"",
                     ""id"": ""f5e23f77-563e-4675-bcb5-0db3c9e05e6b"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false

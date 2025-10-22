@@ -65,7 +65,7 @@ public class PlayerAttribute
 
         // 버퍼
         var skill = info.SkillData.SkillInfoDatas[0];
-        SkillBuffer = new BufferModule(1, skill.Cooldown, startValue: 0);
+        SkillBuffer = new BufferModule(skill.SkillCount, skill.Cooldown, startValue: 0);
         EvadeBuffer = new BufferModule(data.DodgeCount, data.DodgeCooldown, startValue: data.DodgeCount);
         hub.Connect(SkillBuffer, true);
         hub.Connect(EvadeBuffer, false);
@@ -82,7 +82,7 @@ public class PlayerAttribute
     {
         SkillBuffer.Update();
         EvadeBuffer.Update();
-        AwakenGauge.Update();
+        AwakenGauge?.Update();
     }
 
     // 스탯 증가나 버프 적용

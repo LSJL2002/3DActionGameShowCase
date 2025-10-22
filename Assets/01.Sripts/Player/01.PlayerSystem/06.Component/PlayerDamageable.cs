@@ -10,15 +10,16 @@ public class PlayerDamageable : MonoBehaviour, IDamageable
     private PlayerCharacter player;
 
 
-    private void Awake()
+    // 상위가 직접 전달
+    public void Inject(PlayerCharacter player)
     {
-        player ??= GetComponent<PlayerCharacter>();
+        this.player = player;
     }
-
 
     // IDamageable 구현 예시 (플레이어가 맞았을 때)
     public void OnTakeDamage(int amount)
     {
+        if (player.Ability.IsInvincible) return;
         player?.Attr.Resource.TakeDamage(amount);
     }
 

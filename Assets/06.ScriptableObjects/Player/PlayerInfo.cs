@@ -141,14 +141,14 @@ public class SkillInfoData
     [field: SerializeField, Tooltip("지속시간")]
     public float Duration { get; private set; }
 
-    [field: SerializeField, Tooltip("사거리")]
-    public float Range { get; private set; }
-
     [field: SerializeField, Tooltip("넉백 거리")]
     public float KnockbackDistance { get; private set; }
 
     [field: SerializeField, Tooltip("쿨타임")]
-    [field: Range(0f, 10f)] public float Cooldown { get; private set; } = 5f;
+    [field: Range(0f, 30f)] public float Cooldown { get; private set; } = 5f;
+
+    [field: SerializeField, Tooltip("버퍼개수")]
+    public int SkillCount { get; private set; } = 1;
 
     [field: SerializeField, Tooltip("Mp 소모량")]
     public int MpCost { get; private set; }

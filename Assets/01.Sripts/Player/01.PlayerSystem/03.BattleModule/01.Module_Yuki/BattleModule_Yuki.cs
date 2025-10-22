@@ -52,7 +52,7 @@ public class BattleModule_Yuki : BattleModule
     }
 
     // ================== 기본 공격 =================
-    public override void OnAttack()
+    public override void OnAttackStart()
     {
         comboSub.SetAwakened(awakenSub.IsAwakened);
         comboSub.OnAttack();
@@ -65,7 +65,7 @@ public class BattleModule_Yuki : BattleModule
     }
 
     // ================== 스킬 =================
-    public override void OnSkill() => skillSub.OnSkill();
+    public override void OnSkillStart() => skillSub.OnSkillStart();
     public override void OnSkillCanceled() => skillSub.OnSkillCanceled();
 
 

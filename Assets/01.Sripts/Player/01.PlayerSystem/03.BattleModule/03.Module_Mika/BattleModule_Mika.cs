@@ -9,14 +9,14 @@ public class BattleModule_Mika : BattleModule
 
     public BattleModule_Mika(PlayerStateMachine sm) : base(sm) { }
 
-    public override void OnAttack()
+    public override void OnAttackStart()
     {
         comboIndex = (comboIndex + 1) % 3;
         sm.Player.Attack.OnAttack($"Combo{comboIndex + 1}", 1, 0.1f, 1f);
         comboTimer = 1.5f; // 콤보 유지 시간
     }
 
-    public override void OnSkill()
+    public override void OnSkillStart()
     {
         // 현재 콤보 단계에 따라 다른 스킬 실행
         string skillName = comboIndex switch

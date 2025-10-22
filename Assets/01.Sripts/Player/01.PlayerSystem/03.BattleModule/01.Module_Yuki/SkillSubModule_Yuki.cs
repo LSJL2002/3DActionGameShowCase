@@ -24,7 +24,7 @@ public class SkillSubModule_Yuki
 
     public SkillSubModule_Yuki(PlayerStateMachine sm) => this.sm = sm;
 
-    public void OnSkill()
+    public void OnSkillStart()
     {
         var player = sm.Player;
         attackTarget = player.Attack.CurrentAttackTarget;
