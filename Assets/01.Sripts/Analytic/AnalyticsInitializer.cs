@@ -13,8 +13,16 @@ public class AnalyticsInitializer : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
 
-        await UnityServices.InitializeAsync();
-        AnalyticsService.Instance.StartDataCollection();
-        Debug.Log("[Analytics] Initialized (persistent)");
+        try
+        {
+            await UnityServices.InitializeAsync();
+            AnalyticsService.Instance.StartDataCollection();
+            Debug.Log("[Analytics] OK Initialized (persistent)");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[Analytics] X Init Failed: {e.Message}");
+        }
     }
 }
+

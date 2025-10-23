@@ -101,26 +101,21 @@ public class BattleManager : Singleton<BattleManager>
 
 
 
-    //protected override void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.O))
-    //    {
-    //        if (currentZone == null) return;
-    //        HandleMonsterDie();
-    //    }
-    //    if (Input.GetKeyDown(KeyCode.P))
-    //    {
-    //        if (currentZone != null)
-    //            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
-    //    }
-    //    if (Input.GetKeyDown(KeyCode.L))
-    //    {
-    //        if(currentZone != null)
-    //        {
-    //            PlayerManager.Instance.Attr.Resource.TakeDamage(5000);
-    //        }
-    //    }
-    //}
+    protected override void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (currentZone != null)
+                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (currentZone != null)
+            {
+                PlayerManager.Instance.Attr.Resource.TakeDamage(5000);
+            }
+        }
+    }
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
     {
@@ -157,7 +152,7 @@ public class BattleManager : Singleton<BattleManager>
         { "zoneName", currentZone.stageName },                
         { "monsterName", currentMonster.name },
         { "elapsedTime", elapsed },                           // 몬스터를 죽이는데 걸린시간
-        { "timestamp", System.DateTime.UtcNow.ToString("o") } // 실제시간 - 언제 이벤트가 발생했는지
+        { "eventTime", System.DateTime.UtcNow.ToString("o") } // 실제시간 - 언제 이벤트가 발생했는지
     };
         AnalyticsService.Instance.RecordEvent(evt);
         AnalyticsService.Instance.Flush();
