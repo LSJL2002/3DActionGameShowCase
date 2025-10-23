@@ -11,7 +11,6 @@ public class AwakenUIElement
     public GameObject gaugeContainer;
     public CanvasGroup canvasGroup;
     public List<GaugeComponent> fillGauges = new List<GaugeComponent>();
-    public CharacterType characterType;
 }
 
 public class AwakenUI : UIBase
@@ -150,7 +149,6 @@ public class AwakenUI : UIBase
                 foreach (var comp in awakenUIElements[playerIndex].fillGauges)
                 {
                     comp.SetGauge(GaugeComponent.GaugeState2.Off);
-                    comp.SetOriginGauge();
                 }
                 break;
             // 각성상태

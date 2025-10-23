@@ -1,8 +1,5 @@
-using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -53,8 +50,6 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
         // 로드 완료까지 대기
         await op;
 
-        Debug.Log($"{sceneIndex}번씬 로딩 완료");
-
         // 싱글로 로드했다면
         if (loadSceneMode == LoadSceneMode.Single)
         {
@@ -72,8 +67,6 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
 
         // 로드 완료까지 대기
         await op;
-
-        Debug.Log($"{SceneIndex}번씬 언로드");
 
         callback?.Invoke();
     }
