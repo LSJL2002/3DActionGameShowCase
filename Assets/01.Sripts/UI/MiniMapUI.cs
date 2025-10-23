@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -8,6 +6,13 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class MiniMapUI : UIBase
 {
+    public enum MapMode
+    {
+        MiniMap,
+        FullMap,
+    }
+
+    private MapMode previousMapMode = MapMode.MiniMap;
     private AsyncOperationHandle<GameObject> minimapCameraHandle; // 미니맵 카메라 오브젝트 핸들
     private AsyncOperationHandle<GameObject> minimapPlayerIconHandle; // 미니맵 플레이어 아이콘 오브젝트 핸들
 
@@ -20,6 +25,16 @@ public class MiniMapUI : UIBase
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
     }
+
+    // 테스트용! -------------------------------------------------------------------------------------
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            ChangeMapMode();
+        }
+    }
+    // 테스트용! -------------------------------------------------------------------------------------
 
     public async void DelayMethod()
     {
@@ -47,5 +62,20 @@ public class MiniMapUI : UIBase
             Addressables.ReleaseInstance(minimapPlayerIconHandle);
         if (minimapCameraHandle.IsValid())
             Addressables.ReleaseInstance(minimapCameraHandle);
+    }
+
+    // 맵모드 전환
+    public void ChangeMapMode()
+    {
+        switch(previousMapMode)
+        {
+            case MapMode.MiniMap:
+                previousMapMode = MapMode.FullMap;
+                break;
+
+            case MapMode.FullMap:
+                previousMapMode = MapMode.MiniMap;
+                break;
+        }
     }
 }
