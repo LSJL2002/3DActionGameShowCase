@@ -26,7 +26,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     [HideInInspector] public bool hasStartedCombat = false;
     public event Action OnAttackAnimationCompleteEvent;
     private readonly List<GameObject> activeAOEs = new List<GameObject>();
-
+    [HideInInspector] public bool hasDetectedPlayer = false;
     public MonsterStateMachine stateMachine;
 
     protected MonsterPatternSO.PatternEntry currentPattern;

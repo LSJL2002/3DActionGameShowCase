@@ -941,7 +941,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6855971741374199306, guid: d1e5acdb498f8574cabb8f0b1c635716, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4311,6 +4311,7 @@ GameObject:
   - component: {fileID: 6795516254415247759}
   - component: {fileID: 6795516254415247761}
   - component: {fileID: 6795516254415247760}
+  - component: {fileID: 6795516254415247762}
   m_Layer: 0
   m_Name: DamnTractor
   m_TagString: Untagged
@@ -4766,7 +4767,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6146417507537968260}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 4d14eb202b089a2479c0f4e7c0d660b3, type: 3}
   m_Controller: {fileID: 9100000, guid: 353a6e1dddc1269458c797c1cc00ce2e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -4822,7 +4823,30 @@ MonoBehaviour:
   patternConfig: {fileID: 0}
   AreaEffectPoint: {fileID: 706539333}
   hasStartedCombat: 0
+  hasDetectedPlayer: 0
   baseAttackCollider: {fileID: 289103276}
+--- !u!195 &6795516254415247762
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6146417507537968260}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &6883413300531773760
 GameObject:
   m_ObjectHideFlags: 0
