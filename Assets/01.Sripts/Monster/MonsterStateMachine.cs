@@ -109,14 +109,12 @@ public class MonsterStateMachine : StateMachine
         ChangeState(MonsterIdleState);
     }
 
-    public void ChangeState(MonsterBaseState newState)
+    public new void ChangeState(Istate newState)
     {
         if (Monster.IsDead && !(newState is MonsterDeathState))
             return;
-
-        currentState?.Exit();
-        currentState = newState;
-        currentState.Enter();
+        base.ChangeState(newState);
+        currentStateInternal = newState;
     }
 
     public void EnableAIEvents()
