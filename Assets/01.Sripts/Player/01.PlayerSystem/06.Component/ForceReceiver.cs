@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class ForceReceiver : MonoBehaviour
 {
-    //캐릭터가 받아야 할 힘을 모아놓은 계산기
-    //중력, 넉백, 점프 같은걸 더 자연스럽게 만들어줌
-    //그 힘을 실제로 적용시키는건 캐릭터컨트롤러의 Move
-
     [Header("Components")]
     [SerializeField] private CharacterController controller;
     [SerializeField] private Animator animator;
