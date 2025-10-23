@@ -85,6 +85,8 @@ public class PlayerCharacter : MonoBehaviour
         Input.OnMenuToggle += OnMenuToggle;
         Input.OnInventoryToggle += OnInventoryToggle;
         Input.OnCameraLockOn += OnLockOnToggle;
+
+        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnMonsterDie, (_)=>OnLockOnToggle());
     }
     private void Start()
     {
@@ -166,16 +168,12 @@ public class PlayerCharacter : MonoBehaviour
 
     public void Revive()
     {
-        // 1) 게임 오브젝트 활성화
         gameObject.SetActive(true);
+        Ability.Revive(); // IsDeath = false
 
-        // 2) Ability 상태 초기화
-        //Ability.IsDeath = false;
+        Attr.Resource.Revive();
 
-        // 3) 체력 복구
-        //Attr.Resource.CurrentHealth = Attr.Resource.MaxHP;
-
-        // 4) FSM 초기화
+        // 4) FSM 초기화 (Idle 상태로 강제 이동)
         StateMachine.ChangeState(StateMachine.IdleState);
 
         // 5) 입력 & 이동 복구
@@ -183,5 +181,8 @@ public class PlayerCharacter : MonoBehaviour
 
         // 6) 애니메이션 초기화
         Animator.Play("Idle", 0, 0f);
+
+        // 7) 필요한 경우 Lock-On 초기화
+        _camera?.ToggleLockOnTarget(null);
     }
 }

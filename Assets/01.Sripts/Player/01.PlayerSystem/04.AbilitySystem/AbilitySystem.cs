@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
@@ -130,6 +131,10 @@ public class AbilitySystem : MonoBehaviour
         if (IsAttacking) return;
         if (IsUsingSkill) return;
 
+        // 살아있는 캐릭터 수 체크
+        var aliveCount = sm.Player.PlayerManager.Characters.Count(c => !c.Ability.IsDeath);
+        if (aliveCount <= 1) return; // 마지막 1명일 땐 스왑 금지
+
         IsSwapping = true;
 
         if (next)
@@ -209,4 +214,5 @@ public class AbilitySystem : MonoBehaviour
     public void EndAttack() => IsAttacking = false;
     public void StartSkill() => IsUsingSkill = true;
     public void EndSkill() => IsUsingSkill = false;
+    public void Revive() => IsDeath = false;
 }
