@@ -7,7 +7,6 @@ public class SmileMachine_Missile : MonsterBaseState
     private Coroutine missileRoutine;
     private LineRenderer lineRenderer;
     private Transform firePoint;
-    private Transform player;
     private GameObject missileEffect;
 
     public SmileMachine_Missile(MonsterStateMachine ms, MonsterSkillSO missileSkill) : base(ms)
@@ -21,10 +20,6 @@ public class SmileMachine_Missile : MonsterBaseState
             firePoint = monster.firepoint;
             missileEffect = monster.missileEffect;
         }
-
-        player = ms.Monster.PlayerTarget != null
-            ? ms.Monster.PlayerTarget
-            : GameObject.FindGameObjectWithTag("Player")?.transform;
     }
 
     public override void Enter()
@@ -51,21 +46,25 @@ public class SmileMachine_Missile : MonsterBaseState
 
         while (elapsed < aimDuration)
         {
-            if (lineRenderer != null && firePoint != null && player != null)
+            Transform playerTarget = stateMachine.Monster.PlayerTarget;
+
+            if (lineRenderer != null && firePoint != null && playerTarget != null)
             {
-                RotateTowardsPlayer();
+                RotateTowardsPlayer(playerTarget);
                 lineRenderer.SetPosition(0, firePoint.position);
-                lineRenderer.SetPosition(1, player.position);
+                lineRenderer.SetPosition(1, playerTarget.position);
             }
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
+        Transform currentPlayer = stateMachine.Monster.PlayerTarget;
         Vector3 fireDirection = Vector3.zero;
-        if (player != null && firePoint != null)
-            fireDirection = (player.position - firePoint.position).normalized;
-        else
+
+        if (currentPlayer != null && firePoint != null)
+            fireDirection = (currentPlayer.position - firePoint.position).normalized;
+        else if (firePoint != null)
             fireDirection = firePoint.forward;
 
         if (stateMachine.Monster is SmileMachine_UseMissile monster && monster.missile != null && firePoint != null)
@@ -78,7 +77,6 @@ public class SmileMachine_Missile : MonsterBaseState
                 rb.linearVelocity = fireDirection * missileSpeed;
             }
 
-            // Pass damage info
             if (missile.TryGetComponent<Missile>(out var missileScript))
             {
                 int dmg = stateMachine.Monster.Stats.AttackPower;
@@ -97,11 +95,11 @@ public class SmileMachine_Missile : MonsterBaseState
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
-    private void RotateTowardsPlayer()
+    private void RotateTowardsPlayer(Transform playerTarget)
     {
-        if (player == null) return;
+        if (playerTarget == null) return;
 
-        Vector3 dir = player.position - stateMachine.Monster.transform.position;
+        Vector3 dir = playerTarget.position - stateMachine.Monster.transform.position;
         dir.y = 0;
         if (dir != Vector3.zero)
         {
