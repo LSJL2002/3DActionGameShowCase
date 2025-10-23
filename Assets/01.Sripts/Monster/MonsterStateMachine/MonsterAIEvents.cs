@@ -19,6 +19,10 @@ public class MonsterAIEvents : MonoBehaviour
     private AIMode currentMode = AIMode.Idle;
     private bool processingEnabled = true;
 
+    //FailSafe
+    private float idleTimer;
+    private const float idleResetTime = 8f;
+
     private void Awake()
     {
         if (PlayerManager.Instance != null)
@@ -77,25 +81,27 @@ public class MonsterAIEvents : MonoBehaviour
         {
             if (distance <= attackRange)
             {
+                // 사정거리 들어갈때에는
                 if (Time.time >= lastAttackTime + attackCooldown)
                     newMode = AIMode.Attack;
-                else if (distance <= detectRange)
-                    newMode = AIMode.Chase;
                 else
-                    newMode = AIMode.Idle;
+                    newMode = AIMode.Idle; //공격이 불가능하다면 Idle로 변경
             }
             else if (distance <= detectRange - chaseBuffer)
             {
+                // 공격 사정거리에 없지만, 플레이어를 인지하는 상태
                 newMode = AIMode.Chase;
             }
             else if (distance > detectRange + idleBuffer)
             {
+                //너무 멀면 Idle상태
                 newMode = AIMode.Idle;
             }
         }
         else
         {
-            if (distance <= detectRange && distance > attackRange * 1.2f)
+            // 공격을 하면서 사정거리에 벗어나면 다시 따라간다.
+            if (distance > attackRange * 1.2f)
                 newMode = AIMode.Chase;
         }
 
@@ -121,6 +127,17 @@ public class MonsterAIEvents : MonoBehaviour
         {
             stateMachine.Monster.PlayerTarget = player;
             OnPlayerDetected?.Invoke();
+        }
+
+        if (currentMode == AIMode.Idle)
+        {
+            idleTimer += Time.deltaTime;
+            if (idleTimer >= idleResetTime)
+            {
+                idleTimer = 0;
+                currentMode = AIMode.Chase;
+                OnPlayerDetected?.Invoke();
+            }
         }
     }
 
