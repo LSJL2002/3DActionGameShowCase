@@ -21,14 +21,16 @@ public class UIBase : MonoBehaviour
 
     protected virtual void Awake() { }
 
-    protected virtual void OnEnable() 
+    protected virtual void OnEnable()
     {
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     protected virtual void Start() 
     {
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     protected virtual void Update() { }

@@ -10,6 +10,7 @@ public class HomeScene : SceneBase
         await UIManager.Instance.Show<LoadingUI>(); // 로딩 UI 켜기
         GameObject homeObject = await LoadAddress("HomeObject"); // 홈 씬 오브젝트 로드
         UIManager.Instance.Hide<LoadingUI>(); // 로딩 UI 끄기
+        
         OnHomeSceneStart(); // 홈 씬 시작
     }
 
@@ -25,5 +26,10 @@ public class HomeScene : SceneBase
         var newHandle = Addressables.InstantiateAsync(objectAddress);
         await newHandle.ToUniTask();
         return newHandle.Result;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
     }
 }
