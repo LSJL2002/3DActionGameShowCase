@@ -34,7 +34,8 @@ public class TimeLineBase : MonoBehaviour
         attackGaugeUICanvasGroup.alpha = 0f;
         AudioManager.Instance.StopBGM();
 
-        PlayerManager.Instance.EnableInput(false); // 마우스 커서 보이게
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     protected virtual void Start() { }
