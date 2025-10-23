@@ -19,6 +19,7 @@ public class MiniMapUI : UIBase
     private MapMode previousMapMode = MapMode.MiniMap;
     private AsyncOperationHandle<GameObject> minimapCameraHandle; // 미니맵 카메라 오브젝트 핸들
     private AsyncOperationHandle<GameObject> minimapPlayerIconHandle; // 미니맵 플레이어 아이콘 오브젝트 핸들
+    private Camera minimapCamera;
     private Canvas minimapCanvas;
     private int firstSortingOrder;
     private Sequence fullMapsequence;
@@ -80,6 +81,11 @@ public class MiniMapUI : UIBase
             minimapCameraHandle.ToUniTask()
         );
 
+        if (minimapCameraHandle.IsValid() && minimapCameraHandle.Result != null)
+        {
+            minimapCamera = minimapCameraHandle.Result.GetComponent<Camera>();
+        }
+
         // 각 UI 알파값 1로 변경(페이드인 효과)
         miniMapCanvasGroup.DOFade(1f, 1f);
     }
@@ -111,6 +117,7 @@ public class MiniMapUI : UIBase
                 miniMap.rectTransform.anchorMin = anchorMinFullMap;
                 miniMap.rectTransform.anchorMax = anchorMaxFullMap;
                 miniMap.rectTransform.anchoredPosition = positionFullMap;
+                minimapCamera.orthographicSize = 300;
                 minimapCanvas.sortingOrder = 110; // 최대치로 변경
                 fullMapsequence.Restart();
                 break;
@@ -120,6 +127,7 @@ public class MiniMapUI : UIBase
                 miniMap.rectTransform.anchorMin = anchorMinMiniMap;
                 miniMap.rectTransform.anchorMax = anchorMaxMiniMap;
                 miniMap.rectTransform.anchoredPosition = positionMiniMap;
+                minimapCamera.orthographicSize = 40;
                 minimapCanvas.sortingOrder = firstSortingOrder; // 처음 값으로 변경
                 fullMapsequence.PlayBackwards();
                 break;
