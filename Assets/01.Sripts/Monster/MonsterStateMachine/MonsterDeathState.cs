@@ -17,6 +17,14 @@ public class MonsterDeathState : MonsterBaseState
         stateMachine.Monster.ClearAOEs();
 
         if (stateMachine.Monster.Agent != null)
+        {
+            stateMachine.Monster.Agent.isStopped = true;
+            stateMachine.Monster.Agent.ResetPath();
+            stateMachine.Monster.Agent.updateRotation = false;
+            stateMachine.Monster.Agent.enabled = false;
+        }
+        
+        if (stateMachine.Monster.Agent != null)
             stateMachine.Monster.Agent.updateRotation = false;
 
         var cc = stateMachine.Monster.GetComponent<CharacterController>();
