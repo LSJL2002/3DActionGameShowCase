@@ -13,10 +13,8 @@ public class TimeLine_DrainAbility : TimeLineBase
         playableDirector.stopped += SetToDay => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToDay();
 
         // 타임라인의 위치를 현재 플레이어 캐릭터 위치로 이동
-        float height = new Vector3(0, 0.5f, 0).y;
-        Vector3 playerPosition = PlayerManager.Instance.transform.position;
-        Vector3 newposition = new Vector3(playerPosition.x, playerPosition.y + height, playerPosition.z);
-        this.transform.position = newposition;
+        Vector3 playerPosition = PlayerManager.Instance.ActiveCharacter.transform.position;
+        transform.position = playerPosition;
         
         playableDirector.Play();
     }
