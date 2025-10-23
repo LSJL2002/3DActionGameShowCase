@@ -24,6 +24,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     public AbilitySystem Ability => ActiveCharacter?.Ability;
     public PlayerAttribute Attr => ActiveCharacter?.Attr;
     public InputSystem Input => ActiveCharacter?.Input;
+    public int AliveCount => characters.Count(c => !c.Ability.IsDeath);
 
     // ===================== 외부 API =========================
     public PlayerCharacter[] Characters => characters;
@@ -85,10 +86,6 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     // ================ 플레이어 스왑 기능 ====================
     public void SwapNext()
     {
-        // 살아있는 캐릭터 수 체크
-        var aliveCount = characters.Count(c => !c.Ability.IsDeath);
-        if (aliveCount <= 1) return; // 마지막 1명일 땐 스왑 금지
-
         var next = GetNextAliveCharacter();
         if (next != null)
             PlayerSwapService.Swap(this, Array.IndexOf(characters, next));
@@ -96,9 +93,6 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
 
     public void SwapPrev()
     {
-        var aliveCount = characters.Count(c => !c.Ability.IsDeath);
-        if (aliveCount <= 1) return;
-
         var prev = GetPrevAliveCharacter();
         if (prev != null)
             PlayerSwapService.Swap(this, Array.IndexOf(characters, prev));
