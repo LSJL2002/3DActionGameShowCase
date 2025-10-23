@@ -37,6 +37,7 @@ public class AudioManager : Singleton<AudioManager>
 
     private List<AudioSource> sfxSources = new();
     private int currentSfxIndex = 0;
+    private float currentBGMClipVolume = 1f;
     private AudioSource bgmSource;
 
     private Dictionary<string, NamedBGM> bgmDict = new();
@@ -86,7 +87,7 @@ public class AudioManager : Singleton<AudioManager>
     void Update()
     {
         // 항상 볼륨 최신화
-        bgmSource.volume = _bgmVolume;
+        bgmSource.volume = _bgmVolume * currentBGMClipVolume;
         foreach (var sfx in sfxSources) sfx.volume = _sfxVolume;
 
         // UI 버튼 클릭 SFX 처리
@@ -167,7 +168,7 @@ public class AudioManager : Singleton<AudioManager>
 
         bgmSource.Stop();
         bgmSource.clip = bgmData.clip;
-        bgmSource.volume = _bgmVolume * bgmData.volume; // 개별 볼륨 적용
+        currentBGMClipVolume = bgmData.volume;
         bgmSource.Play();
     }
 
@@ -180,6 +181,8 @@ public class AudioManager : Singleton<AudioManager>
     public async UniTask FadeToBGM(string name, float duration)
     {
         if (!bgmDict.TryGetValue(name, out var newBgm)) return;
+
+        currentBGMClipVolume = newBgm.volume;
 
         float startVolume = _bgmVolume * (bgmSource.clip != null && bgmDict.ContainsValue(newBgm) ? newBgm.volume : 1f);
         float time = 0f;
@@ -201,7 +204,7 @@ public class AudioManager : Singleton<AudioManager>
         while (time < duration)
         {
             time += Time.deltaTime;
-            bgmSource.volume = Mathf.Lerp(0f, _bgmVolume * newBgm.volume, time / duration);
+            bgmSource.volume = Mathf.Lerp(0f, _bgmVolume * currentBGMClipVolume, time / duration);
             await UniTask.Yield();
         }
     }

@@ -1,7 +1,6 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using DG.Tweening;
-using UnityEngine.UI;
 
 public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -17,7 +16,7 @@ public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerE
     [SerializeField] private GameObject targetButton;
     [SerializeField] private ItemSlotUI itemSlotUI;
     private ItemInformationUI itemInformationUI;
-
+    private bool isPointerEntering = false;
     public float fadeDuration = 1f;
 
     public void OnEnable()
@@ -45,8 +44,10 @@ public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerE
                 break;
             
             case ButtonType.ItemSlotButton:
-                // 아이템 정보가 있다면
-                if (itemSlotUI.itemData != null)
+                if (isPointerEntering) return;
+                isPointerEntering = true;
+
+                if (itemSlotUI.itemData != null) // 아이템 정보가 있다면
                 {
                     AudioManager.Instance.PlaySFX("ButtonSoundEffect3");
                     this.transform.DOScale(1.1f, 0.2f);
@@ -67,6 +68,7 @@ public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerE
                     Vector3 offset = new Vector3(rectTransform.sizeDelta.x / 2f, rectTransform.sizeDelta.y / 2f, 0);
                     itemInformationUI.transform.position = (Vector3)eventData.position - offset;
                 }
+                isPointerEntering = false;
                 break;
         }
     }

@@ -134,8 +134,8 @@ public partial class GameUI : UIBase
         playerDamageSequence.Append(activeHPImage_Front.DOFillAmount(playerHPpercentage, 0f));
         playerDamageSequence.Append(activeHPImage_Back.DOFillAmount(playerHPpercentage, 2.0f).SetEase(Ease.OutQuad));
 
-        // 플레이어 체력이 40% 이하가 되면 닷트윈 효과(지속)
-        if (playerHPpercentage <= 0.4)
+        // 조건 : ( 0 < 플레이어 체력 < 40% ) 닷트윈 효과(지속)
+        if (0 < playerHPpercentage && playerHPpercentage <= 0.4) 
         {
             activeHPImage_Back.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
             activeHPText.DOColor(Color.red, duration).SetLoops(-1, LoopType.Yoyo);
