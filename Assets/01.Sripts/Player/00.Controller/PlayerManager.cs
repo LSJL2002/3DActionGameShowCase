@@ -25,6 +25,11 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     public PlayerAttribute Attr => ActiveCharacter?.Attr;
     public InputSystem Input => ActiveCharacter?.Input;
 
+    // ===================== 외부 API =========================
+    public PlayerCharacter[] Characters => characters;
+    public int CurrentIndex { get => currentIndex; set => currentIndex = value; }
+    public CameraManager Camera => _camera;
+
     // ==================== Managers =====================
     public CameraManager _camera;
     public SkillManagers skill;
@@ -40,7 +45,6 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     private void Awake()
     {
         Application.targetFrameRate = 120;
-
         InitializeCharacters();
     }
 
@@ -61,14 +65,12 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
 
     private void ActivateFirstCharacter()
     {
-        // 모든 캐릭터 활성화 상태 초기화
         for (int i = 0; i < characters.Length; i++)
             characters[i].gameObject.SetActive(i == currentIndex);
 
-        var active = ActiveCharacter;
-        // 카메라 타겟 초기화 & 첫 시작시 초기화용 이후 상태변환 책임은 AbilitySystem에게 위임함
-        _camera?.SetPlayerTarget(active.transform, active.Face);
-        StateMachine.ChangeState(StateMachine.IdleState);
+        _camera?.SetPlayerTarget(ActiveCharacter.transform, ActiveCharacter.Face);
+        ActiveCharacter.StateMachine.ChangeState(ActiveCharacter.StateMachine.IdleState);
+
         //EnableInput(true); // letterbox 연출
     }
 
@@ -81,56 +83,25 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     }
 
     // ================ 플레이어 스왑 기능 ====================
-    private void SwapTo(int newIndex)
+    public void SwapNext()
     {
-        if (newIndex == currentIndex) return;
+        // 살아있는 캐릭터 수 체크
+        var aliveCount = characters.Count(c => !c.Ability.IsDeath);
+        if (aliveCount <= 1) return; // 마지막 1명일 땐 스왑 금지
 
-        var oldChar = ActiveCharacter;
-        var newChar = characters[newIndex];
-
-        // 위치/활성화만 담당 (논리적 전환은 FSM 담당)
-        PlayerSwapService.PrepareCharacterSwap(oldChar, newChar);
-
-        newChar.Ability.StartSwapIn();
-        _camera?.SetPlayerTarget(newChar.transform, newChar.Face);
-
-        currentIndex = newIndex;
-        OnActiveCharacterChanged?.Invoke(newChar);
-    }
-
-    public void SwapNext() => SwapTo((currentIndex + 1) % characters.Length);
-    public void SwapPrev() => SwapTo((currentIndex - 1 + characters.Length) % characters.Length);
-
-    // ==================== 플레이어 상태 체크 =======================
-    public void HandleCharacterDeath(PlayerCharacter deadCharacter)
-    {
-        // 1) 다음 살아있는 캐릭터 있으면 스왑
         var next = GetNextAliveCharacter();
         if (next != null)
-        {
-            SwapTo(Array.IndexOf(characters, next));
-        }
-
-        // 2) 모두 죽었는지 확인
-        CheckAllCharactersDead();
+            PlayerSwapService.Swap(this, Array.IndexOf(characters, next));
     }
 
-    public void CheckAllCharactersDead()
+    public void SwapPrev()
     {
-        // 모든 캐릭터가 죽었는지 확인
-        bool allDead = true;
-        foreach (var character in characters)
-        {
-            if (!character.Ability.IsDeath)
-            {
-                allDead = false;
-                break;
-            }
-        }
-        if (allDead)
-        {
-            OnAllCharactersDead?.Invoke();
-        }
+        var aliveCount = characters.Count(c => !c.Ability.IsDeath);
+        if (aliveCount <= 1) return;
+
+        var prev = GetPrevAliveCharacter();
+        if (prev != null)
+            PlayerSwapService.Swap(this, Array.IndexOf(characters, prev));
     }
 
     public PlayerCharacter GetNextAliveCharacter()
@@ -143,6 +114,41 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
         }
         return null;
     }
+    public PlayerCharacter GetPrevAliveCharacter()
+    {
+        for (int i = 0; i < characters.Length; i++)
+        {
+            int idx = (currentIndex - 1 - i + characters.Length) % characters.Length;
+            if (!characters[idx].Ability.IsDeath)
+                return characters[idx];
+        }
+        return null;
+    }
+    public void NotifyActiveCharacterChanged(PlayerCharacter newChar)
+    {
+        OnActiveCharacterChanged?.Invoke(newChar);
+    }
+
+    // ==================== 플레이어 상태 체크 =======================
+    public void HandleCharacterDeath(PlayerCharacter deadCharacter)
+    {
+        var next = GetNextAliveCharacter();
+        if (next != null)
+        {
+            PlayerSwapService.Swap(this, Array.IndexOf(characters, next));
+        }
+
+        CheckAllCharactersDead();
+    }
+
+    public void CheckAllCharactersDead()
+    {
+        // 모든 캐릭터가 죽었는지 확인
+        if (characters.All(c => c.Ability.IsDeath))
+        {
+            OnAllCharactersDead?.Invoke();
+        }
+    }
 
     // ============== 부활 ============
     public void ReviveCharacter(PlayerCharacter character)
@@ -153,7 +159,8 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     {
         foreach (var character in characters)
             character.Revive();
+
         currentIndex = 0;
-        SwapTo(0);
+        PlayerSwapService.Swap(this, 0);
     }
 }

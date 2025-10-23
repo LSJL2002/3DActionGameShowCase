@@ -6,6 +6,7 @@ public class EventHub
     public event Action<float> OnHealthChanged;
     public event Action<float> OnEnergyChanged;
     public event Action OnPlayerDie;
+    public event Action OnPlayerRevive;
 
     public event Action OnSkillBufferChanged;
     public event Action OnEvadeBufferChanged;
@@ -18,6 +19,7 @@ public class EventHub
     public void Connect(ResourceModule resource)
     {
         resource.OnDie += () => OnPlayerDie?.Invoke();
+        resource.OnRevive += () => OnPlayerRevive?.Invoke();
         resource.OnHealthChanged += () => OnHealthChanged?.Invoke(resource.CurrentHealth);
         resource.OnEnergyChanged += () => OnEnergyChanged?.Invoke(resource.CurrentEnergy);
     }

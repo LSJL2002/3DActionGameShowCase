@@ -14,6 +14,7 @@ public class ResourceModule
     public event Action OnHealthChanged;
     public event Action OnEnergyChanged;
     public event Action OnDie;
+    public event Action OnRevive;
 
     public bool IsDead => CurrentHealth <= 0;
 
@@ -51,5 +52,15 @@ public class ResourceModule
     {
         CurrentEnergy = Mathf.Min(CurrentEnergy + amount, MaxEnergy.Value);
         OnEnergyChanged?.Invoke();
+    }
+
+    public void Revive()
+    {
+        CurrentHealth = MaxHealth.Value;
+        CurrentEnergy = MaxEnergy.Value;
+
+        OnHealthChanged?.Invoke();
+        OnEnergyChanged?.Invoke();
+        OnRevive?.Invoke();
     }
 }

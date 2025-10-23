@@ -31,7 +31,6 @@ public class AwakenUI : UIBase
 
     private int playerIndex;
     private float gaugeCount = 50;
-    private Sequence consumeSequence;
 
     protected override void OnEnable()
     {
@@ -151,7 +150,6 @@ public class AwakenUI : UIBase
         switch (gaugeState1)
         {
             case GaugeState1.Fill:
-                consumeSequence?.Kill();
                 foreach (var comp in currentElements)
                 {
                     comp.SetGauge(GaugeComponent.GaugeState2.Off);
