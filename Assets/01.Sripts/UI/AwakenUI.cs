@@ -11,7 +11,6 @@ public class AwakenUIElement
     public GameObject gaugeContainer;
     public CanvasGroup canvasGroup;
     public List<GaugeComponent> fillGauges = new List<GaugeComponent>();
-    public CharacterType characterType;
 }
 
 public class AwakenUI : UIBase
@@ -32,33 +31,37 @@ public class AwakenUI : UIBase
 
     private int playerIndex;
     private float gaugeCount = 50;
-    private float totalConsumeDuration = 10f;
     private Sequence consumeSequence;
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
+        InstanceFillGauge(); // 게이지 종류별로 FillGauge 인스턴스 (gaugeCount만큼)
+        
         // 구독
-        PlayerManager.Instance.Attr.AwakenGauge.OnChanged += IncreaseGauge;
+        PlayerManager.Instance.Attr.AwakenGauge.OnChanged += UpdateGauge;
         PlayerManager.Instance.Attr.AwakenGauge.OnFull += ChangeFullState;
-        PlayerManager.Instance.Attr.AwakenGauge.OnUsed += UseGauge;
-        PlayerManager.Instance.OnActiveCharacterChanged += UpdateGaugeUI;
+        PlayerManager.Instance.Attr.AwakenGauge.OnUsed += ChangeAwakenState;
+        PlayerManager.Instance.OnActiveCharacterChanged += UpdateReference;
 
         PlayerCharacter activeCharacter = PlayerManager.Instance.ActiveCharacter;
-        InstanceFillGauge(); // 게이지 종류별로 FillGauge 인스턴스 (gaugeCount만큼)
-        UpdateGaugeUI(activeCharacter);
+        UpdateReference(activeCharacter);
+        
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { awakenGaugeCanvasGroup.DOFade(1f, 1f); });
     }
 
     // 최초, 플레이어 교체시 호출하여 각성게이지 참조들을 갱신
-    public void UpdateGaugeUI(PlayerCharacter playerCharacter)
+    public void UpdateReference(PlayerCharacter playerCharacter)
     {
         playerIndex = (int)playerCharacter.CharacterType; // 현재 플레이어 번호 갱신
         for (int i = 0; i < awakenUIElements.Length; i++)
         {
-            if (playerIndex == i) awakenUIElements[i].canvasGroup.alpha = 1f;
+            if (playerIndex == i && PlayerManager.Instance.Attr.AwakenGauge != null) // 플레이어 게이지정보가 null이 아니라면,
+            {
+                awakenUIElements[i].canvasGroup.alpha = 1f;
+            }
             else awakenUIElements[i].canvasGroup.alpha = 0f;
         }
     }
@@ -105,97 +108,70 @@ public class AwakenUI : UIBase
         }
     }
 
-    // 게이지 증가 함수
-    public void IncreaseGauge(float amount)
+    // 현재 게이지값에 맞게 게이지 상태 업데이트하는 함수
+    public void UpdateGauge(float amount)
     {
-        if (currentGaugeState == GaugeState1.Fill)
+        if (currentGaugeState == GaugeState1.Full) return; // 현재 Full 상태라면 리턴
+        int countToActivate = Mathf.FloorToInt(amount);
+
+        for (int i = 0; i < awakenUIElements[playerIndex].fillGauges.Count; i++)
         {
-            for (int i = 0; i < amount; i++)
+            if (i < countToActivate)
             {
-                if (awakenUIElements[playerIndex].fillGauges[i].currentGaugeState == GaugeComponent.GaugeState2.Off)
+                switch (currentGaugeState) // 켜져야하는 게이지들은 현재상태에 따라 켜줌 (On/Awaken)
                 {
-                    awakenUIElements[playerIndex].fillGauges[i].SetGauge(GaugeComponent.GaugeState2.On);
+                    case GaugeState1.Fill:
+                        awakenUIElements[playerIndex].fillGauges[i].SetGauge(GaugeComponent.GaugeState2.On);
+                        break;
+                    case GaugeState1.Awaken:
+                        awakenUIElements[playerIndex].fillGauges[i].SetGauge(GaugeComponent.GaugeState2.Awaken);
+                        break;
+                }
+            }
+            else // 켜지면 안되는 것들은 꺼줌
+            {
+                // 현재 Off가 아니라면 Off가 맞는 것들이니, 꺼줌
+                if (awakenUIElements[playerIndex].fillGauges[i].currentGaugeState != GaugeComponent.GaugeState2.Off)
+                {
+                    awakenUIElements[playerIndex].fillGauges[i].SetGauge(GaugeComponent.GaugeState2.Off);
                 }
             }
         }
+        if (amount <= 0) { ChangeGaugeState(GaugeState1.Fill); } // 변경된 값이 0이하가 되면 Fill 상태로 변경
     }
 
-    // 게이지 Full 상태변경 함수
-    public void ChangeFullState()
+    public void ChangeFullState() { ChangeGaugeState(GaugeState1.Full); }
+    public void ChangeAwakenState() { ChangeGaugeState(GaugeState1.Awaken); }
+    public void ChangeGaugeState(GaugeState1 gaugeState1)
     {
-        currentGaugeState = GaugeState1.Full; // 상태 변경
-        foreach (var comp in awakenUIElements[playerIndex].fillGauges)
-        {
-            // fillImage 알파값을 n으로 변경
-            comp.PopGaugeEffect();
-        }
-    }
+        currentGaugeState = gaugeState1;
+        Debug.Log($"currentGaugeState:{currentGaugeState}");
+        var currentElements = awakenUIElements[playerIndex].fillGauges;
 
-    // 게이지 사용시 호출 (각성상태돌입)
-    public void UseGauge()
-    {
-        currentGaugeState = GaugeState1.Awaken; // 상태 변경
-        UseGauge(currentGaugeState);
-        consumeSequence?.Kill();
-        consumeSequence = StartConsumeSequence(totalConsumeDuration);
-    }
-
-    // 게이지 세팅 함수
-    public void UseGauge(GaugeState1 gaugeState1)
-    {
         switch (gaugeState1)
         {
-            // 초기화
             case GaugeState1.Fill:
-                foreach (var comp in awakenUIElements[playerIndex].fillGauges)
+                consumeSequence?.Kill();
+                foreach (var comp in currentElements)
                 {
                     comp.SetGauge(GaugeComponent.GaugeState2.Off);
-                    comp.SetOriginGauge();
                 }
                 break;
-            // 각성상태
-            case GaugeState1.Awaken:
+
+            case GaugeState1.Full:
                 foreach (var comp in awakenUIElements[playerIndex].fillGauges)
+                {
+                    comp.PopGaugeEffect(); // fillImage 알파값을 n으로 변경
+                }
+                break;
+
+            case GaugeState1.Awaken:
+                foreach (var comp in currentElements)
                 {
                     comp.SetGauge(GaugeComponent.GaugeState2.Awaken);
                 }
-                currentGaugeState = GaugeState1.Awaken; // 상태 변경
                 break;
         }
-    }
-
-    // 게이지를 뒤에서부터 순차적으로 끄는 메서드(Dotween)
-    private Sequence StartConsumeSequence(float duration)
-    {
-        // 전체 소모 시간을 게이지 개수로 나누어 게이지 하나당 소모 간격을 계산
-        float intervalPerGauge = duration / awakenUIElements[playerIndex].fillGauges.Count;
-        // 새로운 시퀀스 생성
-        Sequence sequence = DOTween.Sequence();
-        // 인덱스를 뒤에서부터 순회하며 시퀀스에 작업을 추가
-        for (int i = awakenUIElements[playerIndex].fillGauges.Count - 1; i >= 0; i--)
-        {
-            GaugeComponent gauge = awakenUIElements[playerIndex].fillGauges[i];
-            // 게이지 끄는 작업 추가
-            // AppendInterval(intervalPerGauge): 다음 작업을 실행하기 전에 'intervalPerGauge' 시간만큼 대기
-            // AppendCallback: 대기 후 즉시 실행할 동작을 추가
-            sequence.AppendInterval(intervalPerGauge)
-                    .AppendCallback(() =>
-                    {
-                        if (gauge.currentGaugeState == GaugeComponent.GaugeState2.Awaken)
-                        {
-                            gauge.SetGauge(GaugeComponent.GaugeState2.Off);
-                        }
-                    });
-        }
-        // 전체 시퀀스가 완료된 후 실행할 동작 추가
-        sequence.OnComplete(() =>
-        {
-            currentGaugeState = GaugeState1.Fill;
-            UseGauge(currentGaugeState); // 게이지 소모 완료 후 초기화 상태로 복귀
-            consumeSequence = null;
-        });
-        // 시퀀스 시작 (자동 재생)
-        return sequence;
     }
 
     #region 해제 파트
@@ -206,10 +182,10 @@ public class AwakenUI : UIBase
         if (PlayerManager.Instance != null )
         {
             // 구독해제
-            PlayerManager.Instance.Attr.AwakenGauge.OnChanged -= IncreaseGauge;
+            PlayerManager.Instance.Attr.AwakenGauge.OnChanged -= UpdateGauge;
             PlayerManager.Instance.Attr.AwakenGauge.OnFull -= ChangeFullState;
-            PlayerManager.Instance.Attr.AwakenGauge.OnUsed -= UseGauge;
-            PlayerManager.Instance.OnActiveCharacterChanged -= UpdateGaugeUI;
+            PlayerManager.Instance.Attr.AwakenGauge.OnUsed -= ChangeAwakenState;
+            PlayerManager.Instance.OnActiveCharacterChanged -= UpdateReference;
         }
     }
 
