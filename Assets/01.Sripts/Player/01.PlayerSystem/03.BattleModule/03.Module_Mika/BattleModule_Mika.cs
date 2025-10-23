@@ -4,37 +4,56 @@ using UnityEngine;
 
 public class BattleModule_Mika : BattleModule
 {
-    private int comboIndex = 0;
-    private float comboTimer = 0f;
+    private ComboSubModule_Mika comboSub;
+    private SkillSubModule_Mika skillSub;
 
-    public BattleModule_Mika(PlayerStateMachine sm) : base(sm) { }
-
-    public override void OnAttackStart()
+    public BattleModule_Mika(PlayerStateMachine sm) : base(sm)
     {
-        comboIndex = (comboIndex + 1) % 3;
-        sm.Player.Attack.OnAttack($"Combo{comboIndex + 1}", 1, 0.1f, 1f);
-        comboTimer = 1.5f; // 콤보 유지 시간
+        comboSub = new ComboSubModule_Mika(sm);
+        skillSub = new SkillSubModule_Mika(sm);
+
+        // 콤보 핸들러 연결
+        comboHandler = comboSub.ComboHandler;
+        comboSub.OnComboEnd += RaiseAttackEnd;
+        skillSub.OnSkillEnd += RaiseSkillEnd;
     }
 
-    public override void OnSkillStart()
+    // AbilitySystem 초기화 후 BattleModule도 초기화할 때 호출
+    public override void Initialize(InputSystem input)
     {
-        // 현재 콤보 단계에 따라 다른 스킬 실행
-        string skillName = comboIndex switch
-        {
-            0 => "Skill_After1",
-            1 => "Skill_After2",
-            2 => "Skill_After3",
-            _ => "Skill_Default"
-        };
-        sm.Player.skill.SpawnSkill(skillName, sm.Player.Body.position);
+        base.Initialize(input);
+        // Attack Hold 입력 구독
+        //input.HoldSystem.OnHoldTriggered += OnAttackHoldTriggered;
     }
 
-    public override void OnUpdate()
+    public override void Dispose()
     {
-        if (comboTimer > 0)
-        {
-            comboTimer -= Time.deltaTime;
-            if (comboTimer <= 0) comboIndex = 0;
-        }
+        //input.HoldSystem.OnHoldTriggered -= OnAttackHoldTriggered;
     }
+
+    private void OnAttackHoldTriggered(string actionName)
+    {
+        if (actionName == "Attack") { }
+        //awakenSub.TryEnterAwakenedMode().Forget();
+    }
+
+    // ================== 기본 공격 =================
+    public override void OnAttackStart() => comboSub.OnAttackStart();
+    public override void OnAttackCanceled() => comboSub.OnAttackCanceled();
+
+    // ================== 스킬 =================
+    public override void OnSkillStart() => skillSub.OnSkillStart();
+    public override void OnSkillCanceled() => skillSub.OnSkillCanceled();
+
+    // ================== 업데이트 =================
+    public override void OnUpdate() => comboSub.OnUpdate();
+    public override void OnSkillUpdate() => skillSub.OnSkillUpdate();
+
+    // ================== 기타 =================
+    public override void OnEnemyHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
+    {
+        comboSub.OnEnemyHit(target);
+        skillSub.OnEnemyHit(target);
+    }
+    public override void ResetCombo() => comboSub.ResetCombo();
 }

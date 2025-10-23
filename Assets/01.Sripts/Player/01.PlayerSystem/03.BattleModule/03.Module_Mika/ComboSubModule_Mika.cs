@@ -1,16 +1,35 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class ComboSubModule_Mika : MonoBehaviour
+public class ComboSubModule_Mika
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public event Action OnComboEnd;
+    public ComboHandler ComboHandler { get; private set; }
+
+    private PlayerStateMachine sm;
+    private List<AttackInfoData> normalAttacks;
+
+    public ComboSubModule_Mika(PlayerStateMachine sm)
     {
-        
+        this.sm = sm;
+        normalAttacks = sm.Player.InfoData.AttackData.AttackInfoDatas;
+        ComboHandler = new ComboHandler(normalAttacks, sm.Player.Animator, sm.Player.Attack);
+
+        ComboHandler.OnComboFinished += HandleComboEnd;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void HandleComboEnd() => OnComboEnd?.Invoke();
+
+    public void OnAttackStart() => ComboHandler.RegisterInput();
+    public void OnAttackCanceled() { }
+    public void OnUpdate() => ComboHandler.Update();
+    public void OnEnemyHit(IDamageable target) { }
+    public void ResetCombo()
     {
-        
+        if (ComboHandler == null) return;
+        ComboHandler.OnComboFinished -= HandleComboEnd;
+        ComboHandler.Reset();
+        ComboHandler.OnComboFinished += HandleComboEnd;
     }
 }
