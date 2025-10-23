@@ -55,6 +55,8 @@ public class TimeLineBase : MonoBehaviour
         attackGaugeUICanvasGroup.alpha = 1f;
 
         PlayerManager.Instance.EnableInput(true); // 마우스 락
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     protected virtual void OnDestroy() { }
