@@ -51,6 +51,7 @@ public class TimeLineBase : MonoBehaviour
         if(mainCamera != null)
         mainCamera.gameObject.SetActive(true);
         gameUICanvasGroup.alpha = 1f;
+        if (miniMapUICanvasGroup != null)
         miniMapUICanvasGroup.alpha = 1f;
         attackGaugeUICanvasGroup.alpha = 1f;
 
