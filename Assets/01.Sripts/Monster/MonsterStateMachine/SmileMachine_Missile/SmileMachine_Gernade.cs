@@ -35,8 +35,12 @@ public class SmileMachine_Gernade : MonsterBaseState
     private IEnumerator GrenadeRoutine()
     {
         if (player == null || firepointGernade == null)
+        {
+            stateMachine.isAttacking = false;
             yield break;
+        }
 
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill5));
 
@@ -54,6 +58,7 @@ public class SmileMachine_Gernade : MonsterBaseState
         if (aoeController == null)
         {
             Debug.LogError("SmileMachine_Gernade: AOE prefab missing AreaEffectController!");
+            stateMachine.isAttacking = false;
             yield break;
         }
 
