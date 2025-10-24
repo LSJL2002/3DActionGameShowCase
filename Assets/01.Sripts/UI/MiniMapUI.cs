@@ -78,6 +78,7 @@ public class MiniMapUI : UIBase
 
     public async void DelayMethod()
     {
+        if (PlayerManager.Instance == null) return;
         int playerCount = PlayerManager.Instance.Characters.Length;
 
         // 모든 플레이어 아이콘 핸들을 저장할 배열 초기화 및 인스턴스화 시작
