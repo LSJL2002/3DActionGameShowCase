@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class TimeLine_SMachineDeath : TimeLineBase
+public class TimeLine_BattleStart : TimeLineBase
 {
     private System.Action<PlayableDirector> setToNightHandler;
     protected override void OnEnable()
