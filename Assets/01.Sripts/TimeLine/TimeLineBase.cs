@@ -55,6 +55,7 @@ public class TimeLineBase : MonoBehaviour
         if (attackGaugeUICanvasGroup != null)
         attackGaugeUICanvasGroup.alpha = 1f;
 
+        if (PlayerManager.Instance != null)
         PlayerManager.Instance.EnableInput(true); // 마우스 락
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

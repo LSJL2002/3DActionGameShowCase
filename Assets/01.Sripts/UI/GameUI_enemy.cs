@@ -41,7 +41,16 @@ public partial class GameUI : UIBase
     // 적 정보 세팅 함수
     public void SetEnemyInfo(int number)
     {
-        switch(number)
+        if (enemyInfoCanvasGroup == null
+            || enemyHPImage_Back == null
+            || enemyHPImage_Front == null
+            || enemyHPText == null
+            || enemyNameText == null)
+        {
+            Debug.LogWarning("[GameUI] Enemy UI elements are missing — skipping SetEnemyInfo()");
+            return;
+        }
+        switch (number)
         {
             case 0:
 
