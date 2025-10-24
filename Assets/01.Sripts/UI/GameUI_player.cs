@@ -27,7 +27,6 @@ public partial class GameUI : UIBase
     private Image activeHPImage_Back;
     private Image activeHPImage_Front;
     private TextMeshProUGUI activeHPText;
-    //private float playerMaxHP;
     private int playerIndex;
     private Sequence playerDamageSequence;
     private Sequence playerHealSequence;
@@ -45,11 +44,6 @@ public partial class GameUI : UIBase
     public void OnStartPlayer()
     {
         playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
-
-        //if (PlayerManager.Instance.Attr != null)
-        //{
-        //    playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
-        //}
 
         var characterTypes = Enum.GetValues(typeof(CharacterType));
 
