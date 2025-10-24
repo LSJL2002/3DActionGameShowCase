@@ -1,27 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [Header("FollowObject")]
-    [SerializeField] public Transform targetObject;
+    private Transform targetObject;
+    private Vector3 initialOffset = new Vector3(0f, 2f, 4f);
+    private Vector3 lookOffset = new Vector3(0f, 1.15f, 0f);
+    private Vector3 targetLocalOffset; // 타겟의 로컬 공간에서 초기 오프셋을 저장
 
-    public Vector3 lookOffset = new Vector3(0f, 1.6f, 0f);
-    private Vector3 localOffset;
-
-    void Start()
+    void OnEnable()
     {
-        if (targetObject == null) return;
-        localOffset = targetObject.InverseTransformPoint(transform.position);
+        PlayerManager.Instance.OnActiveCharacterChanged -= SetTarget;
+        PlayerManager.Instance.OnActiveCharacterChanged += SetTarget;
+
+        SetTarget(PlayerManager.Instance.ActiveCharacter);
     }
 
     void LateUpdate()
     {
         if (targetObject == null) return;
+        transform.position = targetObject.TransformPoint(targetLocalOffset);
+        LookAtTarget();
+    }
 
-        transform.position = targetObject.TransformPoint(localOffset);
-        Vector3 lookPos = targetObject.position + lookOffset;
-        transform.rotation = Quaternion.LookRotation(lookPos - transform.position, Vector3.up);
+    private void SetTarget(PlayerCharacter playerCharacter)
+    {
+        targetObject = PlayerManager.Instance.ActiveCharacter.transform;
+        if (targetObject == null) return;
+        targetLocalOffset = targetObject.InverseTransformDirection(transform.position - targetObject.position);
+        targetLocalOffset = initialOffset; // 타겟의 로컬 공간에서의 원하는 위치 오프셋 저장
+        transform.position = targetObject.TransformPoint(targetLocalOffset); // OnEnable 시점에 초기 위치 설정
+        LookAtTarget();
+    }
+
+    // 타겟을 바라보도록 카메라 회전을 계산하고 적용하는 함수
+    private void LookAtTarget()
+    {
+        // 카메라가 바라볼 월드 위치: 타겟의 중심 + lookOffset
+        Vector3 lookAtPoint = targetObject.position + lookOffset;
+        Quaternion targetRotation = Quaternion.LookRotation(lookAtPoint - transform.position, Vector3.up);
+        transform.rotation = targetRotation;
     }
 }
