@@ -63,6 +63,7 @@ public class PlayerWalkState : PlayerGroundState
         deltaMove.y = 0f; // 수직 이동 제외
         deltaMove += sm.Player.ForceReceiver.Movement;
 
+        if (sm.Player.Controller == null || !sm.Player.Controller.enabled) return;
         sm.Player.Controller.Move(deltaMove);
     }
 }

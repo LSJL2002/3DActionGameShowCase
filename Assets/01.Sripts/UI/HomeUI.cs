@@ -53,6 +53,7 @@ public class HomeUI : UIBase
                 // 기존 게임을 로드
                 SaveManager.Instance.gameMode = eGameMode.LoadGame;
                 SceneLoadManager.Instance.ChangeScene(2, null, LoadSceneMode.Single);
+                InventoryManager.Instance.ClearAllInventory();
                 break;
 
             case "OptionUI":

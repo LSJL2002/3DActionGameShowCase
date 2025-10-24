@@ -14,7 +14,6 @@ public class InventoryManager : Singleton<InventoryManager>
 
         inventoryModel = new Inventory();
         inventoryViewModel.Init(inventoryModel);
-        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, ClearAllInventory);
     }
 
     // 아이템 추가 함수
@@ -71,10 +70,9 @@ public class InventoryManager : Singleton<InventoryManager>
     }
 
     // 스테이지 전부 클리어시 인벤토리 비우는 함수
-    public void ClearAllInventory(BattleZone zone)
+    public void ClearAllInventory()
     {
-        if (zone.stageName == "5")
-            inventoryModel.ClearDictionary();
+        inventoryModel.ClearDictionary();
     }
 
     // 플레이어 스탯 추가 함수 (능력선택시 호출)

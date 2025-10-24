@@ -19,6 +19,8 @@ public class DecisionButtonUI : UIBase
         canvas.sortingOrder = 101;
 
         PlayerManager.Instance.EnableInput(false); // 플레이어 입력 제한
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void SetGuideText()
@@ -52,8 +54,8 @@ public class DecisionButtonUI : UIBase
                 break;
         }
         PlayerManager.Instance.EnableInput(true); // 플레이어 입력 제한 해제
-        Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         Hide(); // 현재 팝업창 닫기
     }
 }
