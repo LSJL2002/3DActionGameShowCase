@@ -281,7 +281,6 @@ public class TutorialUI : UIBase
 
     public void PlayBossAfterSelection(SceneType type)
     {
-        if (type != SceneType.Boss_1 || bossOneAfterSelectPlayed) return;
         List<TextSO> scene = new List<TextSO>();
         foreach (TextSO text in dialogues)
         {

@@ -5409,7 +5409,6 @@ GameObject:
   - component: {fileID: 646725439372400024}
   - component: {fileID: 1261816730138526251}
   - component: {fileID: 3907996684311232973}
-  - component: {fileID: 6935021450080010101}
   - component: {fileID: 4728083590766537062}
   m_Layer: 0
   m_Name: Companion
@@ -5486,31 +5485,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &6935021450080010101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8256886589670269656}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47ae9dd5c82490445a06c3c21a7f37c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetObject: {fileID: 0}
-  lookObject: {fileID: 0}
-  moveSpeed: 20
-  rotationSpeed: 360
-  anim: {fileID: 4272135322808742081}
-  rb: {fileID: 3907996684311232973}
-  chatUI: {fileID: 3047247285030718760}
-  moveFx: {fileID: 276127117624638616}
-  moveSpeedThreshold: 0.1
-  OnBattleStart: {fileID: 11400000, guid: 89c6b4419402e2245aa93504f1d399a8, type: 2}
-  OnBattleClear: {fileID: 11400000, guid: a89dcfca8498af941853ffbfdfd3ea27, type: 2}
-  ui: {fileID: 0}
-  isAttack: 0
 --- !u!114 &4728083590766537062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5532,8 +5506,6 @@ MonoBehaviour:
   rotationSpeed: 360
   moveSpeedThreshold: 0.1
   moveFx: {fileID: 276127117624638616}
-  OnBattleStart: {fileID: 11400000, guid: 89c6b4419402e2245aa93504f1d399a8, type: 2}
-  OnBattleClear: {fileID: 11400000, guid: a89dcfca8498af941853ffbfdfd3ea27, type: 2}
   isAttack: 0
   isTalkMode: 0
   cachedAnchorLocalPos: {x: 0, y: 0, z: 0}

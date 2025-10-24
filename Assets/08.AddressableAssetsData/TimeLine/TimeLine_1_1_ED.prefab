@@ -1621,7 +1621,7 @@ GameObject:
   m_Component:
   - component: {fileID: 877612400012137107}
   - component: {fileID: 5608721674495389422}
-  - component: {fileID: 8008688526904665013}
+  - component: {fileID: 9073481736548945822}
   m_Layer: 0
   m_Name: TimeLine_1_1_ED
   m_TagString: Untagged
@@ -1703,7 +1703,7 @@ PlayableDirector:
     - 5104d9e942cd788418cc612c9515c060: {fileID: 2429068526602130729}
     - 930e3f4448f9d184f84c017ddfe9b7af: {fileID: 3865515375595673934}
     - 3140ffbb315266d4ca31260f2bd26c19: {fileID: 2992476927167387607}
---- !u!114 &8008688526904665013
+--- !u!114 &9073481736548945822
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1712,7 +1712,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 236125491911742075}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 673f1a0e3f6346e42980645008b20bfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fb76039043a4e447a63bcfcdba7bbb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playableDirector: {fileID: 5608721674495389422}
@@ -14932,8 +14932,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8008688526904665013}
-        m_TargetAssemblyTypeName: TimeLineBase, Assembly-CSharp
+      - m_Target: {fileID: 9073481736548945822}
+        m_TargetAssemblyTypeName: TimeLine_BattleEnd, Assembly-CSharp
         m_MethodName: OnSkipButton
         m_Mode: 1
         m_Arguments:
@@ -26382,7 +26382,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7643579120467961464}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 4fe6f33c0dbd1104ea51403312423814, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0

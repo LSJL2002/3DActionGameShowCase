@@ -44,8 +44,13 @@ public class PreviewScene : MonoBehaviour
     {
         if (UIManager.Instance != null)
         {
-            string uiName = UIManager.Instance.currentUI.gameObject.name;
-            UIManager.Instance.Hide(uiName);
+            var ui = UIManager.Instance.currentUI;
+            if (ui != null && ui.gameObject != null)
+            {
+                string uiName = ui.gameObject.name;
+                UIManager.Instance.Hide(uiName);
+                Debug.Log($"[OnDisable] UI '{uiName}' 숨김 처리 완료");
+            }
         }
 
         UnloadPreviewScene();

@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.UI;
 
 public class TimeLineBase : MonoBehaviour
 {
@@ -34,7 +31,9 @@ public class TimeLineBase : MonoBehaviour
         attackGaugeUICanvasGroup.alpha = 0f;
         AudioManager.Instance.StopBGM();
 
-        PlayerManager.Instance.EnableInput(false); // 마우스 커서 보이게
+        PlayerManager.Instance.EnableInput(false);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     protected virtual void Start() { }
@@ -47,13 +46,19 @@ public class TimeLineBase : MonoBehaviour
 
     protected virtual void OnDisable() 
     {
-        if(mainCamera != null)
+        if (mainCamera != null)
         mainCamera.gameObject.SetActive(true);
+        if (gameUICanvasGroup != null)
         gameUICanvasGroup.alpha = 1f;
+        if (miniMapUICanvasGroup != null)
         miniMapUICanvasGroup.alpha = 1f;
+        if (attackGaugeUICanvasGroup != null)
         attackGaugeUICanvasGroup.alpha = 1f;
 
+        if (PlayerManager.Instance != null)
         PlayerManager.Instance.EnableInput(true); // 마우스 락
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     protected virtual void OnDestroy() { }

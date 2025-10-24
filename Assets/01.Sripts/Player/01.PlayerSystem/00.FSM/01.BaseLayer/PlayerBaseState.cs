@@ -73,6 +73,7 @@ public abstract class PlayerBaseState : Istate
                 move = moveDir * moveSpeed + sm.Player.ForceReceiver.Movement;
             }
 
+            if (sm.Player.Controller == null || !sm.Player.Controller.enabled) return;
             sm.Player.Controller.Move(move * Time.deltaTime);
         }
     }
