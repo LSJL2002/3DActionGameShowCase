@@ -69,6 +69,12 @@ public class InventoryManager : Singleton<InventoryManager>
         return inventoryViewModel.GetCoreItems();
     }
 
+    // 스테이지 전부 클리어시 인벤토리 비우는 함수
+    public void ClearAllInventory()
+    {
+        inventoryModel.ClearDictionary();
+    }
+
     // 플레이어 스탯 추가 함수 (능력선택시 호출)
     public void StatUPAbility(ItemData itemData)
     {

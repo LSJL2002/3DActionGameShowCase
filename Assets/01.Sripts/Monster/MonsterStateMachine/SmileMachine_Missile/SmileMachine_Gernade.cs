@@ -17,10 +17,6 @@ public class SmileMachine_Gernade : MonsterBaseState
 
         if (monster != null)
             firepointGernade = monster.firepointGernade;
-
-        player = ms.Monster.PlayerTarget != null
-            ? ms.Monster.PlayerTarget
-            : GameObject.FindGameObjectWithTag("Player")?.transform;
     }
 
     public override void Enter()
@@ -34,7 +30,10 @@ public class SmileMachine_Gernade : MonsterBaseState
 
     private IEnumerator GrenadeRoutine()
     {
-        if (player == null || firepointGernade == null)
+        Transform playerTarget = stateMachine.Monster.PlayerTarget;
+        Transform firepoint = firepointGernade;
+
+        if (playerTarget == null || firepoint == null)
         {
             stateMachine.isAttacking = false;
             yield break;
@@ -44,8 +43,8 @@ public class SmileMachine_Gernade : MonsterBaseState
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill5));
 
-        Vector3 targetPos = player.position;
-        if (Physics.Raycast(player.position + Vector3.up, Vector3.down, out RaycastHit hit, 10f, LayerMask.GetMask("Ground")))
+        Vector3 targetPos = stateMachine.Monster.PlayerTarget.position;
+        if (Physics.Raycast(targetPos + Vector3.up, Vector3.down, out RaycastHit hit, 10f, LayerMask.GetMask("Ground")))
             targetPos = hit.point;
 
         if (stateMachine.Monster.AreaEffectPoint != null)
@@ -76,7 +75,8 @@ public class SmileMachine_Gernade : MonsterBaseState
         while (!telegraphFinished)
             yield return null;
 
-        LaunchGrenade(targetPos, (int)(stateMachine.Monster.Stats.AttackPower));
+        Vector3 latestPos = stateMachine.Monster.PlayerTarget.position;
+        LaunchGrenade(latestPos, (int)(stateMachine.Monster.Stats.AttackPower));
 
         yield return new WaitForSeconds(1f);
 
@@ -86,6 +86,7 @@ public class SmileMachine_Gernade : MonsterBaseState
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill5));
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
+
 
     private void LaunchGrenade(Vector3 targetPos, int damage)
     {

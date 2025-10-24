@@ -133,11 +133,26 @@ public class MonsterStateMachine : StateMachine
 
     private void HandleChase()
     {
-        if (!isAttacking)
+        if (Monster.IsDead || isAttacking) 
+            return;
+
+        if (Monster.PlayerTarget != null)
         {
-            ChangeState(MonsterChaseState);
+            float distance = Vector3.Distance(Monster.transform.position, Monster.PlayerTarget.position);
+
+            if (!Monster.hasDetectedPlayer && distance <= Monster.Stats.AttackRange * 3f)
+            {
+                Monster.hasDetectedPlayer = true;
+                Monster.Stats.DetectRange = 100;
+            }
+
+            if (Monster.hasDetectedPlayer)
+            {
+                ChangeState(MonsterChaseState);
+            }
         }
     }
+
 
     private void HandleIdle()
     {

@@ -69,6 +69,14 @@ public class Inventory
         }
     }
 
+    // 모든 딕셔너리 클리어 함수 (모든 스테이지 클리어시 정리용)
+    public void ClearDictionary()
+    {
+        consumableItems = new Dictionary<ItemData, InventoryItem>();
+        skillItems = new Dictionary<ItemData, InventoryItem>();
+        coreItems = new Dictionary<ItemData, InventoryItem>();
+    }
+
     // 반환하는 메서드도 Dictionary의 Values를 List로 변환하여 반환
     public IReadOnlyList<InventoryItem> GetConsumableItems() => consumableItems.Values.ToList();
     public IReadOnlyList<InventoryItem> GetSkillItems() => skillItems.Values.ToList();

@@ -6,6 +6,7 @@ using UnityEngine.Playables;
 
 public class TimeLine_SMachineBattleStart : TimeLineBase
 {
+    private System.Action<PlayableDirector> setToNightHandler;
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -13,7 +14,9 @@ public class TimeLine_SMachineBattleStart : TimeLineBase
         playableDirector.Play();
 
         playableDirector.stopped += OnTimeLineStop;
-        playableDirector.stopped += SetToNight => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToNight();
+
+        setToNightHandler = _ => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToNight();
+        playableDirector.stopped += setToNightHandler;
     }
 
     protected override void OnDisable()
@@ -21,6 +24,6 @@ public class TimeLine_SMachineBattleStart : TimeLineBase
         base.OnDisable();
 
         playableDirector.stopped -= OnTimeLineStop;
-        playableDirector.stopped -= SetToNight => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToNight();
+        playableDirector.stopped -= setToNightHandler;
     }
 }

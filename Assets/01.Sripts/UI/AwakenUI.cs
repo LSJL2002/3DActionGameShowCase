@@ -177,7 +177,7 @@ public class AwakenUI : UIBase
     {
         base.OnDisable();
 
-        if (PlayerManager.Instance != null )
+        if (PlayerManager.Instance != null)
         {
             // 구독해제
             PlayerManager.Instance.Attr.AwakenGauge.OnChanged -= UpdateGauge;
