@@ -51,7 +51,7 @@ public class DecisionButtonUI : UIBase
                 OnDecisionMade?.Invoke(false);
                 break;
         }
-        PlayerManager.Instance.EnableInput(false); // 플레이어 입력 제한 해제
+        PlayerManager.Instance.EnableInput(true); // 플레이어 입력 제한 해제
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         Hide(); // 현재 팝업창 닫기
