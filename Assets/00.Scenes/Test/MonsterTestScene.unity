@@ -750,6 +750,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5baeba1a62759fa468e0b30de1e09cd8, type: 3}
+--- !u!1 &1780227383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1780227384}
+  m_Layer: 0
+  m_Name: BodyCabin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1780227384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780227383}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4176611914004201069}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1786180578
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,7 +972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6855971741374199306, guid: d1e5acdb498f8574cabb8f0b1c635716, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1285,7 +1316,7 @@ Transform:
   m_GameObject: {fileID: 8806223380428798792}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.00269104, y: -2.111019, z: 0.81564534}
+  m_LocalPosition: {x: -0.00269104, y: 1.58, z: 0.81564534}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2007,7 +2038,7 @@ Transform:
   m_GameObject: {fileID: 5016113737401152588}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.007926712, y: 2.248695, z: -1.4718878}
+  m_LocalPosition: {x: 0.007926712, y: 2.248695, z: -1.471888}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3146,6 +3177,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6728115401673410328}
+  - {fileID: 1780227384}
   m_Father: {fileID: 6795516254415247757}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4298147650869921303
@@ -4308,11 +4340,14 @@ GameObject:
   m_Component:
   - component: {fileID: 6795516254415247757}
   - component: {fileID: 6795516254415247758}
-  - component: {fileID: 6795516254415247759}
   - component: {fileID: 6795516254415247761}
   - component: {fileID: 6795516254415247760}
-  m_Layer: 0
-  m_Name: DamnTractor
+  - component: {fileID: 6795516254415247762}
+  - component: {fileID: 6795516254415247759}
+  - component: {fileID: 6795516254415247764}
+  - component: {fileID: 6795516254415247763}
+  m_Layer: 6
+  m_Name: SpiderMachine_UseGrenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4735,7 +4770,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 2.95, z: -1.42}
+  m_Center: {x: 0, y: 3, z: -1.42}
 --- !u!65 &6795516254415247759
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4766,7 +4801,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6146417507537968260}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 4d14eb202b089a2479c0f4e7c0d660b3, type: 3}
   m_Controller: {fileID: 9100000, guid: 353a6e1dddc1269458c797c1cc00ce2e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -4793,36 +4828,85 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationData:
     animationEntries:
-    - type: 0
-      parameterName: 
-    - type: 1
-      parameterName: Idle
-    - type: 2
-      parameterName: Walk
     - type: 3
       parameterName: Run
-    - type: 4
-      parameterName: Roar
     - type: 5
       parameterName: Attack
     - type: 6
       parameterName: Attack2
     - type: 7
-      parameterName: Smash
-    - type: 8
-      parameterName: Slam
-    - type: 9
-      parameterName: Charge
-    - type: 10
-      parameterName: Missile
-    - type: 11
-      parameterName: Gernade
-    - type: 13
-      parameterName: Death
-  patternConfig: {fileID: 0}
+      parameterName: Stamp
+    - type: 1
+      parameterName: Idle
+  patternConfig: {fileID: 11400000, guid: 5f5579cae6fadfd44a7979d3d22ac263, type: 2}
   AreaEffectPoint: {fileID: 706539333}
   hasStartedCombat: 0
+  hasDetectedPlayer: 0
   baseAttackCollider: {fileID: 289103276}
+  stampEffect: {fileID: 100000, guid: c380d2dd36b7ec44cb9ea6098511faa9, type: 3}
+--- !u!195 &6795516254415247762
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6146417507537968260}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &6795516254415247763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6146417507537968260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 704eb743def2e004db513091d8608ce9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterData: {fileID: 11400000, guid: 720072b063ffdc046a549b5de7168b91, type: 2}
+  maxHp: 0
+  maxMp: 0
+  CurrentHP: 0
+  CurrentMP: 0
+  AttackPower: 0
+  Defense: 0
+  AttackSpeed: 0
+  MoveSpeed: 0
+  DetectRange: 0
+  AttackRange: 0
+  StatusEffect: []
+  DropItem: 
+  MonsterSkills: []
+--- !u!114 &6795516254415247764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6146417507537968260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b5fe3112031b94d97184a74617b434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  animator: {fileID: 0}
+  drag: 0.3
 --- !u!1 &6883413300531773760
 GameObject:
   m_ObjectHideFlags: 0

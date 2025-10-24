@@ -1,34 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
-    private static object _lock = new object();
+    private static readonly object _lock = new object();
     private static bool _applicationIsQuitting = false;
 
     public static T Instance
     {
         get
         {
+            // 🔹 도메인 리로드 시 유령 참조 정리
+            if (_instance != null && _instance.Equals(null))
+                _instance = null;
+
             if (_applicationIsQuitting)
-            {
-                Debug.LogWarning($"[Singleton] {typeof(T)} 이미 종료됨. 새 인스턴스 반환하지 않음.");
                 return null;
-            }
 
             lock (_lock)
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<T>();
+                    // 🔹 Unity 6 대응: FindAnyObjectByType (비활성 포함)
+                    _instance = FindAnyObjectByType<T>(FindObjectsInactive.Include);
 
+                    // ✅ 예외: PlayerManager는 자동 생성 금지
+                    if (_instance == null && typeof(T).Name == "PlayerManager")
+                    {
+                        Debug.LogWarning($"[Singleton<{typeof(T).Name}>] PlayerManager는 씬에 직접 배치해야 합니다. 자동 생성하지 않습니다.");
+                        return null;
+                    }
+
+                    // 🔹 다른 싱글톤은 자동 생성
                     if (_instance == null)
                     {
                         GameObject singletonObj = new GameObject(typeof(T).Name);
                         _instance = singletonObj.AddComponent<T>();
+                        singletonObj.hideFlags = HideFlags.DontSave;
                         DontDestroyOnLoad(singletonObj);
+                        Debug.Log($"[Singleton<{typeof(T).Name}>] 새 인스턴스 생성됨.");
                     }
                 }
 
@@ -55,6 +65,12 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         _applicationIsQuitting = true;
     }
 
+    protected virtual void OnDestroy()
+    {
+        if (_instance == this)
+            _instance = null;
+    }
+
     protected virtual void OnEnable() { }
 
     protected virtual void Start() { }
@@ -67,8 +83,5 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     protected virtual void OnDisable() { }
 
-    protected virtual void OnDestroy()
-    {
-        _instance = null;
-    }
+
 }

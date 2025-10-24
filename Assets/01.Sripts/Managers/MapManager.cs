@@ -96,7 +96,7 @@ public class MapManager : Singleton<MapManager>
             int lastClearStage = SaveManager.Instance.playerData.LastClearStage;
 
             
-            if (lastClearStage == _bossZoneId)
+            if (lastClearStage == _bossZoneId || lastClearStage == 0)
             {
                 ReturnToStartZone();
             }
@@ -194,6 +194,7 @@ public class MapManager : Singleton<MapManager>
         Debug.Log($"마지막 스테이지 클리어! 현재 회차: {round}");
 
         // 필요시 세이브 추가
+        SaveManager.Instance.playerData.LastClearStage = 0;
         SaveManager.Instance.SaveData();       
 
         // 씬 리셋 or 엔딩씬

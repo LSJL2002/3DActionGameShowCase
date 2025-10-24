@@ -35,6 +35,10 @@ public class MonsterStateMachine : StateMachine
     public SmileMachine_Missile SmileMachine_Missile { get; private set; }
     public SmileMachine_Gernade SmileMachine_Gernade { get; private set; }
 
+    //SpiderMachine
+    public SpiderMachine_AttackStamp SpiderMachine_AttackStamp { get; private set; }
+
+
     private MonsterAIEvents aiEvents;
     public bool isAttacking = false;
 
@@ -100,6 +104,11 @@ public class MonsterStateMachine : StateMachine
             var gernadeSkill = monster.Stats.GetSkill("SmileMachine_Grenade");
             SmileMachine_Gernade = new SmileMachine_Gernade(this, gernadeSkill);
         }
+        else if (monster is SpiderTractor_UseGrenade)
+        {
+            var stampSkill = monster.Stats.GetSkill("SpiderMachine_AttackStamp");
+            SpiderMachine_AttackStamp = new SpiderMachine_AttackStamp(this, stampSkill);
+        }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();
         aiEvents.SetStateMachine(this);
@@ -133,11 +142,26 @@ public class MonsterStateMachine : StateMachine
 
     private void HandleChase()
     {
-        if (!isAttacking)
+        if (Monster.IsDead || isAttacking) 
+            return;
+
+        if (Monster.PlayerTarget != null)
         {
-            ChangeState(MonsterChaseState);
+            float distance = Vector3.Distance(Monster.transform.position, Monster.PlayerTarget.position);
+
+            if (!Monster.hasDetectedPlayer && distance <= Monster.Stats.AttackRange * 3f)
+            {
+                Monster.hasDetectedPlayer = true;
+                Monster.Stats.DetectRange = 100;
+            }
+
+            if (Monster.hasDetectedPlayer)
+            {
+                ChangeState(MonsterChaseState);
+            }
         }
     }
+
 
     private void HandleIdle()
     {

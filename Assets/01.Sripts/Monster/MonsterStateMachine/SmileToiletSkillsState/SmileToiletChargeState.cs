@@ -87,7 +87,7 @@ public class SmileToiletChargeState : MonsterBaseState
             stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
         }
-
+        stateMachine.isAttacking = false;
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
     }
     public override void OnAttackHit()
@@ -97,7 +97,5 @@ public class SmileToiletChargeState : MonsterBaseState
 
         IDamageable damageable = player.GetComponent<IDamageable>();
         damageable?.OnTakeDamage(stateMachine.Monster.Stats.AttackPower);
-
-        Debug.Log("Player hit by charge!");
     }
 }

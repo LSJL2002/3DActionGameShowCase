@@ -54,7 +54,10 @@ public class GameScene : SceneBase
         await UIManager.Instance.Show<GameUI>();
         await UIManager.Instance.Show<AwakenUI>();
         await UIManager.Instance.Show<MiniMapUI>();
-        await UIManager.Instance.Show<TutorialUI>();
+        if (SaveManager.Instance.gameMode != eGameMode.LoadGame)
+        {
+            await UIManager.Instance.Show<TutorialUI>();
+        }
     }
 
     public void LoadInventoryFromSave()
@@ -77,5 +80,4 @@ public class GameScene : SceneBase
             InventoryManager.Instance.LoadData_Addressables(id.ToString());
         }
     }
-
 }

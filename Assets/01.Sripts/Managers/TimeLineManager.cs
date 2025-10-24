@@ -55,6 +55,7 @@ public class TimeLineManager : Singleton<TimeLineManager>
         var newHandle = Addressables.InstantiateAsync(timelineName);
         var obj = await newHandle.Task;
         obj.name = timelineName;
+        if (timelineHandles.ContainsKey(timelineName)) return null;
         timelineHandles.Add(timelineName, newHandle);
         var result = obj.GetComponent<T>();
         return result;

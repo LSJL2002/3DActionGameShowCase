@@ -7,6 +7,7 @@ using UnityEngine.UI;
 [System.Serializable]
 public struct PlayerUIElement
 {
+    public float playerMaxHP;
     public Image hpImageBack;
     public Image hpImageFront;
     public TextMeshProUGUI hpText;
@@ -17,7 +18,7 @@ public struct PlayerUIElement
 public partial class GameUI : UIBase
 {
     [Header("[Player UI Group]")]
-    [SerializeField] private PlayerUIElement[] playerUIElements = new PlayerUIElement[2];
+    [SerializeField] private PlayerUIElement[] playerUIElements = new PlayerUIElement[3];
 
     [Header("[Util]")]
     [SerializeField] private CanvasGroup playerInfoCanvasGroup;
@@ -26,7 +27,6 @@ public partial class GameUI : UIBase
     private Image activeHPImage_Back;
     private Image activeHPImage_Front;
     private TextMeshProUGUI activeHPText;
-    private float playerMaxHP;
     private int playerIndex;
     private Sequence playerDamageSequence;
     private Sequence playerHealSequence;
@@ -45,21 +45,15 @@ public partial class GameUI : UIBase
     {
         playerInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { playerInfoCanvasGroup.DOFade(1f, 1f); });
 
-        if (PlayerManager.Instance.Attr != null)
-        {
-            playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
-        }
-
         var characterTypes = Enum.GetValues(typeof(CharacterType));
 
         for (int i = 0; i < playerUIElements.Length; i++)
         {
-            float currentHP = PlayerManager.Instance.Attr?.Resource.CurrentHealth ?? 0f;
-
             // 플레이어 체력UI 기본세팅
+            playerUIElements[i].playerMaxHP = PlayerManager.Instance.Characters[i].Ability.Attr.Resource.MaxHealth.Value;
             playerUIElements[i].hpImageBack.fillAmount = 1f;
             playerUIElements[i].hpImageFront.fillAmount = 1f;
-            playerUIElements[i].hpText.text = currentHP.ToString("#,##0");
+            playerUIElements[i].hpText.text = PlayerManager.Instance.Characters[i].Ability.Attr.Resource.CurrentHealth.ToString("#,##0");
 
             if (i < characterTypes.Length)
             {
@@ -93,7 +87,7 @@ public partial class GameUI : UIBase
     public void UpdatePlayerUI(PlayerCharacter playerCharacter)
     {
         // 현재 캐릭터의 정보를 가져오는 곳 재정의
-        playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
+        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
         playerIndex = (int)playerCharacter.CharacterType;
 
         if (playerIndex >= 0 && playerIndex < playerUIElements.Length)
@@ -108,7 +102,7 @@ public partial class GameUI : UIBase
 
     private float PreprocessHPUpdate()
     {
-        playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
+        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
 
         playerDamageSequence.Kill();
         playerHealSequence.Kill();
@@ -119,7 +113,7 @@ public partial class GameUI : UIBase
 
         audioSource.Stop();
 
-        return currentHealth / playerMaxHP;
+        return currentHealth / playerUIElements[playerIndex].playerMaxHP;
     }
 
     // 체력 감소
