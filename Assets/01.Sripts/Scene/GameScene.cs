@@ -80,5 +80,4 @@ public class GameScene : SceneBase
             InventoryManager.Instance.LoadData_Addressables(id.ToString());
         }
     }
-
 }

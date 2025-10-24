@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -14,10 +15,13 @@ public class MiniMapUI : UIBase
 
     [SerializeField] CanvasGroup miniMapCanvasGroup;
     [SerializeField] RectTransform miniMapRectTransform;
+    [SerializeField] Material[] miniMapIconMat = new Material[3]; // 플레이어아이콘 색을 가지고 있는 Mat 3개(원본포함)
 
     private MapMode currentMapMode = MapMode.MiniMap;
     private AsyncOperationHandle<GameObject> minimapCameraHandle; // 미니맵 카메라 오브젝트 핸들
     private AsyncOperationHandle<GameObject> minimapPlayerIconHandle; // 미니맵 플레이어 아이콘 오브젝트 핸들
+    private AsyncOperationHandle<GameObject>[] minimapPlayerIconHandlesArray;
+    private GameObject[] minimapPlayerIconHandles = new GameObject[3]; // 로드한 미니맵 아이콘들을 저장할 배열
     private Camera minimapCamera;
     private Canvas minimapCanvas;
     private int firstSortingOrder;
@@ -75,25 +79,58 @@ public class MiniMapUI : UIBase
 
     public async void DelayMethod()
     {
-        // 미니맵 카메라, 플레이어 아이콘 어드레서블로 생성
-        minimapPlayerIconHandle = Addressables.InstantiateAsync("Minimap_PlayerIcon", PlayerManager.Instance.ActiveCharacter.transform);
+        int playerCount = PlayerManager.Instance.Characters.Length;
+
+        // 모든 플레이어 아이콘 핸들을 저장할 배열 초기화 및 인스턴스화 시작
+        minimapPlayerIconHandlesArray = new AsyncOperationHandle<GameObject>[playerCount];
+        var allIconTasks = new List<UniTask>();
+
+        // 미니맵 카메라 로드 시작
         minimapCameraHandle = Addressables.InstantiateAsync("MinimapCamera");
+        allIconTasks.Add(minimapCameraHandle.ToUniTask());
 
-        // 두 작업이 모두 완료될 때까지 기다림
-        await UniTask.WhenAll
-        (
-            minimapPlayerIconHandle.ToUniTask(),
-            minimapCameraHandle.ToUniTask()
-        );
+        // 각 플레이어 아이콘 로드 시작
+        for (int i = 0; i < playerCount; i++)
+        {
+            // 각 플레이어의 transform을 부모로 설정하여 아이콘 인스턴스화
+            minimapPlayerIconHandlesArray[i] = Addressables.InstantiateAsync("Minimap_PlayerIcon", PlayerManager.Instance.Characters[i].transform);
+            allIconTasks.Add(minimapPlayerIconHandlesArray[i].ToUniTask());
+        }
 
+        // 모든 로드 작업이 완료될 때까지 기다림
+        await UniTask.WhenAll(allIconTasks);
+
+        // 1. 미니맵카메라 로드/생성 완료 확인 후 카메라 컴포넌트 가져오기
         if (minimapCameraHandle.IsValid() && minimapCameraHandle.Result != null)
         {
             minimapCamera = minimapCameraHandle.Result.GetComponent<Camera>();
         }
 
+        // 2. 미니맵아이콘 로드/생성 확인 후 처리
+        for (int i = 0; i < playerCount; i++)
+        {
+            var handle = minimapPlayerIconHandlesArray[i];
+
+            if (handle.IsValid() && handle.Result != null)
+            {
+                // [i]번째 로드 결과물(GameObject)을 배열에 저장 (고유한 아이콘 인스턴스)
+                minimapPlayerIconHandles[i] = handle.Result;
+
+                var meshRenderer = minimapPlayerIconHandles[i].GetComponent<MeshRenderer>();
+
+                if (meshRenderer != null && i < miniMapIconMat.Length)
+                {
+                    var materials = meshRenderer.materials;
+                    materials[0] = miniMapIconMat[i];
+                    meshRenderer.materials = materials;
+                }
+            }
+        }
+
         // 각 UI 알파값 1로 변경(페이드인 효과)
         miniMapCanvasGroup.DOFade(1f, 1f);
 
+        // 카메라 줌 설정 (카메라 로드가 완료된 후에만 실행)
         if (minimapCamera != null)
         {
             minimapCamera.orthographicSize = miniMapCameraSize;
