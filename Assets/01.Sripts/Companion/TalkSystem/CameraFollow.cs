@@ -9,10 +9,10 @@ public class CameraFollow : MonoBehaviour
 
     void OnEnable()
     {
-        PlayerManager.Instance.OnActiveCharacterChanged -= SetTarget;
-        PlayerManager.Instance.OnActiveCharacterChanged += SetTarget;
+        PlayerManager.Instance.OnActiveCharacterChanged -= ChangeTarget;
+        PlayerManager.Instance.OnActiveCharacterChanged += ChangeTarget;
 
-        SetTarget(PlayerManager.Instance.ActiveCharacter);
+        ChangeTarget(PlayerManager.Instance.ActiveCharacter);
     }
 
     void LateUpdate()
@@ -22,7 +22,7 @@ public class CameraFollow : MonoBehaviour
         LookAtTarget();
     }
 
-    private void SetTarget(PlayerCharacter playerCharacter)
+    private void ChangeTarget(PlayerCharacter playerCharacter)
     {
         targetObject = PlayerManager.Instance.ActiveCharacter.transform;
         if (targetObject == null) return;
