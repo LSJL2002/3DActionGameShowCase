@@ -13,16 +13,15 @@ public class MiniMapUI : UIBase
         FullMap,
     }
 
-    [SerializeField] CanvasGroup miniMapCanvasGroup;
-    [SerializeField] RectTransform miniMapRectTransform;
-    [SerializeField] Material[] miniMapIconMat = new Material[3]; // 플레이어아이콘 색을 가지고 있는 Mat 3개(원본포함)
+    [SerializeField] private CanvasGroup miniMapCanvasGroup;
+    [SerializeField] private RectTransform miniMapRectTransform;
+    [SerializeField] private Material[] miniMapIconMat = new Material[3]; // 플레이어아이콘 색을 가지고 있는 Mat 3개(원본포함)
+    [SerializeField] private Camera minimapCamera;
 
     private MapMode currentMapMode = MapMode.MiniMap;
-    private AsyncOperationHandle<GameObject> minimapCameraHandle; // 미니맵 카메라 오브젝트 핸들
     private AsyncOperationHandle<GameObject> minimapPlayerIconHandle; // 미니맵 플레이어 아이콘 오브젝트 핸들
     private AsyncOperationHandle<GameObject>[] minimapPlayerIconHandlesArray;
     private GameObject[] minimapPlayerIconHandles = new GameObject[3]; // 로드한 미니맵 아이콘들을 저장할 배열
-    private Camera minimapCamera;
     private Canvas minimapCanvas;
     private int firstSortingOrder;
     private Sequence fullMapSequence;
@@ -85,10 +84,6 @@ public class MiniMapUI : UIBase
         minimapPlayerIconHandlesArray = new AsyncOperationHandle<GameObject>[playerCount];
         var allIconTasks = new List<UniTask>();
 
-        // 미니맵 카메라 로드 시작
-        minimapCameraHandle = Addressables.InstantiateAsync("MinimapCamera");
-        allIconTasks.Add(minimapCameraHandle.ToUniTask());
-
         // 각 플레이어 아이콘 로드 시작
         for (int i = 0; i < playerCount; i++)
         {
@@ -99,12 +94,6 @@ public class MiniMapUI : UIBase
 
         // 모든 로드 작업이 완료될 때까지 기다림
         await UniTask.WhenAll(allIconTasks);
-
-        // 1. 미니맵카메라 로드/생성 완료 확인 후 카메라 컴포넌트 가져오기
-        if (minimapCameraHandle.IsValid() && minimapCameraHandle.Result != null)
-        {
-            minimapCamera = minimapCameraHandle.Result.GetComponent<Camera>();
-        }
 
         // 2. 미니맵아이콘 로드/생성 확인 후 처리
         for (int i = 0; i < playerCount; i++)
@@ -144,8 +133,6 @@ public class MiniMapUI : UIBase
         // 미니맵 카메라, 플레이어 아이콘 오브젝트 언로드
         if (minimapPlayerIconHandle.IsValid())
             Addressables.ReleaseInstance(minimapPlayerIconHandle);
-        if (minimapCameraHandle.IsValid())
-            Addressables.ReleaseInstance(minimapCameraHandle);
 
         if (fullMapSequence != null)
         {
