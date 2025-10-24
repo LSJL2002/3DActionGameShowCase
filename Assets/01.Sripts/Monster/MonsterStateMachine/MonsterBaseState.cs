@@ -62,7 +62,7 @@ public class MonsterBaseState : Istate
 
         // 찾은 경로와 force을 이용을하여 몬스터를 이동을 하게 한다
         Vector3 move = desiredVelocity.normalized * stateMachine.MovementSpeed * Time.deltaTime;
-        move += forceReceiver.Movement;
+        move += forceReceiver.HorizontalVelocity;
 
         cc.Move(move);
 
@@ -97,7 +97,7 @@ public class MonsterBaseState : Istate
 
         if (cc != null)
         {
-            Vector3 move = forceReceiver != null ? forceReceiver.Movement * Time.deltaTime : Vector3.zero;
+            Vector3 move = forceReceiver != null ? forceReceiver.HorizontalVelocity * Time.deltaTime : Vector3.zero;
 
             Vector3 top = cc.transform.position + cc.center + Vector3.up * (cc.height / 2 - cc.radius);
             Vector3 bottom = cc.transform.position + cc.center - Vector3.up * (cc.height / 2 - cc.radius);
@@ -136,7 +136,7 @@ public class MonsterBaseState : Istate
         var forceReceiver = stateMachine.Monster.GetComponent<ForceReceiver>();
         if (cc == null || forceReceiver == null) return;
 
-        Vector3 move = forceReceiver.Movement * Time.deltaTime;
+        Vector3 move = forceReceiver.HorizontalVelocity * Time.deltaTime;
 
         if (cc.isGrounded && move.y <= 0f)
         {

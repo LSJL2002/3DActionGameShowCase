@@ -160,6 +160,12 @@ public class AbilitySystem : MonoBehaviour
     public void ApplyKnockback(Vector3 dir, float force, float time)
     {
         if (IsInvincible) return;
+        // 스왑 시도 중이면 패링 성공 처리
+        if (IsSwapping)
+        {
+            //OnParryKnockback(); // 공격 막힘 + 반격 이벤트
+            return;
+        }
 
         IsKnockback = true;
         sm.KnockbackState.Setup(dir, force, time);
@@ -170,6 +176,12 @@ public class AbilitySystem : MonoBehaviour
     public void ApplyStun(float duration)
     {
         if (IsInvincible) return;
+        // 스왑 시도 중이면 패링 성공 처리
+        if (IsSwapping)
+        {
+            //OnParryKnockback(); // 공격 막힘 + 반격 이벤트
+            return;
+        }
 
         IsStun = true;
         sm.StunState.Setup(duration);

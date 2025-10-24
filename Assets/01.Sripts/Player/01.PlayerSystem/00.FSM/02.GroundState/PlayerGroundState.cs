@@ -12,6 +12,8 @@ public class PlayerGroundState : PlayerBaseState
     {
         base.Enter();
         StartAnimation(sm.Player.AnimationData.GroundBoolHash);
+        sm.Player.Motor.AllowMovement = true;
+        sm.Player.Motor.AllowRotation = true;
     }
 
     public override void Exit()
@@ -23,9 +25,6 @@ public class PlayerGroundState : PlayerBaseState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-        Vector3 inputDir = GetMovementDir();
-        bool hasInput = inputDir.sqrMagnitude > 0.0001f;
     }
 
     public override void PhysicsUpdate()

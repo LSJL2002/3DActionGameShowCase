@@ -17,8 +17,10 @@ public class PlayerCharacter : MonoBehaviour
     // ================= Component ====================
     public Animator Animator { get; private set; } //루트모션은 본체에
     public CharacterController Controller { get; private set; }
-    public PlayerAttackController Attack { get; private set; }
+    public CharacterMotor Motor { get; private set; }
     public ForceReceiver ForceReceiver { get; private set; }
+    public VerticalController Vertical { get; private set; }
+    public PlayerAttackController Attack { get; private set; }
     public Interaction Interaction { get; private set; }
     public HitboxOverlap Hitbox { get; private set; }
     public PlayerDamageable Damageable { get; private set; }
@@ -65,8 +67,10 @@ public class PlayerCharacter : MonoBehaviour
 
         Animator ??= GetComponent<Animator>();
         Controller ??= GetComponent<CharacterController>();
-        Attack ??= GetComponent<PlayerAttackController>(); 
+        Motor ??= GetComponent<CharacterMotor>();
         ForceReceiver ??= GetComponent<ForceReceiver>();
+        Vertical ??= GetComponent<VerticalController>();
+        Attack ??= GetComponent<PlayerAttackController>(); 
         Interaction ??= GetComponent<Interaction>(); 
         Damageable ??= GetComponent<PlayerDamageable>(); 
         Hitbox ??= GetComponent<HitboxOverlap>(); 
@@ -90,6 +94,8 @@ public class PlayerCharacter : MonoBehaviour
     }
     private void Start()
     {
+        Motor.Initialize(this);
+        Vertical.Initialize(this);
         Attack.Inject(this);
         Interaction.Inject(this);
         Damageable.Inject(this);

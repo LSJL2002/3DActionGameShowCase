@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 542f16ea7f9827b4895d01a12e48818b, type: 3}
-  m_Name: Playerable3_Mika
+  m_Name: Playerable2_Aoi
   m_EditorClassIdentifier: 
   <GroundData>k__BackingField:
     <BaseRotationDamping>k__BackingField: 25
-    <BaseSpeed>k__BackingField: 0.1
+    <BaseSpeed>k__BackingField: 3
     <WalkSpeedModifier>k__BackingField: 0.7
     <RunAccelerationTime>k__BackingField: 2
     <RunSpeedModifier>k__BackingField: 1
     <DodgeDuration>k__BackingField: 0.8
-    <DodgeStrength>k__BackingField: 6
-    <DodgeLayerBlendSpeed>k__BackingField: 5
+    <DodgeStrength>k__BackingField: 10
   <AirData>k__BackingField:
     <JumpForce>k__BackingField: 5
   <AttackData>k__BackingField:
@@ -28,7 +27,7 @@ MonoBehaviour:
     <DashSpeed>k__BackingField: 1
     <StopDistance>k__BackingField: 5
     <AttackInfoDatas>k__BackingField:
-    - <AttackName>k__BackingField: Attack21
+    - <AttackName>k__BackingField: Attack11
       <DamageMultiplier>k__BackingField: 1
       <ComboTimingStart>k__BackingField: 0.3
       <ComboTimingEnd>k__BackingField: 0.7
@@ -39,7 +38,7 @@ MonoBehaviour:
       <HitEndTime>k__BackingField: 1
       <HitCount>k__BackingField: 1
       <Interval>k__BackingField: 0.1
-    - <AttackName>k__BackingField: Attack22
+    - <AttackName>k__BackingField: Attack12
       <DamageMultiplier>k__BackingField: 1
       <ComboTimingStart>k__BackingField: 0.3
       <ComboTimingEnd>k__BackingField: 0.7
@@ -50,7 +49,7 @@ MonoBehaviour:
       <HitEndTime>k__BackingField: 1
       <HitCount>k__BackingField: 1
       <Interval>k__BackingField: 0.1
-    - <AttackName>k__BackingField: Attack23
+    - <AttackName>k__BackingField: Attack13
       <DamageMultiplier>k__BackingField: 1
       <ComboTimingStart>k__BackingField: 0.3
       <ComboTimingEnd>k__BackingField: 0.7
@@ -59,9 +58,9 @@ MonoBehaviour:
       <Force>k__BackingField: 0
       <HitStartTime>k__BackingField: 0
       <HitEndTime>k__BackingField: 1
-      <HitCount>k__BackingField: 1
+      <HitCount>k__BackingField: 4
       <Interval>k__BackingField: 0.03
-    - <AttackName>k__BackingField: Attack24
+    - <AttackName>k__BackingField: Attack14
       <DamageMultiplier>k__BackingField: 1
       <ComboTimingStart>k__BackingField: 0.3
       <ComboTimingEnd>k__BackingField: 0.7
@@ -72,7 +71,7 @@ MonoBehaviour:
       <HitEndTime>k__BackingField: 1
       <HitCount>k__BackingField: 1
       <Interval>k__BackingField: 0.1
-    - <AttackName>k__BackingField: Attack25
+    - <AttackName>k__BackingField: Attack15
       <DamageMultiplier>k__BackingField: 1
       <ComboTimingStart>k__BackingField: 0.3
       <ComboTimingEnd>k__BackingField: 0.7
@@ -81,9 +80,9 @@ MonoBehaviour:
       <Force>k__BackingField: 0
       <HitStartTime>k__BackingField: 0
       <HitEndTime>k__BackingField: 1
-      <HitCount>k__BackingField: 1
+      <HitCount>k__BackingField: 4
       <Interval>k__BackingField: 0.03
-    - <AttackName>k__BackingField: Attack26
+    - <AttackName>k__BackingField: Attack16
       <DamageMultiplier>k__BackingField: 1
       <ComboTimingStart>k__BackingField: 0.3
       <ComboTimingEnd>k__BackingField: 0.7
@@ -92,11 +91,11 @@ MonoBehaviour:
       <Force>k__BackingField: 0
       <HitStartTime>k__BackingField: 0
       <HitEndTime>k__BackingField: 1
-      <HitCount>k__BackingField: 1
-      <Interval>k__BackingField: 0.01
+      <HitCount>k__BackingField: 4
+      <Interval>k__BackingField: 0.03
   <SkillData>k__BackingField:
     <SkillInfoDatas>k__BackingField:
-    - <SkillName>k__BackingField: Skill1
+    - <SkillName>k__BackingField: Skill11
       <EffectType>k__BackingField: 0
       <DamageMultiplier>k__BackingField: 1.5
       <Duration>k__BackingField: 5
@@ -109,12 +108,12 @@ MonoBehaviour:
       <Force>k__BackingField: 0
       <HitStartTime>k__BackingField: 0
       <HitEndTime>k__BackingField: 1
-      <HitCount>k__BackingField: 4
-      <Interval>k__BackingField: 0.03
+      <HitCount>k__BackingField: 10
+      <Interval>k__BackingField: 0.1
   <StatData>k__BackingField:
     <Id>k__BackingField: 00000001
-    <Name>k__BackingField: Mika
-    <MaxHp>k__BackingField: 1200
+    <Name>k__BackingField: Aoi
+    <MaxHp>k__BackingField: 950
     <MaxMp>k__BackingField: 100
     <AttackPower>k__BackingField: 50
     <Defense>k__BackingField: 0

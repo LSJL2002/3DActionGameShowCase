@@ -11,7 +11,6 @@ public class PlayerGroundData
     [field: SerializeField,Tooltip("캐릭터가 회전할 때 감속되는 정도")]
     [field: Range(0f, 50f)] public float BaseRotationDamping { get; private set; } = 25f;
 
-
     [field: Header("WalkData")]
     [field: SerializeField, Tooltip("기본 이동 속도")]
     [field: Range(0f, 5f)] public float BaseSpeed { get; private set; } = 1f;
@@ -32,9 +31,6 @@ public class PlayerGroundData
 
     [field: SerializeField, Tooltip("캐릭터가 회피할 때 가해지는 힘의 크기")]
     [field: Range(0.1f, 20f)] public float DodgeStrength { get; private set; } = 6f;
-
-    [field: SerializeField, Tooltip("회피 애니메이션 레이어 블렌딩 속도")]
-    [field: Range(1f, 20f)] public float DodgeLayerBlendSpeed { get; private set; } = 5f;
 }
 
 [Serializable]

@@ -10,10 +10,6 @@ public class PlyerFinishAttackState : PlayerBaseState
 
     public PlyerFinishAttackState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
-
-    public override bool AllowRotation => false;
-
-
     public override void Enter()
     {
         base.Enter();
@@ -27,7 +23,6 @@ public class PlyerFinishAttackState : PlayerBaseState
     public override void Exit()
     {
         base.Exit();
-        sm.ComboIndex = 0;
     }
 
     public override void LogicUpdate()

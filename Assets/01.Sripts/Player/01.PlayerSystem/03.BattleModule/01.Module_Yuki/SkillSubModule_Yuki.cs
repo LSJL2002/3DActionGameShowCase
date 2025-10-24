@@ -16,11 +16,14 @@ public class SkillSubModule_Yuki
 
     // 설정값
     private const float StopDistance = 2f;
-    private const float DashPower = 12f;
-    private const float ReturnPower = 8f;
+    private const float DashSpeed = 20f;
+    private const float ReturnSpeed = 10f;
     private const float DashDuration = 0.15f;
     private const float ReturnDuration = 0.1f;
     private const float WaitTime = 0.8f;
+
+    private Vector3 currentForce;           // ForceReceiver에 적용할 힘
+    private Vector3 targetForce;
 
     public SkillSubModule_Yuki(PlayerStateMachine sm) => this.sm = sm;
 
@@ -55,6 +58,8 @@ public class SkillSubModule_Yuki
         }
 
         phaseTimer = 0f;
+        currentForce = Vector3.zero;
+        targetForce = Vector3.zero;
     }
 
     public void OnSkillCanceled()
@@ -73,6 +78,10 @@ public class SkillSubModule_Yuki
             case Phase.Wait: HandleWait(player); break;
             case Phase.Return: HandleReturn(player); break;
         }
+
+        // ForceReceiver에 부드럽게 적용
+        currentForce = Vector3.Lerp(currentForce, targetForce, Time.deltaTime * 10f);
+        player.ForceReceiver.SetForce(currentForce);
     }
 
     private void HandleDash(PlayerCharacter player)
@@ -89,8 +98,8 @@ public class SkillSubModule_Yuki
                 return;
             }
 
-            float moveDistance = Mathf.Min(DashPower * Time.deltaTime, distance - StopDistance);
-            player.ForceReceiver.AddForce(toTarget.normalized * moveDistance / Time.deltaTime);
+            // 목표 Force 계산
+            targetForce = toTarget.normalized * DashSpeed;
         }
         else
         {
@@ -103,17 +112,20 @@ public class SkillSubModule_Yuki
 
     private void HandleWait(PlayerCharacter player)
     {
-        player.ForceReceiver.Reset();
+        // 목표 Force = 0 (멈춤)
+        targetForce = Vector3.zero;
+
         if (phaseTimer >= WaitTime)
             TransitionToPhase(Phase.Return);
     }
 
     private void HandleReturn(PlayerCharacter player)
     {
-        player.ForceReceiver.AddForce(returnDir * ReturnPower);
+        targetForce = returnDir * ReturnSpeed;
+
         if (phaseTimer >= ReturnDuration)
         {
-            player.ForceReceiver.Reset();
+            targetForce = Vector3.zero;
             ExitSkill(player);
         }
     }
@@ -122,7 +134,8 @@ public class SkillSubModule_Yuki
     {
         phase = next;
         phaseTimer = 0f;
-        sm.Player.ForceReceiver.Reset();
+        if (phase == Phase.Wait)
+            targetForce = Vector3.zero;
     }
 
     private void ExitSkill(PlayerCharacter player)
@@ -130,7 +143,8 @@ public class SkillSubModule_Yuki
         if (phase == Phase.None) return;
 
         player.vFX.StopDash();
-        player.ForceReceiver.Reset();
+        targetForce = Vector3.zero;
+        currentForce = Vector3.zero;
         phase = Phase.None;
 
         // 이벤트로 FSM에게 종료 알림

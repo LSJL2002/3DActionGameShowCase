@@ -6,9 +6,6 @@ public class PlayerAttackState : PlayerBaseState
 
     public PlayerAttackState(PlayerStateMachine sm) : base(sm) { }
 
-    public override bool AllowMovement => false; // 스킬 중 이동 제한
-    public override bool AllowRotation => false;
-
     public override void Enter()
     {
         base.Enter();
@@ -17,6 +14,9 @@ public class PlayerAttackState : PlayerBaseState
 
         module = sm.CurrentBattleModule;
         module.OnAttackEnd += HandleAttackEnd;
+
+        sm.Player.Motor.AllowMovement = false;
+        sm.Player.Motor.AllowRotation = false;
     }
 
     public override void Exit()
