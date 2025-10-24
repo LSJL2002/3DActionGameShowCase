@@ -96,7 +96,7 @@ public class MapManager : Singleton<MapManager>
             int lastClearStage = SaveManager.Instance.playerData.LastClearStage;
 
             
-            if (lastClearStage == _bossZoneId)
+            if (lastClearStage == _bossZoneId || lastClearStage == 0)
             {
                 ReturnToStartZone();
             }

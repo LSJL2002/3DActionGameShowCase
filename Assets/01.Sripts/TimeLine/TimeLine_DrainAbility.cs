@@ -5,13 +5,16 @@ using UnityEngine.Playables;
 
 public class TimeLine_DrainAbility : TimeLineBase
 {
+    private System.Action<PlayableDirector> setToDayHandler;
+
     protected override void OnEnable()
     {
         base.OnEnable();
 
         playableDirector.stopped += OnTimeLineStop;
-        playableDirector.stopped += SetToDay => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToDay();
 
+        setToDayHandler = _ => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToDay();
+        playableDirector.stopped += setToDayHandler;
         // 타임라인의 위치를 현재 플레이어 캐릭터 위치로 이동
         Vector3 playerPosition = PlayerManager.Instance.ActiveCharacter.transform.position;
         transform.position = playerPosition;
@@ -24,7 +27,7 @@ public class TimeLine_DrainAbility : TimeLineBase
     protected override async void OnTimeLineStop(PlayableDirector director)
     {
         playableDirector.stopped -= OnTimeLineStop;
-        playableDirector.stopped -= SetToDay => MapManager.Instance.GetComponent<SkyboxBlendController>().SetToDay();
+        playableDirector.stopped -= setToDayHandler;
         TimeLineManager.Instance.Hide(gameObject.name);
 
         await UIManager.Instance.Show<TutorialUI>();
