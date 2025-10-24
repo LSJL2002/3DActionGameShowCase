@@ -80,4 +80,11 @@ public class GameScene : SceneBase
             InventoryManager.Instance.LoadData_Addressables(id.ToString());
         }
     }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        UIManager.Instance.OnSceneUnloaded();
+    }
 }

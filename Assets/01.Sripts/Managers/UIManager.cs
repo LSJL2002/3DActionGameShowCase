@@ -146,26 +146,9 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        // 씬 언로드 이벤트 구독
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        // 씬 언로드 이벤트 구독 해제
-        SceneManager.sceneUnloaded -= OnSceneUnloaded;
-    }
-
     // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬 언로드시 호출할것)
-    private void OnSceneUnloaded(Scene scene)
+    public void OnSceneUnloaded()
     {
-        if (scene.name == "PlayerUIScene")
-            return;
-
         foreach (var handle in uiHandles.Values)
         {
             if (handle.IsValid())
