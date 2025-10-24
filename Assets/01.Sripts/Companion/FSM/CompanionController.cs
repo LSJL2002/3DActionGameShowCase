@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CompanionController : MonoBehaviour
@@ -35,14 +36,66 @@ public class CompanionController : MonoBehaviour
         Sm.ChangeState(new CompanionIdleState(Sm)); // 시작 상태: Follow (원하면 IdleState로 변경)
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
-        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, BattleStart); // 구독해제
-        EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, BattleClear); // 구독해제
+        // 씬 재입장 대비: 참조 리바인드 + 매니저 준비 기다리기
+        StartCoroutine(InitRoutine());
 
-        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, BattleStart); // 구독
-        EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, BattleClear); // 구독
+        if (PlayerManager.Instance != null)
+        {
+            PlayerManager.Instance.OnActiveCharacterChanged += RebindTargets;
+        }
+
+        // 🔹 구독은 OnEnable에서만
+        if (EventsManager.Instance != null)
+        {
+            EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleStart, BattleStart);
+            EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, BattleClear);
+        }
     }
+
+    private void OnDisable()
+    {
+        if (PlayerManager.Instance != null)
+            PlayerManager.Instance.OnActiveCharacterChanged -= RebindTargets;
+
+        // 🔹 구독 해제는 OnDisable에서
+        if (EventsManager.Instance != null)
+        {
+            EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleStart, BattleStart);
+            EventsManager.Instance.StopListening<BattleZone>(GameEventT.OnBattleClear, BattleClear);
+        }
+    }
+
+    private IEnumerator InitRoutine()
+    {
+        // PlayerManager, ActiveCharacter 준비될 때까지 대기
+        yield return new WaitUntil(() => PlayerManager.Instance != null && PlayerManager.Instance.ActiveCharacter != null);
+        RebindTargets(PlayerManager.Instance.ActiveCharacter);
+    }
+
+    private void RebindTargets(PlayerCharacter newChar)
+    {
+        if (newChar == null) return;
+
+        // 활성 캐릭터 하위의 FollowObject 탐색
+        var follow = newChar.transform.Find("FollowObject");
+        if (follow == null)
+            Debug.LogWarning($"[Companion] {newChar.name}에 FollowObject 없음!");
+
+        targetObject = follow != null ? follow : newChar.transform;
+        lookObject = newChar.transform;
+
+        rb = rb ?? GetComponent<Rigidbody>();
+        anim = anim ?? GetComponent<Animator>();
+
+        cachedAnchorLocalPos = targetObject.localPosition;
+
+        Debug.Log($"[Companion] Follow target → {targetObject.name}");
+    }
+
+
+
 
     void Update() { Sm.HandleInput(); Sm.Update(); }
     void FixedUpdate() { Sm.PhysicsUpdate(); }
