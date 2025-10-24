@@ -53,7 +53,7 @@ public class SelectAbilityUI : UIBase
         ReleaseHandles();
 
         // 플레이어 입력 제어 해제
-        PlayerManager.Instance.EnableInput(true);
+        PlayerManager.Instance.EnableInput(false);
 
         BattleManager.Instance.ClearBattle();
     }
