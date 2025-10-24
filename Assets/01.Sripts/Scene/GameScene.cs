@@ -84,7 +84,7 @@ public class GameScene : SceneBase
     protected override void OnDestroy()
     {
         base.OnDestroy();
-
-        UIManager.Instance.OnSceneUnloaded();
+        if (UIManager.Instance != null)
+            UIManager.Instance.OnSceneUnloaded();
     }
 }
