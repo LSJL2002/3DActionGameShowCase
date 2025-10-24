@@ -35,6 +35,10 @@ public class MonsterStateMachine : StateMachine
     public SmileMachine_Missile SmileMachine_Missile { get; private set; }
     public SmileMachine_Gernade SmileMachine_Gernade { get; private set; }
 
+    //SpiderMachine
+    public SpiderMachine_AttackStamp SpiderMachine_AttackStamp { get; private set; }
+
+
     private MonsterAIEvents aiEvents;
     public bool isAttacking = false;
 
@@ -99,6 +103,11 @@ public class MonsterStateMachine : StateMachine
             SmileMachine_Missile = new SmileMachine_Missile(this, missileSkill);
             var gernadeSkill = monster.Stats.GetSkill("SmileMachine_Grenade");
             SmileMachine_Gernade = new SmileMachine_Gernade(this, gernadeSkill);
+        }
+        else if (monster is SpiderTractor_UseGrenade)
+        {
+            var stampSkill = monster.Stats.GetSkill("SpiderMachine_AttackStamp");
+            SpiderMachine_AttackStamp = new SpiderMachine_AttackStamp(this, stampSkill);
         }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();

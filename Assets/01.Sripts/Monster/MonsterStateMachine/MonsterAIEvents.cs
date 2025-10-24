@@ -13,7 +13,7 @@ public class MonsterAIEvents : MonoBehaviour
     [SerializeField] private float idleBuffer = 0.5f;
     [Header("Attack Cooldown")]
     public float attackCooldown = 10f;
-    private float lastAttackTime;
+    public float lastAttackTime;
 
     private enum AIMode { Idle, Chase, Attack }
     private AIMode currentMode = AIMode.Idle;
