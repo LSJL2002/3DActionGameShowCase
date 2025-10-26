@@ -2,21 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStunState : Istate
+public class PlayerStunState : PlayerBaseState
 {
-    private readonly PlayerStateMachine stateMachine;
-
-    private readonly int stunLayerIndex;
-
     private float duration;
     private float elapsed;
 
-    public PlayerStunState(PlayerStateMachine stateMachine)
-    {
-        this.stateMachine = stateMachine;
+    public PlayerStunState(PlayerStateMachine sm) : base(sm) { }
 
-        stunLayerIndex = stateMachine.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
-    }
 
     /// <summary>
     /// 외부(몬스터)에서 스턴 시간 설정
@@ -24,33 +16,31 @@ public class PlayerStunState : Istate
     public void Setup(float time)
     {
         duration = time;
-
         // 이미 넉백 중이라면 → 다시 시작하도록 시간 초기화
         elapsed = 0f;
     }
 
-    public void Enter()
+    public override void Enter()
     {
-        var anim = stateMachine.Player.Animator;
-        anim.SetBool(stateMachine.Player.AnimationData.StunParameterHash, true);
-        anim.SetLayerWeight(stunLayerIndex, 1);
+        base.Enter();
+        StartAnimation(sm.Player.AnimationData.StunParameterHash);
+        int stunLayerIndex = sm.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
+        sm.Player.Animator.SetLayerWeight(stunLayerIndex, 1);
     }
 
-    public void Exit()
+    public override void Exit()
     {
-        var anim = stateMachine.Player.Animator;
-        anim.SetBool(stateMachine.Player.AnimationData.StunParameterHash, false);
-        anim.SetLayerWeight(stunLayerIndex, 0);
+        base.Exit();
+        StartAnimation(sm.Player.AnimationData.StunParameterHash);
+        int stunLayerIndex = sm.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
+        sm.Player.Animator.SetLayerWeight(stunLayerIndex, 0);
 
-        stateMachine.Player.Ability.EndStun();
+        sm.Player.Ability.EndStun();
     }
 
-    public void HandleInput() { }
-
-    public void LogicUpdate()
+    public override void LogicUpdate()
     {
-        Debug.Log(duration);
-
+        base.LogicUpdate();
         elapsed += Time.deltaTime;
 
         if (elapsed >= duration)
@@ -58,6 +48,4 @@ public class PlayerStunState : Istate
             Exit();
         }
     }
-
-    public void PhysicsUpdate() { }
 }

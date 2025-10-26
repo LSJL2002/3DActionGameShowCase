@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -14,6 +15,7 @@ public class SkillSubModule_Aoi
 
     private bool isFiring = false;
 
+
     // 스킬 입력 시작
     public void OnSkillStart()
     {
@@ -22,10 +24,8 @@ public class SkillSubModule_Aoi
 
         isFiring = false; // 초기화    
 
-        // 2️⃣ 바로 공중으로 띄우기
-        float heightOffset = 3f;  // 원하는 높이
-        float duration = player.Animator.GetCurrentAnimatorStateInfo(0).length; // 전체 애니 길이로 설정
-        player.ForceReceiver.BeginVerticalHoldImmediate(heightOffset, duration);
+        float heightOffset = player.transform.position.y + 3f;
+        player.Vertical.Hold(heightOffset, 10);
     }
 
     // 스킬 입력 종료
@@ -56,9 +56,6 @@ public class SkillSubModule_Aoi
             // 애니메이션 끝나면 스킬 종료
             if (state.normalizedTime >= 1f)
             {
-                // 애니 끝나면 공중 유지 종료
-                player.ForceReceiver.EndVerticalHold();
-
                 OnSkillEnd?.Invoke();
             }
         }
@@ -82,6 +79,9 @@ public class SkillSubModule_Aoi
     // FX 반복
     private async UniTaskVoid FireSkillFX(PlayerCharacter player, int fxCount, float interval)
     {
+        var targetObj = player._camera.GetLockOnTarget();
+        if (targetObj == null) return;
+
         for (int i = 0; i < fxCount; i++)
         {
             Vector3 randomOffset = new Vector3(
@@ -89,7 +89,7 @@ public class SkillSubModule_Aoi
                 0f,
                 Random.Range(-15f, 15f)
             );
-            Vector3 fxPos = player.transform.position + randomOffset;
+            Vector3 fxPos = targetObj.position + randomOffset;
 
             player.skill.SpawnSkill("Skill11", fxPos);
 
