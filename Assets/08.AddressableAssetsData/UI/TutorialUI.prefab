@@ -1078,8 +1078,9 @@ MonoBehaviour:
   canvas: {fileID: 0}
   uiType: 3
   talkText: {fileID: 4135534618491878937}
-  playerCamera: {fileID: 5918102332965635801}
-  CompanionCamera: {fileID: 2282517985942433736}
+  playerCameraImage: {fileID: 5918102332965635801}
+  CompanionCameraImage: {fileID: 2282517985942433736}
+  companionTransform: {fileID: 0}
   skipProgressImage: {fileID: 1631470133670044069}
   dialogues:
   - {fileID: 11400000, guid: e301bf3cd576447418d82e6cfefb3d8a, type: 2}
@@ -1202,6 +1203,7 @@ GameObject:
   - component: {fileID: 6858499566962535345}
   - component: {fileID: 8920084565974936999}
   - component: {fileID: 6677286725743849889}
+  - component: {fileID: 7502267341248792644}
   m_Layer: 0
   m_Name: CompanionCamera
   m_TagString: Untagged
@@ -1344,6 +1346,19 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &7502267341248792644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8836618655493487692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8645194508b5f24eb6d583ac2dee2f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  companionData: {fileID: 11400000, guid: d292eab25f21bb1458a208e62666e3ea, type: 2}
 --- !u!1 &9146238496579555117
 GameObject:
   m_ObjectHideFlags: 0
