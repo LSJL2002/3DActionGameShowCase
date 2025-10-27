@@ -685,10 +685,13 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -6630189437020959487}
     m_Position: {x: 210, y: 220, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 4933958528086329664}
+    m_Position: {x: -30, y: 80, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: -8772242994941603480}
-    m_Position: {x: 310, y: 550, z: 0}
+    m_Position: {x: 360, y: 490, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 7109630154067544653}
     m_Position: {x: 440, y: 110, z: 0}
@@ -697,7 +700,7 @@ AnimatorStateMachine:
     m_Position: {x: 210, y: 110, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: -7616495912454877421}
-    m_Position: {x: -20, y: 110, z: 0}
+    m_Position: {x: 10, y: 210, z: 0}
   - serializedVersion: 1
     m_StateMachine: {fileID: 7792510087985161089}
     m_Position: {x: -20, y: 320, z: 0}
@@ -729,7 +732,7 @@ AnimatorStateMachine:
   m_EntryPosition: {x: -260, y: 110, z: 0}
   m_ExitPosition: {x: 640, y: -20, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: 5638334543531509969}
+  m_DefaultState: {fileID: 4933958528086329664}
 --- !u!1102 &969357942660909026
 AnimatorState:
   serializedVersion: 6
@@ -982,6 +985,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 8993902097722301239, guid: 5049a7b52d56f8f41867163799f759dc, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &4933958528086329664
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: New State
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 0}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1264,7 +1293,7 @@ AnimatorState:
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
+  m_WriteDefaultValues: 0
   m_Mirror: 0
   m_SpeedParameterActive: 0
   m_MirrorParameterActive: 0
