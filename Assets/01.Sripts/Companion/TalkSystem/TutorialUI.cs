@@ -59,6 +59,14 @@ public class TutorialUI : UIBase
         }
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = false;
+    }
+
     #region Tutorial
     IEnumerator ShowText(List<TextSO> scene, float time)
     {
