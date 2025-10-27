@@ -10,10 +10,6 @@ public class PlayerIdleState : PlayerGroundState
     private bool isWaitingAnimationTriggered = false;
     private bool isGettingUp = false;
 
-    // Idle 상태에서는 기본적으로 회전 금지
-    public override bool AllowRotation => !isWaitingAnimationTriggered && !isGettingUp;
-    public override bool AllowMovement => !isWaitingAnimationTriggered && !isGettingUp;
-
     public PlayerIdleState(PlayerStateMachine sm) : base(sm) { }
 
     public override void Enter()
@@ -22,7 +18,6 @@ public class PlayerIdleState : PlayerGroundState
         StartAnimation(sm.Player.AnimationData.IdleBoolHash);
 
         sm.MovementSpeedModifier = 0f;
-        sm.ComboIndex = 0;
 
         idleStartTime = Time.time; // Idle 시작 시간 기록
     }

@@ -73,7 +73,7 @@ public class SmileMachineShootState : MonsterBaseState
         {
             if (hit.collider.TryGetComponent<IDamageable>(out var target))
             {
-                target.OnTakeDamage(stateMachine.Monster.Stats.AttackPower * skillData.effectValue);
+                target.OnTakeDamage((int)(stateMachine.Monster.Stats.AttackPower * skillData.effectValue));
             }
         }
     }

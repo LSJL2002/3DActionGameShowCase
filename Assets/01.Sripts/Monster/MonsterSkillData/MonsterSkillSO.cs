@@ -31,7 +31,7 @@ public class MonsterSkillSO : ScriptableObject
 
     [Header("Effect Info")]
     public MonsterEffectType monsterEffectType; // enum instead of string
-    public int effectValue;   // 효과 수치
+    public float effectValue;   // 효과 수치
     public float duration;      // 지속 시간
 
     [Header("Casting & Visuals")]

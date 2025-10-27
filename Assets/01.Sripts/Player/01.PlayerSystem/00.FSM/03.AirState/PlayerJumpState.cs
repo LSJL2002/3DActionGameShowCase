@@ -9,7 +9,7 @@ public class PlayerJumpState : PlayerAirState
     public override void Enter()
     {
         sm.JumpForce = sm.Player.InfoData.AirData.JumpForce;
-        sm.Player.ForceReceiver.Jump(sm.JumpForce);
+        sm.Player.Vertical.Jump(sm.JumpForce);
         base.Enter();
         StartAnimation(sm.Player.AnimationData.JumpTriggerHash);
 

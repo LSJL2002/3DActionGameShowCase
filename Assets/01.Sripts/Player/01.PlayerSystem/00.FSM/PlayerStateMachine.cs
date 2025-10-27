@@ -17,9 +17,6 @@ public class PlayerStateMachine : StateMachine
 
     // 원본 데이터
     public readonly PlayerGroundData GroundData;
-    public readonly PlayerAirData AirData;
-    // 현재 공격 데이터 (SO에서 가져온 참조본)
-    public AttackInfoData AttackInfo { get; private set; }
 
     // 이동 관련
     public Vector2 MovementInput { get; set; } // 입력 방향 (WASD, 스틱)
@@ -42,8 +39,6 @@ public class PlayerStateMachine : StateMachine
     }
 
     public float JumpForce { get; set; } //점프력
-    public int ComboIndex { get; set; } //콤보인덱스
-
 
 
     // ================== 상태 오브젝트=====================
@@ -95,10 +90,6 @@ public class PlayerStateMachine : StateMachine
         RotationDamping = player.InfoData.GroundData.BaseRotationDamping;
         GroundData = player.InfoData.GroundData;
 
-        // AttackInfo 초기화
-        ComboIndex = 0;
-        SetAttackInfo(ComboIndex);
-
         // 캐릭터 타입별 BattleModule 연결
         switch (player.CharacterType)
         {
@@ -106,12 +97,6 @@ public class PlayerStateMachine : StateMachine
             case CharacterType.Aoi: SetBattleModule(new BattleModule_Aoi(this)); break;
             case CharacterType.Mika: SetBattleModule(new BattleModule_Mika(this)); break;
         }
-    }
-
-    public void SetAttackInfo(int comboIndex)
-    {
-        ComboIndex = comboIndex;
-        AttackInfo = Player.InfoData.AttackData.GetAttackInfoData(comboIndex);
     }
 
     // ===================== 타겟 탐지 (공통) =====================
