@@ -9734,7 +9734,6 @@ GameObject:
   - component: {fileID: 1533732848410914877}
   - component: {fileID: 5950138165767776779}
   - component: {fileID: 5121958914599976558}
-  - component: {fileID: 6023728704834963099}
   - component: {fileID: 7684823969566816923}
   - component: {fileID: 5385406049556835764}
   m_Layer: 6
@@ -9882,6 +9881,11 @@ MonoBehaviour:
   hasStartedCombat: 0
   hasDetectedPlayer: 0
   baseAttackCollider: {fileID: 1018224373736016886}
+  gravity: -9.81
+  groundCheckDistance: 0.3
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   flameThrowerEffect: {fileID: 4898589903230457354}
   firePoint: {fileID: 1660095912670615619}
   fireball: {fileID: 3283067671705698780, guid: 74541954fef0d3942a1f851742a7ea46, type: 3}
@@ -9908,21 +9912,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6023728704834963099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8267726345693005202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b5fe3112031b94d97184a74617b434, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller: {fileID: 0}
-  animator: {fileID: 0}
-  drag: 0.3
 --- !u!65 &7684823969566816923
 BoxCollider:
   m_ObjectHideFlags: 0

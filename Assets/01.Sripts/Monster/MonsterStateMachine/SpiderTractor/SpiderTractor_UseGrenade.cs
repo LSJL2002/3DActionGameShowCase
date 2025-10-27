@@ -18,6 +18,7 @@ public class SpiderTractor_UseGrenade : BaseMonster
             case States.TurnLeft: return stateMachine.SpiderMachine_TurnLeft;
             case States.Skill1: return stateMachine.SpiderMachine_AttackStamp;
             case States.Skill2: return stateMachine.SpiderMachine_FangFall;
+            case States.Skill3: return stateMachine.SpiderMachine_Spin;
             default: return null;
         }
     }
@@ -28,6 +29,8 @@ public class SpiderTractor_UseGrenade : BaseMonster
             return Stats.GetSkill("SpiderMachine_AttackStamp").skillUseRange;
         if (state is SpiderMachine_FangFall)
             return Stats.GetSkill("SpiderMachine_Fangfall").skillUseRange;
+        if (state is SpiderMachine_Spin)
+            return Stats.GetSkill("SpiderMachine_Spin").skillUseRange;
         return Stats.AttackRange;
     }
 
@@ -44,6 +47,14 @@ public class SpiderTractor_UseGrenade : BaseMonster
         if (stateMachine.CurrentState is SpiderMachine_Spin spinState)
         {
             spinState.TriggerSpin();
+        }
+    }
+    
+    public void StopSpin()
+    {
+        if (stateMachine.CurrentState is SpiderMachine_Spin spinState)
+        {
+            spinState.StopSpin();
         }
     }
 }
