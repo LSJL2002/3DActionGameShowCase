@@ -16,7 +16,7 @@ public class PlayerSkillState : PlayerBaseState
         module.OnSkillEnd += HandleSkillEnd;
 
         sm.Player.Motor.AllowMovement = false;
-        sm.Player.Motor.AllowRotation = false;
+        sm.Player.Motor.AllowInput = true;
     }
 
     public override void Exit()

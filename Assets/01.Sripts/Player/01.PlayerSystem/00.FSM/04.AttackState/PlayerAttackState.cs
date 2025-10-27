@@ -11,12 +11,11 @@ public class PlayerAttackState : PlayerBaseState
         base.Enter();
         StartAnimation(sm.Player.AnimationData.AttackBoolHash);
         sm.Player.Ability.StartAttack();
+        sm.Player.Motor.AllowMovement = false;
+        sm.Player.Motor.AllowInput = true;
 
         module = sm.CurrentBattleModule;
         module.OnAttackEnd += HandleAttackEnd;
-
-        sm.Player.Motor.AllowMovement = false;
-        sm.Player.Motor.AllowRotation = false;
     }
 
     public override void Exit()
