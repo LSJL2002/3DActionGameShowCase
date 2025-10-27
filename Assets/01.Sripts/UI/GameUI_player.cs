@@ -74,12 +74,10 @@ public partial class GameUI : UIBase
     {
         // 구독해제
         PlayerManager.Instance.Attr.Resource.OnHealthChanged -= PlayerHPDecrease;
-        EventsManager.Instance.StopListening(GameEvent.OnPlayerHeal, PlayerHPIncrease);
         EventsManager.Instance.StopListening(GameEvent.OnStatChanged, PlayerHPDecrease);
 
         // 구독
         PlayerManager.Instance.Attr.Resource.OnHealthChanged += PlayerHPDecrease;
-        EventsManager.Instance.StartListening(GameEvent.OnPlayerHeal, PlayerHPIncrease);
         EventsManager.Instance.StartListening(GameEvent.OnStatChanged, PlayerHPDecrease);
     }
 
@@ -145,22 +143,5 @@ public partial class GameUI : UIBase
             activeHPText.DOKill();
             activeHPText.DOColor(Color.white, 0f);
         }
-    }
-
-    // 체력 증가
-    private void PlayerHPIncrease()
-    {
-        float playerHPpercentage = PreprocessHPUpdate();
-        float duration = 0.2f;
-
-        playerHealSequence = DOTween.Sequence();
-        playerHealSequence.Append(activeHPText.DOColor(Color.green, duration));
-        playerHealSequence.Append(activeHPText.DOColor(Color.white, duration));
-        playerHealSequence.Append(activeHPImage_Front.DOFillAmount(playerHPpercentage, 0f));
-        playerHealSequence.Append(activeHPImage_Back.DOFillAmount(playerHPpercentage, 2.0f).SetEase(Ease.OutQuad));
-
-        activeHPImage_Back.DOKill();
-        activeHPText.DOKill();
-        activeHPText.DOColor(Color.white, 0f);
     }
 }

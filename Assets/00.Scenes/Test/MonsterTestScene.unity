@@ -432,6 +432,22 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5733498898677284140, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5733498898677284140, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5733498898677284140, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5733498898677284140, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6176372896996503166, guid: 5f7a334c6cc1b2d4b83020c7f18e0cca, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.7105044
@@ -626,7 +642,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -4160,7 +4176,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6190975526669998088
 Transform:
   m_ObjectHideFlags: 0
@@ -4648,12 +4664,17 @@ MonoBehaviour:
       parameterName: Idle
     - type: 15
       parameterName: TurnLeft
+    - type: 8
+      parameterName: FangFall
+    - type: 9
+      parameterName: Spin
   patternConfig: {fileID: 11400000, guid: 5f5579cae6fadfd44a7979d3d22ac263, type: 2}
   AreaEffectPoint: {fileID: 706539333}
   hasStartedCombat: 0
   hasDetectedPlayer: 0
   baseAttackCollider: {fileID: 289103276}
   stampEffect: {fileID: 100000, guid: c380d2dd36b7ec44cb9ea6098511faa9, type: 3}
+  fangFallEffect: {fileID: 1719780038224681957, guid: ae2b75e2884477643b2237ed3bff7265, type: 3}
 --- !u!195 &6795516254415247762
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -4714,8 +4735,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0b5fe3112031b94d97184a74617b434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
-  animator: {fileID: 0}
   drag: 0.3
 --- !u!1 &6883413300531773760
 GameObject:

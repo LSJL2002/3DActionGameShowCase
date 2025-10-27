@@ -10,7 +10,7 @@ public class MonsterController : MonoBehaviour
     void OnAnimatorMove()
     {
         Vector3 delta = animator.deltaPosition * rootMotionMultiplier;
-        if (controller != null)
+        if (controller != null && controller.enabled)
             controller.Move(delta);
         else
             transform.position += delta;
