@@ -25,6 +25,13 @@ public partial class GameUI : UIBase
         OnStartPlayer();
     }
 
+    protected override void Update()
+    {
+        base.Update();
+
+        UpdateIcon();
+    }
+
     protected override void OnDisable()
     {
         base.OnDisable();
