@@ -97,7 +97,7 @@ public class InventoryViewModel : ScriptableObject
                         else
                         {
                             // 인벤토리 매니저의 아이템 추가 함수 호출
-                            InventoryManager.Instance.LoadData_Addressables(itemData.name);
+                            InventoryManager.Instance.LoadData_Addressables(itemData.name, 1);
                         }
                         
                         //UI매니저에서 '능력선택UI'를 가져와서 끄기
