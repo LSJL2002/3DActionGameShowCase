@@ -204,6 +204,7 @@ public class AreaEffectController : MonoBehaviour
             {
                 IDamageable damageable = col.GetComponent<IDamageable>();
                 damageable?.OnTakeDamage((int)(damage * skillData.effectValue));
+                Debug.Log($"Dealt Damage {damage * skillData.effectValue}");
                 if (skillData != null)
                 {
                     damageable?.ApplyEffect(
