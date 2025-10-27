@@ -11,6 +11,7 @@ public enum DecisionState
     UseItem,
     SelectAbility,
     EnterToZone,
+    GameClear,
 }
 
 // 제네릭 싱글톤 스크립트를 상속
