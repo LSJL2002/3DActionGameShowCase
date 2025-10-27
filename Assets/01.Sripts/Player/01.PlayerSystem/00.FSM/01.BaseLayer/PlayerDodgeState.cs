@@ -31,14 +31,17 @@ public class PlayerDodgeState : PlayerBaseState
         sm.Player.Animator.SetLayerWeight(dodgeLayerIndex, 1f);
         sm.Player.Ability.StartDodge();
         sm.Player.Motor.AllowMovement = false;
-        sm.Player.Motor.AllowRotation = false;
+        sm.Player.Motor.AllowInput = false;
 
         startTime = Time.time; // 시작 시간 기록
 
         // 이동 방향 + 힘
-        Vector3 dodgeDir = GetDodgeDirection();
-        sm.Player.ForceReceiver.AddForce(dodgeDir * dodgeStrength);
+        Vector3 dodgeDir = GetWorldDodgeDirection();
+        // ✅ 입력이 있을 때만 캐릭터 방향을 돌린다
+        if (sm.MovementInput.sqrMagnitude > 0.01f)
+            sm.Player.transform.rotation = Quaternion.LookRotation(dodgeDir);
 
+        sm.Player.ForceReceiver.AddForce(dodgeDir * dodgeStrength);
     }
 
     public override void Exit()
@@ -65,11 +68,21 @@ public class PlayerDodgeState : PlayerBaseState
 
 
     // ---- 헬퍼 메서드 ----
-    private Vector3 GetDodgeDirection()
+    private Vector3 GetWorldDodgeDirection()
     {
-        if (sm.MovementInput.sqrMagnitude < 0.01f)
-            return -sm.Player.transform.forward; // 뒤로 회피
-        else
-            return sm.Player.transform.forward;  // 바라보는 방향
+        Vector2 input = sm.MovementInput;
+
+        // 입력 없으면 뒤로 회피
+        if (input.sqrMagnitude < 0.01f)
+            return -sm.Player.transform.forward;
+
+        // 카메라 기준 방향 계산
+        Vector3 camF = sm.Player._camera.MainCamera.forward;
+        Vector3 camR = sm.Player._camera.MainCamera.right;
+        camF.y = camR.y = 0;
+        camF.Normalize();
+        camR.Normalize();
+
+        return (camF * input.y + camR * input.x).normalized;
     }
 }

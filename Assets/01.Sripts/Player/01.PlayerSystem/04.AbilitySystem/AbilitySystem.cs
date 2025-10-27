@@ -66,10 +66,10 @@ public class AbilitySystem : MonoBehaviour
     // =============== 상태 전환 로직 ===============
     private void TryMove(Vector2 moveInput)
     {
+        sm.MovementInput = moveInput;
         if (BlockInput()) return;
         if (IsUsingSkill) return;
         if (IsAttacking) return;
-        sm.MovementInput = moveInput;
 
         if (moveInput.sqrMagnitude > 0.01f && sm.CurrentState != sm.WalkState)
             sm.ChangeState(sm.WalkState);
@@ -85,7 +85,6 @@ public class AbilitySystem : MonoBehaviour
 
     private void TryDodge()
     {
-        // 에니메이션 정규화 해야될지도? < 0.1f
         if (BlockInput()) return;
         if (!Attr.EvadeBuffer.Use()) return;
 
