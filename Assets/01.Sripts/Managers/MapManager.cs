@@ -18,6 +18,7 @@ public class MapManager : Singleton<MapManager>
     [SerializeField] private int round;  // 회차
 
     [SerializeField] private GameObject tutorialWall;
+    [SerializeField] private GameObject gameClearDoor;
 
     NavMeshDataInstance navMeshInstance;
 
@@ -73,6 +74,11 @@ public class MapManager : Singleton<MapManager>
         {
             tutorialWall = GameObject.Find("TutorialWall");
         }
+        if(gameClearDoor == null)
+        {
+            gameClearDoor = FindAnyObjectByType<GameClearDoor>().gameObject;
+            gameClearDoor.SetActive(false);
+        }
 
         if (SaveManager.Instance.gameMode != eGameMode.LoadGame)           //불러오기가 아닐때
         {
@@ -110,7 +116,7 @@ public class MapManager : Singleton<MapManager>
                     controller.enabled = true;  // 다시 켜기
                 }
                 OpenNextZone(clearedZone);
-                //await Task.Yield();
+                
 
             }
 
@@ -195,10 +201,10 @@ public class MapManager : Singleton<MapManager>
 
         // 필요시 세이브 추가
         SaveManager.Instance.playerData.LastClearStage = 0;
-        SaveManager.Instance.SaveData();       
+        SaveManager.Instance.SaveData();
 
         // 씬 리셋 or 엔딩씬
-        SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
+        gameClearDoor.SetActive(true);
     }
 
     public async Task<GameObject> LoadAscync(string str)

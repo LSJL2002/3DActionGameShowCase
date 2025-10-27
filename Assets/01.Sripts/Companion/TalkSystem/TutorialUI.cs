@@ -22,8 +22,8 @@ public class TutorialUI : UIBase
 {
     public TMP_Text talkText;
 
-    public GameObject playerCamera;
-    public GameObject CompanionCamera;
+    public GameObject playerCameraImage;
+    public GameObject CompanionCameraImage;
 
     public Image skipProgressImage; // fill amount 이미지
     private float holdToSkipAll = 1.5f; // 1.5초 동안 fill amount 1로
@@ -61,7 +61,10 @@ public class TutorialUI : UIBase
 
     protected override void OnEnable()
     {
-        // playText = true;
+        base.OnEnable();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = false;
     }
 
     #region Tutorial
@@ -99,13 +102,13 @@ public class TutorialUI : UIBase
 
             if (text.abc == Speaker.Player.ToString())
             {
-                playerCamera.SetActive(true);
-                CompanionCamera.SetActive(false);
+                playerCameraImage.gameObject.SetActive(true);
+                CompanionCameraImage.gameObject.SetActive(false);
             }
             else if (text.abc == Speaker.Vix.ToString())
             {
-                CompanionCamera.SetActive(true);
-                playerCamera.SetActive(false);
+                CompanionCameraImage.gameObject.SetActive(true);
+                playerCameraImage.gameObject.SetActive(false);
             }
 
             talkText.text = "";
@@ -177,8 +180,8 @@ public class TutorialUI : UIBase
         }
         endTutorial?.Invoke();
         Hide();
-        playerCamera.SetActive(false);
-        CompanionCamera.SetActive(false);
+        playerCameraImage.gameObject.SetActive(false);
+        CompanionCameraImage.gameObject.SetActive(false);
 
         // 게이지 리셋
         if (skipProgressImage != null)

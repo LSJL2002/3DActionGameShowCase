@@ -38,6 +38,10 @@ public class DecisionButtonUI : UIBase
             case DecisionState.EnterToZone:
                 guideText.text = "진입 후 전투가 시작됩니다.<br>진입하시겠습니까?";
                 break;
+            
+            case DecisionState.GameClear:
+                guideText.text = "게임을 모두 클리어 하셨습니다.<br>홈으로 돌아가시겠습니까?";
+                break;
         }
     }
 

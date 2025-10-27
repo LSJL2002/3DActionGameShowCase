@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 // 중력 / 점프 / 공중 유지
 public class VerticalController : MonoBehaviour
