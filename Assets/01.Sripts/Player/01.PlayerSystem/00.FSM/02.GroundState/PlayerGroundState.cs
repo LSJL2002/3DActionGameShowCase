@@ -13,7 +13,7 @@ public class PlayerGroundState : PlayerBaseState
         base.Enter();
         StartAnimation(sm.Player.AnimationData.GroundBoolHash);
         sm.Player.Motor.AllowMovement = true;
-        sm.Player.Motor.AllowRotation = true;
+        sm.Player.Motor.AllowInput = true;
     }
 
     public override void Exit()
