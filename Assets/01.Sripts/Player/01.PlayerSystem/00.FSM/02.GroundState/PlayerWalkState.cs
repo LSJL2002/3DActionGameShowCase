@@ -10,7 +10,6 @@ public class PlayerWalkState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-
         // 이전 Blend가 있으면 복원, 없으면 0
         if (sm.LastWalkBlend > 0f)
         {
@@ -35,35 +34,16 @@ public class PlayerWalkState : PlayerGroundState
         base.Exit();
     }
 
-    public override void HandleInput()
-    {
-        base.HandleInput();
-    }
-
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-        // 입력 방향 크기
-        float inputMagnitude = sm.MovementInput.magnitude;
 
         // Blend 증가 (가속)
         transitionTimer += Time.deltaTime;
         float accelerationTime = Mathf.Max(sm.GroundData.RunAccelerationTime, 0.01f);
         blend = Mathf.Clamp01(transitionTimer / accelerationTime);
+
         // Blend Tree에 적용
         sm.MovementSpeedModifier = blend;
-
-        // 이동 방향
-        Vector3 moveDir = GetMovementDir();
-        float moveSpeed = sm.MovementSpeed * sm.MovementSpeedModifier;
-
-        // 루트모션 + 외부 힘 적용
-        Vector3 deltaMove = sm.Player.Animator.deltaPosition;
-        deltaMove.y = 0f; // 수직 이동 제외
-        deltaMove += sm.Player.ForceReceiver.Movement;
-
-        if (sm.Player.Controller == null || !sm.Player.Controller.enabled) return;
-        sm.Player.Controller.Move(deltaMove);
     }
 }

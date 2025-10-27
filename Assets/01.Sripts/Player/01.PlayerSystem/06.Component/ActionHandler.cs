@@ -27,7 +27,7 @@ public class ActionHandler : MonoBehaviour
         var attackController = player.Attack; // PlayerAttackController
         if (attackController != null && attackController.CurrentAttackTarget != null)
         {
-            eventManager?.MoveBehindTarget(attackController.CurrentAttackTarget);
+            eventManager?.MoveBehindWithPush(attackController.CurrentAttackTarget);
         }
     }
     public void AwakenAttackMove()

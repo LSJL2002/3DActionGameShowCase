@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class CompanionController : MonoBehaviour
@@ -24,6 +25,7 @@ public class CompanionController : MonoBehaviour
     [HideInInspector] public Vector3 cachedAnchorLocalPos; // 캐릭터 중심으로 처음에 고정한 오브젝트 위치
     [HideInInspector] public CursorLockMode cachedLockMode;  // 커서
     [HideInInspector] public bool cachedCursorVisible; // 커서가 보이고 안보이고하는 bool값
+    public static GameObject thisGO;
 
     public CompanionUI ui;   // UIManager로 띄우는 컴패니언 UI
 
@@ -31,6 +33,8 @@ public class CompanionController : MonoBehaviour
 
     void Awake()
     {
+        thisGO = this.gameObject;
+
         if (targetObject) cachedAnchorLocalPos = targetObject.localPosition;
         Sm = new CompanionStateMachine(this);
         Sm.ChangeState(new CompanionIdleState(Sm)); // 시작 상태: Follow (원하면 IdleState로 변경)

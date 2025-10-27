@@ -159,15 +159,13 @@ public class BattleManager : Singleton<BattleManager>
         Debug.Log($"[Analytics] monster_death → {currentMonster.name}, time={elapsed:F2}s, zone={currentZone.stageName}");
 
         // 
-        if (currentZone.id == MapManager.Instance.bossZoneId)
-        {
-            await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.TimeLineED);
-            MapManager.Instance.HandleLastStageClear();
-            return;
-        }
-
         await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.TimeLineED);
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
+        if (currentZone.id == MapManager.Instance.bossZoneId)
+        {
+            MapManager.Instance.HandleLastStageClear();
+        }
+
         StopWarning();
     }
 

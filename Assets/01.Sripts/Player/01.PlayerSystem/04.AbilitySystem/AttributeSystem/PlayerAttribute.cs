@@ -47,8 +47,8 @@ public class PlayerAttribute
 
     public Stat Attack { get; private set; }
     public Stat Defense { get; private set; }
-    public Stat MoveSpeed { get; private set; }
     public Stat AttackSpeed { get; private set; }
+    public Stat MoveSpeed { get; private set; }
 
     public PlayerAttribute(PlayerInfo info, EventHub hub)
     {

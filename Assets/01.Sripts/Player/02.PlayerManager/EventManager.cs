@@ -1,127 +1,124 @@
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
+using System;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class EventManager : MonoBehaviour
 {
     private PlayerCharacter player;
     private ForceReceiver force;
-    private Transform playerTransform;
+    private Transform playerpos;
 
     [Header("타겟 뒤 이동 설정")]
-    public float sideOffset = 1f;
-    public float behindOffset = 0.5f;
-    public float moveDuration = 0.5f;
-    public int pathPoints = 5;
+    public float sideOffset = 2f;
+    public float behindOffset = 4f;
+    public float moveDuration = 1f;  //진행속도
+
+    [Header("Debug Path")]
+    public bool drawPathGizmos = true;
+    public int debugResolution = 20;
+
+    // Bezier 컨트롤 포인트
+    private Vector3 bezierP0, bezierP1, bezierP2, bezierP3;
 
 
     public void Initialize(PlayerCharacter player, Transform body, ForceReceiver forceReceiver)
     {
         this.player = player;
-        playerTransform = body;
+        playerpos = body;
         force = forceReceiver;
     }
 
     // ======================== Yuki ==========================
     // ==================== 타겟 뒤 이동 =====================
-    public void MoveBehindTarget(Transform target)
+    public void MoveBehindWithPush(Transform target)
     {
         if (target == null || force == null) return;
 
-        Vector3 startPos = playerTransform.position;
+        // ✅ PushBack 먼저 실행
+        float pushDuration = 0.4f;
+        float pushPower = 1f;
+        float pushElapsed = 0f;
 
-        // 타겟 뒤 방향 계산
-        Vector3 rawDir = target.position - startPos;
-        rawDir.y = 0f;
-        Vector3 playerToTarget = rawDir.normalized;
+        DOTween.To(() => pushElapsed, x => pushElapsed = x, 1f, pushDuration)
+            .SetEase(Ease.Linear)
+            .OnUpdate(() =>
+            {
+                // 뒤로 밀기
+                force.AddForce(-player.transform.forward * pushPower);
+            })
+            .OnComplete(() =>
+            {
+                force.ReleaseForce();
+                StartBezierMove(target);
+            });
+    }
 
-        Vector3 targetBehind = target.position + playerToTarget * behindOffset;
-        targetBehind.y = startPos.y;
+    private void StartBezierMove(Transform target)
+    {
+        Vector3 startPos = playerpos.position;
+        bezierP0 = startPos;
 
-        Vector3 right = Vector3.Cross(Vector3.up, playerToTarget).normalized;
+        Vector3 toTarget = target.position - startPos;
+        toTarget.y = 0;
+        Vector3 dir = toTarget.normalized;
 
-        Vector3[] path = new Vector3[pathPoints + 2];
-        path[0] = startPos;
-        for (int i = 1; i <= pathPoints; i++)
-        {
-            float t = (float)i / (pathPoints + 1);
-            Vector3 point = Vector3.Lerp(startPos, targetBehind, t);
-            point += right * Mathf.Sin(t * Mathf.PI) * sideOffset;
-            point.y = startPos.y;
-            path[i] = point;
-        }
-        path[path.Length - 1] = targetBehind;
+        // 목표 위치 (타겟 뒤)
+        Vector3 targetPos = target.position + dir * behindOffset;
+        targetPos.y = startPos.y;
+        bezierP3 = targetPos;
+
+        // 곡선 포인트 계산
+        Vector3 right = Vector3.Cross(Vector3.up, dir).normalized;
+        bezierP1 = startPos + right * sideOffset;
+        bezierP2 = targetPos + right * sideOffset;
 
         float elapsed = 0f;
         DOTween.To(() => elapsed, x => elapsed = x, 1f, moveDuration)
-            .SetEase(Ease.OutQuad)
+            .SetEase(Ease.InQuad)
             .OnUpdate(() =>
             {
-                // 경로 계산
-                float t = elapsed;
-                Vector3 newPos = CatmullRomPath(path, t);
-                // 이동 delta 계산
-                Vector3 delta = newPos - playerTransform.position;
-                // ForceReceiver에 힘 추가
-                force.AddForce(delta, horizontalOnly: true);
+                Vector3 newPos = GizmoUtility.BezierPoint(bezierP0, bezierP1, bezierP2, bezierP3, elapsed);
+                Vector3 delta = newPos - playerpos.position;
+                delta.y = 0;
+                player.Controller.Move(delta);
 
-                // 타겟 바라보기
-                Vector3 lookDir = target.position - playerTransform.position;
+                // 회전
+                Vector3 lookDir = target.position - playerpos.position;
                 lookDir.y = 0f;
                 if (lookDir != Vector3.zero)
                 {
-                    Quaternion targetRotation = Quaternion.LookRotation(lookDir, Vector3.up);
-                    playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, targetRotation, 0.2f);
+                    var rot = Quaternion.LookRotation(lookDir);
+                    playerpos.rotation = Quaternion.Slerp(playerpos.rotation, rot, 0.2f);
                 }
             })
             .OnComplete(() =>
             {
-                // 최종 위치에서 타겟 바라보기
-                Vector3 lookDir = target.position - playerTransform.position;
-                lookDir.y = 0f;
-                if (lookDir != Vector3.zero)
-                    playerTransform.rotation = Quaternion.LookRotation(lookDir, Vector3.up);
+                force.ReleaseForce();
             });
-    }
-
-    private Vector3 CatmullRomPath(Vector3[] points, float t)
-    {
-        int numSections = points.Length - 3;
-        int currPt = Mathf.Min(Mathf.FloorToInt(t * numSections), numSections - 1);
-        float u = t * numSections - currPt;
-
-        Vector3 a = points[currPt];
-        Vector3 b = points[currPt + 1];
-        Vector3 c = points[currPt + 2];
-        Vector3 d = points[currPt + 3];
-
-        float u2 = u * u;
-        float u3 = u2 * u;
-
-        return 0.5f * ((2f * b) +
-                       (-a + c) * u +
-                       (2f * a - 5f * b + 4f * c - d) * u2 +
-                       (-a + 3f * b - 3f * c + d) * u3);
     }
 
     // ================ 각성 공격 막타 이동 =================
     public void OnAwakenAttackStepMove()
     {
-        Vector2 input = player.StateMachine.MovementInput; // 현재 방향키 입력
-        Vector3 moveDir;
-        if (input == Vector2.zero)
-        {
-            // 입력 없으면 뒤로 이동
-            moveDir = -player.transform.forward;
-        }
-        else
-        {
-            moveDir = (player.transform.forward * input.y +
-                       player.transform.right * input.x).normalized;
-        }
+        Vector2 input = player.StateMachine.MovementInput;
+        Vector3 moveDir =
+            input == Vector2.zero
+            ? -playerpos.transform.forward
+            : (playerpos.transform.forward * input.y + playerpos.transform.right * input.x).normalized;
+        force.AddForce(moveDir * 20f);
+    }
 
-        player.ForceReceiver?.AddForce(moveDir * 20f, horizontalOnly: true);
+
+    // ================== 디버그 Gizmo ==================
+    private void OnDrawGizmos()
+    {
+        if (!drawPathGizmos) return;
+        if (bezierP0 == Vector3.zero && bezierP3 == Vector3.zero) return;
+        Gizmos.color = Color.green;
+        GizmoUtility.DrawBezierCurve(bezierP0, bezierP1, bezierP2, bezierP3, debugResolution, true);
     }
 }

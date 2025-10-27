@@ -60,14 +60,13 @@ public class AwakenSubModule_Yuki
         sm.Player.Animator.SetTrigger("Action/Toggle_AwakenExit");
 
         sm.Player.skill.SpawnSkill("Awaken", sm.Player.Body.position, sm.Player.Body.rotation);
-        sm.Player.ForceReceiver?.AddForce(-sm.Player.transform.forward * 15f, horizontalOnly: true);
-        sm.Player.ForceReceiver?.BeginVerticalHold(1f, 1f);
+        sm.Player.ForceReceiver?.AddForce(-sm.Player.transform.forward * 15f);
+        sm.Player.Vertical?.Hold(sm.Player.transform.position.y + 1, 1f);
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
 
         // 후반 연출
         sm.Player.skill.SpawnSkill("Awaken2", sm.Player.Body.position, sm.Player.Body.rotation);
-        sm.Player.ForceReceiver?.EndVerticalHold();
 
         sm.Player.Animator.SetLayerWeight(awakenLayerIndex, 0f);
         sm.Player._camera?.SetColorGradingEnabled(true);
