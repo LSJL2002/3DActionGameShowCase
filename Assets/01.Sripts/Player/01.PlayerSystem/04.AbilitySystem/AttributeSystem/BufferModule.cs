@@ -19,15 +19,20 @@ public class BufferModule
     {
         BufferMax = max;
         Cooldown = cooldown;
-        BufferCurrent = startValue ?? 0;
+        BufferCurrent = Mathf.Clamp(startValue ?? 0, 0, BufferMax);
         lastTime = 0f;
 
-        // 자동 회복 모드: startValue < max면 첫 회복 예약 생성
+        // 자동 회복 모드: startValue < max이면 부족한 만큼 복구 예약 생성
         if (BufferCurrent < BufferMax)
         {
-            float firstRecover = Time.time + Cooldown;
-            recoveryTimes.Enqueue(firstRecover);
-            lastTime = firstRecover;
+            // 첫 복구는 Time.time + Cooldown, 그 다음은 +Cooldown 간격으로 쌓음
+            float baseTime = Time.time;
+            for (int i = 0; i < (BufferMax - BufferCurrent); i++)
+            {
+                float recoverAt = baseTime + Cooldown * (i + 2);
+                recoveryTimes.Enqueue(recoverAt);
+                lastTime = recoverAt;
+            }
         }
     }
 

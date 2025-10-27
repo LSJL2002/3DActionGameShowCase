@@ -49,6 +49,9 @@ public class PlayerAttribute
     public Stat Defense { get; private set; }
     public Stat AttackSpeed { get; private set; }
     public Stat MoveSpeed { get; private set; }
+    public Stat MaxHealth { get; private set; }
+    public Stat MaxEnergy { get; private set; }
+
 
     public PlayerAttribute(PlayerInfo info, EventHub hub)
     {
@@ -58,6 +61,8 @@ public class PlayerAttribute
         Defense = new Stat(data.Defense);
         MoveSpeed = new Stat(data.MoveSpeed);
         AttackSpeed = new Stat(data.AttackSpeed);
+        MaxHealth = new Stat(data.MaxHp);
+        MaxEnergy = new Stat(data.MaxMp);
 
         // 체력/에너지
         Resource = new ResourceModule(data.MaxHp, data.MaxMp);
@@ -94,6 +99,20 @@ public class PlayerAttribute
             case StatType.Defense: Defense.AddModifier(value); break;
             case StatType.MoveSpeed: MoveSpeed.AddModifier(value); break;
             case StatType.AttackSpeed: AttackSpeed.AddModifier(value); break;
+            case StatType.MaxHealth:
+                {
+                    float oldMax = MaxHealth.Value;
+                    MaxHealth.AddModifier(value);
+                    Resource.UpdateMaxHealth(MaxHealth.Value, oldMax);
+                    break;
+                }
+            case StatType.MaxEnergy:
+                {
+                    float oldMax = MaxEnergy.Value;
+                    MaxEnergy.AddModifier(value);
+                    Resource.UpdateMaxEnergy(MaxEnergy.Value, oldMax);
+                    break;
+                }
         }
     }
 
@@ -105,6 +124,20 @@ public class PlayerAttribute
             case StatType.Defense: Defense.RemoveModifier(value); break;
             case StatType.MoveSpeed: MoveSpeed.RemoveModifier(value); break;
             case StatType.AttackSpeed: AttackSpeed.RemoveModifier(value); break;
+            case StatType.MaxHealth:
+                {
+                    float oldMax = MaxHealth.Value;
+                    MaxHealth.RemoveModifier(value);
+                    Resource.UpdateMaxHealth(MaxHealth.Value, oldMax);
+                    break;
+                }
+            case StatType.MaxEnergy:
+                {
+                    float oldMax = MaxEnergy.Value;
+                    MaxEnergy.RemoveModifier(value);
+                    Resource.UpdateMaxEnergy(MaxEnergy.Value, oldMax);
+                    break;
+                }
         }
     }
 }

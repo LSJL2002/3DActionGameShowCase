@@ -26,6 +26,7 @@ public class PlayerStunState : PlayerBaseState
         StartAnimation(sm.Player.AnimationData.StunParameterHash);
         int stunLayerIndex = sm.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
         sm.Player.Animator.SetLayerWeight(stunLayerIndex, 1);
+        sm.Player.Motor.AllowMovement = false;
     }
 
     public override void Exit()
@@ -34,8 +35,6 @@ public class PlayerStunState : PlayerBaseState
         StartAnimation(sm.Player.AnimationData.StunParameterHash);
         int stunLayerIndex = sm.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
         sm.Player.Animator.SetLayerWeight(stunLayerIndex, 0);
-
-        sm.Player.Ability.EndStun();
     }
 
     public override void LogicUpdate()
@@ -45,7 +44,7 @@ public class PlayerStunState : PlayerBaseState
 
         if (elapsed >= duration)
         {
-            Exit();
+            sm.Player.Ability.EndStun();
         }
     }
 }
