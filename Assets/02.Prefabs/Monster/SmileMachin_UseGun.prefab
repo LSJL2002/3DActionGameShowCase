@@ -4946,6 +4946,7 @@ GameObject:
   - component: {fileID: 5763327211639044479}
   - component: {fileID: 6227563921741055052}
   - component: {fileID: 5436924065047375963}
+  - component: {fileID: 6725131131286552980}
   m_Layer: 6
   m_Name: SmileMachin_UseGun
   m_TagString: Untagged
@@ -5130,9 +5131,10 @@ MonoBehaviour:
   patternConfig: {fileID: 11400000, guid: b877a1398cb215f4e849af2ca936cf1c, type: 2}
   AreaEffectPoint: {fileID: 1810103001261259569}
   hasStartedCombat: 0
+  hasDetectedPlayer: 0
+  baseAttackCollider: {fileID: 5778639908450511797}
   rifleParticleEffect: {fileID: 8751197841148956972}
   groggyParticleEffect: {fileID: 6005512538140963122}
-  baseAttackCollider: {fileID: 5778639908450511797}
 --- !u!114 &5763327211639044479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5148,6 +5150,7 @@ MonoBehaviour:
   chaseBuffer: 0.5
   idleBuffer: 0.5
   attackCooldown: 10
+  lastAttackTime: 0
 --- !u!65 &6227563921741055052
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5190,6 +5193,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.25, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6725131131286552980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4096753740676932879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b386d8e90f8c4194da699f8c07031a95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 5537974382895312408}
+  controller: {fileID: 7091687856046425219}
 --- !u!1 &4104414094180350370
 GameObject:
   m_ObjectHideFlags: 0
