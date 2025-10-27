@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class SpiderMachine_Spin : MonsterBaseState
@@ -5,6 +7,8 @@ public class SpiderMachine_Spin : MonsterBaseState
     private MonsterSkillSO skillData;
     private GameObject aoeInstance;
     private AreaEffectController aoeController;
+    private Coroutine spinCoroutine;
+    private Quaternion initialRotation;
     public SpiderMachine_Spin(MonsterStateMachine stateMachine, MonsterSkillSO spinSkill) : base(stateMachine)
     {
         skillData = spinSkill;
@@ -45,9 +49,50 @@ public class SpiderMachine_Spin : MonsterBaseState
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
     }
 
+
     public void TriggerSpin()
     {
-        
+        if (spinCoroutine != null)
+            stateMachine.Monster.StopCoroutine(spinCoroutine);
+
+        initialRotation = stateMachine.Monster.transform.rotation;
+        spinCoroutine = stateMachine.Monster.StartCoroutine(SpinRoutine());
+        OnAttackHit();
+    }
+
+    private IEnumerator SpinRoutine()
+    {
+        while (true)
+        {
+            stateMachine.Monster.transform.Rotate(Vector3.up, 720f * Time.deltaTime, Space.World);
+            yield return null;
+        }
+    }
+
+    public void StopSpin()
+    {
+        if (spinCoroutine != null)
+        {
+            stateMachine.Monster.StopCoroutine(spinCoroutine);
+            spinCoroutine = null;
+        }
+        stateMachine.Monster.StartCoroutine(RotateBackToInitial());
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
+    }
+    private IEnumerator RotateBackToInitial()
+    {
+        Quaternion startRot = stateMachine.Monster.transform.rotation;
+        float t = 0f;
+        const float duration = 0.3f;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            stateMachine.Monster.transform.rotation = Quaternion.Slerp(startRot, initialRotation, t / duration);
+            yield return null;
+        }
+
+        stateMachine.Monster.transform.rotation = initialRotation;
     }
 
     public override void OnAttackHit()
@@ -56,6 +101,7 @@ public class SpiderMachine_Spin : MonsterBaseState
 
         aoeController.EnableDamage(stateMachine.Monster.transform);
     }
+
 
     public override void Exit()
     {
