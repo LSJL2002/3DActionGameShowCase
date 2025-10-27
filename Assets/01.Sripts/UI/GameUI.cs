@@ -15,7 +15,7 @@ public partial class GameUI : UIBase
 
         OnEnablePlayer();
         OnEnableEnemy();
-        OnEnableSkill();
+        OnEnableIcon();
     }
 
     protected override void Start()
@@ -38,6 +38,6 @@ public partial class GameUI : UIBase
 
         OnDisablePlayer();
         OnDisableEnemy();
-        OnDisableSkill();
+        OnDisableIcon();
     }
 }

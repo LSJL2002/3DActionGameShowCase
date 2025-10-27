@@ -38,20 +38,20 @@ public partial class GameUI : UIBase
     private float item2CooltimeDuration = 0;
     private float item3CooltimeDuration = 0;
 
-    public void OnEnableSkill()
+    public void OnEnableIcon()
     {
         skillInfoCanvasGroup.DOFade(0f, 0f).OnComplete(() => { skillInfoCanvasGroup.DOFade(1f, 1f); });
 
         PlayerCharacter activeCharacter = PlayerManager.Instance.ActiveCharacter;
-        UpdateSkillUI(activeCharacter);
+        UpdateIconUI(activeCharacter);
 
         // 이벤트 구독 / 해제
-        PlayerManager.Instance.OnActiveCharacterChanged -= UpdateSkillUI;
+        PlayerManager.Instance.OnActiveCharacterChanged -= UpdateIconUI;
         EventsManager.Instance.StopListening(GameEvent.OnConsumableItemsChanged, SetItemIcon);
         EventsManager.Instance.StopListening(GameEvent.OnUsedItem, SetItemIcon);
         EventsManager.Instance.StopListening(GameEvent.OnUsedItem, ItemCooltimeStart);
 
-        PlayerManager.Instance.OnActiveCharacterChanged += UpdateSkillUI;
+        PlayerManager.Instance.OnActiveCharacterChanged += UpdateIconUI;
         EventsManager.Instance.StartListening(GameEvent.OnConsumableItemsChanged, SetItemIcon);
         EventsManager.Instance.StartListening(GameEvent.OnUsedItem, SetItemIcon);
         EventsManager.Instance.StartListening(GameEvent.OnUsedItem, ItemCooltimeStart);
@@ -60,20 +60,18 @@ public partial class GameUI : UIBase
         float skillCooltimeDuration = PlayerManager.Instance.Attr.SkillBuffer.Cooldown; // 스킬 Max 쿨타임 가져옴 (초단위)
 
         // 회피 쿨타임 시퀀스 초기 생성
-        evadeCoolTimeSequence = DOTween.Sequence();
-        evadeCoolTimeSequence.Append(evadeImage.DOFillAmount(0f, evadeCooltimeDuration));
-        evadeCoolTimeSequence.AppendCallback(() => { evadeImage.fillAmount = 1f; });
-        evadeCoolTimeSequence.SetAutoKill(false);
+        evadeCoolTimeSequence = DOTween.Sequence()
+            .SetAutoKill(false)
+            .Append(evadeImage.DOFillAmount(0f, evadeCooltimeDuration))
+            .AppendCallback(() => { evadeImage.fillAmount = 1f; })
+            .Pause();
 
         // 스킬 쿨타임 시퀀스 초기 생성
-        skillCoolTimeSequence = DOTween.Sequence();
-        skillCoolTimeSequence.Append(skill1Image.DOFillAmount(0f, skillCooltimeDuration));
-        skillCoolTimeSequence.AppendCallback(() => { skill1Image.fillAmount = 1f; });
-        skillCoolTimeSequence.SetAutoKill(false);
-
-        // 최초엔 정지
-        evadeCoolTimeSequence.Pause();
-        skillCoolTimeSequence.Pause();
+        skillCoolTimeSequence = DOTween.Sequence()
+            .SetAutoKill(false)
+            .Append(skill1Image.DOFillAmount(0f, skillCooltimeDuration))
+            .AppendCallback(() => { skill1Image.fillAmount = 1f; })
+            .Pause();
 
         SetItemIcon();
     }
@@ -162,7 +160,7 @@ public partial class GameUI : UIBase
         }
     }
 
-    public void OnDisableSkill()
+    public void OnDisableIcon()
     {
         DOTween.Kill(this);
         evadeCoolTimeSequence = null;
@@ -170,7 +168,7 @@ public partial class GameUI : UIBase
     }
 
     // 구독갱신
-    public void ResetEventSkill()
+    public void ResetEventIcon()
     {
         // 구독해제
         PlayerManager.Instance.Attr.EvadeBuffer.OnBufferChanged -= OnCoolTimeEvade;
@@ -182,7 +180,7 @@ public partial class GameUI : UIBase
     }
 
     // SkillUI 업데이트시 호출 (최초, 플레이어 교체시)
-    public void UpdateSkillUI(PlayerCharacter playerCharacter)
+    public void UpdateIconUI(PlayerCharacter playerCharacter)
     {
         if (evadeCoolTimeSequence.IsActive())
             evadeCoolTimeSequence.Rewind(); // 처음으로 되감기 + Pause
@@ -195,7 +193,7 @@ public partial class GameUI : UIBase
         skill1Image.fillAmount = 1;
         skill1Text.text = PlayerManager.Instance.Attr.SkillBuffer.BufferCurrent.ToString();
 
-        ResetEventSkill();
+        ResetEventIcon();
     }
 
     // 회피 쿨타임
