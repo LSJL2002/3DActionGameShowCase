@@ -52,9 +52,11 @@ public class MonsterBaseState : Istate
     protected void MoveTo(Vector3 destination)
     {
         var cc = stateMachine.Monster.GetComponent<CharacterController>();
-        var forceReceiver = stateMachine.Monster.GetComponent<ForceReceiver>();
         var agent = stateMachine.Monster.Agent;
-        if (cc == null || forceReceiver == null || agent == null) return;
+        if (cc == null || agent == null) return;
+
+        if (agent.isStopped)
+            agent.isStopped = false;
 
         // NavMeshAgent은 이동 경로에만 사용
         agent.SetDestination(destination);
@@ -62,7 +64,6 @@ public class MonsterBaseState : Istate
 
         // 찾은 경로와 force을 이용을하여 몬스터를 이동을 하게 한다
         Vector3 move = desiredVelocity.normalized * stateMachine.MovementSpeed * Time.deltaTime;
-        move += forceReceiver.HorizontalVelocity;
 
         cc.Move(move);
 

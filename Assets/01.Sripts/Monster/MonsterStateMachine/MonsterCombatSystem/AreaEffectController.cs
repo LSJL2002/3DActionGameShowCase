@@ -98,9 +98,10 @@ public class AreaEffectController : MonoBehaviour
         }
 
         // Apply damage after telegraph
-        ApplyHalfCircleDamage(origin, radius, angle);
+        //ApplyHalfCircleDamage(origin, radius, angle);
 
         OnTelegraphFinished?.Invoke();
+        // Destroy(gameObject, 0.1f);
     }
 
     private void ApplyHalfCircleDamage(Transform origin, float radius, float angle)
@@ -223,15 +224,15 @@ public class AreaEffectController : MonoBehaviour
         damageCollider.enabled = false;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Testing Hit");
-        if (!damageCollider.enabled) return;
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     Debug.Log("Testing Hit");
+    //     if (!damageCollider.enabled) return;
 
-        if (other.CompareTag("Player"))
-        {
-            IDamageable damageable = other.GetComponent<IDamageable>();
-            damageable?.OnTakeDamage((int)(damage * skillData.effectValue));
-        }
-    }
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         IDamageable damageable = other.GetComponent<IDamageable>();
+    //         damageable?.OnTakeDamage((int)(damage * skillData.effectValue));
+    //     }
+    // }
 }
