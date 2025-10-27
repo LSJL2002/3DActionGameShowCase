@@ -79,12 +79,12 @@ public class InventoryManager : Singleton<InventoryManager>
     public void StatUPAbility(ItemData itemData)
     {
         // 플레이어 스탯 증가 함수 호출
-        PlayerManager.Instance.Attr.AddModifier(StatType.MaxHealth, itemData.MaxHP);
-        PlayerManager.Instance.Attr.AddModifier(StatType.MaxEnergy, itemData.MaxMP);
-        PlayerManager.Instance.Attr.AddModifier(StatType.Attack, itemData.Attack);
-        PlayerManager.Instance.Attr.AddModifier(StatType.Defense, itemData.Defence);
-        PlayerManager.Instance.Attr.AddModifier(StatType.MoveSpeed, itemData.MoveSpeed);
-        PlayerManager.Instance.Attr.AddModifier(StatType.AttackSpeed, itemData.AttackSpeed);
+        PlayerManager.Instance.ActiveCharacter.Attr.AddModifier(StatType.MaxHealth, itemData.MaxHP);
+        PlayerManager.Instance.ActiveCharacter.Attr.AddModifier(StatType.MaxEnergy, itemData.MaxMP);
+        PlayerManager.Instance.ActiveCharacter.Attr.AddModifier(StatType.Attack, itemData.Attack);
+        PlayerManager.Instance.ActiveCharacter.Attr.AddModifier(StatType.Defense, itemData.Defence);
+        PlayerManager.Instance.ActiveCharacter.Attr.AddModifier(StatType.MoveSpeed, itemData.MoveSpeed);
+        PlayerManager.Instance.ActiveCharacter.Attr.AddModifier(StatType.AttackSpeed, itemData.AttackSpeed);
 
         EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
     }

@@ -85,7 +85,7 @@ public partial class GameUI : UIBase
     public void UpdatePlayerUI(PlayerCharacter playerCharacter)
     {
         // 현재 캐릭터의 정보를 가져오는 곳 재정의
-        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
+        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.ActiveCharacter.Attr.Resource.MaxHealth.Value;
         playerIndex = (int)playerCharacter.CharacterType;
 
         if (playerIndex >= 0 && playerIndex < playerUIElements.Length)
@@ -100,12 +100,12 @@ public partial class GameUI : UIBase
 
     private float PreprocessHPUpdate()
     {
-        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
+        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.ActiveCharacter.Attr.Resource.MaxHealth.Value;
 
         playerDamageSequence.Kill();
         playerHealSequence.Kill();
 
-        float currentHealth = PlayerManager.Instance.Attr.Resource.CurrentHealth;
+        float currentHealth = PlayerManager.Instance.ActiveCharacter.Attr.Resource.CurrentHealth;
 
         activeHPText.text = currentHealth.ToString("#,##0");
 
@@ -117,6 +117,8 @@ public partial class GameUI : UIBase
     // 체력 감소
     private void PlayerHPDecrease()
     {
+        UpdatePlayerUI(PlayerManager.Instance.ActiveCharacter);
+
         float playerHPpercentage = PreprocessHPUpdate();
         float duration = 0.2f;
 
