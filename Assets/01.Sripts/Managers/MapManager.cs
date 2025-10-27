@@ -56,6 +56,11 @@ public class MapManager : Singleton<MapManager>
         }
         // NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
         await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
+
+        if(MapManager.Instance != null)
+        {
+            MapManager.Instance.GetComponent<SkyboxBlendController>()?.skyInitialize();
+        }
     }
 
     public void ResetZones()
