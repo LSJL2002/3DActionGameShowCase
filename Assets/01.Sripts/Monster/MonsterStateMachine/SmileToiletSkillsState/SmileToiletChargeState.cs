@@ -55,6 +55,12 @@ public class SmileToiletChargeState : MonsterBaseState
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Charge));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
         attackActive = true;
+
+        var mc = stateMachine.Monster.GetComponent<MonsterController>();
+        if (mc != null)
+        {
+            mc.SetRootMotionMultiplier(2.0f); // boost root motion
+        }
     }
     
     public override void OnControllerColliderHit(ControllerColliderHit hit)
@@ -86,6 +92,11 @@ public class SmileToiletChargeState : MonsterBaseState
         {
             stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
+        }
+        var mc = stateMachine.Monster.GetComponent<MonsterController>();
+        if (mc != null)
+        {
+            mc.ResetRootMotionMultiplier(); // reset to normal
         }
         stateMachine.isAttacking = false;
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));

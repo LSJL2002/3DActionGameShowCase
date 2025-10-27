@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class SpiderTractor_UseGrenade : BaseMonster
@@ -13,6 +14,7 @@ public class SpiderTractor_UseGrenade : BaseMonster
             case States.BaseAttack: return stateMachine.MonsterBaseAttack;
             case States.BaseAttack2: return stateMachine.MonsterBaseAttackAlt;
             case States.Skill1: return stateMachine.SpiderMachine_AttackStamp;
+            case States.TurnLeft: return stateMachine.SpiderMachine_TurnLeft;
             default: return null;
         }
     }
