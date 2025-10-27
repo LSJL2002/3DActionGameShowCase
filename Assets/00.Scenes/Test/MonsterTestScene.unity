@@ -4168,7 +4168,6 @@ GameObject:
   - component: {fileID: 6795516254415247760}
   - component: {fileID: 6795516254415247762}
   - component: {fileID: 6795516254415247759}
-  - component: {fileID: 6795516254415247764}
   - component: {fileID: 6795516254415247763}
   m_Layer: 6
   m_Name: SpiderMachine_UseGrenade
@@ -4673,6 +4672,11 @@ MonoBehaviour:
   hasStartedCombat: 0
   hasDetectedPlayer: 0
   baseAttackCollider: {fileID: 289103276}
+  gravity: -9.81
+  groundCheckDistance: 0.3
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   stampEffect: {fileID: 100000, guid: c380d2dd36b7ec44cb9ea6098511faa9, type: 3}
   fangFallEffect: {fileID: 1719780038224681957, guid: ae2b75e2884477643b2237ed3bff7265, type: 3}
 --- !u!195 &6795516254415247762
@@ -4723,19 +4727,6 @@ MonoBehaviour:
   StatusEffect: []
   DropItem: 
   MonsterSkills: []
---- !u!114 &6795516254415247764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6146417507537968260}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b5fe3112031b94d97184a74617b434, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drag: 0.3
 --- !u!1 &6883413300531773760
 GameObject:
   m_ObjectHideFlags: 0
