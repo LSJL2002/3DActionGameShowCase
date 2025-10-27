@@ -7,6 +7,7 @@ public class SmileToiletSmashState : MonsterBaseState
     private MonsterSkillSO skillData;
     private GameObject aoeInstance;
     private AreaEffectController aoeController;
+    private bool hasHit = false;
     public SmileToiletSmashState(MonsterStateMachine ms, MonsterSkillSO smashSkill) : base(ms)
     {
         skillData = smashSkill;
@@ -53,7 +54,7 @@ public class SmileToiletSmashState : MonsterBaseState
     // Called from animation event
     public override void OnAttackHit()
     {
-        if (aoeController == null) return;
+        if ( hasHit || aoeController == null) return;
 
         Debug.Log("OnAttackHitSmash");
         aoeController.EnableDamage(stateMachine.Monster.transform);
