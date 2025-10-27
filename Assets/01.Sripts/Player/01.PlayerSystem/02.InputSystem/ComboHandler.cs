@@ -17,7 +17,8 @@ public class ComboHandler
 
     private readonly PlayerAttackController attackCtrl;
 
-
+    public int CurrentIndex => currentIndex;        // 0부터 시작
+    public int CurrentComboCount => currentIndex + 1; // 1부터 시작하는 타수
 
     public ComboHandler(List<AttackInfoData> attacks, Animator animator, PlayerAttackController attackCtrl)
     {
