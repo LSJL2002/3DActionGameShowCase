@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.SceneManagement;
 
 public class MapManager : Singleton<MapManager>
 {
@@ -57,10 +56,8 @@ public class MapManager : Singleton<MapManager>
         // NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
         await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
 
-        if(MapManager.Instance != null)
-        {
-            MapManager.Instance.GetComponent<SkyboxBlendController>()?.skyInitialize();
-        }
+        GetComponent<SkyboxBlendController>()?.skyInitialize();
+
     }
 
     public void ResetZones()
@@ -79,7 +76,7 @@ public class MapManager : Singleton<MapManager>
         {
             tutorialWall = GameObject.Find("TutorialWall");
         }
-        if(gameClearDoor == null)
+        if (gameClearDoor == null)
         {
             gameClearDoor = FindAnyObjectByType<GameClearDoor>().gameObject;
             gameClearDoor.SetActive(false);
@@ -95,25 +92,25 @@ public class MapManager : Singleton<MapManager>
             if (controller != null)
             {
                 controller.enabled = false; // 움직임 제어 잠깐 끄기
-                PlayerManager.Instance.ActiveCharacter.transform.position = new Vector3(0,0,5);
+                PlayerManager.Instance.ActiveCharacter.transform.position = new Vector3(0, 0, 5);
                 controller.enabled = true;  // 다시 켜기
             }
         }
 
         else if (SaveManager.Instance.gameMode == eGameMode.LoadGame)
         {
-            
+
             tutorialWall.SetActive(false);
             int lastClearStage = SaveManager.Instance.playerData.LastClearStage;
 
-            
+
             if (lastClearStage == _bossZoneId || lastClearStage == 0)
             {
                 ReturnToStartZone();
             }
             else if (zoneDict.TryGetValue(lastClearStage, out var clearedZone))
             {
-                
+
                 if (controller != null)
                 {
                     controller.enabled = false; // 움직임 제어 잠깐 끄기
@@ -121,7 +118,7 @@ public class MapManager : Singleton<MapManager>
                     controller.enabled = true;  // 다시 켜기
                 }
                 OpenNextZone(clearedZone);
-                
+
 
             }
 
@@ -129,6 +126,7 @@ public class MapManager : Singleton<MapManager>
             currentZone = null;
             Debug.Log("맵 불러오기 완료");
         }
+       
     }
 
     private void ReturnToStartZone()
@@ -190,13 +188,8 @@ public class MapManager : Singleton<MapManager>
                 Debug.Log("다음 스테이지 없음 → 마지막 스테이지거나 잘못된 ID");
             }
         }
-
-        //클리어한 존 비활성화
-        zone.gameObject.SetActive(false); //Release
-        //zoneDict.Remove(zone.id);
-        //Addressables.ReleaseInstance(zone.gameObject);
+        zone.gameObject.SetActive(false);
         currentZone = null;
-
     }
 
     public void HandleLastStageClear()
@@ -204,11 +197,11 @@ public class MapManager : Singleton<MapManager>
         SaveManager.Instance.playerData.round++;
         Debug.Log($"마지막 스테이지 클리어! 현재 회차: {round}");
 
-        // 필요시 세이브 추가
+        // 세이브
         SaveManager.Instance.playerData.LastClearStage = 0;
         SaveManager.Instance.SaveData();
 
-        // 씬 리셋 or 엔딩씬
+        //클리어 문 생성
         gameClearDoor.SetActive(true);
     }
 

@@ -49,11 +49,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentZone: {fileID: 0}
   startingZoneId: 60000000
-  BossZoneId: 60000010
+  _bossZoneId: 60000010
   round: 0
   tutorialWall: {fileID: 0}
-  OnBattleStart: {fileID: 11400000, guid: 89c6b4419402e2245aa93504f1d399a8, type: 2}
-  OnBattleClear: {fileID: 11400000, guid: a89dcfca8498af941853ffbfdfd3ea27, type: 2}
+  gameClearDoor: {fileID: 0}
 --- !u!114 &8521040522662022671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,8 +97,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <dropItem>k__BackingField: {fileID: 0}
-  OnMonsterDie: {fileID: 11400000, guid: 0d43f80353484b54680524673789e05e, type: 2}
-  OnBattleClear: {fileID: 11400000, guid: a89dcfca8498af941853ffbfdfd3ea27, type: 2}
 --- !u!114 &1061153404368884808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,5 +114,5 @@ MonoBehaviour:
   flipX: 0
   flipY: 0
   blendOffset: 0
-  rotationOffset: 0
+  rotationOffset: 270
   mainLight: {fileID: 0}

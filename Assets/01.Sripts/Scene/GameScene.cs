@@ -22,11 +22,9 @@ public class GameScene : SceneBase
         await MapManager.Instance.LoadMap();
         await Task.Yield();
 
-        await MapManager.Instance.LoadAscync("Character");
-        await Task.Yield();
-
         UIManager.Instance.Hide<LoadingUI>(); // 로딩 UI 끄기
         OnGameSceneStart(); // 게임 씬 시작
+        await MapManager.Instance.LoadAscync("companion");
     }
 
     public async void OnGameSceneStart()

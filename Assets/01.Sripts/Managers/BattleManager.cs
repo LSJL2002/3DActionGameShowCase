@@ -14,11 +14,6 @@ public class BattleManager : Singleton<BattleManager>
     private bool isBattle;
     private float battleStartTime;
 
-    //[SerializeField] private BaseEventSO<BattleZone> OnBattleStart;
-    //[SerializeField] private BaseEventSO<BattleZone> OnPlayerDie;
-    //[SerializeField] private BaseEventSO<BattleZone> OnMonsterDie;
-    //[SerializeField] private BaseEventSO<BattleZone> OnBattleClear;
-
     [SerializeField] private Material warningMaterial;
     private Tween emissionTween;
     private static readonly Color baseEmission = Color.black;
@@ -149,7 +144,7 @@ public class BattleManager : Singleton<BattleManager>
         // 아날리틱스 전송
         var evt = new CustomEvent("monster_death")
     {
-        { "zoneName", currentZone.stageName },                
+        { "zoneName", currentZone.stageName },
         { "monsterName", currentMonster.name },
         { "elapsedTime", elapsed },                           // 몬스터를 죽이는데 걸린시간
         { "eventTime", System.DateTime.UtcNow.ToString("o") } // 실제시간 - 언제 이벤트가 발생했는지
@@ -158,14 +153,14 @@ public class BattleManager : Singleton<BattleManager>
         AnalyticsService.Instance.Flush();
         Debug.Log($"[Analytics] monster_death → {currentMonster.name}, time={elapsed:F2}s, zone={currentZone.stageName}");
 
-        // 
-        await TimeLineManager.Instance.OnTimeLine<PlayableDirector>(currentZone.TimeLineED);
+        await TimeLineManager.Instance.PlayAndWait(currentZone.TimeLineED);
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
         if (currentZone.id == MapManager.Instance.bossZoneId)
         {
             MapManager.Instance.HandleLastStageClear();
         }
 
+        await UniTask.NextFrame();
         StopWarning();
     }
 
@@ -177,12 +172,12 @@ public class BattleManager : Singleton<BattleManager>
         SaveManager.Instance.SetStageData(currentZone.id);
         SaveManager.Instance.SaveData();
 
-        Addressables.ReleaseInstance(currentMonster.gameObject); 
+        Addressables.ReleaseInstance(currentMonster.gameObject);
         currentZone = null;
         currentMonster = null;
         monsterStats = null;
         isBattle = false;
-        
+
     }
 
     public void ResetBattleState()
