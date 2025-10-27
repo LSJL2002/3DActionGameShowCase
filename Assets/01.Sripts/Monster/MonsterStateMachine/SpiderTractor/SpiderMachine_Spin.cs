@@ -77,6 +77,7 @@ public class SpiderMachine_Spin : MonsterBaseState
             spinCoroutine = null;
         }
         stateMachine.Monster.StartCoroutine(RotateBackToInitial());
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
     private IEnumerator RotateBackToInitial()
     {
@@ -100,6 +101,7 @@ public class SpiderMachine_Spin : MonsterBaseState
 
         aoeController.EnableDamage(stateMachine.Monster.transform);
     }
+
 
     public override void Exit()
     {
