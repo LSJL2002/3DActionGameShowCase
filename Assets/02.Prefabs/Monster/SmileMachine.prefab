@@ -3786,8 +3786,8 @@ GameObject:
   - component: {fileID: 2337321881769251409}
   - component: {fileID: 1518149972915075037}
   - component: {fileID: 378540195965098670}
-  - component: {fileID: 6942012498410592670}
   - component: {fileID: 4443697076283274857}
+  - component: {fileID: 8772678078245913456}
   m_Layer: 6
   m_Name: SmileMachine
   m_TagString: Untagged
@@ -3876,7 +3876,13 @@ MonoBehaviour:
   patternConfig: {fileID: 11400000, guid: a6b3fbe4dec0d8d429a3566b9488367b, type: 2}
   AreaEffectPoint: {fileID: 2512720210794313222}
   hasStartedCombat: 0
+  hasDetectedPlayer: 0
   baseAttackCollider: {fileID: 3144015635715855134}
+  gravity: -9.81
+  groundCheckDistance: 0.3
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!195 &2337321881769251409
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3946,21 +3952,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &6942012498410592670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3177182589720266420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b5fe3112031b94d97184a74617b434, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller: {fileID: 378540195965098670}
-  animator: {fileID: 0}
-  drag: 0.3
 --- !u!65 &4443697076283274857
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3982,6 +3973,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.43, z: 0}
+--- !u!114 &8772678078245913456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3177182589720266420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b386d8e90f8c4194da699f8c07031a95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1518149972915075037}
+  controller: {fileID: 378540195965098670}
 --- !u!1 &3186133775840382300
 GameObject:
   m_ObjectHideFlags: 0
@@ -6676,7 +6681,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43cf8dbcf93b1e44d882be9597e4db66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
 --- !u!1 &5736962716820106575
 GameObject:
   m_ObjectHideFlags: 0

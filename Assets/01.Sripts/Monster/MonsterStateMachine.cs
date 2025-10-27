@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.UIElements;
 
 public class MonsterStateMachine : StateMachine
@@ -37,6 +38,9 @@ public class MonsterStateMachine : StateMachine
 
     //SpiderMachine
     public SpiderMachine_AttackStamp SpiderMachine_AttackStamp { get; private set; }
+    public SpiderMachine_TurnLeft SpiderMachine_TurnLeft { get; private set; }
+    public SpiderMachine_FangFall SpiderMachine_FangFall { get; private set; }
+    public SpiderMachine_Spin SpiderMachine_Spin { get; private set; }
 
 
     private MonsterAIEvents aiEvents;
@@ -108,6 +112,12 @@ public class MonsterStateMachine : StateMachine
         {
             var stampSkill = monster.Stats.GetSkill("SpiderMachine_AttackStamp");
             SpiderMachine_AttackStamp = new SpiderMachine_AttackStamp(this, stampSkill);
+            var turnLeftSkill = monster.Stats.GetSkill("SpiderMachine_TurnLeft");
+            SpiderMachine_TurnLeft = new SpiderMachine_TurnLeft(this, turnLeftSkill);
+            var fangFallSkill = monster.Stats.GetSkill("SpiderMachine_Fangfall");
+            SpiderMachine_FangFall = new SpiderMachine_FangFall(this, fangFallSkill);
+            var spinSkill = monster.Stats.GetSkill("SpiderMachine_Spin");
+            SpiderMachine_Spin = new SpiderMachine_Spin(this, spinSkill);
         }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();

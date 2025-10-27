@@ -8465,8 +8465,8 @@ GameObject:
   - component: {fileID: 552197791800929625}
   - component: {fileID: 1042758355871282718}
   - component: {fileID: 7295982123017148033}
-  - component: {fileID: 18588292402395172}
   - component: {fileID: 8379250178715168306}
+  - component: {fileID: 7315617197883912992}
   m_Layer: 6
   m_Name: SmileMachine_UseMissile
   m_TagString: Untagged
@@ -8580,7 +8580,13 @@ MonoBehaviour:
   patternConfig: {fileID: 11400000, guid: 524bd95524077a6489680f4a56a9a90e, type: 2}
   AreaEffectPoint: {fileID: 7505521778771576658}
   hasStartedCombat: 0
+  hasDetectedPlayer: 0
   baseAttackCollider: {fileID: 6822000184812816250}
+  gravity: -9.81
+  groundCheckDistance: 0.3
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   lineRender: {fileID: 6469370732569835215}
   missile: {fileID: 936575497134010909, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
   missileEffect: {fileID: 100010, guid: e0609132424a24844b1d53ad3d704fd9, type: 3}
@@ -8634,21 +8640,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &18588292402395172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6855971741374199306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0b5fe3112031b94d97184a74617b434, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller: {fileID: 1042758355871282718}
-  animator: {fileID: 8830690254502627650}
-  drag: 0.3
 --- !u!114 &8379250178715168306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8675,6 +8666,20 @@ MonoBehaviour:
   StatusEffect: []
   DropItem: 
   MonsterSkills: []
+--- !u!114 &7315617197883912992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6855971741374199306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b386d8e90f8c4194da699f8c07031a95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 8830690254502627650}
+  controller: {fileID: 1042758355871282718}
 --- !u!1 &6877063891898121407
 GameObject:
   m_ObjectHideFlags: 0

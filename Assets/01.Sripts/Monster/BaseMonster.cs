@@ -39,6 +39,12 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public static event System.Action OnEnemyHealthChanged;
 
     public Collider baseAttackCollider;
+    [Header("Movement & Gravity")]
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundCheckDistance = 0.3f;
+    [SerializeField] private LayerMask groundMask;
+    private Vector3 verticalVelocity;
+    private bool isGrounded;
 
     protected virtual void Awake()
     {
@@ -72,6 +78,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         {
             PickPatternByCondition();
         }
+        ApplyGravity();
     }
     private void OnActiveCharacterChanged(PlayerCharacter newCharacter)
     {
@@ -83,6 +90,24 @@ public class BaseMonster : MonoBehaviour, IDamageable
     {
         if (PlayerManager.Instance != null)
             PlayerManager.Instance.OnActiveCharacterChanged -= OnActiveCharacterChanged;
+    }
+    private void ApplyGravity()
+    {
+        if (Controller == null || IsDead) return;
+
+        // Simple ground check using a raycast or sphere
+        isGrounded = Physics.CheckSphere(transform.position + Vector3.up * 0.1f, groundCheckDistance, groundMask);
+
+        if (isGrounded && verticalVelocity.y < 0)
+        {
+            verticalVelocity.y = -2f;
+        }
+
+        // Apply gravity acceleration
+        verticalVelocity.y += gravity * Time.deltaTime;
+
+        // Move the controller vertically
+        Controller.Move(verticalVelocity * Time.deltaTime);
     }
 
     protected virtual void FixedUpdate() => stateMachine.Physicsupdate();

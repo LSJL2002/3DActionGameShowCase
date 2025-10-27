@@ -10,7 +10,7 @@ public class BattleModule_Mika : BattleModule
     public BattleModule_Mika(PlayerStateMachine sm) : base(sm)
     {
         comboSub = new ComboSubModule_Mika(sm);
-        skillSub = new SkillSubModule_Mika(sm);
+        skillSub = new SkillSubModule_Mika(sm, comboSub);
 
         // 콤보 핸들러 연결
         comboHandler = comboSub.ComboHandler;

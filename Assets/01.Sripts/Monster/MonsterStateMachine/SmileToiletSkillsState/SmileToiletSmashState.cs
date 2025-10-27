@@ -7,6 +7,7 @@ public class SmileToiletSmashState : MonsterBaseState
     private MonsterSkillSO skillData;
     private GameObject aoeInstance;
     private AreaEffectController aoeController;
+    private bool hasHit = false;
     public SmileToiletSmashState(MonsterStateMachine ms, MonsterSkillSO smashSkill) : base(ms)
     {
         skillData = smashSkill;
@@ -53,8 +54,8 @@ public class SmileToiletSmashState : MonsterBaseState
     // Called from animation event
     public override void OnAttackHit()
     {
-        if (aoeController == null) return;
-
+        if (hasHit || aoeController == null) return;
+        hasHit = true;
         Debug.Log("OnAttackHitSmash");
         aoeController.EnableDamage(stateMachine.Monster.transform);
         stateMachine.Monster.StartCoroutine(DisableColliderNextFrame());
@@ -74,6 +75,7 @@ public class SmileToiletSmashState : MonsterBaseState
 
     public override void Exit()
     {
+        Debug.Log("Exiting Smash State");
         if (aoeController != null)
             aoeController.OnTelegraphFinished -= OnTelegraphComplete;
 
@@ -83,6 +85,7 @@ public class SmileToiletSmashState : MonsterBaseState
             Object.Destroy(aoeInstance);
         }
         stateMachine.isAttacking = false;
+        hasHit = false;
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
     }
 }

@@ -23,16 +23,6 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
         nowSceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
-    // 다른 스크립트에서 호출할 함수
-    public void LoadScene(int sceneIndex)
-    {
-        // 매개변수로 받은 sceneIndex를 selectSceneIndex 변수에 저장
-        targetSceneIndex = sceneIndex;
-
-        // 로딩씬 로드
-        ChangeScene(4);
-    }
-
     // 매개변수1(씬번호) : 로드할 씬번호
     // 매개변수2(함수) : 함수 마지막에 실행할 함수를 매개변수로 받음
     // 매개변수3(씬로드방식) : Single은 동기 로드, Additive는 비동기 로드

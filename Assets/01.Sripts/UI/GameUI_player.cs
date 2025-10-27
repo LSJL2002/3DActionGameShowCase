@@ -74,12 +74,10 @@ public partial class GameUI : UIBase
     {
         // 구독해제
         PlayerManager.Instance.Attr.Resource.OnHealthChanged -= PlayerHPDecrease;
-        EventsManager.Instance.StopListening(GameEvent.OnPlayerHeal, PlayerHPIncrease);
         EventsManager.Instance.StopListening(GameEvent.OnStatChanged, PlayerHPDecrease);
 
         // 구독
         PlayerManager.Instance.Attr.Resource.OnHealthChanged += PlayerHPDecrease;
-        EventsManager.Instance.StartListening(GameEvent.OnPlayerHeal, PlayerHPIncrease);
         EventsManager.Instance.StartListening(GameEvent.OnStatChanged, PlayerHPDecrease);
     }
 
@@ -87,7 +85,7 @@ public partial class GameUI : UIBase
     public void UpdatePlayerUI(PlayerCharacter playerCharacter)
     {
         // 현재 캐릭터의 정보를 가져오는 곳 재정의
-        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
+        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.ActiveCharacter.Attr.Resource.MaxHealth.Value;
         playerIndex = (int)playerCharacter.CharacterType;
 
         if (playerIndex >= 0 && playerIndex < playerUIElements.Length)
@@ -102,12 +100,12 @@ public partial class GameUI : UIBase
 
     private float PreprocessHPUpdate()
     {
-        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.Attr.Resource.MaxHealth.Value;
+        playerUIElements[playerIndex].playerMaxHP = PlayerManager.Instance.ActiveCharacter.Attr.Resource.MaxHealth.Value;
 
         playerDamageSequence.Kill();
         playerHealSequence.Kill();
 
-        float currentHealth = PlayerManager.Instance.Attr.Resource.CurrentHealth;
+        float currentHealth = PlayerManager.Instance.ActiveCharacter.Attr.Resource.CurrentHealth;
 
         activeHPText.text = currentHealth.ToString("#,##0");
 
@@ -119,6 +117,8 @@ public partial class GameUI : UIBase
     // 체력 감소
     private void PlayerHPDecrease()
     {
+        UpdatePlayerUI(PlayerManager.Instance.ActiveCharacter);
+
         float playerHPpercentage = PreprocessHPUpdate();
         float duration = 0.2f;
 
@@ -145,22 +145,5 @@ public partial class GameUI : UIBase
             activeHPText.DOKill();
             activeHPText.DOColor(Color.white, 0f);
         }
-    }
-
-    // 체력 증가
-    private void PlayerHPIncrease()
-    {
-        float playerHPpercentage = PreprocessHPUpdate();
-        float duration = 0.2f;
-
-        playerHealSequence = DOTween.Sequence();
-        playerHealSequence.Append(activeHPText.DOColor(Color.green, duration));
-        playerHealSequence.Append(activeHPText.DOColor(Color.white, duration));
-        playerHealSequence.Append(activeHPImage_Front.DOFillAmount(playerHPpercentage, 0f));
-        playerHealSequence.Append(activeHPImage_Back.DOFillAmount(playerHPpercentage, 2.0f).SetEase(Ease.OutQuad));
-
-        activeHPImage_Back.DOKill();
-        activeHPText.DOKill();
-        activeHPText.DOColor(Color.white, 0f);
     }
 }
