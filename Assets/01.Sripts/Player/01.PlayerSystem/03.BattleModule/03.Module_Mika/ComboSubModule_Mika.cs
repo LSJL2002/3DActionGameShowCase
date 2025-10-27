@@ -10,6 +10,9 @@ public class ComboSubModule_Mika
     private PlayerStateMachine sm;
     private List<AttackInfoData> normalAttacks;
 
+
+    public int CurrentComboIndex => ComboHandler.CurrentIndex;
+
     public ComboSubModule_Mika(PlayerStateMachine sm)
     {
         this.sm = sm;

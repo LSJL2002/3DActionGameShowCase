@@ -76,6 +76,7 @@ public class CompanionController : MonoBehaviour
         // PlayerManager, ActiveCharacter 준비될 때까지 대기
         yield return new WaitUntil(() => PlayerManager.Instance != null && PlayerManager.Instance.ActiveCharacter != null);
         RebindTargets(PlayerManager.Instance.ActiveCharacter);
+        transform.position = PlayerManager.Instance.ActiveCharacter.transform.position + Vector3.forward;
     }
 
     private void RebindTargets(PlayerCharacter newChar)
