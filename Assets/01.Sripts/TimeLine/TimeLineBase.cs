@@ -31,6 +31,7 @@ public class TimeLineBase : MonoBehaviour
         attackGaugeUICanvasGroup.alpha = 0f;
         AudioManager.Instance.StopBGM();
 
+        UIManager.Instance.Hide<TutorialUI>();
         PlayerManager.Instance.EnableInput(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
