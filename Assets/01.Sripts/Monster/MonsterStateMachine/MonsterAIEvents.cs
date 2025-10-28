@@ -15,7 +15,7 @@ public class MonsterAIEvents : MonoBehaviour
     public float attackCooldown = 3f;
     public float lastAttackTime;
 
-    private enum AIMode { Idle, Chase, Attack }
+    private enum AIMode { Idle, Chase, CombatIdle, Attack }
     private AIMode currentMode = AIMode.Idle;
     private bool processingEnabled = true;
 
@@ -26,9 +26,7 @@ public class MonsterAIEvents : MonoBehaviour
     private void Awake()
     {
         if (PlayerManager.Instance != null)
-        {
             PlayerManager.Instance.OnActiveCharacterChanged += UpdatePlayerReference;
-        }
 
         UpdatePlayerReference(PlayerManager.Instance?.ActiveCharacter);
     }
@@ -36,22 +34,13 @@ public class MonsterAIEvents : MonoBehaviour
     private void OnDestroy()
     {
         if (PlayerManager.Instance != null)
-        {
             PlayerManager.Instance.OnActiveCharacterChanged -= UpdatePlayerReference;
-        }
     }
 
     private void UpdatePlayerReference(PlayerCharacter newPlayer)
     {
         if (newPlayer != null)
-        {
             player = newPlayer.transform;
-            Debug.Log($"[MonsterAIEvents] Target updated to new player: {newPlayer.name}");
-        }
-        else
-        {
-            Debug.LogError("[MonsterAIEvents] Tried to update to null player!");
-        }
     }
 
     private void Update()
@@ -81,30 +70,32 @@ public class MonsterAIEvents : MonoBehaviour
         {
             if (distance <= attackRange)
             {
-                // 사정거리 들어갈때에는
                 if (Time.time >= lastAttackTime + attackCooldown)
-                    newMode = AIMode.Attack;
+                {
+                    newMode = AIMode.Attack; // ready to attack
+                }
                 else
-                    newMode = AIMode.Idle; //공격이 불가능하다면 Idle로 변경
+                {
+                    newMode = AIMode.CombatIdle; // cooldown not done → wait but check continuously
+                    stateMachine.ChangeState(stateMachine.MonsterIdleState);
+                }
             }
             else if (distance <= detectRange - chaseBuffer)
             {
-                // 공격 사정거리에 없지만, 플레이어를 인지하는 상태
                 newMode = AIMode.Chase;
             }
-            else if (distance > detectRange + idleBuffer)
+            else
             {
-                //너무 멀면 Idle상태
                 newMode = AIMode.Idle;
             }
         }
         else
         {
-            // 공격을 하면서 사정거리에 벗어나면 다시 따라간다.
             if (distance > attackRange * 1.2f)
                 newMode = AIMode.Chase;
         }
 
+        // Switch state if changed
         if (newMode != currentMode)
         {
             currentMode = newMode;
@@ -117,10 +108,21 @@ public class MonsterAIEvents : MonoBehaviour
                 case AIMode.Chase:
                     stateMachine.Monster.PlayerTarget = player;
                     break;
+                case AIMode.CombatIdle:
+                    stateMachine.Monster.PlayerTarget = player;
+                    break;
                 case AIMode.Idle:
                     RestingPhase?.Invoke();
                     break;
             }
+        }
+
+        // Continuously check for cooldown even while waiting
+        if (currentMode == AIMode.CombatIdle && Time.time >= lastAttackTime + attackCooldown)
+        {
+            currentMode = AIMode.Attack;
+            OnInAttackRange?.Invoke();
+            lastAttackTime = Time.time;
         }
 
         if (currentMode == AIMode.Chase)
@@ -141,17 +143,9 @@ public class MonsterAIEvents : MonoBehaviour
         }
     }
 
-    public void ForceResetToIdle()
-    {
-        currentMode = AIMode.Idle;
-        RestingPhase?.Invoke();
-    }
 
-    public void SetStateMachine(MonsterStateMachine sm)
-    {
-        stateMachine = sm;
-    }
 
+    public void SetStateMachine(MonsterStateMachine sm) => stateMachine = sm;
     public void Disable() => processingEnabled = false;
     public void Enable() => processingEnabled = true;
 }
