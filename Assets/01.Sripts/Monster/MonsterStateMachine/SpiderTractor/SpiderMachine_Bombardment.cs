@@ -1,5 +1,4 @@
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 
 public class SpiderMachine_Bombardment : MonsterBaseState
@@ -7,88 +6,141 @@ public class SpiderMachine_Bombardment : MonsterBaseState
     private MonsterSkillSO skillData;
     private Transform firePointMissile;
     private GameObject aoeInstance;
+
     public SpiderMachine_Bombardment(MonsterStateMachine ms, MonsterSkillSO bombardmentSkill) : base(ms)
     {
         skillData = bombardmentSkill;
-        var monster = ms.Monster as SpiderTractor_UseGrenade;
-        if (monster != null)
-        {
+        if (ms.Monster is SpiderTractor_UseGrenade monster)
             firePointMissile = monster.firePointMissile;
-        }
     }
 
     public override void Enter()
     {
-        if (skillData == null)
+        base.Enter();
+        if (skillData == null || firePointMissile == null)
         {
             stateMachine.isAttacking = false;
             return;
         }
 
         stateMachine.isAttacking = true;
+        StopMoving();
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
-        GameObject aoeObj = Object.Instantiate(skillData.areaEffectPrefab, stateMachine.Monster.transform.position, Quaternion.identity);
-        AreaEffectController aoeController = aoeObj.GetComponent<AreaEffectController>();
-        // if (aoeController != null)
-        // {
-        //     aoeController.MultipleCircleInitialize(
-        //         skillData.preCastTime,
-        //         skillData.range,
-        //         stateMachine.Monster.Stats.AttackPower,
-        //         skillData,
-        //         10,
-        //         10f,
-        //         3f,
-        //         null,
-        //         stateMachine.Monster
-        //     );
 
-        //     aoeController.OnTelegraphFinished += () =>
-        //     {
-        //         Vector3 targetPos = aoeObj.transform.position + Vector3.up * 0.1f;
-        //         ShootMissile(targetPos);
-        //     };
-        // }
-    }
-
-    private void ShootMissile(Vector3 targetPos)
-    {
-        if (!(stateMachine.Monster is SpiderTractor_UseGrenade monster)) return;
-        if (monster.missile == null || firePointMissile == null) return;
-
-        GameObject missile = Object.Instantiate(monster.missile, firePointMissile.position, Quaternion.identity);
-
-        if (missile.TryGetComponent<Rigidbody>(out Rigidbody rb))
+        if (stateMachine.Monster is SpiderTractor_UseGrenade monster)
         {
-            // Launch missile in an arc toward target
-            Vector3 velocity = CalculateLaunchVelocity(firePointMissile.position, targetPos, 45f); // 45° launch angle
-            rb.linearVelocity = velocity;
+            // Setup AOE and spawn multiple circles
+            var aoeController = stateMachine.Monster.AreaEffectPoint.GetComponent<AreaEffectController>();
+            if (aoeController == null)
+                aoeController = stateMachine.Monster.AreaEffectPoint.gameObject.AddComponent<AreaEffectController>();
+
+            // Start coroutine to handle missiles and animation cleanup
+            stateMachine.Monster.StartCoroutine(HandleBombardment(aoeController, monster));
         }
     }
 
-    private Vector3 CalculateLaunchVelocity(Vector3 start, Vector3 target, float launchAngle)
+    private IEnumerator HandleBombardment(AreaEffectController aoeController, SpiderTractor_UseGrenade monster)
     {
-        float gravity = Physics.gravity.y;
-        float rad = launchAngle * Mathf.Deg2Rad;
+        bool allDone = false;
+        int totalCircles = 10;
+        int finishedCount = 0;
+        bool startedSkillAnimation = false;
 
-        Vector3 planarTarget = new Vector3(target.x, 0, target.z);
-        Vector3 planarPosition = new Vector3(start.x, 0, start.z);
+        System.Action<Vector3> onCircleFinish = (Vector3 pos) =>
+        {
+            LaunchMissile(pos, monster, (int)(stateMachine.Monster.Stats.AttackPower));
+            if (!startedSkillAnimation)
+            {
+                startedSkillAnimation = true;
+                StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
+            }
 
-        float distance = Vector3.Distance(planarTarget, planarPosition);
-        float yOffset = target.y - start.y;
+            finishedCount++;
+            if (finishedCount >= totalCircles)
+                allDone = true;
+        };
 
-        float initialVelocity = Mathf.Sqrt(-gravity * distance * distance /
-            (2 * (yOffset - Mathf.Tan(rad) * distance) * Mathf.Pow(Mathf.Cos(rad), 2)));
+        aoeController.MultipleCircleInitialize(
+            skillData.preCastTime,
+            skillData.range,
+            monster.Stats.AttackPower,
+            skillData,
+            totalCircles,
+            5f,
+            0.5f,
+            monster,
+            onCircleFinish
+        );
 
-        Vector3 velocity = new Vector3(0, initialVelocity * Mathf.Sin(rad), initialVelocity * Mathf.Cos(rad));
-        Vector3 dir = (planarTarget - planarPosition).normalized;
-        Quaternion rot = Quaternion.FromToRotation(Vector3.forward, dir);
+        while (!allDone)
+            yield return null;
 
-        return rot * velocity;
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
+        stateMachine.isAttacking = false;
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
+    }
+
+
+    private void LaunchMissile(Vector3 targetPos, SpiderTractor_UseGrenade monster, int damage)
+    {
+        if (monster.missile == null) return;
+
+        Vector3 spawnPos = firePointMissile.position + firePointMissile.forward * 0.3f;
+        GameObject missile = Object.Instantiate(monster.missile, spawnPos, Quaternion.LookRotation(firePointMissile.forward));
+
+        // Ignore collisions with the monster
+        if (missile.TryGetComponent<Collider>(out var missileCol) &&
+            stateMachine.Monster.TryGetComponent<Collider>(out var monsterCol))
+        {
+            Physics.IgnoreCollision(missileCol, monsterCol);
+        }
+
+        // Ignore collisions with other missiles
+        Missile[] otherMissiles = Object.FindObjectsOfType<Missile>();
+        foreach (var other in otherMissiles)
+        {
+            if (other != null && other.TryGetComponent<Collider>(out var otherCol))
+                Physics.IgnoreCollision(missileCol, otherCol);
+        }
+
+        if (missile.TryGetComponent<Rigidbody>(out var rb))
+        {
+            float arcHeight = 5f; // peak height of trajectory
+            Vector3 velocity = CalculateLaunchVelocity(firePointMissile.position, targetPos, arcHeight);
+            rb.useGravity = true;
+            rb.linearVelocity = velocity;
+        }
+
+        if (missile.TryGetComponent<Missile>(out var missileScript))
+            missileScript.Initialize(damage, stateMachine.Monster.transform);
+    }
+
+    private Vector3 CalculateLaunchVelocity(Vector3 start, Vector3 end, float height)
+    {
+        float gravity = Mathf.Abs(Physics.gravity.y);
+
+        Vector3 displacementXZ = new Vector3(end.x - start.x, 0, end.z - start.z);
+        float displacementY = end.y - start.y;
+
+        float timeUp = Mathf.Sqrt(2 * height / gravity);
+        float timeDown = Mathf.Sqrt(2 * (height - displacementY) / gravity);
+        float totalTime = timeUp + timeDown;
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(2 * gravity * height);
+        Vector3 velocityXZ = displacementXZ / totalTime;
+
+        return velocityXZ + velocityY;
     }
 
     public override void Exit()
     {
-        
+        base.Exit();
+        stateMachine.isAttacking = false;
+
+        if (aoeInstance != null)
+        {
+            stateMachine.Monster.UnregisterAOE(aoeInstance);
+            Object.Destroy(aoeInstance);
+        }
     }
 }

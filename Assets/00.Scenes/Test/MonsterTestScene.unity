@@ -348,63 +348,6 @@ Transform:
   - {fileID: 2049705435}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1159444629
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 936575497134010909, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_Name
-      value: rl2 rocket
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.68435276
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.27349752
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -3.8914325
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7746510208277858300, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
 --- !u!1001 &1230213849
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4756,6 +4699,8 @@ MonoBehaviour:
       parameterName: FangFall
     - type: 9
       parameterName: Spin
+    - type: 10
+      parameterName: Bombardment
   patternConfig: {fileID: 11400000, guid: 5f5579cae6fadfd44a7979d3d22ac263, type: 2}
   AreaEffectPoint: {fileID: 706539333}
   hasStartedCombat: 0
@@ -4768,7 +4713,7 @@ MonoBehaviour:
     m_Bits: 0
   stampEffect: {fileID: 100000, guid: c380d2dd36b7ec44cb9ea6098511faa9, type: 3}
   fangFallEffect: {fileID: 1719780038224681957, guid: ae2b75e2884477643b2237ed3bff7265, type: 3}
-  missile: {fileID: 936575497134010909, guid: d9c83326d9e3a734a9afd9cbfc8035e6, type: 3}
+  missile: {fileID: 1985142402343117751, guid: 726b4bfe5a9265d46804b45b9832af29, type: 3}
   firePointMissile: {fileID: 1408279986}
 --- !u!195 &6795516254415247762
 NavMeshAgent:
@@ -5832,4 +5777,3 @@ SceneRoots:
   - {fileID: 2789056800935356574}
   - {fileID: 6795516254415247757}
   - {fileID: 1230213849}
-  - {fileID: 1159444629}

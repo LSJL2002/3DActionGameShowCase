@@ -41,6 +41,7 @@ public class MonsterStateMachine : StateMachine
     public SpiderMachine_TurnLeft SpiderMachine_TurnLeft { get; private set; }
     public SpiderMachine_FangFall SpiderMachine_FangFall { get; private set; }
     public SpiderMachine_Spin SpiderMachine_Spin { get; private set; }
+    public SpiderMachine_Bombardment SpiderMachine_Bombardment { get; private set; }
 
 
     private MonsterAIEvents aiEvents;
@@ -118,6 +119,8 @@ public class MonsterStateMachine : StateMachine
             SpiderMachine_FangFall = new SpiderMachine_FangFall(this, fangFallSkill);
             var spinSkill = monster.Stats.GetSkill("SpiderMachine_Spin");
             SpiderMachine_Spin = new SpiderMachine_Spin(this, spinSkill);
+            var bombardmentSkill = monster.Stats.GetSkill("SpiderMachine_Bombardment");
+            SpiderMachine_Bombardment = new SpiderMachine_Bombardment(this, bombardmentSkill);
         }
 
         aiEvents = monster.GetComponent<MonsterAIEvents>() ?? monster.gameObject.AddComponent<MonsterAIEvents>();

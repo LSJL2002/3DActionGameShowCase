@@ -158,31 +158,37 @@ public class AreaEffectController : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            // Random offset around player
-            Vector2 randomOffset = Random.insideUnitCircle * offsetRange;
-            Vector3 spawnPos = basePos + new Vector3(randomOffset.x, 0, randomOffset.y);
+            Vector3 spawnPos;
 
-            // Instantiate a new circle
+            if (i == 0)
+            {
+                spawnPos = basePos;
+            }
+            else
+            {
+                Vector2 randomOffset = Random.insideUnitCircle * offsetRange;
+                spawnPos = basePos + new Vector3(randomOffset.x, 0, randomOffset.y);
+            }
+
             GameObject aoeObj = Instantiate(skillData.areaEffectPrefab, spawnPos, Quaternion.identity);
             monster.RegisterAOE(aoeObj);
 
             AreaEffectController aoeCtrl = aoeObj.GetComponent<AreaEffectController>();
             aoeCtrl.StopAllCoroutines();
 
-            // Set up the telegraph fill
             aoeCtrl.CircleInitialize(castTime, radius, damage, skillData);
 
-            // When this circle finishes, fireball is shot and circle destroyed
             aoeCtrl.OnTelegraphFinished += () =>
             {
                 onTelegraphFinished?.Invoke(aoeObj.transform.position);
                 monster.UnregisterAOE(aoeObj);
-                Object.Destroy(aoeObj, 0.5f);
+                Object.Destroy(aoeObj, 1f);
             };
 
             yield return new WaitForSeconds(delayBetween); // stagger spawn
         }
     }
+
 
 
 

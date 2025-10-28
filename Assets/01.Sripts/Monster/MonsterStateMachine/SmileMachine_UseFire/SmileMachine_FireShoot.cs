@@ -41,7 +41,6 @@ public class SmileMachine_FireShoot : MonsterBaseState
         totalCircles = 5;
         circlesFinished = 0;
 
-        // Use generic MultipleCircleInitialize
         AreaEffectController aoeController = stateMachine.Monster.AreaEffectPoint.GetComponent<AreaEffectController>();
         if (aoeController == null)
             aoeController = stateMachine.Monster.AreaEffectPoint.gameObject.AddComponent<AreaEffectController>();
@@ -59,7 +58,6 @@ public class SmileMachine_FireShoot : MonsterBaseState
         );
     }
 
-    // Generic callback for AOE
     private void FireAtPosition(Vector3 targetPos)
     {
         if (fireballPrefab == null || firePoint == null) return;
