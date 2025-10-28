@@ -21,6 +21,7 @@ public class TimeLine_DrainAbility : TimeLineBase
 
         playableDirector.stopped -= OnTimeLineStop;
 
+        if (UIManager.Instance == null) return;
         await UIManager.Instance.Show<TutorialUI>();
         UIManager.Instance.Get<TutorialUI>().PlayBossAfterSelection(SceneType.Boss_1);
         AudioManager.Instance.StopBGM();
