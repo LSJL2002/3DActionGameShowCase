@@ -46,6 +46,8 @@ public class MonsterAIEvents : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(currentMode);
+
         if (!processingEnabled || player == null || stateMachine == null)
             return;
 
@@ -55,26 +57,29 @@ public class MonsterAIEvents : MonoBehaviour
             return;
         }
 
-        stateMachine.Monster.PickPatternByCondition();
         float distance = Vector3.Distance(transform.position, player.position);
         float detectRange = stateMachine.Monster.Stats.DetectRange;
         float attackRange = stateMachine.Monster.GetCurrentSkillRange();
 
-        AIMode newMode = currentMode;
-
+  
         if (!stateMachine.isAttacking)
         {
+            if (distance < detectRange - chaseBuffer)
+            {
+                currentMode = AIMode.Chase;
+            }
+
             if (distance <= attackRange)
             {   
-                newMode = Time.time >= lastAttackTime + attackCooldown ? AIMode.Attack : AIMode.CombatIdle;
+                currentMode = Time.time >= lastAttackTime + attackCooldown ? AIMode.Attack : AIMode.CombatIdle;
             }
             else if (distance <= detectRange - chaseBuffer)
             {
-                newMode = AIMode.Chase;
+                currentMode = AIMode.Chase;
             }
             else
             {
-                newMode = AIMode.CombatIdle; // keep idle animation
+                currentMode = AIMode.CombatIdle; // keep idle animation
             }
         }
         else
@@ -85,12 +90,8 @@ public class MonsterAIEvents : MonoBehaviour
             }*/
         }
 
-        if (newMode != currentMode)
-        {
-
-            currentMode = newMode;
             
-            switch (newMode)
+            switch (currentMode)
             {
                 case AIMode.Attack:
                     OnInAttackRange?.Invoke();
@@ -112,10 +113,10 @@ public class MonsterAIEvents : MonoBehaviour
                     }
                     break;
             }
-        }
+   
 
         // Continuously check for cooldown
-        if (currentMode == AIMode.CombatIdle && Time.time >= lastAttackTime + attackCooldown)
+        if (currentMode == AIMode.CombatIdle && Time.time >= lastAttackTime + attackCooldown && distance <= attackRange)
         {
             currentMode = AIMode.Attack;
             OnInAttackRange?.Invoke();
