@@ -37,6 +37,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     // 체력이 변경될 때 호출될 이벤트
     public static event System.Action OnEnemyHealthChanged;
+    public event Action OnHealthChanged;
 
     public Collider baseAttackCollider;
     [Header("Movement & Gravity")]
@@ -287,8 +288,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     {
         float damage = Mathf.Max(1, amount - Stats.Defense);
         Stats.CurrentHP -= damage;
-        Stats.ApplyDamage(amount);
-
+        Stats.UpdateHealthUI();
         if (Stats.CurrentHP <= 0 && !IsDead)
         {
             Stats.Die();
@@ -296,7 +296,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
             Stats.CurrentHP = 0;
             stateMachine.ChangeState(stateMachine.MonsterDeathState);
         }
-
         OnEnemyHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
     }
 
