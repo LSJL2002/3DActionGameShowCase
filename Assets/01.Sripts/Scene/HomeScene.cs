@@ -31,5 +31,6 @@ public class HomeScene : SceneBase
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

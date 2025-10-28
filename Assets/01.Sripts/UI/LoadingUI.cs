@@ -20,8 +20,6 @@ public class LoadingUI : UIBase
 
     protected override void OnEnable()
     {
-        base.OnEnable();
-
         rotationTweener?.Play();
         punchTweener?.Play();
     }

@@ -45,8 +45,6 @@ public class TutorialUI : UIBase
 
     protected override void Awake()
     {
-        base.Awake();
-
         // UI매니저의 튜토리얼 재생 여부 확인 후 재생
         if (UIManager.Instance.tutorialEnabled)
         {
@@ -60,13 +58,7 @@ public class TutorialUI : UIBase
         }
     }
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = false;
-    }
+    protected override void OnEnable() { }
 
     #region Tutorial
     IEnumerator ShowText(List<TextSO> scene, float time)

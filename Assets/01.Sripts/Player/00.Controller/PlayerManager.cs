@@ -76,7 +76,7 @@ public class PlayerManager : Singleton<PlayerManager>, IPlayerManager
     {
         ActiveCharacter?.EnableCharacterInput(active);
         _camera?.SetCameraInputEnabled(active);
-        Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.lockState = active ? CursorLockMode.Locked : CursorLockMode.None;
     }
 
     // ================ 플레이어 스왑 기능 ====================

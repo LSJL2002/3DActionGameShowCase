@@ -43,8 +43,6 @@ public class MiniMapUI : UIBase
 
     protected override void Awake()
     {
-        base.Awake();
-
         minimapCanvas = GetComponentInParent<Canvas>();
         firstSortingOrder = minimapCanvas.sortingOrder; // 첫 SortingOrder 값을 저장
         anchoredPositionMiniMap = miniMapRectTransform.anchoredPosition; // 첫 포지션 위치를 저장
@@ -53,6 +51,8 @@ public class MiniMapUI : UIBase
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
     }
+
+    protected override void OnEnable() { }
 
     // 확대 시퀀스를 처음 생성하는 함수
     public void SetSequence()
