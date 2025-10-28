@@ -24,14 +24,13 @@ public class SmileMachine_Missile : MonsterBaseState
 
     public override void Enter()
     {
-        base.Enter();
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         stateMachine.isAttacking = true;
         missileRoutine = stateMachine.Monster.StartCoroutine(MissileRoutine());
     }
 
     private IEnumerator MissileRoutine()
     {
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
 

@@ -18,6 +18,7 @@ public class MonsterAIEvents : MonoBehaviour
     private enum AIMode { Idle, Chase, CombatIdle, Attack }
     private AIMode currentMode = AIMode.Idle;
     private bool processingEnabled = true;
+    private bool combatIdleStarted = false;
 
     //FailSafe
     private float idleTimer;
@@ -103,16 +104,23 @@ public class MonsterAIEvents : MonoBehaviour
                 case AIMode.Attack:
                     OnInAttackRange?.Invoke();
                     lastAttackTime = Time.time;
+                    combatIdleStarted = false;
                     break;
                 case AIMode.Chase:
                     stateMachine.Monster.PlayerTarget = player;
+                    combatIdleStarted = false;
                     break;
                 case AIMode.CombatIdle:
                     stateMachine.Monster.PlayerTarget = player;
-                    stateMachine.ChangeState(stateMachine.MonsterIdleState);
+                    if (!combatIdleStarted)
+                    {
+                        stateMachine.ChangeState(stateMachine.MonsterIdleState);
+                        combatIdleStarted = true;
+                    }
                     break;
                 case AIMode.Idle:
                     RestingPhase?.Invoke();
+                    combatIdleStarted = false;
                     break;
             }
         }
