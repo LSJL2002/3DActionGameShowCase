@@ -76,13 +76,10 @@ public class MonsterStatHandler : MonoBehaviour
         return false;
     }
 
-    // public void ApplyDamage(int amount)
-    // {
-    //     int damage = amount - Defense;
-    //     CurrentHP -= damage;
-    //     CurrentHP = Mathf.Max(0, CurrentHP);
-    //     OnHealthChanged?.Invoke();
-    // }
+    public void UpdateHealthUI()
+    {
+        OnHealthChanged?.Invoke();
+    }
 
     public void Die()
     {
