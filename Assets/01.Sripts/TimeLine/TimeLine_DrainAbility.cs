@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class TimeLine_DrainAbility : TimeLineBase
 {
-
     protected override void OnEnable()
     {
         base.OnEnable();

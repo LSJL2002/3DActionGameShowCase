@@ -14,6 +14,7 @@ public enum GameEvent
     OnUsedItem,               // 발생 : 인벤토리매니저, 구독 : 플레이어 스탯UI
     OnStatChanged,            // 발생 : 능력치 변경하는 곳들, 구독 : 캐릭터스테이터스UI
     OnPlayerHeal,             // 발생 : 회복기믹, 구독 : GameUI
+    OnHealthChanged,          // 발생 : MonsterStatHandler, 구독 : 몬스터체력바UI, 배틀매니저
 }
 
 // 매개변수 있는 타입의 이벤트들

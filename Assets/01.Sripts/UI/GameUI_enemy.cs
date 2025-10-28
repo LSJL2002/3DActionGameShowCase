@@ -83,14 +83,14 @@ public partial class GameUI : UIBase
     {
         monsterStats = BattleManager.Instance.monsterStats;
         ChangeState(eBattleState.Battle);
-        monsterStats.OnHealthChanged += OnEnemyHealthChanged;
+        EventsManager.Instance.StartListening(GameEvent.OnHealthChanged, OnEnemyHealthChanged);
     }
 
     public void ReleaseMonsterStat(BattleZone zone)                  //몬스터 스텟 해제
     {
         if (monsterStats != null)
         {
-            monsterStats.OnHealthChanged -= OnEnemyHealthChanged;
+            EventsManager.Instance.StopListening(GameEvent.OnHealthChanged, OnEnemyHealthChanged);
             monsterStats = null;
         }
         ChangeState(eBattleState.Idle);

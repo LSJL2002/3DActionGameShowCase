@@ -25,7 +25,10 @@ public class HitboxOverlap : MonoBehaviour
     [SerializeField] private float capsuleSpeed = 10f;    // 초당 이동 속도
 
     private readonly HashSet<IDamageable> alreadyHit = new();
-    public event Action<IDamageable, Vector3> OnHit;
+    public event Action<IDamageable, Vector3, float> OnHit;
+
+    private float currentDamageMultiplier = 1f;
+    public void SetDamageMultiplier(float multiplier) => currentDamageMultiplier = multiplier;
 
     public void Inject(PlayerCharacter player)
     {
@@ -110,7 +113,8 @@ public class HitboxOverlap : MonoBehaviour
 
         alreadyHit.Add(dmgable);
         Vector3 hitPoint = col.ClosestPoint(body.position);
-        OnHit?.Invoke(dmgable, hitPoint);
+
+        OnHit?.Invoke(dmgable, hitPoint, currentDamageMultiplier);
     }
 
     private void OnDrawGizmosSelected()
