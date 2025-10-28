@@ -71,6 +71,12 @@ public class SmileToiletSlamState : MonsterBaseState
         if (aoeInstance != null)
             Object.Destroy(aoeInstance);
     }
+    public override void OnAnimationComplete()
+    {
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
+        Debug.Log("Finished Animation");
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
+    }
 
     public override void Exit()
     {
