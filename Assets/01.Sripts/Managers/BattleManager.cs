@@ -104,6 +104,16 @@ public class BattleManager : Singleton<BattleManager>
             if (currentZone != null)
                 currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
         }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            if (currentZone != null)
+                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(6000);
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (currentZone != null)
+                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(12000);
+        }
         if (Input.GetKeyDown(KeyCode.L))
         {
             if (currentZone != null)
