@@ -93,6 +93,6 @@ public class SmileToiletSmashState : MonsterBaseState
         }
         stateMachine.isAttacking = false;
         hasHit = false;
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
     }
 }
