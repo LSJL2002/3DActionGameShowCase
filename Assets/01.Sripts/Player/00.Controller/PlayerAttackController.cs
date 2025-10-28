@@ -17,13 +17,12 @@ public class PlayerAttackController : MonoBehaviour
 
     [Header("Debug / Gizmos")]
     private PlayerInfo playerInfo;
-    [SerializeField] private Transform debugAttackTarget;
+
     public Transform CurrentAttackTarget
     {
         get
         {
-            if (_camera != null) debugAttackTarget = _camera.GetLockOnTarget();
-            return debugAttackTarget;
+            return _camera != null ? _camera.GetLockOnTarget() : null;
         }
     }
 
@@ -38,7 +37,7 @@ public class PlayerAttackController : MonoBehaviour
         spawnPoint = player.Body;
         playerInfo = player.InfoData;
 
-        hit.OnHit += (target, hitPoint) => HandleHit(target, hitPoint, 1f);
+        hit.OnHit += (target, hitPoint, dmgMul) => HandleHit(target, hitPoint, dmgMul);
     }
 
     /// <summary>
@@ -77,6 +76,7 @@ public class PlayerAttackController : MonoBehaviour
     /// </summary>
     public void OnAttack(string skillName, int hitCount = 1, float interval = 0.1f, float damageMultiplier = 1f)
     {
+        hit.SetDamageMultiplier(damageMultiplier);
         ComboAttackAsync(skillName, hitCount, interval, damageMultiplier).Forget();
     }
 
@@ -140,10 +140,12 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    public void HandleHit(IDamageable target, Vector3 hitPoint, float damageMultiplier = 1f)
+    public void HandleHit(IDamageable target, Vector3 hitPoint, float damageMultiplier)
     {
         int damage = Mathf.RoundToInt(player.Attr.Attack.Value * damageMultiplier);
         target.OnTakeDamage(damage);
+
+        Debug.LogWarning($"Player: {damage}");
 
         // 타격 효과 & 카메라 흔들림
         string fxName = player.CharacterType switch

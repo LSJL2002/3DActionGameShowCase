@@ -63,4 +63,21 @@ public class ResourceModule
         OnEnergyChanged?.Invoke();
         OnRevive?.Invoke();
     }
+
+    // 최대 체력 변경 시 비율 유지
+    public void UpdateMaxHealth(float newMax, float oldMax)
+    {
+        float ratio = CurrentHealth / oldMax;
+        CurrentHealth = newMax * ratio;
+        MaxHealth = new Stat(newMax); // MaxHealth 갱신
+        OnHealthChanged?.Invoke();
+    }
+
+    public void UpdateMaxEnergy(float newMax, float oldMax)
+    {
+        float ratio = CurrentEnergy / oldMax;
+        CurrentEnergy = newMax * ratio;
+        MaxEnergy = new Stat(newMax); // MaxEnergy 갱신
+        OnEnergyChanged?.Invoke();
+    }
 }

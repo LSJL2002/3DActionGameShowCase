@@ -30,6 +30,7 @@ public class PlayerKnockbackState : PlayerBaseState
         StartAnimation(sm.Player.AnimationData.KnockbackParameterHash);
         int knockLayerIndex = sm.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
         sm.Player.Animator.SetLayerWeight(knockLayerIndex, 1);
+        sm.Player.Motor.AllowMovement = false;
 
         // 넉백 힘 바로 적용
         sm.Player.ForceReceiver.AddForce(knockDirection * knockForce);
@@ -41,8 +42,6 @@ public class PlayerKnockbackState : PlayerBaseState
         StopAnimation(sm.Player.AnimationData.KnockbackParameterHash);
         int knockLayerIndex = sm.Player.Animator.GetLayerIndex("Overall/Toggle_HitStopLayer");
         sm.Player.Animator.SetLayerWeight(knockLayerIndex, 0);
-
-        sm.Player.Ability.EndKnockback();
     }
 
     public override void HandleInput() { /* 넉백 중 입력 무시 */ }
@@ -62,7 +61,8 @@ public class PlayerKnockbackState : PlayerBaseState
 
         if (elapsed >= duration)
         {
-            Exit();
+            //sm.Player.Ability.EndKnockback();
+            Enter();
         }
     }
 }
