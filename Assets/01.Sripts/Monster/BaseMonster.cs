@@ -34,11 +34,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
     protected int currentStepIndex = 0;
     protected bool isRunningPattern = false;
     private bool ignoreDistanceCheck = false;
-
-    // 체력이 변경될 때 호출될 이벤트
-    public static event System.Action OnEnemyHealthChanged;
-    public event Action OnHealthChanged;
-
     public Collider baseAttackCollider;
     [Header("Movement & Gravity")]
     [SerializeField] private float gravity = -9.81f;
@@ -296,7 +291,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
             Stats.CurrentHP = 0;
             stateMachine.ChangeState(stateMachine.MonsterDeathState);
         }
-        OnEnemyHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
     }
 
     public void ApplyEffect(MonsterEffectType effectType, Vector3 sourcePosition, float effectValue = 0f, float duration = 0f)
