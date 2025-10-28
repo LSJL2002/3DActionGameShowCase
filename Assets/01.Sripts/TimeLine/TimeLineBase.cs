@@ -33,8 +33,6 @@ public class TimeLineBase : MonoBehaviour
 
         UIManager.Instance.Hide<TutorialUI>();
         PlayerManager.Instance.EnableInput(false);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
     }
 
     protected virtual void Start() { }
@@ -57,9 +55,7 @@ public class TimeLineBase : MonoBehaviour
         attackGaugeUICanvasGroup.alpha = 1f;
 
         if (PlayerManager.Instance != null)
-        PlayerManager.Instance.EnableInput(true); // 마우스 락
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        PlayerManager.Instance.EnableInput(true); // 입력제한 해제
     }
 
     protected virtual void OnDestroy() { }
