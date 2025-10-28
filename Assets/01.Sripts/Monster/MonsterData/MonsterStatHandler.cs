@@ -23,7 +23,6 @@ public class MonsterStatHandler : MonoBehaviour
     public List<MonsterSkillSO> MonsterSkills;
 
     private Dictionary<string, MonsterSkillSO> skillDict;
-    public event Action OnHealthChanged;
 
     void Awake()
     {
@@ -78,7 +77,7 @@ public class MonsterStatHandler : MonoBehaviour
 
     public void UpdateHealthUI()
     {
-        OnHealthChanged?.Invoke();
+        EventsManager.Instance.TriggerEvent(GameEvent.OnHealthChanged);
     }
 
     public void Die()
