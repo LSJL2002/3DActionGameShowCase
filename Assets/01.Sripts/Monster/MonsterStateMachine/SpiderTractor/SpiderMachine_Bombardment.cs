@@ -60,7 +60,7 @@ public class SpiderMachine_Bombardment : MonsterBaseState
         {
             // Launch missile in an arc toward target
             Vector3 velocity = CalculateLaunchVelocity(firePointMissile.position, targetPos, 45f); // 45° launch angle
-            rb.velocity = velocity;
+            rb.linearVelocity = velocity;
         }
     }
 

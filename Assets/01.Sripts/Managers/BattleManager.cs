@@ -137,6 +137,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public async UniTask HandleMonsterDie()
     {
+        AudioManager.Instance.StopBGM();
         if (monsterStats == null || currentZone == null || monsterStats.CurrentHP > 0)
             return;
 
@@ -163,6 +164,7 @@ public class BattleManager : Singleton<BattleManager>
 
         await UniTask.NextFrame();
         StopWarning();
+        AudioManager.Instance.PlayBGM("afterBattleBGM");
     }
 
 
@@ -178,8 +180,6 @@ public class BattleManager : Singleton<BattleManager>
         currentMonster = null;
         monsterStats = null;
         isBattle = false;
-        AudioManager.Instance.StopBGM();
-        AudioManager.Instance.PlayBGM("InGameBGM");
     }
 
     public void ResetBattleState()
