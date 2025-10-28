@@ -49,14 +49,17 @@ MonoBehaviour:
   bgmGroup: {fileID: 8467838843245643321, guid: 7e8349c59967471418d298fbdfce1c9b, type: 2}
   sfxGroup: {fileID: 2638911068034820088, guid: 7e8349c59967471418d298fbdfce1c9b, type: 2}
   bgmList:
-  - name: InGameBGM
-    clip: {fileID: 8300000, guid: 6889b6e179a6d9a46adf321a8f0f893e, type: 3}
-    volume: 1
   - name: 2
     clip: {fileID: 8300000, guid: 6609f04e5b8ccbc49a4174f246a84dff, type: 3}
     volume: 0.263
+  - name: InGameBGM
+    clip: {fileID: 8300000, guid: 6889b6e179a6d9a46adf321a8f0f893e, type: 3}
+    volume: 1
   - name: 3
     clip: {fileID: 8300000, guid: 37f4b8c77175eac409c3c8c18ca0e30b, type: 3}
+    volume: 1
+  - name: BattleBGM
+    clip: {fileID: 8300000, guid: 7307de35576074d42a4fa1927225f30f, type: 3}
     volume: 1
   sfxList:
   - name: Attack1

@@ -50,7 +50,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (isBattle) return;
         isBattle = true;
-
+        AudioManager.Instance.StopBGM();
         battleStartTime = Time.time;
 
         currentZone = zone;
@@ -91,6 +91,7 @@ public class BattleManager : Singleton<BattleManager>
             { "timestamp", System.DateTime.UtcNow.ToString("o") }
         };
         AnalyticsService.Instance.RecordEvent(evt);
+        AudioManager.Instance.PlayBGM("BattleBGM");
     }
 
 
@@ -177,7 +178,8 @@ public class BattleManager : Singleton<BattleManager>
         currentMonster = null;
         monsterStats = null;
         isBattle = false;
-
+        AudioManager.Instance.StopBGM();
+        AudioManager.Instance.PlayBGM("InGameBGM");
     }
 
     public void ResetBattleState()
