@@ -15,8 +15,8 @@ public class MonsterAIEvents : MonoBehaviour
     public float attackCooldown = 3f;
     public float lastAttackTime;
 
-    private enum AIMode { Idle, Chase, CombatIdle, Attack }
-    private AIMode currentMode = AIMode.Idle;
+    private enum AIMode { Chase, CombatIdle, Attack }
+    private AIMode currentMode = AIMode.CombatIdle;
     private bool processingEnabled = true;
     private bool combatIdleStarted = false;
 
@@ -51,12 +51,7 @@ public class MonsterAIEvents : MonoBehaviour
 
         if (PlayerManager.Instance.ActiveCharacter.Ability.IsDeath)
         {
-            if (currentMode != AIMode.Idle)
-            {
-                currentMode = AIMode.Idle;
-                RestingPhase?.Invoke();
-                stateMachine.ChangeState(stateMachine.MonsterIdleState);
-            }
+            currentMode = AIMode.CombatIdle;
             return;
         }
 
@@ -72,22 +67,14 @@ public class MonsterAIEvents : MonoBehaviour
             if (distance <= attackRange)
             {
                 if (Time.time >= lastAttackTime + attackCooldown)
-                {
-                    newMode = AIMode.Attack; // ready to attack
-                }
+                    newMode = AIMode.Attack;
                 else
-                {
-                    newMode = AIMode.CombatIdle; // cooldown not done → wait but check continuously
-                }
+                    newMode = AIMode.CombatIdle;
             }
             else if (distance <= detectRange - chaseBuffer)
-            {
                 newMode = AIMode.Chase;
-            }
             else
-            {
-                newMode = AIMode.Idle;
-            }
+                newMode = AIMode.CombatIdle; // just idle animation
         }
         else
         {
@@ -95,7 +82,6 @@ public class MonsterAIEvents : MonoBehaviour
                 newMode = AIMode.Chase;
         }
 
-        // Switch state if changed
         if (newMode != currentMode)
         {
             currentMode = newMode;
@@ -114,18 +100,14 @@ public class MonsterAIEvents : MonoBehaviour
                     stateMachine.Monster.PlayerTarget = player;
                     if (!combatIdleStarted)
                     {
-                        stateMachine.ChangeState(stateMachine.MonsterIdleState);
                         combatIdleStarted = true;
+                        RestingPhase?.Invoke();
                     }
-                    break;
-                case AIMode.Idle:
-                    RestingPhase?.Invoke();
-                    combatIdleStarted = false;
                     break;
             }
         }
 
-        // Continuously check for cooldown even while waiting
+        // Continuously check for cooldown
         if (currentMode == AIMode.CombatIdle && Time.time >= lastAttackTime + attackCooldown)
         {
             currentMode = AIMode.Attack;
@@ -138,19 +120,7 @@ public class MonsterAIEvents : MonoBehaviour
             stateMachine.Monster.PlayerTarget = player;
             OnPlayerDetected?.Invoke();
         }
-
-        if (currentMode == AIMode.Idle)
-        {
-            idleTimer += Time.deltaTime;
-            if (idleTimer >= idleResetTime)
-            {
-                idleTimer = 0;
-                currentMode = AIMode.Chase;
-                OnPlayerDetected?.Invoke();
-            }
-        }
     }
-
 
 
     public void SetStateMachine(MonsterStateMachine sm) => stateMachine = sm;
