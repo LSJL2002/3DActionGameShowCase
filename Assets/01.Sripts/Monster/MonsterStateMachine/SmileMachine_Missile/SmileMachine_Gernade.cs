@@ -23,6 +23,7 @@ public class SmileMachine_Gernade : MonsterBaseState
         base.Enter();
         stateMachine.isAttacking = true;
         StopMoving();
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
 
         grenadeRoutine = stateMachine.Monster.StartCoroutine(GrenadeRoutine());
     }
@@ -37,10 +38,6 @@ public class SmileMachine_Gernade : MonsterBaseState
             stateMachine.isAttacking = false;
             yield break;
         }
-
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill5));
 
         Vector3 targetPos = stateMachine.Monster.PlayerTarget.position;
         if (Physics.Raycast(targetPos + Vector3.up, Vector3.down, out RaycastHit hit, 10f, LayerMask.GetMask("Ground")))
@@ -82,7 +79,6 @@ public class SmileMachine_Gernade : MonsterBaseState
         aoeController.OnTelegraphFinished -= telegraphHandler;
 
         stateMachine.isAttacking = false;
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill5));
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
@@ -94,6 +90,8 @@ public class SmileMachine_Gernade : MonsterBaseState
             Debug.LogWarning("SmileMachine_Gernade: Missing grenade prefab!");
             return;
         }
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill5));
 
         Vector3 spawnPos = firepointGernade.position + firepointGernade.forward * 0.3f;
         GameObject grenade = Object.Instantiate(monster.gernade, spawnPos, Quaternion.identity);
