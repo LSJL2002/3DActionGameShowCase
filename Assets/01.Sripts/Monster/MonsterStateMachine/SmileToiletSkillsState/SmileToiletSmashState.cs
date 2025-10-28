@@ -74,8 +74,9 @@ public class SmileToiletSmashState : MonsterBaseState
     }
 
     public override void OnAnimationComplete()
-    {        
+    {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
+        Debug.Log("Finished Animation");
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
