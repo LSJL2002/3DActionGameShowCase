@@ -287,7 +287,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
     {
         float damage = Mathf.Max(1, amount - Stats.Defense);
         Stats.CurrentHP -= damage;
-        Stats.ApplyDamage(amount);
 
         if (Stats.CurrentHP <= 0 && !IsDead)
         {
