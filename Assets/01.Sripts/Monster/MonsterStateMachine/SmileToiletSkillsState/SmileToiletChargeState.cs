@@ -62,7 +62,7 @@ public class SmileToiletChargeState : MonsterBaseState
             mc.SetRootMotionMultiplier(2.0f); // boost root motion
         }
     }
-    
+
     public override void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (!attackActive) return;
@@ -80,6 +80,15 @@ public class SmileToiletChargeState : MonsterBaseState
             }
         }
     }
+
+    public override void OnAnimationComplete()
+    {
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
+        Debug.Log("Finished Animation");
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
+    }
+    
+    
     public override void Exit()
     {
         if (aoeController != null)
