@@ -21,10 +21,13 @@ public class SmileToiletChargeState : MonsterBaseState
 
         if (skillData == null)
         {
-            Debug.LogError("SmileToieltChargeState: skill Data is null");
+            Debug.LogError("SmileToiletChargeState: skill Data is null");
             stateMachine.isAttacking = false;
             return;
         }
+
+        // Start charge animation immediately
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Charge));
 
         Vector3 spawnPos = stateMachine.Monster.AreaEffectPoint.transform.position;
         aoeInstance = Object.Instantiate(skillData.areaEffectPrefab, spawnPos, skillData.areaEffectPrefab.transform.rotation);
@@ -53,15 +56,18 @@ public class SmileToiletChargeState : MonsterBaseState
     private void OnTelegraphComplete()
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Charge));
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
         attackActive = true;
 
         var mc = stateMachine.Monster.GetComponent<MonsterController>();
         if (mc != null)
         {
-            mc.SetRootMotionMultiplier(2.0f); // boost root motion
+            mc.SetRootMotionMultiplier(2.0f); // boost root motion for dash
         }
+
+        // You can optionally play skill impact animation here
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
     }
+
 
     public override void OnControllerColliderHit(ControllerColliderHit hit)
     {
@@ -83,12 +89,12 @@ public class SmileToiletChargeState : MonsterBaseState
 
     public override void OnAnimationComplete()
     {
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
         Debug.Log("Finished Animation");
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
-    
-    
+
+
     public override void Exit()
     {
         if (aoeController != null)
@@ -108,8 +114,8 @@ public class SmileToiletChargeState : MonsterBaseState
             mc.ResetRootMotionMultiplier(); // reset to normal
         }
         stateMachine.isAttacking = false;
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
     }
+    
     public override void OnAttackHit()
     {
         var player = stateMachine.Monster.PlayerTarget;
