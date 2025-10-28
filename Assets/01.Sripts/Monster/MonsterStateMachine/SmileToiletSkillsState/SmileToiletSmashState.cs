@@ -72,8 +72,9 @@ public class SmileToiletSmashState : MonsterBaseState
         if (aoeInstance != null)
             Object.Destroy(aoeInstance);
 
-        // Transition back to Idle safely
         stateMachine.isAttacking = false;
+        stateMachine.Monster.GetComponent<MonsterAIEvents>()?.ForceResetToIdle();
+
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 

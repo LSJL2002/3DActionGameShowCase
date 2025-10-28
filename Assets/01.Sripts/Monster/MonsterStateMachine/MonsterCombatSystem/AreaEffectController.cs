@@ -136,16 +136,16 @@ public class AreaEffectController : MonoBehaviour
 
     // ------------------- Multiple Circle Method -------------------
 
-    public void MultipleCircleInitialize(float castDuration, float radius, int damageAmount, MonsterSkillSO skill, int count, float offsetRange, float delayBetween, SmileMachine_FireShoot stateRef)
+    public void MultipleCircleInitialize(float castDuration, float radius, int damageAmount, MonsterSkillSO skill, int count, float offsetRange, float delayBetween, BaseMonster monster, System.Action<Vector3> onTelegraphFinished)
     {
         skillData = skill;
         castTime = castDuration;
         damage = damageAmount;
 
-        StartCoroutine(MultipleCircleRoutine(count, radius, offsetRange, delayBetween, stateRef));
+        StartCoroutine(MultipleCircleRoutine(count, radius, offsetRange, delayBetween, monster, onTelegraphFinished));
     }
 
-    private IEnumerator MultipleCircleRoutine(int count, float radius, float offsetRange, float delayBetween, SmileMachine_FireShoot stateRef)
+    private IEnumerator MultipleCircleRoutine(int count, float radius, float offsetRange, float delayBetween, BaseMonster monster, System.Action<Vector3> onTelegraphFinished)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
@@ -158,28 +158,37 @@ public class AreaEffectController : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            // Random offset around player
-            Vector2 randomOffset = Random.insideUnitCircle * offsetRange;
-            Vector3 spawnPos = basePos + new Vector3(randomOffset.x, 0, randomOffset.y);
+            Vector3 spawnPos;
 
-            // Instantiate a new circle
+            if (i == 0)
+            {
+                spawnPos = basePos;
+            }
+            else
+            {
+                Vector2 randomOffset = Random.insideUnitCircle * offsetRange;
+                spawnPos = basePos + new Vector3(randomOffset.x, 0, randomOffset.y);
+            }
+
             GameObject aoeObj = Instantiate(skillData.areaEffectPrefab, spawnPos, Quaternion.identity);
+            monster.RegisterAOE(aoeObj);
+
             AreaEffectController aoeCtrl = aoeObj.GetComponent<AreaEffectController>();
             aoeCtrl.StopAllCoroutines();
 
-            // Set up the telegraph fill
             aoeCtrl.CircleInitialize(castTime, radius, damage, skillData);
 
-            // When this circle finishes, fireball is shot and circle destroyed
             aoeCtrl.OnTelegraphFinished += () =>
             {
-                stateRef.ShootFireball(aoeObj.transform.position); // use passed state reference
-                Destroy(aoeObj, 0.5f);
+                onTelegraphFinished?.Invoke(aoeObj.transform.position);
+                monster.UnregisterAOE(aoeObj);
+                Object.Destroy(aoeObj, 1f);
             };
 
             yield return new WaitForSeconds(delayBetween); // stagger spawn
         }
     }
+
 
 
 
