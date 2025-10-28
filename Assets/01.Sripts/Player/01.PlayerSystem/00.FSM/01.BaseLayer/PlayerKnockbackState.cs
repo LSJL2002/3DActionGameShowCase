@@ -61,8 +61,7 @@ public class PlayerKnockbackState : PlayerBaseState
 
         if (elapsed >= duration)
         {
-            //sm.Player.Ability.EndKnockback();
-            Enter();
+            sm.Player.Ability.EndKnockback();
         }
     }
 }
