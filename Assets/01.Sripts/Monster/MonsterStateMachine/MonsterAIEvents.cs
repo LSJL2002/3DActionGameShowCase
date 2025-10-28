@@ -66,15 +66,12 @@ public class MonsterAIEvents : MonoBehaviour
         {
             if (distance <= attackRange)
             {
-                if (Time.time >= lastAttackTime + attackCooldown)
-                    newMode = AIMode.Attack;
-                else
-                    newMode = AIMode.CombatIdle;
+                newMode = Time.time >= lastAttackTime + attackCooldown ? AIMode.Attack : AIMode.CombatIdle;
             }
             else if (distance <= detectRange - chaseBuffer)
                 newMode = AIMode.Chase;
             else
-                newMode = AIMode.CombatIdle; // just idle animation
+                newMode = AIMode.CombatIdle; // keep idle animation
         }
         else
         {
