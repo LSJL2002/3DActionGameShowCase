@@ -217,13 +217,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
             // Wait until attack finishes
             yield return new WaitUntil(() => !stateMachine.isAttacking);
 
-            // --- Return to Idle after attack ---
-            if (!(stateMachine.CurrentState is MonsterIdleState))
-            {
-                stateMachine.ChangeState(stateMachine.MonsterIdleState);
-                yield return new WaitForSeconds(0.3f); // lock in Idle for a bit
-            }
-
             currentStepIndex++;
             yield return new WaitForSeconds(0.2f); // small delay between steps
         }
