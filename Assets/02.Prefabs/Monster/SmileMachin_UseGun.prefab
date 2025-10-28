@@ -5059,8 +5059,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0b5fe3112031b94d97184a74617b434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 7091687856046425219}
-  animator: {fileID: 0}
   drag: 0.3
 --- !u!95 &5537974382895312408
 Animator:
@@ -5133,6 +5131,11 @@ MonoBehaviour:
   hasStartedCombat: 0
   hasDetectedPlayer: 0
   baseAttackCollider: {fileID: 5778639908450511797}
+  gravity: -9.81
+  groundCheckDistance: 0.3
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
   rifleParticleEffect: {fileID: 8751197841148956972}
   groggyParticleEffect: {fileID: 6005512538140963122}
 --- !u!114 &5763327211639044479
