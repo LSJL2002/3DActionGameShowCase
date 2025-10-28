@@ -66,6 +66,7 @@ public class MonsterBaseAttack : MonsterBaseState
 
     public override void OnAnimationComplete()
     {
+        Debug.Log("BaseAttack");
         if (attackCollider != null)
             attackCollider.enabled = false;
 

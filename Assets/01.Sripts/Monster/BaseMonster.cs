@@ -189,42 +189,54 @@ public class BaseMonster : MonoBehaviour, IDamageable
             }
 
             float skillRange = GetSkillRangeFromState(attackState);
-            if (!ignoreDistanceCheck) // If ignore distance check is true, then just perform the attack
+
+            // --- Wait until player is in range (unless ignoring distance) ---
+            if (!ignoreDistanceCheck)
             {
                 float waitTime = 0f;
                 bool inRange = false;
                 yield return new WaitUntil(() =>
                 {
                     waitTime += Time.deltaTime;
-                    inRange = (PlayerTarget != null && Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange);
+                    inRange = (PlayerTarget != null &&
+                            Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange);
                     return inRange || waitTime >= 5f;
                 });
 
                 if (!inRange)
                 {
-                    //Debug.Log($"{name} stopped pattern {currentPattern.id} after 5s timeout");
+                    // Player moved away — stop pattern
                     break;
                 }
             }
+
             // --- Perform attack ---
             stateMachine.isAttacking = true;
             stateMachine.ChangeState(attackState);
+
             if (!hasStartedCombat)
-            {
                 hasStartedCombat = true;
-            }
 
             // Wait until attack finishes
             yield return new WaitUntil(() => !stateMachine.isAttacking);
 
+            // --- Return to Idle for a moment before next attack ---
+            stateMachine.ChangeState(stateMachine.MonsterIdleState);
+            yield return new WaitForSeconds(0.3f); // short reset time (tweak as needed)
+
             currentStepIndex++;
-            yield return new WaitForSeconds(0.2f); // small delay between steps
         }
+
+        // --- Pattern finished, cooldown before new one ---
         float cooldown = UnityEngine.Random.Range(1f, 3f);
         yield return new WaitForSeconds(cooldown);
+
         currentPattern = null;
         currentPatternPriority = -1;
         isRunningPattern = false;
+
+        // Return to idle after finishing pattern
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
     public float GetCurrentSkillRange()
