@@ -141,6 +141,12 @@ public class MonsterAIEvents : MonoBehaviour
         }
     }
 
+    public void ForceResetToIdle()
+    {
+        currentMode = AIMode.Idle;
+        RestingPhase?.Invoke();
+    }
+
     public void SetStateMachine(MonsterStateMachine sm)
     {
         stateMachine = sm;
