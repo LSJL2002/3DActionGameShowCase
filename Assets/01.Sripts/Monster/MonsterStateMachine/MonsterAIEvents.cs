@@ -77,7 +77,6 @@ public class MonsterAIEvents : MonoBehaviour
                 else
                 {
                     newMode = AIMode.CombatIdle; // cooldown not done → wait but check continuously
-                    stateMachine.ChangeState(stateMachine.MonsterIdleState);
                 }
             }
             else if (distance <= detectRange - chaseBuffer)
@@ -110,6 +109,7 @@ public class MonsterAIEvents : MonoBehaviour
                     break;
                 case AIMode.CombatIdle:
                     stateMachine.Monster.PlayerTarget = player;
+                    stateMachine.ChangeState(stateMachine.MonsterIdleState);
                     break;
                 case AIMode.Idle:
                     RestingPhase?.Invoke();
