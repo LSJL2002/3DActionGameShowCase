@@ -10,6 +10,7 @@ public enum SceneType
 {
     Tutorial,
     Boss_1,
+    Boss_1_Death,
 }
 
 public enum Speaker
@@ -284,13 +285,32 @@ public class TutorialUI : UIBase
     }
 
     // 보스 처치 후 능력 선택 때 호출 함수
-    public void PlayBossAfterSelection(SceneType type)
+    public void PlayBossBeforeSelection(SceneType type)
     {
         List<TextSO> scene = new List<TextSO>();
         foreach (TextSO text in dialogues)
         {
             // 50010032 ~ 50010033 두 줄만 수집
             if (text.scenes == type.ToString() && text.id >= 50010028 && text.id <= 50010031)
+            {
+                scene.Add(text);
+            }
+        }
+
+        scene.Sort((a, b) => a.id.CompareTo(b.id));
+        bossOneAfterSelectPlayed = true;
+
+        StartCoroutine(ShowText(scene, 2.0f));
+    }
+
+    // 보스룸 클리어 후 호출 함수
+    public void PlayBossAfterSelection(SceneType type)
+    {
+        List<TextSO> scene = new List<TextSO>();
+        foreach (TextSO text in dialogues)
+        {
+            // 50010032 ~ 50010033 두 줄만 수집
+            if (text.scenes == type.ToString() && text.id >= 50010032 && text.id <= 50010033)
             {
                 scene.Add(text);
             }
