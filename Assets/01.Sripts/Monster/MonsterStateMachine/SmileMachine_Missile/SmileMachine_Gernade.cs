@@ -6,7 +6,6 @@ public class SmileMachine_Gernade : MonsterBaseState
     private MonsterSkillSO skillData;
     private Coroutine grenadeRoutine;
     private Transform firepointGernade;
-    private Transform player;
     private GameObject aoeInstance;
     private AreaEffectController aoeController;
 

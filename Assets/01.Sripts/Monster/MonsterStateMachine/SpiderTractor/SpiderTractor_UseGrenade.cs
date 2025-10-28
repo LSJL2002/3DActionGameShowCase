@@ -9,6 +9,9 @@ public class SpiderTractor_UseGrenade : BaseMonster
     public GameObject stampEffect;
     [Header("FangFallSkill")]
     public GameObject fangFallEffect;
+    [Header("Bombardment")]
+    public GameObject missile;
+    public Transform firePointMissile;
     protected override MonsterBaseState GetStateFromEnum(States stateEnum)
     {
         switch (stateEnum)
