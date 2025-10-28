@@ -24,7 +24,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public GameObject AreaEffectPoint;
     public bool IsDead { get; set; }
     [HideInInspector] public bool hasStartedCombat = false;
-    public event Action OnAttackAnimationCompleteEvent;
     private readonly List<GameObject> activeAOEs = new List<GameObject>();
     [HideInInspector] public bool hasDetectedPlayer = false;
     public MonsterStateMachine stateMachine;
@@ -270,8 +269,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnAttackAnimationComplete()
     {
-        stateMachine.isAttacking = false;
-        OnAttackAnimationCompleteEvent?.Invoke();
+        if (stateMachine.CurrentState is MonsterBaseState)
+        {
+            (stateMachine.CurrentState as MonsterBaseState).OnAnimationComplete();
+        }
     }
 
     public void OnAttackHitEvent()

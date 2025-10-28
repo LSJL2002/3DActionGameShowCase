@@ -52,7 +52,7 @@ public class SmileToiletSlamState : MonsterBaseState
     private void OnTelegraphComplete()
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
     }
 
     public override void OnAttackHit()
@@ -83,6 +83,6 @@ public class SmileToiletSlamState : MonsterBaseState
             Object.Destroy(aoeInstance);
         }
         stateMachine.isAttacking = false;
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
     }
 }
