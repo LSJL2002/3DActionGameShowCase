@@ -15,8 +15,8 @@ public class MonsterAIEvents : MonoBehaviour
     public float attackCooldown = 3f;
     public float lastAttackTime;
 
-    private enum AIMode { Chase, CombatIdle, Attack }
-    private AIMode currentMode = AIMode.CombatIdle;
+    public enum AIMode { Chase, CombatIdle, Attack } // 기존 private에서 public으로 변경
+    [SerializeField] private AIMode currentMode = AIMode.CombatIdle; // 인스펙터에서 수정 가능하도록 설정
     private bool processingEnabled = true;
     private bool combatIdleStarted = false;
 
@@ -65,23 +65,31 @@ public class MonsterAIEvents : MonoBehaviour
         if (!stateMachine.isAttacking)
         {
             if (distance <= attackRange)
-            {
+            {   
                 newMode = Time.time >= lastAttackTime + attackCooldown ? AIMode.Attack : AIMode.CombatIdle;
             }
             else if (distance <= detectRange - chaseBuffer)
+            {
                 newMode = AIMode.Chase;
+            }
             else
+            {
                 newMode = AIMode.CombatIdle; // keep idle animation
+            }
         }
         else
-        {
+        {/*
             if (distance > attackRange * 1.2f)
+            {
                 newMode = AIMode.Chase;
+            }*/
         }
 
         if (newMode != currentMode)
         {
+            Debug.Log($"Mode changed: {currentMode} → {newMode}, Distance: {distance}, DetectRange: {detectRange}, AttackRange: {attackRange}, ChaseBuffer: {chaseBuffer}, isAttacking: {stateMachine.isAttacking}");
             currentMode = newMode;
+            
             switch (newMode)
             {
                 case AIMode.Attack:
@@ -90,10 +98,12 @@ public class MonsterAIEvents : MonoBehaviour
                     combatIdleStarted = false;
                     break;
                 case AIMode.Chase:
+                    Debug.Log($"Entering Chase mode. Distance to player: {distance}, DetectRange: {detectRange}, ChaseBuffer: {chaseBuffer}");
                     stateMachine.Monster.PlayerTarget = player;
                     combatIdleStarted = false;
                     break;
                 case AIMode.CombatIdle:
+                    Debug.Log("Entering CombatIdle mode.");
                     stateMachine.Monster.PlayerTarget = player;
                     if (!combatIdleStarted)
                     {
@@ -118,7 +128,6 @@ public class MonsterAIEvents : MonoBehaviour
             OnPlayerDetected?.Invoke();
         }
     }
-
 
     public void SetStateMachine(MonsterStateMachine sm) => stateMachine = sm;
     public void Disable() => processingEnabled = false;
