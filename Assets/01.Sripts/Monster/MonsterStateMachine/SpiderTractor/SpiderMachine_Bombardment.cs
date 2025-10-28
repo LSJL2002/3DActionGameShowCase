@@ -6,6 +6,7 @@ public class SpiderMachine_Bombardment : MonsterBaseState
 {
     private MonsterSkillSO skillData;
     private Transform firePointMissile;
+    private GameObject aoeInstance;
     public SpiderMachine_Bombardment(MonsterStateMachine ms, MonsterSkillSO bombardmentSkill) : base(ms)
     {
         skillData = bombardmentSkill;
@@ -28,25 +29,26 @@ public class SpiderMachine_Bombardment : MonsterBaseState
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         GameObject aoeObj = Object.Instantiate(skillData.areaEffectPrefab, stateMachine.Monster.transform.position, Quaternion.identity);
         AreaEffectController aoeController = aoeObj.GetComponent<AreaEffectController>();
-        if (aoeController != null)
-        {
-            aoeController.MultipleCircleInitialize(
-                skillData.preCastTime,
-                skillData.range,
-                stateMachine.Monster.Stats.AttackPower,
-                skillData,
-                10,
-                10f,
-                3f,
-                null
-            );
+        // if (aoeController != null)
+        // {
+        //     aoeController.MultipleCircleInitialize(
+        //         skillData.preCastTime,
+        //         skillData.range,
+        //         stateMachine.Monster.Stats.AttackPower,
+        //         skillData,
+        //         10,
+        //         10f,
+        //         3f,
+        //         null,
+        //         stateMachine.Monster
+        //     );
 
-            aoeController.OnTelegraphFinished += () =>
-            {
-                Vector3 targetPos = aoeObj.transform.position + Vector3.up * 0.1f;
-                ShootMissile(targetPos);
-            };
-        }
+        //     aoeController.OnTelegraphFinished += () =>
+        //     {
+        //         Vector3 targetPos = aoeObj.transform.position + Vector3.up * 0.1f;
+        //         ShootMissile(targetPos);
+        //     };
+        // }
     }
 
     private void ShootMissile(Vector3 targetPos)
@@ -60,7 +62,7 @@ public class SpiderMachine_Bombardment : MonsterBaseState
         {
             // Launch missile in an arc toward target
             Vector3 velocity = CalculateLaunchVelocity(firePointMissile.position, targetPos, 45f); // 45° launch angle
-            rb.velocity = velocity;
+            rb.linearVelocity = velocity;
         }
     }
 
@@ -75,7 +77,7 @@ public class SpiderMachine_Bombardment : MonsterBaseState
         float distance = Vector3.Distance(planarTarget, planarPosition);
         float yOffset = target.y - start.y;
 
-        float initialVelocity = Mathf.Sqrt(-gravity * distance * distance / 
+        float initialVelocity = Mathf.Sqrt(-gravity * distance * distance /
             (2 * (yOffset - Mathf.Tan(rad) * distance) * Mathf.Pow(Mathf.Cos(rad), 2)));
 
         Vector3 velocity = new Vector3(0, initialVelocity * Mathf.Sin(rad), initialVelocity * Mathf.Cos(rad));
@@ -83,5 +85,10 @@ public class SpiderMachine_Bombardment : MonsterBaseState
         Quaternion rot = Quaternion.FromToRotation(Vector3.forward, dir);
 
         return rot * velocity;
+    }
+
+    public override void Exit()
+    {
+        
     }
 }

@@ -12,8 +12,6 @@ public class SmileMachine_FireShoot : MonsterBaseState
     private int circlesFinished = 0;
     private int totalCircles = 0;
 
-    private List<GameObject> aoeInstances = new List<GameObject>();
-
     public SmileMachine_FireShoot(MonsterStateMachine ms, MonsterSkillSO fireShootSkill) : base(ms)
     {
         skillData = fireShootSkill;
@@ -43,7 +41,7 @@ public class SmileMachine_FireShoot : MonsterBaseState
         totalCircles = 5;
         circlesFinished = 0;
 
-        // Spawn multiple circles around player
+        // Use generic MultipleCircleInitialize
         AreaEffectController aoeController = stateMachine.Monster.AreaEffectPoint.GetComponent<AreaEffectController>();
         if (aoeController == null)
             aoeController = stateMachine.Monster.AreaEffectPoint.gameObject.AddComponent<AreaEffectController>();
@@ -56,37 +54,33 @@ public class SmileMachine_FireShoot : MonsterBaseState
             totalCircles,   // number of circles
             4f,             // offset range
             0.4f,           // delay between circles
-            this            // pass state reference
+            stateMachine.Monster, // pass monster for AOEs
+            FireAtPosition           // callback when telegraph finishes
         );
     }
 
-    public void ShootFireball(Vector3 targetPos)
+    // Generic callback for AOE
+    private void FireAtPosition(Vector3 targetPos)
     {
+        if (fireballPrefab == null || firePoint == null) return;
+
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
-        if (fireballPrefab == null || firePoint == null) return;
-
-        // Instantiate fireball at firePoint
         GameObject fireball = Object.Instantiate(fireballPrefab, firePoint.position, Quaternion.identity);
 
-        // Rotate fireball to face the target
         Vector3 dir = (targetPos - firePoint.position).normalized;
         if (dir != Vector3.zero)
             fireball.transform.rotation = Quaternion.LookRotation(-dir);
 
-        // Ensure the particle system starts
         ParticleSystem ps = fireball.GetComponentInChildren<ParticleSystem>();
         if (ps != null)
-        {
             ps.Play();
-        }
 
         stateMachine.Monster.StartCoroutine(MoveFireballToTarget(fireball, targetPos, 0.7f));
 
         circlesFinished++;
     }
-
 
     private IEnumerator MoveFireballToTarget(GameObject fireball, Vector3 targetPos, float duration)
     {
@@ -108,6 +102,7 @@ public class SmileMachine_FireShoot : MonsterBaseState
         {
             Object.Instantiate(groundFirePrefab, targetPos, groundFirePrefab.transform.rotation);
         }
+
         if (circlesFinished >= totalCircles)
         {
             stateMachine.ChangeState(stateMachine.MonsterIdleState);
@@ -119,11 +114,7 @@ public class SmileMachine_FireShoot : MonsterBaseState
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
         stateMachine.isAttacking = false;
 
-        foreach (var aoe in aoeInstances)
-        {
-            if (aoe != null)
-                Object.Destroy(aoe);
-        }
-        aoeInstances.Clear();
+        if (stateMachine.Monster != null)
+            stateMachine.Monster.ClearAOEs(); // Clear all remaining AOEs
     }
 }
