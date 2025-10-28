@@ -87,7 +87,7 @@ public class MonsterAIEvents : MonoBehaviour
 
         if (newMode != currentMode)
         {
-            Debug.Log($"Mode changed: {currentMode} → {newMode}, Distance: {distance}, DetectRange: {detectRange}, AttackRange: {attackRange}, ChaseBuffer: {chaseBuffer}, isAttacking: {stateMachine.isAttacking}");
+
             currentMode = newMode;
             
             switch (newMode)
