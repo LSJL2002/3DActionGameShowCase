@@ -14,7 +14,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patterns:
   - id: 1
+    states: 0000000001000000
+  - id: 2
+    states: 0000000000000000
+  - id: 3
+    states: 0100000001000000
+  - id: 4
+    states: 000000000000000001000000
+  - id: 5
+    states: 000000000100000002000000
+  - id: 6
+    states: 03000000
+  - id: 7
+    states: 070000000000000002000000
+  - id: 8
+    states: 08000000000000000100000002000000
+  - id: 9
+    states: 0600000005000000
+  - id: 10
+    states: 04000000
+  - id: 11
+    states: 06000000
+  - id: 12
     states: 05000000
+  - id: 11
+    states: 02000000
+  - id: 11
+    states: 010000000100000004000000
   conditions:
   - id: 0
     conditionType: 0
@@ -24,8 +50,134 @@ MonoBehaviour:
     requiredDistance: 0
     triggerOnce: 0
     hasTriggered: 0
-    possiblePatternIds: 01000000
+    possiblePatternIds: 0100000002000000030000000400000005000000
     priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 1
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 90
+    requiredDistance: 0
+    triggerOnce: 1
+    hasTriggered: 0
+    possiblePatternIds: 06000000
+    priority: 1
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 2
+    conditionType: 0
+    minHpPercent: 60
+    maxHpPercent: 90
+    thresholdHpPercent: 0
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 01000000020000000300000004000000050000000600000007000000
+    priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 3
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 60
+    requiredDistance: 0
+    triggerOnce: 1
+    hasTriggered: 0
+    possiblePatternIds: 0a000000
+    priority: 1
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 4
+    conditionType: 0
+    minHpPercent: 30
+    maxHpPercent: 60
+    thresholdHpPercent: 0
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 040000000500000007000000080000000b0000000f000000
+    priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 5
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 30
+    requiredDistance: 0
+    triggerOnce: 1
+    hasTriggered: 0
+    possiblePatternIds: 09000000
+    priority: 1
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 6
+    conditionType: 0
+    minHpPercent: 10
+    maxHpPercent: 30
+    thresholdHpPercent: 0
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 0100000002000000030000000400000005000000060000000700000008000000090000000b0000000e000000
+    priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 7
+    conditionType: 1
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 10
+    requiredDistance: 0
+    triggerOnce: 1
+    hasTriggered: 0
+    possiblePatternIds: 09000000
+    priority: 1
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 8
+    conditionType: 0
+    minHpPercent: 0
+    maxHpPercent: 10
+    thresholdHpPercent: 0
+    requiredDistance: 0
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 0400000005000000060000000700000008000000090000000b0000000e000000
+    priority: 3
+    ignoreDistanceCheck: 0
+    effectValueMultiplier: 1
+    rangeMultiplier: 1
+    preCastTimeMultiplier: 1
+  - id: 9
+    conditionType: 2
+    minHpPercent: 0
+    maxHpPercent: 0
+    thresholdHpPercent: 0
+    requiredDistance: 5
+    triggerOnce: 0
+    hasTriggered: 0
+    possiblePatternIds: 06000000
+    priority: 2
     ignoreDistanceCheck: 0
     effectValueMultiplier: 1
     rangeMultiplier: 1

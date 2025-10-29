@@ -85,7 +85,10 @@ public class MonsterStatHandler : MonoBehaviour
     public void UpdateHealthUI()
     {
         EventsManager.Instance.TriggerEvent(GameEvent.OnHealthChanged);
-        CheckHealthThresholds();
+        if (monsterData.id == 10000001)
+        {
+            CheckHealthThresholds();
+        }
     }
 
     public void Die()
@@ -125,12 +128,8 @@ public class MonsterStatHandler : MonoBehaviour
     {
         // 현재 체력 비율 계산
         float hpPercent = (CurrentHP / maxHp);
+        await UIManager.Instance.Show<TutorialUI>();
+        UIManager.Instance.Get<TutorialUI>().TryPlayBossThresholdDialogue(SceneType.Boss_1, hpPercent);
 
-        // 90% 이하인지 확인
-        if (hpPercent <= 90f)
-        {
-            await UIManager.Instance.Show<TutorialUI>();
-            UIManager.Instance.Get<TutorialUI>().TryPlayBossThresholdDialogue(SceneType.Boss_1, hpPercent);
-        }
     }
 }
