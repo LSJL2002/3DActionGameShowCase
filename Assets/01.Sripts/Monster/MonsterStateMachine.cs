@@ -192,12 +192,12 @@ public class MonsterStateMachine : StateMachine
 
     private void HandlePlayerInAttackRange()
     {
-        if (!isAttacking && CurrentState == MonsterIdleState)
+        if (!isAttacking)
         {
             isAttacking = true;
-            if (Monster is ToiletMonster toilet)
+            if (Monster is BaseMonster monster)
             {
-                toilet.PickPatternByCondition();
+                monster.PickPatternByCondition();
             }
         }
     }
