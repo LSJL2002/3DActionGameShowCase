@@ -161,7 +161,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""Camera"",
                     ""type"": ""Button"",
                     ""id"": ""d6be459b-89f8-405a-89a3-c9c8f9b330e8"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -206,7 +206,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""DashL"",
                     ""type"": ""Button"",
                     ""id"": ""069f2a90-3337-4ff0-80d0-41ca6a86119b"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -215,7 +215,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""DashR"",
                     ""type"": ""Button"",
                     ""id"": ""b6a95ab4-beee-4266-9d58-c9cb0baf950f"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -573,7 +573,7 @@ namespace UnityEngine.InputSystem
                 {
                     ""name"": """",
                     ""id"": ""f0815b3d-74d9-4b84-adb9-1a278ab42ac7"",
-                    ""path"": ""<Joystick>/stick/down"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",

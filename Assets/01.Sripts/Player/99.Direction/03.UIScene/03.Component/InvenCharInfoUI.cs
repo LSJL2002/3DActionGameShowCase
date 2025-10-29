@@ -1,7 +1,8 @@
 using System;
-using System.Security.Cryptography;
-using TMPro;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InvenCharInfoUI : MonoBehaviour
@@ -14,12 +15,29 @@ public class InvenCharInfoUI : MonoBehaviour
     [SerializeField] private Button energyBtn;
     [SerializeField] private Button cashBtn;
 
-    [SerializeField] private Button button1;
-    [SerializeField] private Button button2;
-    [SerializeField] private Button button3;
-    [SerializeField] private Button button4;
-    [SerializeField] private Button button5;
+    [SerializeField] private List<Button> buttons;
+    // 문자열 키와 실제 UI 열기 함수 매핑
+    private Dictionary<string, Func<Task>> uiActions;
 
+    private void Awake()
+    {
+        // Dictionary 초기화
+        uiActions = new Dictionary<string, Func<Task>>()
+        {
+            { "Info", async () => { await UIManager.Instance.Show<CharacterInfomationUI>(); } },
+            { "Core", async () => { await UIManager.Instance.Show<CharacterCoreUI>(); } },
+            { "Skill", async () => { await UIManager.Instance.Show<CharacterSkillUI>(); } },
+            { "Option", async () => { await UIManager.Instance.Show<SoundSettingUI>(); } },
+            { "Quit", async () =>
+                {
+                    Time.timeScale = 1f;
+                    PlayerManager.Instance.EnableInput(false);
+                    SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
+                    await Task.CompletedTask;
+                }
+            }
+        };
+    }
 
     private void Start()
     {
@@ -29,11 +47,13 @@ public class InvenCharInfoUI : MonoBehaviour
         if (energyBtn != null) energyBtn.onClick.AddListener(OnEnergyBtnClicked);
         if (cashBtn != null) cashBtn.onClick.AddListener(OnCashBtnClicked);
 
-        if (button1 != null) button1.onClick.AddListener(OnBtn1Clicked);
-        if (button2 != null) button2.onClick.AddListener(OnBtn2Clicked);
-        if (button3 != null) button3.onClick.AddListener(OnBtn3Clicked);
-        if (button4 != null) button4.onClick.AddListener(OnBtn4Clicked);
-        if (button5 != null) button5.onClick.AddListener(OnBtn5Clicked);
+        // 버튼 리스트 반복 처리
+        string[] uiKeys = { "Info", "Core", "Skill", "Option", "Quit" };
+        for (int i = 0; i < buttons.Count && i < uiKeys.Length; i++)
+        {
+            int index = i; // 캡처 문제 방지
+            buttons[i].onClick.AddListener(() => OnOpenUI(uiKeys[index]));
+        }
     }
 
     // ---------------- 버튼별 함수 ----------------
@@ -52,14 +72,18 @@ public class InvenCharInfoUI : MonoBehaviour
             manager.seqCam.enabled = true;
     }
 
-    // 나머지 버튼 함수 이름만 정의
     private void OnGoldBtnClicked() { /* TODO: 구현 */ }
     private void OnEnergyBtnClicked() { /* TODO: 구현 */ }
     private void OnCashBtnClicked() { /* TODO: 구현 */ }
 
-    private void OnBtn1Clicked() { /* TODO: 구현 */ }
-    private void OnBtn2Clicked() { /* TODO: 구현 */ }
-    private void OnBtn3Clicked() { /* TODO: 구현 */ }
-    private void OnBtn4Clicked() { /* TODO: 구현 */ }
-    private void OnBtn5Clicked() { /* TODO: 구현 */ }
+    private async void OnOpenUI(string key)
+    {
+        if (UIManager.Instance.currentUI != null)
+            UIManager.Instance.Hide(UIManager.Instance.currentUI.gameObject.name);
+
+        if (uiActions.TryGetValue(key, out var action))
+            await action();
+        else
+            Debug.LogWarning($"UI key '{key}' not found in dictionary.");
+    }
 }
