@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PreviewScene : MonoBehaviour
 {
     [Header("Preview Scene")]
-    [SerializeField] private string previewSceneName = "PlayerUIScene";
+    [SerializeField] private string previewSceneName = "UI_CharacterScene";
     private bool isLoaded = false;
     private Animator previewAnimator;
     [SerializeField] private Canvas canvas;
