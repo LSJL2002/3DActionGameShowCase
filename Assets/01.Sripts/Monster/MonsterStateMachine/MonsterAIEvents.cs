@@ -94,6 +94,7 @@ public class MonsterAIEvents : MonoBehaviour
         switch (currentMode)
         {
             case AIMode.Attack:
+                Debug.Log($"[MonsterAIEvents] Attack triggered! Distance: {distance}");
                 OnInAttackRange?.Invoke();
                 lastAttackTime = Time.time;
                 combatIdleStarted = false;
@@ -127,6 +128,14 @@ public class MonsterAIEvents : MonoBehaviour
         {
             stateMachine.Monster.PlayerTarget = player;
             OnPlayerDetected?.Invoke();
+        }
+
+        if (stateMachine.isAttacking && Time.time >= lastAttackTime + attackCooldown + 1f)
+        {
+            // something went wrong, reset
+            Debug.Log("Something went wrong....");
+            stateMachine.isAttacking = false;
+            currentMode = AIMode.CombatIdle;
         }
     }
 
