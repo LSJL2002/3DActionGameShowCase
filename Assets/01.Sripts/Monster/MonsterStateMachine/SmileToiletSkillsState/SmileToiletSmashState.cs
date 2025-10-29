@@ -52,7 +52,7 @@ public class SmileToiletSmashState : MonsterBaseState
     private void OnTelegraphComplete()
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
-        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
+        StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
     }
 
     // Called from animation event
@@ -71,9 +71,12 @@ public class SmileToiletSmashState : MonsterBaseState
         aoeController.DisableDamage();
         if (aoeInstance != null)
             Object.Destroy(aoeInstance);
+    }
 
-        // Transition back to Idle safely
-        stateMachine.isAttacking = false;
+    public override void OnAnimationComplete()
+    {
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
+        Debug.Log("Finished Animation");
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
@@ -90,6 +93,6 @@ public class SmileToiletSmashState : MonsterBaseState
         }
         stateMachine.isAttacking = false;
         hasHit = false;
-        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
     }
 }

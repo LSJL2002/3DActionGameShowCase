@@ -513,6 +513,37 @@ Transform:
   - {fileID: 289103274}
   m_Father: {fileID: 6795516254415247757}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1408279985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1408279986}
+  m_Layer: 0
+  m_Name: MissileFirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1408279986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408279985}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.748, z: 1.31}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1404064863351550067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1444827730
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -793,10 +824,6 @@ PrefabInstance:
     - target: {fileID: 6855971741374199306, guid: d1e5acdb498f8574cabb8f0b1c635716, type: 3}
       propertyPath: m_Name
       value: SmileMachine_UseMissile
-      objectReference: {fileID: 0}
-    - target: {fileID: 6855971741374199306, guid: d1e5acdb498f8574cabb8f0b1c635716, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1713,7 +1740,8 @@ Transform:
   m_LocalPosition: {x: -0.007926712, y: -2.248695, z: 0.20350364}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1408279986}
   m_Father: {fileID: 1624669122774880327}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1425267377648262322
@@ -2425,7 +2453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8267726345693005202, guid: 0059cb4da6a8bca41ad1e44df6310e19, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4667,6 +4695,8 @@ MonoBehaviour:
       parameterName: FangFall
     - type: 9
       parameterName: Spin
+    - type: 10
+      parameterName: Bombardment
   patternConfig: {fileID: 11400000, guid: 5f5579cae6fadfd44a7979d3d22ac263, type: 2}
   AreaEffectPoint: {fileID: 706539333}
   hasStartedCombat: 0
@@ -4679,6 +4709,8 @@ MonoBehaviour:
     m_Bits: 0
   stampEffect: {fileID: 100000, guid: c380d2dd36b7ec44cb9ea6098511faa9, type: 3}
   fangFallEffect: {fileID: 1719780038224681957, guid: ae2b75e2884477643b2237ed3bff7265, type: 3}
+  missile: {fileID: 1985142402343117751, guid: 726b4bfe5a9265d46804b45b9832af29, type: 3}
+  firePointMissile: {fileID: 1408279986}
 --- !u!195 &6795516254415247762
 NavMeshAgent:
   m_ObjectHideFlags: 0

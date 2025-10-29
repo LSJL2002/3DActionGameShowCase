@@ -50,7 +50,7 @@ public class BattleManager : Singleton<BattleManager>
     {
         if (isBattle) return;
         isBattle = true;
-
+        AudioManager.Instance.StopBGM();
         battleStartTime = Time.time;
 
         currentZone = zone;
@@ -91,6 +91,7 @@ public class BattleManager : Singleton<BattleManager>
             { "timestamp", System.DateTime.UtcNow.ToString("o") }
         };
         AnalyticsService.Instance.RecordEvent(evt);
+        AudioManager.Instance.PlayBGM("BattleBGM");
     }
 
 
@@ -102,6 +103,16 @@ public class BattleManager : Singleton<BattleManager>
         {
             if (currentZone != null)
                 currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            if (currentZone != null)
+                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(6000);
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (currentZone != null)
+                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(12000);
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
@@ -136,6 +147,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public async UniTask HandleMonsterDie()
     {
+        AudioManager.Instance.StopBGM();
         if (monsterStats == null || currentZone == null || monsterStats.CurrentHP > 0)
             return;
 
@@ -162,6 +174,7 @@ public class BattleManager : Singleton<BattleManager>
 
         await UniTask.NextFrame();
         StopWarning();
+        AudioManager.Instance.PlayBGM("afterBattleBGM");
     }
 
 
@@ -177,7 +190,6 @@ public class BattleManager : Singleton<BattleManager>
         currentMonster = null;
         monsterStats = null;
         isBattle = false;
-
     }
 
     public void ResetBattleState()

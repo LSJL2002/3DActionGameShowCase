@@ -4,14 +4,11 @@ using System.Collections;
 public class SpiderMachine_TurnLeft : MonsterBaseState
 {
     private MonsterSkillSO skillData;
-    private float moveSpeed = 12f;
-    private float rotationSpeed = 12f;
-    private Vector3 targetPosition;
-    private bool hasArrived;
-    private float stopDistance = 1f;
-    private float desiredDistanceFromPlayer = 5f;
-
     private Coroutine moveCoroutine;
+
+    private float moveSpeed = 12f;
+    private float stopDistance = 0.1f;
+    private float leftOffset = 5f;
 
     public SpiderMachine_TurnLeft(MonsterStateMachine stateMachine, MonsterSkillSO turnLeftSkill)
         : base(stateMachine)
@@ -21,69 +18,50 @@ public class SpiderMachine_TurnLeft : MonsterBaseState
 
     public override void Enter()
     {
-        base.Enter();
-        hasArrived = false;
-
-        Transform monster = stateMachine.Monster.transform;
-        Transform player = stateMachine.Monster.PlayerTarget;
-
-        if (player == null)
-        {
-            Debug.LogWarning("[TurnLeft] No player target found!");
-            stateMachine.ChangeState(stateMachine.MonsterIdleState);
-            return;
-        }
-        Vector3 toPlayer = (player.position - monster.position).normalized;
-        Vector3 leftDirection = Quaternion.Euler(0, -90f, 0) * toPlayer;
-        targetPosition = player.position + leftDirection * desiredDistanceFromPlayer;
-
-        Debug.Log($"[TurnLeft] Monster: {monster.position}, Player: {player.position}, Target: {targetPosition}");
-
+        if (moveCoroutine != null)
+            stateMachine.Monster.StopCoroutine(moveCoroutine);
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Run));
-
-        moveCoroutine = stateMachine.Monster.StartCoroutine(MoveToTarget(monster, targetPosition));
+        moveCoroutine = stateMachine.Monster.StartCoroutine(MoveToLeftOfPlayer());
+        stateMachine.isAttacking = true;
     }
 
-    private IEnumerator MoveToTarget(Transform monster, Vector3 target)
+    private IEnumerator MoveToLeftOfPlayer()
     {
-        while (!hasArrived)
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
         {
-            Vector3 direction = (target - monster.position).normalized;
-            float distance = Vector3.Distance(monster.position, target);
+            Debug.LogWarning("Player not found for TurnLeft state.");
+            stateMachine.ChangeState(stateMachine.MonsterIdleState);
+            yield break;
+        }
 
-            if (direction != Vector3.zero)
-            {
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                monster.rotation = Quaternion.Slerp(monster.rotation, lookRotation, rotationSpeed * Time.deltaTime);
-            }
+        Transform monsterTransform = stateMachine.Monster.transform;
+        Vector3 playerPos = player.transform.position;
 
-            monster.position += direction * moveSpeed * Time.deltaTime;
+        // Calculate left side of the player (relative to player's facing direction)
+        Vector3 leftSide = player.transform.position - player.transform.right * leftOffset;
 
-            if (distance <= stopDistance)
-            {
-                hasArrived = true;
-                Debug.Log("[TurnLeft] Arrived at target position.");
+        // Rotate monster to face the player while moving
+        Quaternion targetRotation = Quaternion.LookRotation(playerPos - monsterTransform.position);
 
-                StopAnimation(stateMachine.Monster.animationData.GetHash(
-                    MonsterAnimationData.MonsterAnimationType.Run));
-
-                stateMachine.ChangeState(stateMachine.MonsterIdleState);
-            }
-
+        while (Vector3.Distance(monsterTransform.position, leftSide) > stopDistance)
+        {
+            monsterTransform.position = Vector3.MoveTowards(monsterTransform.position, leftSide, moveSpeed * Time.deltaTime);
+            monsterTransform.rotation = Quaternion.Lerp(monsterTransform.rotation, targetRotation, Time.deltaTime * 5f);
             yield return null;
         }
+
+        StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Run));
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
     public override void Exit()
     {
-        base.Exit();
-
         if (moveCoroutine != null)
         {
             stateMachine.Monster.StopCoroutine(moveCoroutine);
             moveCoroutine = null;
         }
-
-        Debug.Log("[TurnLeft] Exiting state.");
+        stateMachine.isAttacking = false;
     }
 }

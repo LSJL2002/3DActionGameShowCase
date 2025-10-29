@@ -8,8 +8,6 @@ public partial class GameUI : UIBase
 
     protected override void OnEnable()
     {
-        base.OnEnable();
-
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { gameUICanvasGroup.DOFade(1f, 1f); });
 

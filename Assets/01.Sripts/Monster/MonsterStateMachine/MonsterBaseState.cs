@@ -28,7 +28,10 @@ public class MonsterBaseState : Istate
         ApplyForcesOnly();
     }
     public virtual void OnAttackHit() { }
-    public virtual void OnAnimationComplete() { }
+    public virtual void OnAnimationComplete()
+    {
+        
+    }
 
     protected void StartAnimation(int animationHash)
     {

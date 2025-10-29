@@ -15,9 +15,10 @@ public class MonsterAIEvents : MonoBehaviour
     public float attackCooldown = 3f;
     public float lastAttackTime;
 
-    private enum AIMode { Idle, Chase, Attack }
-    private AIMode currentMode = AIMode.Idle;
+    public enum AIMode { Chase, CombatIdle, Attack } // 기존 private에서 public으로 변경
+    [SerializeField] private AIMode currentMode = AIMode.CombatIdle; // 인스펙터에서 수정 가능하도록 설정
     private bool processingEnabled = true;
+    private bool combatIdleStarted = false;
 
     //FailSafe
     private float idleTimer;
@@ -26,9 +27,7 @@ public class MonsterAIEvents : MonoBehaviour
     private void Awake()
     {
         if (PlayerManager.Instance != null)
-        {
             PlayerManager.Instance.OnActiveCharacterChanged += UpdatePlayerReference;
-        }
 
         UpdatePlayerReference(PlayerManager.Instance?.ActiveCharacter);
     }
@@ -36,41 +35,27 @@ public class MonsterAIEvents : MonoBehaviour
     private void OnDestroy()
     {
         if (PlayerManager.Instance != null)
-        {
             PlayerManager.Instance.OnActiveCharacterChanged -= UpdatePlayerReference;
-        }
     }
 
     private void UpdatePlayerReference(PlayerCharacter newPlayer)
     {
         if (newPlayer != null)
-        {
             player = newPlayer.transform;
-            Debug.Log($"[MonsterAIEvents] Target updated to new player: {newPlayer.name}");
-        }
-        else
-        {
-            Debug.LogError("[MonsterAIEvents] Tried to update to null player!");
-        }
     }
 
     private void Update()
     {
+
         if (!processingEnabled || player == null || stateMachine == null)
             return;
 
         if (PlayerManager.Instance.ActiveCharacter.Ability.IsDeath)
         {
-            if (currentMode != AIMode.Idle)
-            {
-                currentMode = AIMode.Idle;
-                RestingPhase?.Invoke();
-                stateMachine.ChangeState(stateMachine.MonsterIdleState);
-            }
+            currentMode = AIMode.CombatIdle;
             return;
         }
 
-        stateMachine.Monster.PickPatternByCondition();
         float distance = Vector3.Distance(transform.position, player.position);
         float detectRange = stateMachine.Monster.Stats.DetectRange;
         float attackRange = stateMachine.Monster.GetCurrentSkillRange();
@@ -79,48 +64,63 @@ public class MonsterAIEvents : MonoBehaviour
 
         if (!stateMachine.isAttacking)
         {
+            if (distance < detectRange - chaseBuffer)
+            {
+                currentMode = AIMode.Chase;
+            }
+
             if (distance <= attackRange)
             {
-                // 사정거리 들어갈때에는
-                if (Time.time >= lastAttackTime + attackCooldown)
-                    newMode = AIMode.Attack;
-                else
-                    newMode = AIMode.Idle; //공격이 불가능하다면 Idle로 변경
+                currentMode = Time.time >= lastAttackTime + attackCooldown ? AIMode.Attack : AIMode.CombatIdle;
             }
             else if (distance <= detectRange - chaseBuffer)
             {
-                // 공격 사정거리에 없지만, 플레이어를 인지하는 상태
-                newMode = AIMode.Chase;
+                currentMode = AIMode.Chase;
             }
-            else if (distance > detectRange + idleBuffer)
+            else
             {
-                //너무 멀면 Idle상태
-                newMode = AIMode.Idle;
+                currentMode = AIMode.CombatIdle; // keep idle animation
             }
         }
         else
-        {
-            // 공격을 하면서 사정거리에 벗어나면 다시 따라간다.
+        {/*
             if (distance > attackRange * 1.2f)
+            {
                 newMode = AIMode.Chase;
+            }*/
         }
 
-        if (newMode != currentMode)
+
+        switch (currentMode)
         {
-            currentMode = newMode;
-            switch (newMode)
-            {
-                case AIMode.Attack:
-                    OnInAttackRange?.Invoke();
-                    lastAttackTime = Time.time;
-                    break;
-                case AIMode.Chase:
-                    stateMachine.Monster.PlayerTarget = player;
-                    break;
-                case AIMode.Idle:
+            case AIMode.Attack:
+                OnInAttackRange?.Invoke();
+                lastAttackTime = Time.time;
+                combatIdleStarted = false;
+                break;
+            case AIMode.Chase:
+                //Debug.Log($"Entering Chase mode. Distance to player: {distance}, DetectRange: {detectRange}, ChaseBuffer: {chaseBuffer}");
+                stateMachine.Monster.PlayerTarget = player;
+                combatIdleStarted = false;
+                break;
+            case AIMode.CombatIdle:
+                //Debug.Log("Entering CombatIdle mode.");
+                stateMachine.Monster.PlayerTarget = player;
+                if (!combatIdleStarted)
+                {
+                    combatIdleStarted = true;
                     RestingPhase?.Invoke();
-                    break;
-            }
+                }
+                break;
+        }
+
+
+        // Continuously check for cooldown
+        if (currentMode == AIMode.CombatIdle && Time.time >= lastAttackTime + attackCooldown && distance <= attackRange)
+        {
+            currentMode = AIMode.Attack;
+            OnInAttackRange?.Invoke();
+            lastAttackTime = Time.time;
         }
 
         if (currentMode == AIMode.Chase)
@@ -128,24 +128,9 @@ public class MonsterAIEvents : MonoBehaviour
             stateMachine.Monster.PlayerTarget = player;
             OnPlayerDetected?.Invoke();
         }
-
-        if (currentMode == AIMode.Idle)
-        {
-            idleTimer += Time.deltaTime;
-            if (idleTimer >= idleResetTime)
-            {
-                idleTimer = 0;
-                currentMode = AIMode.Chase;
-                OnPlayerDetected?.Invoke();
-            }
-        }
     }
 
-    public void SetStateMachine(MonsterStateMachine sm)
-    {
-        stateMachine = sm;
-    }
-
+    public void SetStateMachine(MonsterStateMachine sm) => stateMachine = sm;
     public void Disable() => processingEnabled = false;
     public void Enable() => processingEnabled = true;
 }

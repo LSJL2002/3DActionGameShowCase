@@ -23,7 +23,13 @@ public class MonsterStatHandler : MonoBehaviour
     public List<MonsterSkillSO> MonsterSkills;
 
     private Dictionary<string, MonsterSkillSO> skillDict;
-    public event Action OnHealthChanged;
+    // 현재 다이얼로그 임계값
+    private float currentDialogueThreshold = 0.90f;
+
+    // 다이얼로그 임계값 목록
+    private readonly float[] dialogueThresholds = { 0.90f, 0.60f, 0.30f, 0.10f };
+
+
 
     void Awake()
     {
@@ -76,16 +82,54 @@ public class MonsterStatHandler : MonoBehaviour
         return false;
     }
 
-    // public void ApplyDamage(int amount)
-    // {
-    //     int damage = amount - Defense;
-    //     CurrentHP -= damage;
-    //     CurrentHP = Mathf.Max(0, CurrentHP);
-    //     OnHealthChanged?.Invoke();
-    // }
+    public void UpdateHealthUI()
+    {
+        EventsManager.Instance.TriggerEvent(GameEvent.OnHealthChanged);
+        if (monsterData.id == 10000001)
+        {
+            CheckHealthThresholds();
+        }
+    }
 
     public void Die()
     {
         Debug.Log($"{monsterData.monsterName} 사망!");
+    }
+
+    private void CheckHealthThresholds()
+    {
+        float hpPercent = CurrentHP / maxHp;
+
+        // 현재 임계값에 도달했는지 확인
+        if (hpPercent <= currentDialogueThreshold)
+        {
+            CallDialogue();
+
+            // 다음 임계값으로 업데이트
+            UpdateDialogueThreshold();
+        }
+    }
+    private void UpdateDialogueThreshold()
+    {
+        // 현재 임계값의 인덱스를 찾고 다음 임계값으로 이동
+        int currentIndex = Array.IndexOf(dialogueThresholds, currentDialogueThreshold);
+        if (currentIndex < dialogueThresholds.Length - 1)
+        {
+            currentDialogueThreshold = dialogueThresholds[currentIndex + 1];
+        }
+        else
+        {
+            // 더 이상 임계값이 없으면 무효화
+            currentDialogueThreshold = -1f;
+        }
+    }
+
+    public async void CallDialogue()
+    {
+        // 현재 체력 비율 계산
+        float hpPercent = (CurrentHP / maxHp);
+        await UIManager.Instance.Show<TutorialUI>();
+        UIManager.Instance.Get<TutorialUI>().TryPlayBossThresholdDialogue(SceneType.Boss_1, hpPercent);
+
     }
 }

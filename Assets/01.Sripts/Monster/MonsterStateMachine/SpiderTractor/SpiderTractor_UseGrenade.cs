@@ -9,6 +9,9 @@ public class SpiderTractor_UseGrenade : BaseMonster
     public GameObject stampEffect;
     [Header("FangFallSkill")]
     public GameObject fangFallEffect;
+    [Header("Bombardment")]
+    public GameObject missile;
+    public Transform firePointMissile;
     protected override MonsterBaseState GetStateFromEnum(States stateEnum)
     {
         switch (stateEnum)
@@ -19,6 +22,7 @@ public class SpiderTractor_UseGrenade : BaseMonster
             case States.Skill1: return stateMachine.SpiderMachine_AttackStamp;
             case States.Skill2: return stateMachine.SpiderMachine_FangFall;
             case States.Skill3: return stateMachine.SpiderMachine_Spin;
+            case States.Skill4: return stateMachine.SpiderMachine_Bombardment;
             default: return null;
         }
     }
@@ -31,6 +35,8 @@ public class SpiderTractor_UseGrenade : BaseMonster
             return Stats.GetSkill("SpiderMachine_Fangfall").skillUseRange;
         if (state is SpiderMachine_Spin)
             return Stats.GetSkill("SpiderMachine_Spin").skillUseRange;
+        if (state is SpiderMachine_Bombardment)
+            return Stats.GetSkill("SpiderMachine_Bombardment").skillUseRange;
         return Stats.AttackRange;
     }
 
