@@ -144,6 +144,8 @@ public partial class GameUI : UIBase
             activeHPImage_Back.DOKill();
             activeHPText.DOKill();
             activeHPText.DOColor(Color.white, 0f);
+            activeHPImage_Front.DOFillAmount(playerHPpercentage, 0f);
+            activeHPImage_Back.DOFillAmount(playerHPpercentage, 0f);
         }
     }
 }
