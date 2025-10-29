@@ -34,6 +34,7 @@ public class TutorialUI : UIBase
     private bool bossOneIntroPlayed = false;
     // 목스터 생명 수치
     private bool bossOneAt90Played, bossOneAt60Played, bossOneAt30Played, bossOneAt10Played, bossOneAt0Played;
+    private bool bossOne_Lived = true;
     // 선택 후 대화
     private bool bossOneAfterSelectPlayed = false;
 
@@ -230,6 +231,7 @@ public class TutorialUI : UIBase
     // 보스 체력상태에 따라 대화 출력하는 함수
     public void TryPlayBossThresholdDialogue(SceneType type, float hpPercent)
     {
+        if(bossOne_Lived==false) return; // 이미 사망한 보스면 대화 안나오게
         if (type != SceneType.Boss_1) return;
         Debug.Log($"{bossOneAt90Played}");
         Debug.Log($"[TutorialUI] TryPlayBossThresholdDialogue 호출: hpPercent={hpPercent}");
@@ -261,6 +263,8 @@ public class TutorialUI : UIBase
             bossOneAt10Played = true;
             TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010027);
             if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
+            bossOne_Lived = false; // 보스 사망 처리
+
         }
 
         if (!bossOneAt0Played && hpPercent <= 0.001f)
@@ -274,9 +278,11 @@ public class TutorialUI : UIBase
                     scene.Add(text);
                 }
             }
+            
             scene.Sort((a, b) => a.id.CompareTo(b.id));
             StartCoroutine(ShowText(scene, 2.0f));
         }
+        
     }
 
     // 보스 처치 후 능력 선택 때 호출 함수
