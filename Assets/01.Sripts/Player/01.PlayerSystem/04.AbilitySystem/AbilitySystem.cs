@@ -67,9 +67,7 @@ public class AbilitySystem : MonoBehaviour
     private void TryMove(Vector2 moveInput)
     {
         sm.MovementInput = moveInput;
-        if (BlockInput()) return;
-        if (IsUsingSkill) return;
-        if (IsAttacking) return;
+        if (BlockInput() || IsUsingSkill || IsAttacking) return;
 
         if (moveInput.sqrMagnitude > 0.01f && sm.CurrentState != sm.WalkState)
             sm.ChangeState(sm.WalkState);
@@ -85,16 +83,14 @@ public class AbilitySystem : MonoBehaviour
 
     private void TryDodge()
     {
-        if (BlockInput()) return;
-        if (!Attr.EvadeBuffer.Use()) return;
+        if (BlockInput() || !Attr.EvadeBuffer.Use()) return;
 
         sm.ChangeState(sm.DodgeState);
     }
 
     private void TryAttack()
     {
-        if (BlockInput()) return;
-        if (IsUsingSkill) return;
+        if (BlockInput() || IsUsingSkill) return;
 
         // 이미 공격 상태라면 FSM 바꾸지 않고, 모듈로 입력만 전달
         if (IsAttacking)
@@ -112,10 +108,7 @@ public class AbilitySystem : MonoBehaviour
 
     private void TrySkill()
     {
-        if (BlockInput()) return;
-        if (IsUsingSkill) return;
-        if (IsAttacking) return;
-        if (!Attr.SkillBuffer.Use()) return; // 리소스 체크 등
+        if (BlockInput() || IsUsingSkill || IsAttacking || !Attr.SkillBuffer.Use()) return;
 
         sm.ChangeState(sm.SkillState);
         sm.CurrentBattleModule?.OnSkillStart();
@@ -126,15 +119,11 @@ public class AbilitySystem : MonoBehaviour
 
     public void TrySwap(bool next)
     {
-        if (BlockInput()) return;
-        if (IsAttacking) return;
-        if (IsUsingSkill) return;
+        if (BlockInput() || IsAttacking || IsUsingSkill) return;
 
-        // 살아있는 캐릭터 수 체크
-        if (sm.Player.PlayerManager.AliveCount <= 1) return;
+        if (sm.Player.PlayerManager.AliveCount <= 1) return; // 살아있는 캐릭터 수 체크
 
         IsSwapping = true;
-
         if (next)
             sm.Player.PlayerManager.SwapNext();
         else
@@ -158,8 +147,7 @@ public class AbilitySystem : MonoBehaviour
     // ===================== 상태 제어 메서드 =====================
     public void ApplyKnockback(Vector3 dir, float force, float time)
     {
-        if (IsInvincible) return;
-        // 스왑 시도 중이면 패링 성공 처리
+        if (IsInvincible || IsDeath) return;
         if (IsSwapping)
         {
             //OnParryKnockback(); // 공격 막힘 + 반격 이벤트
@@ -174,8 +162,7 @@ public class AbilitySystem : MonoBehaviour
 
     public void ApplyStun(float duration)
     {
-        if (IsInvincible) return;
-        // 스왑 시도 중이면 패링 성공 처리
+        if (IsInvincible || IsDeath) return;
         if (IsSwapping)
         {
             //OnParryKnockback(); // 공격 막힘 + 반격 이벤트
@@ -212,7 +199,6 @@ public class AbilitySystem : MonoBehaviour
     // =================== 조건 로직 ===================
     private bool BlockInput()
     {
-        // 입력을 막는 모든 조건
         return IsStun || IsKnockback || IsDeath || IsJumping || IsDodging || IsSwapping;
     }
 
