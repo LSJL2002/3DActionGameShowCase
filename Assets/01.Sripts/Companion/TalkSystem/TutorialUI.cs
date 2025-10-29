@@ -49,12 +49,12 @@ public class TutorialUI : UIBase
         if (UIManager.Instance.tutorialEnabled)
         {
             // n초 대기 후 실행
-            DOVirtual.DelayedCall(6f, () => 
+            DOVirtual.DelayedCall(6f, () =>
             {
                 // 각 UI 알파값 1로 변경(페이드인 효과)
                 tutorialUICanvasGroup.DOFade(1f, 1f);
                 PlayDialogue(SceneType.Tutorial);
-            });            
+            });
         }
     }
 
@@ -116,7 +116,7 @@ public class TutorialUI : UIBase
 
                 // 0.05초 대기 or X키 입력 시 즉시 스킵
                 float elapsed = 0.0f;
-                while (elapsed < 0.05f) 
+                while (elapsed < 0.05f)
                 {
                     bool holding = Input.GetKeyUp(KeyCode.X);
                     UpdateSkipUI(holding);
@@ -207,7 +207,7 @@ public class TutorialUI : UIBase
     public void PlayBossDialogue(SceneType type)
     {
         if (type != SceneType.Boss_1 || bossOneIntroPlayed) return;
-        
+
         List<TextSO> scene = new List<TextSO>();
 
         foreach (TextSO text in dialogues)
@@ -231,12 +231,15 @@ public class TutorialUI : UIBase
     public void TryPlayBossThresholdDialogue(SceneType type, float hpPercent)
     {
         if (type != SceneType.Boss_1) return;
-
+        Debug.Log($"{bossOneAt90Played}");
+        Debug.Log($"[TutorialUI] TryPlayBossThresholdDialogue 호출: hpPercent={hpPercent}");
         if (!bossOneAt90Played && hpPercent <= 0.90f)
         {
             bossOneAt90Played = true;
             TextSO match = dialogues.Find(d => d.scenes == type.ToString() && d.id == 50010024);
             if (match != null) StartCoroutine(ShowText(new List<TextSO> { match }, 2.0f));
+            Debug.Log($"[TutorialUI] Showing dialogue for Boss at 90% HP: ID={match.id}, Content={match.textContent}");
+
         }
 
         if (!bossOneAt60Played && hpPercent <= 0.60f)
@@ -271,8 +274,8 @@ public class TutorialUI : UIBase
                     scene.Add(text);
                 }
             }
-            scene.Sort((a, b) => a.id.CompareTo(b.id)); 
-            StartCoroutine(ShowText(scene, 2.0f));      
+            scene.Sort((a, b) => a.id.CompareTo(b.id));
+            StartCoroutine(ShowText(scene, 2.0f));
         }
     }
 
