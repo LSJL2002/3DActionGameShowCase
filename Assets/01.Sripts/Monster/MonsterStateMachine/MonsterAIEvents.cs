@@ -46,7 +46,6 @@ public class MonsterAIEvents : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(currentMode);
 
         if (!processingEnabled || player == null || stateMachine == null)
             return;
@@ -61,7 +60,8 @@ public class MonsterAIEvents : MonoBehaviour
         float detectRange = stateMachine.Monster.Stats.DetectRange;
         float attackRange = stateMachine.Monster.GetCurrentSkillRange();
 
-  
+        AIMode newMode = currentMode;
+
         if (!stateMachine.isAttacking)
         {
             if (distance < detectRange - chaseBuffer)
@@ -70,7 +70,7 @@ public class MonsterAIEvents : MonoBehaviour
             }
 
             if (distance <= attackRange)
-            {   
+            {
                 currentMode = Time.time >= lastAttackTime + attackCooldown ? AIMode.Attack : AIMode.CombatIdle;
             }
             else if (distance <= detectRange - chaseBuffer)
@@ -90,30 +90,30 @@ public class MonsterAIEvents : MonoBehaviour
             }*/
         }
 
-            
-            switch (currentMode)
-            {
-                case AIMode.Attack:
-                    OnInAttackRange?.Invoke();
-                    lastAttackTime = Time.time;
-                    combatIdleStarted = false;
-                    break;
-                case AIMode.Chase:
-                    Debug.Log($"Entering Chase mode. Distance to player: {distance}, DetectRange: {detectRange}, ChaseBuffer: {chaseBuffer}");
-                    stateMachine.Monster.PlayerTarget = player;
-                    combatIdleStarted = false;
-                    break;
-                case AIMode.CombatIdle:
-                    Debug.Log("Entering CombatIdle mode.");
-                    stateMachine.Monster.PlayerTarget = player;
-                    if (!combatIdleStarted)
-                    {
-                        combatIdleStarted = true;
-                        RestingPhase?.Invoke();
-                    }
-                    break;
-            }
-   
+
+        switch (currentMode)
+        {
+            case AIMode.Attack:
+                OnInAttackRange?.Invoke();
+                lastAttackTime = Time.time;
+                combatIdleStarted = false;
+                break;
+            case AIMode.Chase:
+                //Debug.Log($"Entering Chase mode. Distance to player: {distance}, DetectRange: {detectRange}, ChaseBuffer: {chaseBuffer}");
+                stateMachine.Monster.PlayerTarget = player;
+                combatIdleStarted = false;
+                break;
+            case AIMode.CombatIdle:
+                //Debug.Log("Entering CombatIdle mode.");
+                stateMachine.Monster.PlayerTarget = player;
+                if (!combatIdleStarted)
+                {
+                    combatIdleStarted = true;
+                    RestingPhase?.Invoke();
+                }
+                break;
+        }
+
 
         // Continuously check for cooldown
         if (currentMode == AIMode.CombatIdle && Time.time >= lastAttackTime + attackCooldown && distance <= attackRange)
