@@ -10,6 +10,7 @@ public enum SceneType
 {
     Tutorial,
     Boss_1,
+    Boss_1_Death,
 }
 
 public enum Speaker
@@ -44,8 +45,6 @@ public class TutorialUI : UIBase
 
     protected override void Awake()
     {
-        base.Awake();
-
         // UI매니저의 튜토리얼 재생 여부 확인 후 재생
         if (UIManager.Instance.tutorialEnabled)
         {
@@ -59,13 +58,7 @@ public class TutorialUI : UIBase
         }
     }
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = false;
-    }
+    protected override void OnEnable() { }
 
     #region Tutorial
     IEnumerator ShowText(List<TextSO> scene, float time)
@@ -234,6 +227,7 @@ public class TutorialUI : UIBase
         StartCoroutine(ShowText(scene, 2.5f));
     }
 
+    // 보스 체력상태에 따라 대화 출력하는 함수
     public void TryPlayBossThresholdDialogue(SceneType type, float hpPercent)
     {
         if (type != SceneType.Boss_1) return;
@@ -282,6 +276,26 @@ public class TutorialUI : UIBase
         }
     }
 
+    // 보스 처치 후 능력 선택 때 호출 함수
+    public void PlayBossBeforeSelection(SceneType type)
+    {
+        List<TextSO> scene = new List<TextSO>();
+        foreach (TextSO text in dialogues)
+        {
+            // 50010032 ~ 50010033 두 줄만 수집
+            if (text.scenes == type.ToString() && text.id >= 50010028 && text.id <= 50010031)
+            {
+                scene.Add(text);
+            }
+        }
+
+        scene.Sort((a, b) => a.id.CompareTo(b.id));
+        bossOneAfterSelectPlayed = true;
+
+        StartCoroutine(ShowText(scene, 2.0f));
+    }
+
+    // 보스룸 클리어 후 호출 함수
     public void PlayBossAfterSelection(SceneType type)
     {
         List<TextSO> scene = new List<TextSO>();

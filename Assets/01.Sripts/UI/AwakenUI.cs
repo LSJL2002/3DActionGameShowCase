@@ -34,8 +34,6 @@ public class AwakenUI : UIBase
 
     protected override void OnEnable()
     {
-        base.OnEnable();
-
         InstanceFillGauge(); // 게이지 종류별로 FillGauge 인스턴스 (gaugeCount만큼)
         
         // 구독

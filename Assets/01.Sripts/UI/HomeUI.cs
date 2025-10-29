@@ -47,6 +47,7 @@ public class HomeUI : UIBase
                 SaveManager.Instance.gameMode = eGameMode.NewGame;
                 SaveManager.Instance.DeleteSaveFile();
                 SceneLoadManager.Instance.ChangeScene(2, null, LoadSceneMode.Single);
+                Cursor.lockState = CursorLockMode.Locked;
                 break;
 
             case "LoadStart":

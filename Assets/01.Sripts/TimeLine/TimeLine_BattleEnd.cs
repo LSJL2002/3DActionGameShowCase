@@ -7,15 +7,14 @@ public class TimeLine_BattleEnd : TimeLineBase
         playableDirector.Play();
 
         playableDirector.stopped += OnTimeLineStop;
-
-      
     }
 
-    protected override void OnDisable()
+    protected async override void OnDisable()
     {
         base.OnDisable();
 
         playableDirector.stopped -= OnTimeLineStop;
-       
+        await UIManager.Instance.Show<TutorialUI>();
+        UIManager.Instance.Get<TutorialUI>().PlayBossBeforeSelection(SceneType.Boss_1_Death);
     }
 }

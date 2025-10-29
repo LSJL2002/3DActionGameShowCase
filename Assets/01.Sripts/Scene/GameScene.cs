@@ -10,9 +10,6 @@ public class GameScene : SceneBase
         base.Awake();
         // 타임라인매니저 최초 인스턴스용 호출
         TimeLineManager timeLineManager = TimeLineManager.Instance;
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     protected async override void Start()

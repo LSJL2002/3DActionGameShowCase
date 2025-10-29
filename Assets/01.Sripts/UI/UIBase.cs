@@ -27,11 +27,7 @@ public class UIBase : MonoBehaviour
         Cursor.visible = true;
     }
 
-    protected virtual void Start() 
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
+    protected virtual void Start() { }
 
     protected virtual void Update() { }
 

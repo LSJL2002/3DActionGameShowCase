@@ -24,7 +24,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
     public GameObject AreaEffectPoint;
     public bool IsDead { get; set; }
     [HideInInspector] public bool hasStartedCombat = false;
-    public event Action OnAttackAnimationCompleteEvent;
     private readonly List<GameObject> activeAOEs = new List<GameObject>();
     [HideInInspector] public bool hasDetectedPlayer = false;
     public MonsterStateMachine stateMachine;
@@ -34,10 +33,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
     protected int currentStepIndex = 0;
     protected bool isRunningPattern = false;
     private bool ignoreDistanceCheck = false;
-
-    // 체력이 변경될 때 호출될 이벤트
-    public static event System.Action OnEnemyHealthChanged;
-
     public Collider baseAttackCollider;
     [Header("Movement & Gravity")]
     [SerializeField] private float gravity = -9.81f;
@@ -194,49 +189,54 @@ public class BaseMonster : MonoBehaviour, IDamageable
             }
 
             float skillRange = GetSkillRangeFromState(attackState);
-            if (!ignoreDistanceCheck) // If ignore distance check is true, then just perform the attack
+
+            // --- Wait until player is in range (unless ignoring distance) ---
+            if (!ignoreDistanceCheck)
             {
                 float waitTime = 0f;
                 bool inRange = false;
                 yield return new WaitUntil(() =>
                 {
                     waitTime += Time.deltaTime;
-                    inRange = (PlayerTarget != null && Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange);
+                    inRange = (PlayerTarget != null &&
+                            Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange);
                     return inRange || waitTime >= 5f;
                 });
 
                 if (!inRange)
                 {
-                    //Debug.Log($"{name} stopped pattern {currentPattern.id} after 5s timeout");
+                    // Player moved away — stop pattern
                     break;
                 }
             }
+
             // --- Perform attack ---
             stateMachine.isAttacking = true;
             stateMachine.ChangeState(attackState);
+
             if (!hasStartedCombat)
-            {
                 hasStartedCombat = true;
-            }
 
             // Wait until attack finishes
             yield return new WaitUntil(() => !stateMachine.isAttacking);
 
-            // --- Return to Idle after attack ---
-            if (!(stateMachine.CurrentState is MonsterIdleState))
-            {
-                stateMachine.ChangeState(stateMachine.MonsterIdleState);
-                yield return new WaitForSeconds(0.3f); // lock in Idle for a bit
-            }
+            // --- Return to Idle for a moment before next attack ---
+            stateMachine.ChangeState(stateMachine.MonsterIdleState);
+            yield return new WaitForSeconds(0.3f); // short reset time (tweak as needed)
 
             currentStepIndex++;
-            yield return new WaitForSeconds(0.2f); // small delay between steps
         }
+
+        // --- Pattern finished, cooldown before new one ---
         float cooldown = UnityEngine.Random.Range(1f, 3f);
         yield return new WaitForSeconds(cooldown);
+
         currentPattern = null;
         currentPatternPriority = -1;
         isRunningPattern = false;
+
+        // Return to idle after finishing pattern
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
     public float GetCurrentSkillRange()
@@ -274,8 +274,10 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
     public void OnAttackAnimationComplete()
     {
-        stateMachine.isAttacking = false;
-        OnAttackAnimationCompleteEvent?.Invoke();
+        if (stateMachine.CurrentState is MonsterBaseState)
+        {
+            (stateMachine.CurrentState as MonsterBaseState).OnAnimationComplete();
+        }
     }
 
     public void OnAttackHitEvent()
@@ -287,8 +289,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
     {
         float damage = Mathf.Max(1, amount - Stats.Defense);
         Stats.CurrentHP -= damage;
-        Stats.ApplyDamage(amount);
-
+        Stats.UpdateHealthUI();
         if (Stats.CurrentHP <= 0 && !IsDead)
         {
             Stats.Die();
@@ -296,8 +297,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
             Stats.CurrentHP = 0;
             stateMachine.ChangeState(stateMachine.MonsterDeathState);
         }
-
-        OnEnemyHealthChanged?.Invoke(); // 체력이 변경될 때 이벤트 호출
     }
 
     public void ApplyEffect(MonsterEffectType effectType, Vector3 sourcePosition, float effectValue = 0f, float duration = 0f)

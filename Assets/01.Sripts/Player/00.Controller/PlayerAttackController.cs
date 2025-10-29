@@ -145,8 +145,6 @@ public class PlayerAttackController : MonoBehaviour
         int damage = Mathf.RoundToInt(player.Attr.Attack.Value * damageMultiplier);
         target.OnTakeDamage(damage);
 
-        Debug.LogWarning($"Player: {damage}");
-
         // 타격 효과 & 카메라 흔들림
         string fxName = player.CharacterType switch
         {

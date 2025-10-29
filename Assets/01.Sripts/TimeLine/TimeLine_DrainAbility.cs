@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class TimeLine_DrainAbility : TimeLineBase
 {
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -25,7 +21,10 @@ public class TimeLine_DrainAbility : TimeLineBase
 
         playableDirector.stopped -= OnTimeLineStop;
 
+        if (UIManager.Instance == null) return;
         await UIManager.Instance.Show<TutorialUI>();
         UIManager.Instance.Get<TutorialUI>().PlayBossAfterSelection(SceneType.Boss_1);
+        AudioManager.Instance.StopBGM();
+        AudioManager.Instance.PlayBGM("InGameBGM");
     }
 }
