@@ -198,8 +198,8 @@ public class BaseMonster : MonoBehaviour, IDamageable
                 yield return new WaitUntil(() =>
                 {
                     waitTime += Time.deltaTime;
-                    inRange = (PlayerTarget != null &&
-                            Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange);
+                    if (IsDead || PlayerTarget == null) return true; // early exit
+                    inRange = Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange;
                     return inRange || waitTime >= 5f;
                 });
 

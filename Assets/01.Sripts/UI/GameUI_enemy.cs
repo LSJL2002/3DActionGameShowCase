@@ -1,5 +1,6 @@
 using DG.Tweening;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -100,7 +101,8 @@ public partial class GameUI : UIBase
     private void OnEnemyHealthChanged()
     {
         // 체력 텍스트 업데이트
-        enemyHPText.text = monsterStats.CurrentHP.ToString("#,##0");
+        float monsterCurrentHealth = Mathf.Max(monsterStats.CurrentHP, 0); // 0이하로 안내려가게
+        enemyHPText.text = monsterCurrentHealth.ToString("#,##0");
 
         enemyDamageSequence.Kill(); // 이전 시퀀스가 실행중이면 종료
 
