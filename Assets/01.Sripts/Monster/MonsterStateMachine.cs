@@ -127,8 +127,6 @@ public class MonsterStateMachine : StateMachine
         aiEvents.SetStateMachine(this);
 
         EnableAIEvents();
-
-        ChangeState(MonsterIdleState);
     }
 
     public new void ChangeState(Istate newState)
