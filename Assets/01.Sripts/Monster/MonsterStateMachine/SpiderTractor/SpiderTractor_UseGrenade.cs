@@ -19,10 +19,12 @@ public class SpiderTractor_UseGrenade : BaseMonster
             case States.BaseAttack: return stateMachine.MonsterBaseAttack;
             case States.BaseAttack2: return stateMachine.MonsterBaseAttackAlt;
             case States.TurnLeft: return stateMachine.SpiderMachine_TurnLeft;
+            case States.TurnRight: return stateMachine.SpiderMachine_TurnRight;
             case States.Skill1: return stateMachine.SpiderMachine_AttackStamp;
             case States.Skill2: return stateMachine.SpiderMachine_FangFall;
             case States.Skill3: return stateMachine.SpiderMachine_Spin;
             case States.Skill4: return stateMachine.SpiderMachine_Bombardment;
+            case States.Skill5: return stateMachine.SpiderMachine_BackJump;
             default: return null;
         }
     }

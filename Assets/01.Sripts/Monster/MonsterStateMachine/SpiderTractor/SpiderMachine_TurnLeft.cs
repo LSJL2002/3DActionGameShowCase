@@ -7,7 +7,6 @@ public class SpiderMachine_TurnLeft : MonsterBaseState
     private Coroutine moveCoroutine;
 
     private float moveSpeed = 12f;
-    private float stopDistance = 0.1f;
     private float leftOffset = 5f;
 
     public SpiderMachine_TurnLeft(MonsterStateMachine stateMachine, MonsterSkillSO turnLeftSkill)
@@ -20,40 +19,37 @@ public class SpiderMachine_TurnLeft : MonsterBaseState
     {
         if (moveCoroutine != null)
             stateMachine.Monster.StopCoroutine(moveCoroutine);
+
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Run));
-        moveCoroutine = stateMachine.Monster.StartCoroutine(MoveToLeftOfPlayer());
+        moveCoroutine = stateMachine.Monster.StartCoroutine(MoveAroundPlayer90());
         stateMachine.isAttacking = true;
     }
 
-    private IEnumerator MoveToLeftOfPlayer()
+    private IEnumerator MoveAroundPlayer90()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
-        {
-            Debug.LogWarning("Player not found for TurnLeft state.");
-            stateMachine.ChangeState(stateMachine.MonsterIdleState);
-            yield break;
-        }
-
         Transform monsterTransform = stateMachine.Monster.transform;
-        Vector3 playerPos = player.transform.position;
+        Vector3 playerPos = stateMachine.Monster.PlayerTarget.position;
 
-        // Calculate left side of the player (relative to player's facing direction)
-        Vector3 leftSide = player.transform.position - player.transform.right * leftOffset;
+        Vector3 direction = monsterTransform.position - playerPos;
+        direction.y = 0;
 
-        // Rotate monster to face the player while moving
-        Quaternion targetRotation = Quaternion.LookRotation(playerPos - monsterTransform.position);
+        Vector3 targetDirection = Quaternion.Euler(0, -90f, 0) * direction;
 
-        while (Vector3.Distance(monsterTransform.position, leftSide) > stopDistance)
+        Vector3 targetPos = playerPos + targetDirection.normalized * leftOffset;
+
+        while (Vector3.Distance(monsterTransform.position, targetPos) > 0.05f)
         {
-            monsterTransform.position = Vector3.MoveTowards(monsterTransform.position, leftSide, moveSpeed * Time.deltaTime);
-            monsterTransform.rotation = Quaternion.Lerp(monsterTransform.rotation, targetRotation, Time.deltaTime * 5f);
+            monsterTransform.position = Vector3.MoveTowards(monsterTransform.position, targetPos, moveSpeed * Time.deltaTime);
+            monsterTransform.rotation = Quaternion.Lerp(monsterTransform.rotation,
+                Quaternion.LookRotation(playerPos - monsterTransform.position),
+                Time.deltaTime * 5f);
             yield return null;
         }
 
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Run));
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
+
 
     public override void Exit()
     {

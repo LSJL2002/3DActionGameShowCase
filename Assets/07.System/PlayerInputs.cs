@@ -170,7 +170,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""4eadf7cd-77da-459b-821f-72ea6f5d280c"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -573,10 +573,10 @@ namespace UnityEngine.InputSystem
                 {
                     ""name"": """",
                     ""id"": ""f0815b3d-74d9-4b84-adb9-1a278ab42ac7"",
-                    ""path"": ""<Keyboard>/tab"",
+                    ""path"": ""<Joystick>/stick/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
