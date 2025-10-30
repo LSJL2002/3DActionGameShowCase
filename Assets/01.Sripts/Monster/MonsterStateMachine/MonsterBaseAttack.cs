@@ -47,7 +47,6 @@ public class MonsterBaseAttack : MonsterBaseState
             if (trigger != null)
             {
                 int attackPower = stateMachine.Monster.Stats.AttackPower;
-                Debug.Log(attackPower);
                 int finalDamage = Mathf.RoundToInt(attackPower);
                 trigger.SetDamage(finalDamage);
 
@@ -56,8 +55,6 @@ public class MonsterBaseAttack : MonsterBaseState
                     hasHit = true;
                     attackCollider.enabled = false;
                 };
-
-                Debug.Log($"[MonsterBaseAttack] Passed {finalDamage} damage to AttackTrigger.");
             }
 
             attackCollider.enabled = true;
@@ -66,7 +63,6 @@ public class MonsterBaseAttack : MonsterBaseState
 
     public override void OnAnimationComplete()
     {
-        Debug.Log("BaseAttackEscape");
         if (attackCollider != null)
             attackCollider.enabled = false;
 
