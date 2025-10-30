@@ -66,8 +66,11 @@ public class SmileMachineShootState : MonsterBaseState
 
     private void DealDamageInFront()
     {
-        Vector3 origin = stateMachine.Monster.transform.position + Vector3.up * 1.5f;
+        Vector3 origin = stateMachine.Monster.transform.position + Vector3.up;
         Vector3 direction = stateMachine.Monster.transform.forward;
+        Vector3 end = origin + direction * skillData.range;
+
+        // CreateDebugLine(origin, end);
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, skillData.range))
         {
@@ -76,7 +79,29 @@ public class SmileMachineShootState : MonsterBaseState
                 target.OnTakeDamage((int)(stateMachine.Monster.Stats.AttackPower * skillData.effectValue));
             }
         }
+        else
+        {
+        }
     }
+    // private void CreateDebugLine(Vector3 start, Vector3 end)
+    // {
+    //     GameObject lineObj = new GameObject("DebugRayLine");
+    //     LineRenderer lr = lineObj.AddComponent<LineRenderer>();
+    //     lr.positionCount = 2;
+    //     lr.SetPosition(0, start);
+    //     lr.SetPosition(1, end);
+    //     lr.startWidth = 0.05f;
+    //     lr.endWidth = 0.05f;
+
+    //     // Basic material (works without extra setup)
+    //     lr.material = new Material(Shader.Find("Sprites/Default"));
+    //     lr.startColor = Color.red;
+    //     lr.endColor = Color.red;
+
+    //     // Auto-destroy after 1 second
+    //     Object.Destroy(lineObj, 1f);
+    // }
+
 
     public override void Exit()
     {
