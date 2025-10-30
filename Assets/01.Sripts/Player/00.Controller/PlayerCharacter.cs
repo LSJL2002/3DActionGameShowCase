@@ -137,7 +137,6 @@ public class PlayerCharacter : MonoBehaviour
     {
         var vcam = _camera.FreeLookCam;
         if (vcam == null) return;
-
         float zoomSpeed = 3f;
         float fov = vcam.Lens.FieldOfView - Mathf.Sign(delta) * zoomSpeed;
         vcam.Lens.FieldOfView = Mathf.Clamp(fov, 10f, 70f);
@@ -147,30 +146,19 @@ public class PlayerCharacter : MonoBehaviour
     private void OnMenuToggle()
     {
         isPaused = !isPaused;
-        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = isPaused;
-        _camera.Volume_Blur.enabled = isPaused;
         Time.timeScale = isPaused ? 0f : 1f;
+        Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+
+        _camera.Volume_Blur.enabled = isPaused;
     }
     private void OnInventoryToggle()
     {
-        if (direction.inventory == null) return;
-        var inven = direction.inventory;
-        bool isActive = !inven.activeSelf;
-        inven.SetActive(isActive);
-
-        // 인벤토리 켜면 시간 멈추기, 끄면 다시 정상
-        Time.timeScale = isActive ? 0f : 1f;
-
-        // 옵션: 커서 락 해제
-        Cursor.lockState = isActive ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = isActive;
+        Time.timeScale = 0f;
+        PlayerManager.EnableInput(false);
+        direction.LoadScene();
+        _camera.MainCamera.gameObject.SetActive(false);
     }
-    private void OnLockOnToggle()
-    {
-        var cam = _camera;
-        cam.ToggleLockOnTarget(null); // 무조건 락온 해제
-    }
+    private void OnLockOnToggle() => _camera.ToggleLockOnTarget(null);
 
     public void Revive()
     {

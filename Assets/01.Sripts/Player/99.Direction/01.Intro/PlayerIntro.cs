@@ -13,7 +13,7 @@ public class PlayerIntro : MonoBehaviour
     public CinemachineSequencerCamera introCam;
 
     [Header("Intro Settings")]
-    [SerializeField] private float introDuration = 5f; // 카메라 연출 길이
+    [SerializeField] private float introDuration = 6f; // 카메라 연출 길이
 
     private void Start()
     {
