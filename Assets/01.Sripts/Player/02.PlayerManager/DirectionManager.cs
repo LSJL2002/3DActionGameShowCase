@@ -1,17 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DirectionManager : MonoBehaviour
 {
-    public GameObject inventory; // 켜고 끌 대상
+    [Header("Additive Scene")]
+    [SerializeField] private string previewSceneName = "ShowroomScene";
 
-    private void Awake()
+    private bool isLoaded = false;
+
+    public void LoadScene()
     {
-        inventory.SetActive(false);
+        if (isLoaded) return;
+        SceneManager.LoadScene(previewSceneName, LoadSceneMode.Additive);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        isLoaded = true;
     }
 
-    private void Update()
+    public void UnloadScene()
     {
+        if (!isLoaded) return;
+        SceneManager.UnloadSceneAsync(previewSceneName);
+        isLoaded = false;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != previewSceneName) return;
+
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

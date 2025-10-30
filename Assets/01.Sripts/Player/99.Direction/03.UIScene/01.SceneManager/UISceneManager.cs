@@ -1,27 +1,56 @@
+using System.Collections.Generic;
+using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UISceneManager : MonoBehaviour
 {
-    public static UISceneManager Instance;
+    [Header("Cinemachine")]
+    public CinemachineBrain brain;
+    public CinemachineSequencerCamera seqCam;
+    public CinemachineCamera CharCam;
 
-    public enum CameraMode { Gameplay, Inventory, Cutscene }
-    public CameraMode currentMode;
+    [Header("Panel")]
+    public GameObject IntroUI;
+    public GameObject CharUI;
+    [Header("UI Text")]
+    public TMP_Text nameText; // 텍스트에 띄울 이름
 
-    public delegate void CameraModeChanged(CameraMode mode);
-    public static event CameraModeChanged OnModeChanged;
 
-    void Awake() => Instance = this;
-
-    public void SetMode(CameraMode mode)
+    void Start()
     {
-        currentMode = mode;
-        OnModeChanged?.Invoke(mode);
+        if (IntroUI != null) IntroUI.SetActive(false);
+        if (CharUI != null) CharUI.SetActive(false);
     }
 
-    // 예: 키 입력으로 전환
-    void Update()
+    // UI 제어 메서드
+    public void ShowIntroUI() => IntroUI?.SetActive(true);
+    public void HideIntroUI() => IntroUI?.SetActive(false);
+    public void ShowCharUI() => CharUI?.SetActive(true);
+    public void HideCharUI() => CharUI?.SetActive(false);
+
+    public void UpdateUI(string name)
     {
-        if (Input.GetKeyDown(KeyCode.I))
-            SetMode(currentMode == CameraMode.Inventory ? CameraMode.Gameplay : CameraMode.Inventory);
+        if (nameText != null)
+        {
+            string verticalName = string.Join("\n", name.ToCharArray());
+            nameText.text = verticalName;
+        }
+
+        switch (name)
+        {
+            case "Yuki":
+                //ShowChar1UI();
+                break;
+
+            case "Aoi":
+                //ShowChar2UI();
+                break;
+
+            case "Mika":
+                //ShowChar3UI();
+                break;
+        }
     }
 }
