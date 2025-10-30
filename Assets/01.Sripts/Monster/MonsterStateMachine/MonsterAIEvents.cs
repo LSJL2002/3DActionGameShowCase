@@ -99,12 +99,10 @@ public class MonsterAIEvents : MonoBehaviour
                 combatIdleStarted = false;
                 break;
             case AIMode.Chase:
-                //Debug.Log($"Entering Chase mode. Distance to player: {distance}, DetectRange: {detectRange}, ChaseBuffer: {chaseBuffer}");
                 stateMachine.Monster.PlayerTarget = player;
                 combatIdleStarted = false;
                 break;
             case AIMode.CombatIdle:
-                //Debug.Log("Entering CombatIdle mode.");
                 stateMachine.Monster.PlayerTarget = player;
                 if (!combatIdleStarted)
                 {
@@ -131,8 +129,6 @@ public class MonsterAIEvents : MonoBehaviour
 
         if (stateMachine.isAttacking && Time.time >= lastAttackTime + attackCooldown + 1f)
         {
-            // something went wrong, reset
-            Debug.Log("Something went wrong....");
             stateMachine.isAttacking = false;
             currentMode = AIMode.CombatIdle;
         }

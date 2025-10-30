@@ -17,7 +17,6 @@ public class AttackTrigger : MonoBehaviour
         {
             other.GetComponent<IDamageable>()?.OnTakeDamage(damage);
             onHit?.Invoke();
-            Debug.Log($"[AttackTrigger] {name} hit {other.name} for {damage} damage!");
         }
     }
 }

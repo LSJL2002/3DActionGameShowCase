@@ -52,7 +52,6 @@ public class SmileMachine_Gernade : MonsterBaseState
         aoeController = aoeInstance.GetComponent<AreaEffectController>();
         if (aoeController == null)
         {
-            Debug.LogError("SmileMachine_Gernade: AOE prefab missing AreaEffectController!");
             stateMachine.isAttacking = false;
             yield break;
         }
@@ -87,7 +86,6 @@ public class SmileMachine_Gernade : MonsterBaseState
     {
         if (!(stateMachine.Monster is SmileMachine_UseMissile monster) || monster.gernade == null)
         {
-            Debug.LogWarning("SmileMachine_Gernade: Missing grenade prefab!");
             return;
         }
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));

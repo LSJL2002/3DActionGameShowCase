@@ -30,7 +30,6 @@ public class SmileMachine_FireShoot : MonsterBaseState
 
         if (skillData == null || firePoint == null || fireballPrefab == null)
         {
-            Debug.LogError("SmileMachine_FireShoot: Missing references!");
             stateMachine.isAttacking = false;
             return;
         }

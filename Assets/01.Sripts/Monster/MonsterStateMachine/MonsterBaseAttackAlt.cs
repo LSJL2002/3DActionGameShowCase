@@ -62,7 +62,6 @@ public class MonsterBaseAttackAlt : MonsterBaseState
                     attackCollider.enabled = false;
                 };
 
-                Debug.Log($"[MonsterBaseAttack] Passed {finalDamage} damage to AttackTrigger.");
             }
 
             attackCollider.enabled = true;
@@ -74,7 +73,6 @@ public class MonsterBaseAttackAlt : MonsterBaseState
         if (attackCollider != null)
             attackCollider.enabled = false;
 
-        Debug.Log($"{stateMachine.Monster.name} finished alt base attack.");
         stateMachine.isAttacking = false;
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
