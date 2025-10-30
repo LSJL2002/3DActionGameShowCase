@@ -171,7 +171,7 @@ public class UIManager : Singleton<UIManager>
     // 이전 씬에서 사용한 딕셔너리 리스트 정리 (씬 언로드시 호출할것)
     private void OnSceneUnloaded(Scene scene)
     {
-        if (scene.name == "PlayerUIScene")
+        if (scene.name == "ShowroomScene")
             return;
 
         foreach (var handle in uiHandles.Values)

@@ -62,6 +62,8 @@ public class InvenCharInfoUI : MonoBehaviour
     // 로비로 가는 버튼
     private void OnRobyBtnClicked()
     {
+        EventsManager.Instance.TriggerEvent(GameEvent.OnMenu);
+        UIManager.Instance.currentUI.Hide();
         FindAnyObjectByType<DirectionManager>()?.UnloadScene();
     }
 
