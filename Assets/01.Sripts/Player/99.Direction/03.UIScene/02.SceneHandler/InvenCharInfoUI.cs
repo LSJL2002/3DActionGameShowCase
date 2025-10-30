@@ -37,6 +37,7 @@ public class InvenCharInfoUI : MonoBehaviour
                 }
             }
         };
+        EventsManager.Instance.TriggerEvent(GameEvent.OnMenu);
     }
 
     private void Start()
@@ -69,6 +70,8 @@ public class InvenCharInfoUI : MonoBehaviour
     {
         if (manager != null && manager.seqCam1 != null)
             manager.seqCam1.enabled = true;
+
+        UIManager.Instance.currentUI.Hide();
     }
 
     private void OnGoldBtnClicked() { /* TODO: 구현 */ }

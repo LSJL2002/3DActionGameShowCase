@@ -4,7 +4,6 @@ using UnityEngine;
 // CharacterInfomationUI의 Status Part
 public partial class CharacterInfomationUI : UIBase
 {
-    [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI energyText;
     [SerializeField] private TextMeshProUGUI attackText;
@@ -14,36 +13,15 @@ public partial class CharacterInfomationUI : UIBase
 
     public void AwakeStatus()
     {
-        // 구독해제
-        PlayerManager.Instance.Attr.Resource.OnHealthChanged -= SetPlayerStat;
-        PlayerManager.Instance.OnActiveCharacterChanged -= OnActiveCharacterChanged;
-        EventsManager.Instance.StopListening(GameEvent.OnUsedItem, SetPlayerStat);
-
-        // 구독
-        PlayerManager.Instance.Attr.Resource.OnHealthChanged += SetPlayerStat;
-        PlayerManager.Instance.OnActiveCharacterChanged += OnActiveCharacterChanged;
-        EventsManager.Instance.StartListening(GameEvent.OnUsedItem, SetPlayerStat);
-
-        SetPlayerStat();
-    }
-
-    // 캐릭터 변경에 대응하는 함수
-    private void OnActiveCharacterChanged(PlayerCharacter newCharacter)
-    {
-        // 이전 캐릭터의 스탯 이벤트 구독 해제
-        EventsManager.Instance.StopListening(GameEvent.OnStatChanged, SetPlayerStat);
-
-        // 새로운 캐릭터의 스탯 이벤트 구독
-        EventsManager.Instance.StartListening(GameEvent.OnStatChanged, SetPlayerStat);
-
-        // UI 업데이트
-        SetPlayerStat();
+        // 구독 / 해제
+        EventsManager.Instance.StopListening<int>(GameEventT.OnSelectChange, SetPlayerStat);
+        EventsManager.Instance.StartListening<int>(GameEventT.OnSelectChange, SetPlayerStat);
     }
 
     // 플레이어 스탯 정보 초기화 함수
-    public void SetPlayerStat()
+    public void SetPlayerStat(int i)
     {
-        PlayerAttribute playerAttr = PlayerManager.Instance.Attr;
+        PlayerAttribute playerAttr = PlayerManager.Instance.Characters[i].Attr;
 
         healthText.text = $"체력 : {playerAttr.Resource.CurrentHealth} / {playerAttr.Resource.MaxHealth.Value.ToString()}";
         energyText.text = $"마력 : {playerAttr.Resource.CurrentEnergy} / {playerAttr.Resource.MaxEnergy.Value.ToString()}";

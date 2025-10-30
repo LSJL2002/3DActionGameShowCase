@@ -22,6 +22,8 @@ public class UISceneManager : MonoBehaviour
     [Header("UI Text")]
     public TMP_Text nameText; // 텍스트에 띄울 이름
 
+    private int currnetCharacterIndex;
+
 
     void OnEnable()
     {
@@ -77,7 +79,7 @@ public class UISceneManager : MonoBehaviour
         }
     }
 
-    public void UpdateUI(string name)
+    public async void UpdateUI(string name)
     {
         if (nameText != null)
         {
@@ -85,18 +87,23 @@ public class UISceneManager : MonoBehaviour
             nameText.text = verticalName;
         }
 
+        await UIManager.Instance.Show<CharacterInfomationUI>();
+
         switch (name)
         {
             case "Yuki":
-                //ShowChar1UI();
+                EventsManager.Instance.TriggerEvent<int>(GameEventT.OnSelectChange, 0);
+                currnetCharacterIndex = 0;
                 break;
 
             case "Aoi":
-                //ShowChar2UI();
+                EventsManager.Instance.TriggerEvent<int>(GameEventT.OnSelectChange, 1);
+                currnetCharacterIndex = 1;
                 break;
 
             case "Mika":
-                //ShowChar3UI();
+                EventsManager.Instance.TriggerEvent<int>(GameEventT.OnSelectChange, 2);
+                currnetCharacterIndex = 2;
                 break;
         }
     }

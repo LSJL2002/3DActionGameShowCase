@@ -14,6 +14,13 @@ public enum DecisionState
     GameClear,
 }
 
+public interface IMenuOpen
+{
+    void EventListen(); // 이벤트 구독/해제
+
+    void Interact(); // 구독할 메서드
+}
+
 // 제네릭 싱글톤 스크립트를 상속
 public class UIManager : Singleton<UIManager>
 {

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class MiniMapUI : UIBase
+public class MiniMapUI : UIBase, IMenuOpen
 {
     public enum MapMode
     {
@@ -50,6 +50,8 @@ public class MiniMapUI : UIBase
 
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { DelayMethod(); });
+
+        EventListen();
     }
 
     protected override void OnEnable() { }
@@ -200,5 +202,16 @@ public class MiniMapUI : UIBase
         {
             minimapCamera.DOOrthoSize(fullMapCameraSize, animationDuration);
         }
+    }
+
+    public void EventListen()
+    {
+        EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
+        EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
+    }
+
+    public void Interact()
+    {
+        miniMapCanvasGroup.alpha = (miniMapCanvasGroup.alpha == 0f) ? 1f : 0f;
     }
 }
