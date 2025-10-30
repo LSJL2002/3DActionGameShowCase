@@ -61,8 +61,7 @@ public class InvenCharInfoUI : MonoBehaviour
     // 로비로 가는 버튼
     private void OnRobyBtnClicked()
     {
-        // 실제 로비 이동 로직 구현
-        // 예: SceneManager.LoadScene("Lobby");
+        FindAnyObjectByType<DirectionManager>()?.UnloadScene();
     }
 
     // 뒤로 가는 버튼
