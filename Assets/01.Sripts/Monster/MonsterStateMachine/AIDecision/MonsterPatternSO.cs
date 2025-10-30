@@ -76,7 +76,7 @@ public class MonsterPatternSO : ScriptableObject
                     if (!cond.hasTriggered && currentHpPercent <= cond.thresholdHpPercent)
                     {
                         valid.Add(cond);
-                        if (cond.triggerOnce)
+                        if (!cond.triggerOnce)
                             cond.hasTriggered = true;
                     }
                     break;
@@ -92,7 +92,7 @@ public class MonsterPatternSO : ScriptableObject
         valid.Sort((a, b) => a.priority.CompareTo(b.priority));
         foreach (var cond in valid)
         {
-            Debug.Log($"Valid condition ID={cond.id}, priority={cond.priority}");
+            //Debug.Log($"Valid condition ID={cond.id}, priority={cond.priority}");
         }
         return valid;
     }

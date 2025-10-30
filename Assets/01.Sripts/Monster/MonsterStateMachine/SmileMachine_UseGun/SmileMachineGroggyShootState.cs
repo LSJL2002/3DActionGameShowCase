@@ -81,7 +81,6 @@ public class SmileMachineGroggyShoot : MonsterBaseState
 
     public override void Exit()
     {
-        Debug.Log("Exit SmileMachineShootState");
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
         if (shootRoutine != null)
