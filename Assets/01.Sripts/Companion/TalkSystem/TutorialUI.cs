@@ -19,7 +19,7 @@ public enum Speaker
     Player
 }
 
-public class TutorialUI : UIBase
+public class TutorialUI : UIBase, IMenuOpen
 {
     public TMP_Text talkText;
 
@@ -57,6 +57,8 @@ public class TutorialUI : UIBase
                 PlayDialogue(SceneType.Tutorial);
             });
         }
+
+        EventListen();
     }
 
     protected override void OnEnable() { }
@@ -323,5 +325,16 @@ public class TutorialUI : UIBase
         StartCoroutine(ShowText(scene, 2.0f));
     }
     #endregion
+
+    public void EventListen()
+    {
+        EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
+        EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
+    }
+
+    public void Interact()
+    {
+        tutorialUICanvasGroup.alpha = (tutorialUICanvasGroup.alpha == 0f) ? 1f : 0f;
+    }
 }
 

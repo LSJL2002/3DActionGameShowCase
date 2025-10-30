@@ -13,7 +13,7 @@ public class AwakenUIElement
     public List<GaugeComponent> fillGauges = new List<GaugeComponent>();
 }
 
-public class AwakenUI : UIBase
+public class AwakenUI : UIBase, IMenuOpen
 {
     public enum GaugeState1
     {
@@ -47,6 +47,8 @@ public class AwakenUI : UIBase
         
         // n초 대기 후 실행
         DOVirtual.DelayedCall(6f, () => { awakenGaugeCanvasGroup.DOFade(1f, 1f); });
+
+        EventListen();
     }
 
     // 최초, 플레이어 교체시 호출하여 각성게이지 참조들을 갱신
@@ -168,6 +170,17 @@ public class AwakenUI : UIBase
                 }
                 break;
         }
+    }
+
+    public void EventListen()
+    {
+        EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
+        EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
+    }
+
+    public void Interact()
+    {
+        awakenGaugeCanvasGroup.alpha = (awakenGaugeCanvasGroup.alpha == 0f) ? 1f : 0f;
     }
 
     #region 해제 파트

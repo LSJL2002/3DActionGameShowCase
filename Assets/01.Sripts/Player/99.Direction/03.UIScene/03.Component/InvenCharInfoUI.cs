@@ -37,6 +37,7 @@ public class InvenCharInfoUI : MonoBehaviour
                 }
             }
         };
+        EventsManager.Instance.TriggerEvent(GameEvent.OnMenu);
     }
 
     private void Start()

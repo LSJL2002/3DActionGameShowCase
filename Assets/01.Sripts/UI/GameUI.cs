@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 
 // GameUI의 Base
-public partial class GameUI : UIBase
+public partial class GameUI : UIBase, IMenuOpen
 {
     [SerializeField] CanvasGroup gameUICanvasGroup;
 
@@ -21,6 +21,7 @@ public partial class GameUI : UIBase
         base.Start();
 
         OnStartPlayer();
+        EventListen();
     }
 
     protected override void Update()
@@ -37,5 +38,16 @@ public partial class GameUI : UIBase
         OnDisablePlayer();
         OnDisableEnemy();
         OnDisableIcon();
+    }
+
+    public void EventListen()
+    {
+        EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
+        EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
+    }
+
+    public void Interact()
+    {
+        gameUICanvasGroup.alpha = (gameUICanvasGroup.alpha == 0f) ? 1f : 0f;
     }
 }
