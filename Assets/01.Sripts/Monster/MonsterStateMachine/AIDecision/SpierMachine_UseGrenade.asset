@@ -37,10 +37,12 @@ MonoBehaviour:
     states: 06000000
   - id: 12
     states: 05000000
-  - id: 11
+  - id: 13
     states: 02000000
-  - id: 11
+  - id: 14
     states: 010000000100000004000000
+  - id: 15
+    states: 05000000
   conditions:
   - id: 0
     conditionType: 0
@@ -176,7 +178,7 @@ MonoBehaviour:
     requiredDistance: 15
     triggerOnce: 0
     hasTriggered: 0
-    possiblePatternIds: 06000000
+    possiblePatternIds: 0600000004000000
     priority: 2
     ignoreDistanceCheck: 0
     effectValueMultiplier: 1
