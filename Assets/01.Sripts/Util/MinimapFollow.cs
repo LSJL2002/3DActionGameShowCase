@@ -27,4 +27,16 @@ public class MinimapFollow : MonoBehaviour
         // Z : 0f (기울어지지 않음)
         transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
+
+    public void Start()
+    {
+        PlayerManager.Instance.OnActiveCharacterChanged -= ChangeTarget;
+        PlayerManager.Instance.OnActiveCharacterChanged += ChangeTarget;
+    }
+
+    // 카메라 Follow 대상을 변경하는 함수
+    public void ChangeTarget(PlayerCharacter playerCharacter)
+    {
+        target = PlayerManager.Instance.ActiveCharacter.transform;
+    }
 }

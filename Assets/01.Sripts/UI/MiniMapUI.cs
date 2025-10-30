@@ -28,7 +28,7 @@ public class MiniMapUI : UIBase
     private const float animationDuration = 0.5f;
 
     // FullMap 관련
-    private readonly Vector2 anchorMinFullMap = new Vector2(0.5f,0.5f);
+    private readonly Vector2 anchorMinFullMap = new Vector2(0.5f, 0.5f);
     private readonly Vector2 anchorMaxFullMap = new Vector2(0.5f, 0.5f);
     private readonly Vector2 anchoredPositionFullMap = new Vector2(0, 0);
     private readonly Vector3 fullMapScale = new Vector3(4, 4, 4);
@@ -69,7 +69,7 @@ public class MiniMapUI : UIBase
     // 테스트용! -------------------------------------------------------------------------------------
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             ChangeMapMode();
         }
