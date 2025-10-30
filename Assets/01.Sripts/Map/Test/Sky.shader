@@ -13,7 +13,7 @@ Shader "Skybox/PanoramicBlendSingle_URP"
 
     SubShader
     {
-        Tags { "RenderPipeline"="UniversalRenderPipeline" "Queue"="Background" "RenderType"="Background" }
+        Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Background" "RenderType"="Background" }
         ZWrite Off Cull Off
 
         Pass

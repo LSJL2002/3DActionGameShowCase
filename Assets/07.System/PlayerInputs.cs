@@ -161,7 +161,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""Camera"",
                     ""type"": ""Button"",
                     ""id"": ""d6be459b-89f8-405a-89a3-c9c8f9b330e8"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -170,7 +170,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""4eadf7cd-77da-459b-821f-72ea6f5d280c"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -206,7 +206,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""DashL"",
                     ""type"": ""Button"",
                     ""id"": ""069f2a90-3337-4ff0-80d0-41ca6a86119b"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -215,7 +215,7 @@ namespace UnityEngine.InputSystem
                     ""name"": ""DashR"",
                     ""type"": ""Button"",
                     ""id"": ""b6a95ab4-beee-4266-9d58-c9cb0baf950f"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -576,7 +576,7 @@ namespace UnityEngine.InputSystem
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
+                    ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
