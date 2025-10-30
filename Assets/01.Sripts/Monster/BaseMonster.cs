@@ -211,12 +211,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
                     inRange = Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange;
                     return inRange || waitTime >= 5f;
                 });
-
-                if (!inRange)
-                {
-                    // Player moved away — stop pattern
-                    break;
-                }
             }
 
             // --- Perform attack ---
