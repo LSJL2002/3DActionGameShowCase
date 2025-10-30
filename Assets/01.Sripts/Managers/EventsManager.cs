@@ -24,6 +24,7 @@ public enum GameEventT
     OnBattleStart, // <BattleZone>
     OnBattleClear, // <BattleZone>
     OnMonsterDie, // <BattleZone>
+    OnSelectChange, // <int>
 }
 
 public class EventsManager : Singleton<EventsManager>
