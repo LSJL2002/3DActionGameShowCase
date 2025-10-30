@@ -21,7 +21,6 @@ public class SmileToiletChargeState : MonsterBaseState
 
         if (skillData == null)
         {
-            Debug.LogError("SmileToiletChargeState: skill Data is null");
             stateMachine.isAttacking = false;
             return;
         }
@@ -36,7 +35,6 @@ public class SmileToiletChargeState : MonsterBaseState
 
         if (aoeController == null)
         {
-            Debug.LogError("AOE prefab missing");
             stateMachine.isAttacking = false;
             return;
         }
@@ -50,7 +48,6 @@ public class SmileToiletChargeState : MonsterBaseState
     private void OnTelegraphStart()
     {
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Charge));
-        Debug.Log("Starting Charge animation, hash: ");
     }
 
     private void OnTelegraphComplete()
@@ -81,7 +78,6 @@ public class SmileToiletChargeState : MonsterBaseState
                 dmg.OnTakeDamage(stateMachine.Monster.Stats.AttackPower);
                 Vector3 sourcePos = stateMachine.Monster.transform.position;
                 dmg.ApplyEffect(skillData.monsterEffectType, sourcePos, skillData.knockbackDistance, skillData.duration);
-                Debug.Log("Player hit by charge via OnControllerColliderHit!");
                 attackActive = false;
             }
         }
@@ -90,7 +86,6 @@ public class SmileToiletChargeState : MonsterBaseState
     public override void OnAnimationComplete()
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
-        Debug.Log("Finished Animation");
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 

@@ -19,7 +19,6 @@ public class SmileToiletSlamState : MonsterBaseState
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
         if (skillData == null)
         {
-            Debug.LogError("SmileToiletSlamState: skillData is null!");
             stateMachine.isAttacking = false;
             return;
         }
@@ -28,7 +27,6 @@ public class SmileToiletSlamState : MonsterBaseState
         StopMoving();
 
         Vector3 spawnPos = stateMachine.Monster.AreaEffectPoint.transform.position;
-        Debug.Log(spawnPos);
 
         aoeInstance = Object.Instantiate(skillData.areaEffectPrefab, spawnPos, Quaternion.identity);
         stateMachine.Monster.RegisterAOE(aoeInstance);
@@ -36,7 +34,6 @@ public class SmileToiletSlamState : MonsterBaseState
         aoeController = aoeInstance.GetComponent<AreaEffectController>();
         if (aoeController == null)
         {
-            Debug.LogError("SmileToiletSlamState: AOE prefab is missing AreaEffectController!");
             stateMachine.isAttacking = false;
             return;
         }
@@ -59,7 +56,6 @@ public class SmileToiletSlamState : MonsterBaseState
     {
         if (aoeController == null) return;
 
-        Debug.Log("OnAttackHitSlam");
         aoeController.EnableDamage(stateMachine.Monster.transform);
         stateMachine.Monster.StartCoroutine(DisableColliderNextFrame());
     }
@@ -74,7 +70,6 @@ public class SmileToiletSlamState : MonsterBaseState
     public override void OnAnimationComplete()
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill2));
-        Debug.Log("Finished Animation");
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 

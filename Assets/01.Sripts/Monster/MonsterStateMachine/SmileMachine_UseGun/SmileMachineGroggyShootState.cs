@@ -66,7 +66,7 @@ public class SmileMachineGroggyShoot : MonsterBaseState
 
     private void DealDamageInFront()
     {
-        Vector3 origin = stateMachine.Monster.transform.position + Vector3.up * 1.5f;
+        Vector3 origin = stateMachine.Monster.transform.position + Vector3.up;
         Vector3 direction = stateMachine.Monster.transform.forward;
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, skillData.range))
@@ -81,7 +81,6 @@ public class SmileMachineGroggyShoot : MonsterBaseState
 
     public override void Exit()
     {
-        Debug.Log("Exit SmileMachineShootState");
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill4));
 
         if (shootRoutine != null)

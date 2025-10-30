@@ -20,7 +20,6 @@ public class SmileToiletSmashState : MonsterBaseState
 
         if (skillData == null)
         {
-            Debug.LogError("SmileToiletSmashState: skillData is null!");
             stateMachine.isAttacking = false;
             return;
         }
@@ -41,7 +40,6 @@ public class SmileToiletSmashState : MonsterBaseState
 
         if (aoeController == null)
         {
-            Debug.LogError("SmileToiletSmashState: AOE prefab missing AreaEffectController!");
             stateMachine.isAttacking = false;
             return;
         }
@@ -60,7 +58,6 @@ public class SmileToiletSmashState : MonsterBaseState
     {
         if (hasHit || aoeController == null) return;
         hasHit = true;
-        Debug.Log("OnAttackHitSmash");
         aoeController.EnableDamage(stateMachine.Monster.transform);
         stateMachine.Monster.StartCoroutine(DisableColliderNextFrame());
     }
@@ -76,13 +73,11 @@ public class SmileToiletSmashState : MonsterBaseState
     public override void OnAnimationComplete()
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
-        Debug.Log("Finished Animation");
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
     public override void Exit()
     {
-        Debug.Log("Exiting Smash State");
         if (aoeController != null)
             aoeController.OnTelegraphFinished -= OnTelegraphComplete;
 
