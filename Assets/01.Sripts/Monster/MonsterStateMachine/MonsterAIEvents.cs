@@ -94,7 +94,6 @@ public class MonsterAIEvents : MonoBehaviour
         switch (currentMode)
         {
             case AIMode.Attack:
-                Debug.Log($"[MonsterAIEvents] Attack triggered! Distance: {distance}");
                 OnInAttackRange?.Invoke();
                 lastAttackTime = Time.time;
                 combatIdleStarted = false;

@@ -76,7 +76,7 @@ public class MonsterPatternSO : ScriptableObject
                     if (!cond.hasTriggered && currentHpPercent <= cond.thresholdHpPercent)
                     {
                         valid.Add(cond);
-                        if (cond.triggerOnce)
+                        if (!cond.triggerOnce)
                             cond.hasTriggered = true;
                     }
                     break;
