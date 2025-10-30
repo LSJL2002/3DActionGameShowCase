@@ -40,9 +40,9 @@ public class SmileMachine_UseGun : BaseMonster
         if (state is SmileToiletChargeState)
             return Stats.GetSkill("SmileMachine_Charge").range;
         if (state is SmileMachineShootState)
-            return Stats.GetSkill("SmileMachine_Shoot").range;
+            return Stats.GetSkill("SmileMachine_Shoot").skillUseRange;
         if (state is SmileMachineGroggyShoot)
-            return Stats.GetSkill("SmileMachine_GroggyShoot").range;
+            return Stats.GetSkill("SmileMachine_GroggyShoot").skillUseRange;
 
         return Stats.AttackRange;
     }
