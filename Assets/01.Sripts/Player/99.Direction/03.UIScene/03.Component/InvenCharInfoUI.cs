@@ -68,8 +68,8 @@ public class InvenCharInfoUI : MonoBehaviour
     // 뒤로 가는 버튼
     private void OnBackBtnClicked()
     {
-        if (manager != null && manager.seqCam != null)
-            manager.seqCam.enabled = true;
+        if (manager != null && manager.seqCam1 != null)
+            manager.seqCam1.enabled = true;
     }
 
     private void OnGoldBtnClicked() { /* TODO: 구현 */ }

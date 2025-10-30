@@ -6,9 +6,6 @@ using UnityEngine.UI;
 public class InvenFristSequence : MonoBehaviour
 {
     [SerializeField] private UISceneManager manager;
-    private CinemachineBrain brain;
-    private CinemachineSequencerCamera seqCam; 
-    private CinemachineVirtualCameraBase cam; // 감시할 시네머신 카메라
 
     [Header("Buttons (Optional, for camera activation)")]
     [SerializeField] private Button button1;
@@ -26,33 +23,9 @@ public class InvenFristSequence : MonoBehaviour
 
     void Start()
     {
-        this.brain = manager.brain;
-        this.seqCam = manager.seqCam;
-        if (seqCam != null && seqCam.Instructions != null && seqCam.Instructions.Count > 0)
-            cam = seqCam.Instructions[seqCam.Instructions.Count - 1].Camera;
-
         if (button1 != null) button1.onClick.AddListener(() => SpawnCharacter(char1));
         if (button2 != null) button2.onClick.AddListener(() => SpawnCharacter(char2));
         if (button3 != null) button3.onClick.AddListener(() => SpawnCharacter(char3));
-    }
-
-    void Update()
-    {
-        if (cam == null || brain == null) return;
-
-        bool isLive = CinemachineCore.IsLive(cam);
-        bool isBlending = brain.IsBlending;
-        if (isLive && !isBlending)
-            manager.ShowIntroUI();
-        else
-            manager.HideIntroUI();
-    }
-
-    public void ActivateCamera()
-    {
-        if (seqCam == null) return;
-        seqCam.enabled = false;
-        manager.HideIntroUI();
     }
 
     private void SpawnCharacter(GameObject prefab)
@@ -67,6 +40,8 @@ public class InvenFristSequence : MonoBehaviour
         manager.UpdateUI(prefab.name);
 
         // 카메라 비활성 및 UI 닫기
-        ActivateCamera();
+        manager.seqCam2.enabled = false;
+        manager.charCam.enabled = true;
+        manager.introUI.SetActive(false);
     }
 }

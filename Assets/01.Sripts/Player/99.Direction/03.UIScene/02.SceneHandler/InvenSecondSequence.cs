@@ -18,11 +18,11 @@ public class InvenSecondSequence : MonoBehaviour
     [SerializeField] private Button zoomToggleButton;
     [SerializeField] private Slider verticalSlider;
 
-    private CinemachineCamera cam;
     private Transform camTransform;
 
     private bool isZoomed = false;
     private bool isDragging = false;
+    private bool isActive = false; // charCam 활성화 여부
 
     private Vector3 defaultCamPos;
     private float baseY;
@@ -30,57 +30,36 @@ public class InvenSecondSequence : MonoBehaviour
 
     void Start()
     {
-        cam = manager.CharCam;
-        camTransform = cam.transform;
-
+        camTransform = manager.charCam.transform;
         defaultCamPos = camTransform.position;
         currentTargetPos = defaultCamPos;
         baseY = camTransform.position.y;
 
         if (zoomToggleButton != null) zoomToggleButton.onClick.AddListener(ToggleZoom);
         if (verticalSlider != null) verticalSlider.onValueChanged.AddListener(OnSliderValueChanged);
+        manager.charEvent.CameraActivatedEvent.AddListener(OnCharCamBlendFinished2);
+        manager.charEvent.CameraDeactivatedEvent.AddListener(OnCharCamDeactivated);
+    }
+    void OnDestroy()
+    {
+        // 구독 해제
+        manager.charEvent.CameraActivatedEvent.RemoveListener(OnCharCamBlendFinished2);
+        manager.charEvent.CameraDeactivatedEvent.RemoveListener(OnCharCamDeactivated);
     }
 
     void Update()
     {
-        // --- VCam 라이브 체크 ---
-        bool isLive = CinemachineCore.IsLive(cam);
-        bool isBlending = manager.brain.IsBlending;
+        if (!isActive) return; // charCam 활성화 상태에서만 실행
 
-        if (isLive && !isBlending)
+        // --- 카메라 이동 ---
+        camTransform.position = Vector3.Lerp(camTransform.position, currentTargetPos, Time.unscaledDeltaTime * moveSmooth);
+        // --- 캐릭터 회전 ---
+        if (Input.GetMouseButtonDown(0)) isDragging = true;
+        if (Input.GetMouseButtonUp(0)) isDragging = false;
+        if (isDragging)
         {
-            // --- 카메라 이동 ---
-            camTransform.position = Vector3.Lerp(camTransform.position, currentTargetPos, Time.deltaTime * moveSmooth);
-            // --- 캐릭터 회전 ---
-            if (Input.GetMouseButtonDown(0)) isDragging = true;
-            if (Input.GetMouseButtonUp(0)) isDragging = false;
-            if (isDragging)
-            {
-                float mouseX = Input.GetAxis("Mouse X");
-                characterRoot.Rotate(Vector3.up, -mouseX * rotateSpeed * Time.deltaTime, Space.World);
-            }
-
-            manager.ShowCharUI();
-        }
-        else
-        {
-            // --- CharUI 숨김 시 캐릭터 회전 초기화 ---
-            characterRoot.localRotation = Quaternion.Euler(0f, 90f, 0f); // 초기 Y축 90도로 고정
-            isDragging = false; // 드래그 해제
-
-            // --- 줌 상태 초기화 ---
-            if (isZoomed)
-            {
-                isZoomed = false;
-                currentTargetPos = defaultCamPos;
-                if (verticalSlider != null)
-                {
-                    verticalSlider.value = 0.5f;
-                    verticalSlider.gameObject.SetActive(false);
-                }
-            }
-
-            manager.HideCharUI();
+            float mouseX = Input.GetAxis("Mouse X");
+            characterRoot.Rotate(Vector3.up, -mouseX * rotateSpeed * Time.unscaledDeltaTime, Space.World);
         }
     }
 
@@ -112,5 +91,41 @@ public class InvenSecondSequence : MonoBehaviour
         Vector3 newPos = currentTargetPos;
         newPos.y = baseY + offset;
         currentTargetPos = newPos;
+    }
+
+    private void OnCharCamBlendFinished2(ICinemachineMixer mixer, ICinemachineCamera cam)
+    {
+        if (cam == manager.charCam)
+        {
+            isActive = true;
+        }
+    }
+
+    private void OnCharCamDeactivated(ICinemachineMixer mixer, ICinemachineCamera cam)
+    {
+        if (cam == manager.charCam)
+        {
+            // 캐릭터 회전 초기화
+            characterRoot.localRotation = Quaternion.Euler(0f, 90f, 0f);
+            isDragging = false;
+
+            // 줌 초기화
+            if (isZoomed)
+            {
+                isZoomed = false;
+                currentTargetPos = defaultCamPos;
+                if (verticalSlider != null)
+                {
+                    verticalSlider.value = 0.5f;
+                    verticalSlider.gameObject.SetActive(false);
+                }
+            }
+
+            // UI 숨기기
+            manager.charUI.SetActive(false);
+            isActive = false;
+            manager.seqCam1.enabled = true;
+            manager.charCam.enabled = false;
+        }
     }
 }
