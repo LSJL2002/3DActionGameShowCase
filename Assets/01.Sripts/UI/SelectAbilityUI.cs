@@ -63,7 +63,7 @@ public class SelectAbilityUI : UIBase
         // 플레이어 입력 제어 해제
         PlayerManager.Instance.EnableInput(false);
 
-        BattleManager.Instance.ClearBattle();
+       
     }
 
     public async void GetItemInfo(string adress, string type)

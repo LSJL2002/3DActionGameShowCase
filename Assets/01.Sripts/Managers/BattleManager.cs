@@ -49,12 +49,13 @@ public class BattleManager : Singleton<BattleManager>
     public async void StartBattle(BattleZone zone)
     {
         if (isBattle) return;
-        CheckInBattle();                           // 퍼널10번
+        
         isBattle = true;
         AudioManager.Instance.StopBGM();
         battleStartTime = Time.time;
 
         currentZone = zone;
+        CheckInBattle();                           // 퍼널10번
         currentZone.triggerCollider.enabled = false;
         // 1. 벽 켜기 + 경고 이펙트 시작
         currentZone.SetWallsActive(true);
