@@ -58,7 +58,7 @@ public class GameScene : SceneBase
         }
 
         // n초 대기 후 실행
-        DOVirtual.DelayedCall(6f, () => { PlayerManager.Instance.ActiveCharacter.OnMenuToggle(); });
+        DOVirtual.DelayedCall(7f, () => { UIManager.Instance.Show<InterfaceUI>(); });
     }
 
     public void LoadInventoryFromSave()

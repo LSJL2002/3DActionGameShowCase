@@ -1,15 +1,25 @@
+using UnityEngine;
+
 public class InterfaceUI : UIBase
 {
-    protected override void OnEnable()
+    protected override void Awake()
     {
-        base.OnEnable();
+        base.Awake();
 
-        EventsManager.Instance.StartListening(GameEvent.OnESCButton, OnInterfaceUI);
+        PlayerManager.Instance.EnableInput(false);
+        EventsManager.Instance.TriggerEvent(GameEvent.OnMenu);
     }
 
-    private void OnInterfaceUI()
+    public void OnClickButton(string str)
     {
-        EventsManager.Instance.StopListening(GameEvent.OnESCButton, OnInterfaceUI);
+        switch (str)
+        {
+            case "Quit":
+                PlayerManager.Instance.EnableInput(true);
+                EventsManager.Instance.TriggerEvent(GameEvent.OnMenu);
+                break;
+        }
+        // 현재 팝업창 닫기
         Hide();
     }
 }

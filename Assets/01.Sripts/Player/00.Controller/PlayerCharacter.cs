@@ -150,10 +150,6 @@ public class PlayerCharacter : MonoBehaviour
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
 
         _camera.Volume_Blur.enabled = isPaused;
-
-        EventsManager.Instance.TriggerEvent(GameEvent.OnESCButton);
-        if (!isPaused) return;
-        UIManager.Instance.Show<InterfaceUI>();
     }
 
     private void OnInventoryToggle()
