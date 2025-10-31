@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class MiniMapUI : UIBase, IMenuOpen
+public class MiniMapUI : UIBase, IInterfaceOpen
 {
     public enum MapMode
     {

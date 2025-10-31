@@ -13,7 +13,7 @@ public class AwakenUIElement
     public List<GaugeComponent> fillGauges = new List<GaugeComponent>();
 }
 
-public class AwakenUI : UIBase, IMenuOpen
+public class AwakenUI : UIBase, IInterfaceOpen
 {
     public enum GaugeState1
     {

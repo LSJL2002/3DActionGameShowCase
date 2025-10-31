@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 
 // GameUI의 Base
-public partial class GameUI : UIBase, IMenuOpen
+public partial class GameUI : UIBase, IInterfaceOpen
 {
     [SerializeField] CanvasGroup gameUICanvasGroup;
 

@@ -30,10 +30,9 @@ public class InvenCharInfoUI : MonoBehaviour
             { "Option", async () => { await UIManager.Instance.Show<SoundSettingUI>(); } },
             { "Quit", async () =>
                 {
-                    Time.timeScale = 1f;
-                    PlayerManager.Instance.EnableInput(false);
-                    SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
-                    await Task.CompletedTask;
+                    EventsManager.Instance.TriggerEvent(GameEvent.OnMenu);
+                    UIManager.Instance.currentUI.Hide();
+                    FindAnyObjectByType<DirectionManager>()?.UnloadScene();
                 }
             }
         };
@@ -42,7 +41,7 @@ public class InvenCharInfoUI : MonoBehaviour
 
     private void Start()
     {
-        if (robyBtn != null) robyBtn.onClick.AddListener(OnRobyBtnClicked);
+        if (robyBtn != null) robyBtn.onClick.AddListener(OnLobbyBtnClicked);
         if (backBtn != null) backBtn.onClick.AddListener(OnBackBtnClicked);
         if (goldBtn != null) goldBtn.onClick.AddListener(OnGoldBtnClicked);
         if (energyBtn != null) energyBtn.onClick.AddListener(OnEnergyBtnClicked);
@@ -60,11 +59,12 @@ public class InvenCharInfoUI : MonoBehaviour
     // ---------------- 버튼별 함수 ----------------
 
     // 로비로 가는 버튼
-    private void OnRobyBtnClicked()
+    private async void OnLobbyBtnClicked()
     {
-        EventsManager.Instance.TriggerEvent(GameEvent.OnMenu);
-        UIManager.Instance.currentUI.Hide();
-        FindAnyObjectByType<DirectionManager>()?.UnloadScene();
+        Time.timeScale = 1f;
+        PlayerManager.Instance.EnableInput(false);
+        SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single);
+        await Task.CompletedTask;
     }
 
     // 뒤로 가는 버튼

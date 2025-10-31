@@ -19,7 +19,7 @@ public enum Speaker
     Player
 }
 
-public class TutorialUI : UIBase, IMenuOpen
+public class TutorialUI : UIBase, IInterfaceOpen
 {
     public TMP_Text talkText;
 
