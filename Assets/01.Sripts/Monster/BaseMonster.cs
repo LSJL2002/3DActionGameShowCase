@@ -157,26 +157,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
         StartCoroutine(RunPattern());
     }
 
-    public void ForceRunPattern(MonsterPatternSO.PatternEntry pattern, MonsterPatternSO.PatternCondition conditions)
-    {
-        //미래용
-        if (pattern == null)
-        {
-            return;
-        }
-
-        StopAllCoroutines();
-        currentPattern = pattern;
-        currentStepIndex = 0;
-        isRunningPattern = false;
-
-        stateMachine.RangeMultiplier = conditions.rangeMultiplier;
-        stateMachine.PreCastTimeMultiplier = conditions.preCastTimeMultiplier;
-        stateMachine.EffectValueMultiplier = conditions.effectValueMultiplier;
-
-        StartCoroutine(RunPattern());
-    }
-
     private IEnumerator RunPattern()
     {
         isRunningPattern = true;
