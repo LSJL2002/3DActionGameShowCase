@@ -142,6 +142,8 @@ public class MiniMapUI : UIBase, IInterfaceOpen
             fullMapSequence.Kill();
             fullMapSequence = null;
         }
+
+        if (EventsManager.Instance != null) EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
     }
 
     // 맵모드 전환
@@ -206,7 +208,6 @@ public class MiniMapUI : UIBase, IInterfaceOpen
 
     public void EventListen()
     {
-        EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
         EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
     }
 

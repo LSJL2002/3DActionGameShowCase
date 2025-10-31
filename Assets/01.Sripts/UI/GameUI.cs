@@ -38,11 +38,11 @@ public partial class GameUI : UIBase, IInterfaceOpen
         OnDisablePlayer();
         OnDisableEnemy();
         OnDisableIcon();
+        if (EventsManager.Instance != null) EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
     }
 
     public void EventListen()
     {
-        EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
         EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
     }
 

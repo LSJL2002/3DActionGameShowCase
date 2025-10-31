@@ -174,7 +174,6 @@ public class AwakenUI : UIBase, IInterfaceOpen
 
     public void EventListen()
     {
-        EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
         EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
     }
 
@@ -196,6 +195,8 @@ public class AwakenUI : UIBase, IInterfaceOpen
             PlayerManager.Instance.Attr.AwakenGauge.OnUsed -= ChangeAwakenState;
             PlayerManager.Instance.OnActiveCharacterChanged -= UpdateReference;
         }
+
+        if (EventsManager.Instance != null) EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
     }
 
     protected override void OnDestroy()

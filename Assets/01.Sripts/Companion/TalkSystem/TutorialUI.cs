@@ -63,6 +63,11 @@ public class TutorialUI : UIBase, IInterfaceOpen
 
     protected override void OnEnable() { }
 
+    protected override void OnDisable() 
+    {
+        if (EventsManager.Instance != null) EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -335,7 +340,6 @@ public class TutorialUI : UIBase, IInterfaceOpen
 
     public void EventListen()
     {
-        EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
         EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
     }
 
