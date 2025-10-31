@@ -63,6 +63,13 @@ public class TutorialUI : UIBase, IMenuOpen
 
     protected override void OnEnable() { }
 
+    protected override void Start()
+    {
+        base.Start();
+
+        AnalyticsManager.SendFunnelStep("9");
+    }
+
     #region Tutorial
     IEnumerator ShowText(List<TextSO> scene, float time)
     {

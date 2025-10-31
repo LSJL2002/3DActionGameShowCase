@@ -40,6 +40,13 @@ public class DataUpdater : MonoBehaviour
     private string currentVersion; // 로컬에 저장된 현재 버전
     private string latestVersion; // 서버에서 가져온 최신 버전
 
+    // Analytics boolean
+    private bool step0 = false;
+    private bool step20 = false;
+    private bool step40 = false;
+    private bool step60 = false;
+    private bool step80 = false;
+
     public VersionConfigData VersionConfig { get; private set; } = new VersionConfigData();
 
     public void Awake()
@@ -275,11 +282,41 @@ public class DataUpdater : MonoBehaviour
             {
                 downSliders.value = total / patchSize;
             }
-            downValueText.text = (int)(downSliders.value * 100) + "%";
+            int percentage = (int)(downSliders.value * 100);
+            downValueText.text = percentage + "%";
+
+            // 퍼널 스텝 전송 로직
+            if (!step20 && percentage >= 20) 
+            { 
+                step20 = true;
+                AnalyticsManager.SendFunnelStep("2"); 
+            }
+            else if (!step40 && percentage >= 40) 
+            {
+                step40 = true;
+                AnalyticsManager.SendFunnelStep("3"); 
+            }
+            else if (!step60 && percentage >= 60) 
+            {
+                step60 = true;
+                AnalyticsManager.SendFunnelStep("4"); 
+            }
+            else if (!step80 && percentage >= 80) 
+            { 
+                step80 = true;
+                AnalyticsManager.SendFunnelStep("5"); 
+            }
+            else if (!step0) 
+            { 
+                step0 = true;
+                AnalyticsManager.SendFunnelStep("1"); 
+            }
 
             // 다운로드 완료 조건
             if (total >= patchSize)
             {
+                AnalyticsManager.SendFunnelStep("6");
+
                 SaveManager.Instance.SavePlayerPrefs(SaveManager.PlayerPrefsSaveType.BuildVersion, latestVersion); // 다운로드한 버전정보 저장
                 yield return new WaitForSeconds(3f); // 캐시 정리를 위한 일정시간 대기
 

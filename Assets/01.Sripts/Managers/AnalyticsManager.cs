@@ -17,7 +17,7 @@ public class AnalyticsManager : Singleton<AnalyticsManager>
             Debug.Log("Unity Services Initialized");
 
             //(1) 퍼널 이벤트 전송 예시
-            SendFunnelStep("2");
+            SendFunnelStep("StartStage1");
 
             //(2) 스킬 이벤트 전송 예시
             analyticsSkill("1", "3");
@@ -41,6 +41,8 @@ public class AnalyticsManager : Singleton<AnalyticsManager>
         funnelEvent["Funnel_Step_Number"] = stepNumber; //parameter
 
         AnalyticsService.Instance.RecordEvent(funnelEvent); //custom event
+
+        Debug.Log("Funnel Step Sent: " + stepNumber);
     }
 
     //[2]스킬
