@@ -68,8 +68,6 @@ public class InventoryViewModel : ScriptableObject
     {
         DecisionButtonUI decisionUI = await UIManager.Instance.Show<DecisionButtonUI>();
 
-        DecisionButtonUI decisionButtonUI = UIManager.Instance.Get<DecisionButtonUI>();
-
         // 이벤트 구독을 위한 델리게이트 변수 생성
         Action<bool> onDecisionMadeCallback = null;
         onDecisionMadeCallback = async (isConfirmed) =>
