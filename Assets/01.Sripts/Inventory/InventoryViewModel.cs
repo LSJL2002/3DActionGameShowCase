@@ -68,8 +68,6 @@ public class InventoryViewModel : ScriptableObject
     {
         DecisionButtonUI decisionUI = await UIManager.Instance.Show<DecisionButtonUI>();
 
-        DecisionButtonUI decisionButtonUI = UIManager.Instance.Get<DecisionButtonUI>();
-
         // 이벤트 구독을 위한 델리게이트 변수 생성
         Action<bool> onDecisionMadeCallback = null;
         onDecisionMadeCallback = async (isConfirmed) =>
@@ -88,18 +86,20 @@ public class InventoryViewModel : ScriptableObject
 
                     // 능력선택에 대한 내용이라면,
                     case DecisionState.SelectAbility:
-                        
+
+                        SignalPunnelStep();
+
                         // 스탯업이라면,
                         if (itemData.itemType == ItemData.ItemType.StatUP)
                         {
                             InventoryManager.Instance.StatUPAbility(itemData);
-                        }                        
+                        }
                         else
                         {
                             // 인벤토리 매니저의 아이템 추가 함수 호출
                             InventoryManager.Instance.LoadData_Addressables(itemData.name, 1);
                         }
-                        
+
                         //UI매니저에서 '능력선택UI'를 가져와서 끄기
                         UIManager.Instance.Hide<SelectAbilityUI>();
                         //InventoryManager.Instance.LoadData_Addressables("20000000", 5); // 회복물약 5스택 추가
@@ -115,5 +115,42 @@ public class InventoryViewModel : ScriptableObject
 
         // 이벤트 구독
         decisionUI.OnDecisionMade += onDecisionMadeCallback;
+    }
+
+    private void SignalPunnelStep()
+    {
+        switch (BattleManager.Instance.currentZone.id)
+        {
+            case 60000000:
+                AnalyticsManager.SendFunnelStep("18");
+                break;
+            case 60000001:
+                AnalyticsManager.SendFunnelStep("28");
+                break;
+            case 60000002:
+                AnalyticsManager.SendFunnelStep("28");
+                break;
+            case 60000003:
+                AnalyticsManager.SendFunnelStep("28");
+                break;
+            case 60000004:
+                AnalyticsManager.SendFunnelStep("38");
+                break;
+            case 60000005:
+                AnalyticsManager.SendFunnelStep("38");
+                break;
+            case 60000006:
+                AnalyticsManager.SendFunnelStep("38");
+                break;
+            case 60000007:
+                AnalyticsManager.SendFunnelStep("48");
+                break;
+            case 60000008:
+                AnalyticsManager.SendFunnelStep("48");
+                break;
+            case 60000009:
+                AnalyticsManager.SendFunnelStep("48");
+                break;
+        }
     }
 }
