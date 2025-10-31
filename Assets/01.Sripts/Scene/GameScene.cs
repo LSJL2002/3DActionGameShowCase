@@ -39,11 +39,11 @@ public class GameScene : SceneBase
         if (SaveManager.Instance.gameMode == eGameMode.LoadGame)
         {
             LoadInventoryFromSave();
-            Debug.Log("[GameScene] NewGame 모드 - 기존 세이브 로드");
+           
         }
         else
         {
-            Debug.Log("[GameScene] LoadGame 모드 - 기존 세이브 로드 생략");
+            
         }
       
 

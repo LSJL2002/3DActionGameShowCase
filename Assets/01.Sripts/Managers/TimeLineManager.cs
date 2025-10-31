@@ -106,17 +106,17 @@ public class TimeLineManager : Singleton<TimeLineManager>
             {
                 Addressables.ReleaseInstance(handle);
             }
-            else
-            {
-                Debug.LogWarning($"'{timelineName}' 핸들은 유효하지 않음");
-            }
+            //else
+            //{
+            //    Debug.LogWarning($"'{timelineName}' 핸들은 유효하지 않음");
+            //}
             // 딕셔너리에서도 제거
             timelineHandles.Remove(timelineName);
         }
-        else
-        {
-            Debug.LogWarning($"'{timelineName}'가 딕셔너리에 없음");
-        }
+        //else
+        //{
+        //    Debug.LogWarning($"'{timelineName}'가 딕셔너리에 없음");
+        //}
     }
 
     public void Release(string timelineName)
@@ -127,27 +127,25 @@ public class TimeLineManager : Singleton<TimeLineManager>
             {
                 Addressables.ReleaseInstance(handle);
             }
-            else
-            {
-                Debug.LogWarning($"'{timelineName}' 핸들은 유효하지 않음");
-            }
+            //else
+            //{
+            //    Debug.LogWarning($"'{timelineName}' 핸들은 유효하지 않음");
+            //}
             // 딕셔너리에서도 제거
             timelineHandles.Remove(timelineName);
         }
-        else
-        {
-            Debug.LogWarning($"'{timelineName}'가 딕셔너리에 없음");
-        }
+        //else
+        //{
+        //    Debug.LogWarning($"'{timelineName}'가 딕셔너리에 없음");
+        //}
     }
 
     public async UniTask PlayAndWait(string timelineName)
     {
-        Debug.Log("PlayAndWait 시작: " + timelineName);
 
         // 1. 타임라인이 없거나 핸들이 유효하지 않으면 자동 로드
         if (!timelineHandles.TryGetValue(timelineName, out var handle) || !handle.IsValid())
         {
-            Debug.Log($"timelineHandles에 없음 → 새로 로드: {timelineName}");
             await Load<PlayableDirector>(timelineName);
             handle = timelineHandles[timelineName];
         }
@@ -156,7 +154,6 @@ public class TimeLineManager : Singleton<TimeLineManager>
         var director = handle.Result.GetComponent<PlayableDirector>();
         if (director == null)
         {
-            Debug.LogError("PlayableDirector 못 찾음");
             return;
         }
 
@@ -165,7 +162,6 @@ public class TimeLineManager : Singleton<TimeLineManager>
         // 3. 종료 이벤트 연결
         void OnStopped(PlayableDirector d)
         {
-            Debug.Log("Timeline Stopped 이벤트 받음: " + d.name);
             director.stopped -= OnStopped;
             tcs.TrySetResult();
         }
@@ -175,12 +171,10 @@ public class TimeLineManager : Singleton<TimeLineManager>
         // 4. 타임라인 실행
         director.gameObject.SetActive(true);
         director.Play();
-        Debug.Log("Timeline Play 호출");
 
         // 5. 종료/스킵까지 대기
         await tcs.Task;
 
-        Debug.Log("Timeline PlayAndWait 완료");
     }
 
 

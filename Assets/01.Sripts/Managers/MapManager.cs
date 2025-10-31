@@ -192,7 +192,6 @@ public class MapManager : Singleton<MapManager>
     {   // 프리팹 비동기 로드 & 인스턴스화
         var op = Addressables.InstantiateAsync(str, Vector3.zero, Quaternion.identity);
         await op.Task; // 여기서 먼저 대기
-        Debug.Log(op.PercentComplete);
         if (op.Status == AsyncOperationStatus.Succeeded)
         {
             return op.Result; // 성공적으로 불러온 프리팹 반환
