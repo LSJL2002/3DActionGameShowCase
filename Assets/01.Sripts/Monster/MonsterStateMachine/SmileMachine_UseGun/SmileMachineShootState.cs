@@ -93,6 +93,10 @@ public class SmileMachineShootState : MonsterBaseState
             stateMachine.Monster.StopCoroutine(shootRoutine);
             shootRoutine = null;
         }
+        if (stateMachine.Monster is SmileMachine_UseGun machine)
+        {
+            machine.rifleParticleEffect.SetActive(false);
+        }
 
         stateMachine.isAttacking = false;
     }
