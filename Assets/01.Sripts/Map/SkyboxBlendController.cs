@@ -153,4 +153,13 @@ public class SkyboxBlendController : MonoBehaviour
                 DynamicGI.UpdateEnvironment();
             });
     }
+
+    public void ForceRestoreSkybox()
+    {
+        if (RenderSettings.skybox != blendSkybox)
+        {
+            RenderSettings.skybox = blendSkybox;
+            DynamicGI.UpdateEnvironment();
+        }
+    }
 }

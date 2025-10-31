@@ -3,6 +3,7 @@ public class TimeLine_BattleEnd : TimeLineBase
     protected override void OnEnable()
     {
         base.OnEnable();
+        transform.position = BattleManager.Instance.currentZone.transform.position;
 
         playableDirector.Play();
 

@@ -93,6 +93,9 @@ public class MapManager : Singleton<MapManager>
             if (lastClearStage == _bossZoneId || lastClearStage == 0)
             {
                 ReturnToStartZone();
+                controller.enabled = false; // 움직임 제어 잠깐 끄기
+                PlayerManager.Instance.ActiveCharacter.transform.position = new Vector3(0, 0, 5);
+                controller.enabled = true;  // 다시 켜기
             }
             else if (zoneDict.TryGetValue(lastClearStage, out var clearedZone))
             {

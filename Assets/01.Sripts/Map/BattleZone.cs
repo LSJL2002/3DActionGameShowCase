@@ -22,6 +22,7 @@ public class BattleZone : MonoBehaviour
     public string TimeLineED;
 
     public BoxCollider triggerCollider;
+    [SerializeField] private GameObject minimapIcon;
 
     [Header("못나가게막는벽")]
     [SerializeField] private GameObject walls;
@@ -65,12 +66,14 @@ public class BattleZone : MonoBehaviour
                 // 확인UI에서 허가를 받았다면,
                 if (isConfirmed)
                 {
+                    minimapIcon.gameObject.SetActive(false);
                     BattleManager.Instance.StartBattle(this);
                 }
                 else
                 {
                     // CharacterController가 있다면 잠시 비활성화
                     playerCC.enabled = false;
+                    minimapIcon.gameObject.SetActive(true);
 
                     // 플레이어를 뒤로 물러나게 함
                     Sequence backMoveSequence = DOTween.Sequence(); // 새로운 시퀀스 생성

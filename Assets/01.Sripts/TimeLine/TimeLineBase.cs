@@ -56,6 +56,8 @@ public class TimeLineBase : MonoBehaviour
 
         if (PlayerManager.Instance != null)
         PlayerManager.Instance.EnableInput(true); // 입력제한 해제
+        if(MapManager.Instance != null)
+        MapManager.Instance.GetComponent<SkyboxBlendController>()?.ForceRestoreSkybox();
     }
 
     protected virtual void OnDestroy() { }

@@ -19,7 +19,6 @@ public class DropItemSpawner : MonoBehaviour
         Vector3 dropPos = BattleManager.Instance.currentMonster.transform.position; // 몬스터위치
         dropPos.y = 0;
         dropItem.transform.position = dropPos;
-        //dropItem.transform.position = PlayerManager.Instance.stateMachine.Player.transform.position; //플레이어 위치
         dropItem.SetActive(true);
     }
 
