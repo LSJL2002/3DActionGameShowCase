@@ -127,21 +127,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
         var chosenCondition = validConditions[0];
         if (chosenCondition.possiblePatternIds.Count == 0) return;
 
-        if (isRunningPattern && chosenCondition.priority >= currentPatternPriority)
-        {
-            // current one has higher or equal priority → keep running it
-            return;
-        }
-
-        // stop the current pattern if needed
-        if (isRunningPattern)
-        {
-            StopAllCoroutines();
-            isRunningPattern = false;
-            currentPattern = null;
-            currentStepIndex = 0;
-        }
-
         int patternId = chosenCondition.possiblePatternIds[UnityEngine.Random.Range(0, chosenCondition.possiblePatternIds.Count)];
         currentPattern = patternConfig.GetPatternById(patternId);
         if (currentPattern == null) return;
@@ -179,14 +164,16 @@ public class BaseMonster : MonoBehaviour, IDamageable
             if (!ignoreDistanceCheck)
             {
                 float waitTime = 0f;
-                bool inRange = false;
-                yield return new WaitUntil(() =>
+                float maxWait = 5f; // maximum wait time
+                while (!IsDead && PlayerTarget != null && waitTime < maxWait)
                 {
+                    if (Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange)
+                        break; // player in range → attack
+
                     waitTime += Time.deltaTime;
-                    if (IsDead || PlayerTarget == null) return true; // early exit
-                    inRange = Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange;
-                    return inRange || waitTime >= 5f;
-                });
+                    yield return null;
+                }
+                // after maxWait, attack anyway
             }
 
             // --- Perform attack ---
@@ -200,8 +187,8 @@ public class BaseMonster : MonoBehaviour, IDamageable
             yield return new WaitUntil(() => !stateMachine.isAttacking);
 
             // --- Return to Idle for a moment before next attack ---
-            stateMachine.ChangeState(stateMachine.MonsterIdleState);
             yield return new WaitForSeconds(0.3f); // short reset time (tweak as needed)
+            stateMachine.ChangeState(stateMachine.MonsterIdleState);
 
             currentStepIndex++;
         }
