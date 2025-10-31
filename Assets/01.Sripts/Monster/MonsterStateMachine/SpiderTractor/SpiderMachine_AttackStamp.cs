@@ -54,7 +54,6 @@ public class SpiderMachine_AttackStamp : MonsterBaseState
             if (trigger != null)
             {
                 int attackPower = stateMachine.Monster.Stats.AttackPower;
-                Debug.Log(attackPower);
                 int finalDamage = Mathf.RoundToInt(attackPower);
                 trigger.SetDamage(finalDamage);
 
@@ -63,8 +62,6 @@ public class SpiderMachine_AttackStamp : MonsterBaseState
                     hasHit = true;
                     attackCollider.enabled = false;
                 };
-
-                Debug.Log($"[StampAttack] Passed {finalDamage} damage to AttackTrigger.");
             }
 
             attackCollider.enabled = true;
@@ -90,7 +87,6 @@ public class SpiderMachine_AttackStamp : MonsterBaseState
 
     public override void OnAnimationComplete()
     {
-        Debug.Log("Finished attacking");
         if (attackCollider != null)
             attackCollider.enabled = false;
 

@@ -61,6 +61,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         PlayerTarget = GameObject.FindWithTag("Player").transform;
 
         PlayerManager.Instance.OnActiveCharacterChanged += OnActiveCharacterChanged;
+        ResetPatternConditions();
 
         if (Agent != null) Agent.speed = stateMachine.MovementSpeed;
     }
@@ -126,11 +127,13 @@ public class BaseMonster : MonoBehaviour, IDamageable
         var chosenCondition = validConditions[0];
         if (chosenCondition.possiblePatternIds.Count == 0) return;
 
-        if (isRunningPattern && chosenCondition.priority <= currentPatternPriority)
+        if (isRunningPattern && chosenCondition.priority >= currentPatternPriority)
         {
+            // current one has higher or equal priority → keep running it
             return;
         }
 
+        // stop the current pattern if needed
         if (isRunningPattern)
         {
             StopAllCoroutines();
@@ -142,11 +145,13 @@ public class BaseMonster : MonoBehaviour, IDamageable
         int patternId = chosenCondition.possiblePatternIds[UnityEngine.Random.Range(0, chosenCondition.possiblePatternIds.Count)];
         currentPattern = patternConfig.GetPatternById(patternId);
         if (currentPattern == null) return;
+
         stateMachine.RangeMultiplier = chosenCondition.rangeMultiplier;
         stateMachine.PreCastTimeMultiplier = chosenCondition.preCastTimeMultiplier;
         stateMachine.EffectValueMultiplier = chosenCondition.effectValueMultiplier;
         ignoreDistanceCheck = chosenCondition.ignoreDistanceCheck;
-        //Debug.Log($"{name} - Picked conditionId={chosenCondition.id} (priority={chosenCondition.priority}) → patternId={patternId}");
+
+        currentPatternPriority = chosenCondition.priority;
 
         currentStepIndex = 0;
         StartCoroutine(RunPattern());
@@ -202,12 +207,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
                     inRange = Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange;
                     return inRange || waitTime >= 5f;
                 });
-
-                if (!inRange)
-                {
-                    // Player moved away — stop pattern
-                    break;
-                }
             }
 
             // --- Perform attack ---
@@ -230,7 +229,7 @@ public class BaseMonster : MonoBehaviour, IDamageable
         // --- Pattern finished, cooldown before new one ---
         float cooldown = UnityEngine.Random.Range(1f, 3f);
         yield return new WaitForSeconds(cooldown);
-
+        
         currentPattern = null;
         currentPatternPriority = -1;
         isRunningPattern = false;
@@ -258,7 +257,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
     //Virtual, 각 몬스터에게 스킬을 연결할떄
     protected virtual MonsterBaseState GetStateFromEnum(States stateEnum)
     {
-        //Debug.LogWarning($"{name} - BaseMonster.GetStateFromEnum not overridden!");
         return null;
     }
 
@@ -326,5 +324,14 @@ public class BaseMonster : MonoBehaviour, IDamageable
         if (IsDead) return;
 
         (stateMachine.CurrentState as MonsterBaseState)?.OnControllerColliderHit(hit);
+    }
+    private void ResetPatternConditions()
+    {
+        if (patternConfig == null) return;
+
+        foreach (var cond in patternConfig.conditions)
+        {
+            cond.hasTriggered = false;
+        }
     }
 }

@@ -17677,6 +17677,7 @@ GameObject:
   - component: {fileID: 239774494}
   - component: {fileID: 239774493}
   - component: {fileID: 239774492}
+  - component: {fileID: 239774495}
   m_Layer: 0
   m_Name: AT1
   m_TagString: Untagged
@@ -17727,7 +17728,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Priority:
     Enabled: 1
-    m_Value: 0
+    m_Value: 20
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -17765,12 +17766,37 @@ Transform:
   m_GameObject: {fileID: 239774491}
   serializedVersion: 2
   m_LocalRotation: {x: 2.8276903e-12, y: 0.9999816, z: 0.006072461, w: -4.6564946e-10}
-  m_LocalPosition: {x: 1.6799009, y: -3.299487, z: -1.3250413}
+  m_LocalPosition: {x: 1.6799009, y: -3.2994761, z: -1.3250413}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1989644963}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &239774495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239774491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c657da9fbf87ac4caa9deae71bbb343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventTarget: {fileID: 0}
+  CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  CameraDeactivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  BlendCreatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  BlendFinishedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &239883260
 GameObject:
   m_ObjectHideFlags: 0
@@ -25780,6 +25806,7 @@ GameObject:
   - component: {fileID: 365996875}
   - component: {fileID: 365996874}
   - component: {fileID: 365996876}
+  - component: {fileID: 365996877}
   m_Layer: 0
   m_Name: AT2
   m_TagString: Untagged
@@ -25794,14 +25821,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 365996873}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Priority:
     Enabled: 1
-    m_Value: 0
+    m_Value: 20
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -25839,7 +25866,7 @@ Transform:
   m_GameObject: {fileID: 365996873}
   serializedVersion: 2
   m_LocalRotation: {x: -0.00039451913, y: 0.98827416, z: -0.15266831, w: -0.0025538572}
-  m_LocalPosition: {x: 1.69, y: -2.886, z: 0.135}
+  m_LocalPosition: {x: 1.69, y: -2.8859935, z: 0.13500023}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25874,6 +25901,31 @@ MonoBehaviour:
     Time: 0
     Smoothing: 0
     IgnoreY: 0
+--- !u!114 &365996877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365996873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c657da9fbf87ac4caa9deae71bbb343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventTarget: {fileID: 0}
+  CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  CameraDeactivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  BlendCreatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  BlendFinishedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &366563756
 GameObject:
   m_ObjectHideFlags: 0
@@ -28410,7 +28462,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 120
   m_TargetDisplay: 0
 --- !u!224 &411757790
 RectTransform:
@@ -41461,7 +41513,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Roby
+  m_text: Loby
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -43818,7 +43870,7 @@ MonoBehaviour:
   fadeProperty: _Fade
   startFade: 0
   Fade: 0
-  FadeSpeed: 2
+  FadeSpeed: 4
 --- !u!1 &744786701
 GameObject:
   m_ObjectHideFlags: 0
@@ -54978,7 +55030,7 @@ Transform:
   m_GameObject: {fileID: 954951629}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 300, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -54996,11 +55048,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ce57318ce921c94b80d84b9cc0bdbf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brain: {fileID: 1658826878}
-  seqCam: {fileID: 1989644962}
-  CharCam: {fileID: 2071287509}
-  IntroUI: {fileID: 1993045384}
-  CharUI: {fileID: 593237314}
+  seqCam1: {fileID: 239774493}
+  seqCam2: {fileID: 365996874}
+  charCam: {fileID: 2071287509}
+  seq1Event: {fileID: 239774495}
+  seq2Event: {fileID: 365996877}
+  charEvent: {fileID: 2071287511}
+  introUI: {fileID: 1993045384}
+  charUI: {fileID: 593237314}
   nameText: {fileID: 794305469}
 --- !u!114 &954951632
 MonoBehaviour:
@@ -67598,7 +67653,7 @@ Transform:
   m_GameObject: {fileID: 1176891213}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 300, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -71078,7 +71133,7 @@ Transform:
   m_GameObject: {fileID: 1248512483}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 300, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -73416,7 +73471,7 @@ Transform:
   m_GameObject: {fileID: 1281329354}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 300, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -82874,7 +82929,7 @@ GameObject:
   - component: {fileID: 1410876333}
   - component: {fileID: 1410876332}
   m_Layer: 5
-  m_Name: Roby
+  m_Name: Loby
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84547,7 +84602,7 @@ MonoBehaviour:
   fadeProperty: _Fade
   startFade: 0
   Fade: 0
-  FadeSpeed: 2
+  FadeSpeed: 4
 --- !u!1 &1440480596
 GameObject:
   m_ObjectHideFlags: 0
@@ -88067,7 +88122,7 @@ Transform:
   m_GameObject: {fileID: 1512041147}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 300, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -95762,7 +95817,6 @@ GameObject:
   - component: {fileID: 1658826876}
   - component: {fileID: 1658826878}
   - component: {fileID: 1658826879}
-  - component: {fileID: 1658826880}
   m_Layer: 5
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -95779,7 +95833,7 @@ Camera:
   m_GameObject: {fileID: 1658826872}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 4
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -95788,12 +95842,12 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 13.858139
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
   m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
+  m_SensorSize: {x: 21.946, y: 16.002}
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -95830,7 +95884,7 @@ Transform:
   m_GameObject: {fileID: 1658826872}
   serializedVersion: 2
   m_LocalRotation: {x: 2.8276903e-12, y: 0.9999816, z: 0.0060724616, w: -4.6564946e-10}
-  m_LocalPosition: {x: 0, y: 1.105, z: -7.146}
+  m_LocalPosition: {x: 0, y: 1.105011, z: -7.146}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -95876,7 +95930,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  CustomBlends: {fileID: 0}
+  CustomBlends: {fileID: 11400000, guid: 7da06374470b6784eb76b30100c8332c, type: 2}
 --- !u!114 &1658826879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95921,18 +95975,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &1658826880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1658826872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0705c634807e2b144b76b6391df6327b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1663258038
 GameObject:
   m_ObjectHideFlags: 0
@@ -110302,7 +110344,7 @@ MonoBehaviour:
   fadeProperty: _Fade
   startFade: 0
   Fade: 0
-  FadeSpeed: 2
+  FadeSpeed: 4
 --- !u!1 &1898862676
 GameObject:
   m_ObjectHideFlags: 0
@@ -114835,7 +114877,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1989644963}
-  - component: {fileID: 1989644962}
   - component: {fileID: 1989644964}
   m_Layer: 0
   m_Name: SeqCam
@@ -114844,67 +114885,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1989644962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1989644961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53258ad9ad6e71e48bb8643c9522112e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Priority:
-    Enabled: 1
-    m_Value: 10
-  OutputChannel: 1
-  StandbyUpdate: 2
-  m_StreamingVersion: 20241001
-  m_LegacyPriority: 0
-  DefaultTarget:
-    Enabled: 0
-    Target:
-      TrackingTarget: {fileID: 0}
-      LookAtTarget: {fileID: 0}
-      CustomLookAtTarget: 0
-  DefaultBlend:
-    Style: 1
-    Time: 0.5
-    CustomCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  CustomBlends: {fileID: 0}
-  Loop: 0
-  Instructions:
-  - Camera: {fileID: 239774493}
-    Blend:
-      Style: 0
-      Time: 0
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-    Hold: 0.5
-  - Camera: {fileID: 365996874}
-    Blend:
-      Style: 1
-      Time: 0.5
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-    Hold: 0
-  m_LegacyLookAt: {fileID: 0}
-  m_LegacyFollow: {fileID: 0}
 --- !u!4 &1989644963
 Transform:
   m_ObjectHideFlags: 0
@@ -120302,6 +120282,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2071287510}
   - component: {fileID: 2071287509}
+  - component: {fileID: 2071287511}
   m_Layer: 0
   m_Name: Cam1
   m_TagString: Untagged
@@ -120316,14 +120297,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2071287508}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Priority:
     Enabled: 1
-    m_Value: 0
+    m_Value: 20
   OutputChannel: 1
   StandbyUpdate: 2
   m_StreamingVersion: 20241001
@@ -120367,6 +120348,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1294836542}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &2071287511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071287508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c657da9fbf87ac4caa9deae71bbb343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventTarget: {fileID: 0}
+  CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  CameraDeactivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  BlendCreatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  BlendFinishedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2071643151
 GameObject:
   m_ObjectHideFlags: 0
@@ -123043,7 +123049,7 @@ Transform:
   m_GameObject: {fileID: 2108539859}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 300, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

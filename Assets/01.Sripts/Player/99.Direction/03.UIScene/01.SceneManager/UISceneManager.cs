@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -7,30 +9,77 @@ using UnityEngine.UI;
 public class UISceneManager : MonoBehaviour
 {
     [Header("Cinemachine")]
-    public CinemachineBrain brain;
-    public CinemachineSequencerCamera seqCam;
-    public CinemachineCamera CharCam;
+    public CinemachineCamera seqCam1;
+    public CinemachineCamera seqCam2;
+    public CinemachineCamera charCam;
+    public CinemachineCameraEvents seq1Event;
+    public CinemachineCameraEvents seq2Event;
+    public CinemachineCameraEvents charEvent;
 
     [Header("Panel")]
-    public GameObject IntroUI;
-    public GameObject CharUI;
+    public GameObject introUI;
+    public GameObject charUI;
     [Header("UI Text")]
     public TMP_Text nameText; // 텍스트에 띄울 이름
 
+    private int currnetCharacterIndex;
+
+
+    void OnEnable()
+    {
+        seq1Event = seqCam1.GetComponent<CinemachineCameraEvents>();
+        seq2Event = seqCam2.GetComponent<CinemachineCameraEvents>();
+        charEvent = charCam.GetComponent<CinemachineCameraEvents>();
+        seq1Event.CameraActivatedEvent.AddListener(OnSeqCam1Actived);
+        seq2Event.BlendFinishedEvent.AddListener(OnSeqCam2BlendFinished);
+        charEvent.CameraActivatedEvent.AddListener(OnCharCamBlendFinished);
+    }
+
+    void OnDisable()
+    {
+        seq1Event.CameraActivatedEvent.RemoveListener(OnSeqCam1Actived);
+        seq2Event.BlendFinishedEvent.RemoveListener(OnSeqCam2BlendFinished);
+        charEvent.CameraActivatedEvent.RemoveListener(OnCharCamBlendFinished);
+    }
 
     void Start()
     {
-        if (IntroUI != null) IntroUI.SetActive(false);
-        if (CharUI != null) CharUI.SetActive(false);
+        introUI?.SetActive(false);
+        charUI?.SetActive(false);
+        seqCam2.enabled = false;
+        charCam.enabled = false;
     }
 
-    // UI 제어 메서드
-    public void ShowIntroUI() => IntroUI?.SetActive(true);
-    public void HideIntroUI() => IntroUI?.SetActive(false);
-    public void ShowCharUI() => CharUI?.SetActive(true);
-    public void HideCharUI() => CharUI?.SetActive(false);
+    private void OnSeqCam1Actived(ICinemachineMixer mixer, ICinemachineCamera cam)
+    {
+        if (cam == seqCam1)
+        {
+            DOVirtual.DelayedCall(1.5f, () =>
+            {
+                seqCam1.enabled = false; // 이전 카메라 비활성화
+                seqCam2.enabled = true;  // 다음 카메라 활성화
+            })
+                    .SetUpdate(true); // timeScale=0에서도 실행
+        }
+    }
 
-    public void UpdateUI(string name)
+    private void OnSeqCam2BlendFinished(ICinemachineMixer mixer, ICinemachineCamera cam)
+    {
+        if (cam == seqCam2)
+        {
+            introUI?.SetActive(true);
+        }
+    }
+
+    private void OnCharCamBlendFinished(ICinemachineMixer mixer, ICinemachineCamera cam)
+    {
+        if (cam == charCam)
+        {
+            charUI?.SetActive(true);
+        }
+    }
+
+    public async void UpdateUI(string name)
     {
         if (nameText != null)
         {
@@ -38,18 +87,23 @@ public class UISceneManager : MonoBehaviour
             nameText.text = verticalName;
         }
 
+        await UIManager.Instance.Show<CharacterInfomationUI>();
+
         switch (name)
         {
             case "Yuki":
-                //ShowChar1UI();
+                EventsManager.Instance.TriggerEvent<int>(GameEventT.OnSelectChange, 0);
+                currnetCharacterIndex = 0;
                 break;
 
             case "Aoi":
-                //ShowChar2UI();
+                EventsManager.Instance.TriggerEvent<int>(GameEventT.OnSelectChange, 1);
+                currnetCharacterIndex = 1;
                 break;
 
             case "Mika":
-                //ShowChar3UI();
+                EventsManager.Instance.TriggerEvent<int>(GameEventT.OnSelectChange, 2);
+                currnetCharacterIndex = 2;
                 break;
         }
     }

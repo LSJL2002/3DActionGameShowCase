@@ -153,10 +153,7 @@ public class PlayerCharacter : MonoBehaviour
     }
     private void OnInventoryToggle()
     {
-        Time.timeScale = 0f;
-        PlayerManager.EnableInput(false);
-        direction.LoadScene();
-        _camera.MainCamera.gameObject.SetActive(false);
+        direction.LoadScene(this);
     }
     private void OnLockOnToggle() => _camera.ToggleLockOnTarget(null);
 
