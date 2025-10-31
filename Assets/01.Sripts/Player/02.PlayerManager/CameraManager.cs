@@ -20,8 +20,6 @@ public class CameraManager : MonoBehaviour
 
     private ColorAdjustments colorAdjustments;
 
-
-
     private Transform player; // 기본 바닦임
     private Transform playerFace;
     private Transform lockOnTarget;
