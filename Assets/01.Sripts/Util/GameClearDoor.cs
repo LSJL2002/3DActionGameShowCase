@@ -17,6 +17,8 @@ public class GameClearDoor : MonoBehaviour, IInteractable
         UIManager.Instance.currentDecisionState = DecisionState.GameClear;
 
         SelectItem();
+        AnalyticsManager.SendFunnelStep("58");
+        Debug.Log("58");
     }
 
     public async void SelectItem()
