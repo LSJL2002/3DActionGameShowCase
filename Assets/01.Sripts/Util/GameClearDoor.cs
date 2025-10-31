@@ -3,13 +3,21 @@ using UnityEngine;
 
 public class GameClearDoor : MonoBehaviour, IInteractable
 {
+    private string clearDoorText;
+
+
+    private void OnEnable()
+    {
+        clearDoorText = $"Press Key.F";
+    }
     public string GetInteractPrompt()
     {
-        return $"Press Key.F";
+        return clearDoorText;
     }
 
     public void OnInteract()
     {
+        clearDoorText = string.Empty;
         PlayerManager.Instance.EnableInput(true); // 플레이어 입력 잠금
         Cursor.lockState = CursorLockMode.None; // 커서 잠금 해제
         Cursor.visible = true; // 커서 보이게
@@ -35,9 +43,13 @@ public class GameClearDoor : MonoBehaviour, IInteractable
             {
                 SceneLoadManager.Instance.ChangeScene(1);
             }
+            else
+            {
+                clearDoorText = $"Press Key.F";
+            }
 
-            // 이벤트 구독 해제
-            decisionUI.OnDecisionMade -= onDecisionMadeCallback;
+                // 이벤트 구독 해제
+                decisionUI.OnDecisionMade -= onDecisionMadeCallback;
         };
 
         // 이벤트 구독
