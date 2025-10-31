@@ -64,34 +64,130 @@ public class BattleManager : Singleton<BattleManager>
         {
             Debug.Log($"Battle Start → Timeline 실행: {currentZone.TimeLineOP}");
             await TimeLineManager.Instance.PlayAndWait(currentZone.TimeLineOP);
-        }
+            switch (currentZone.id)
+            {
+                case 60000000:
+                    AnalyticsManager.SendFunnelStep("11");
+                    Debug.Log("SendFunnelStep(11)");
+                    break;
+                case 60000001:
+                    AnalyticsManager.SendFunnelStep("21");
+                    Debug.Log("SendFunnelStep(21)");
+                    break;
+                case 60000002:
+                    AnalyticsManager.SendFunnelStep("21");
+                    Debug.Log("SendFunnelStep(21)");
+                    break;
+                case 60000003:
+                    AnalyticsManager.SendFunnelStep("21");
+                    Debug.Log("SendFunnelStep(21)");
+                    break;
+                case 60000004:
+                    AnalyticsManager.SendFunnelStep("31");
+                    Debug.Log("SendFunnelStep(31)");
+                    break;
+                case 60000005:
+                    AnalyticsManager.SendFunnelStep("31");
+                    Debug.Log("SendFunnelStep(31)");
+                    break;
+                case 60000006:
+                    AnalyticsManager.SendFunnelStep("31");
+                    Debug.Log("SendFunnelStep(31)");
+                    break;
+                case 60000007:
+                    AnalyticsManager.SendFunnelStep("41");
+                    Debug.Log("SendFunnelStep(41)");
+                    break;
+                case 60000008:
+                    AnalyticsManager.SendFunnelStep("41");
+                    Debug.Log("SendFunnelStep(41)");
+                    break;
+                case 60000009:
+                    AnalyticsManager.SendFunnelStep("41");
+                    Debug.Log("SendFunnelStep(41)");
+                    break;
+                case 60000010:
+                    AnalyticsManager.SendFunnelStep("51");
+                    Debug.Log("SendFunnelStep(51)");
+                    break;
+            }
 
-        // 게임 종료 중이면 리턴
-        if (!Application.isPlaying || this == null) return;
+            // 게임 종료 중이면 리턴
+            if (!Application.isPlaying || this == null) return;
 
-        // 3. 몬스터 소환
-        currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
+            // 3. 몬스터 소환
+            currentMonster = await SpawnMonster(zone.summonMonsterId, zone.transform.position);
 
-        if (currentMonster != null)
-        {
-            currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
-            Debug.Log("Battle Start → 몬스터 소환 완료");
-        }
-        else
-        {
-            Debug.LogError("Battle Start → 몬스터 소환 실패");
-        }
+            if (currentMonster != null)
+            {
+                currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
+                Debug.Log("Battle Start → 몬스터 소환 완료");
+            }
+            else
+            {
+                Debug.LogError("Battle Start → 몬스터 소환 실패");
+            }
 
-        // 4. 전투 시작 이벤트 브로드캐스트
-        EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnBattleStart, zone);
+            // 4. 전투 시작 이벤트 브로드캐스트
+            EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnBattleStart, zone);
 
-        var evt = new CustomEvent("battle_start")
+            var evt = new CustomEvent("battle_start")
         {
             { "zoneName", currentZone.stageName },
             { "timestamp", System.DateTime.UtcNow.ToString("o") }
         };
-        AnalyticsService.Instance.RecordEvent(evt);
-        AudioManager.Instance.PlayBGM("BattleBGM");
+            AnalyticsService.Instance.RecordEvent(evt);
+            AudioManager.Instance.PlayBGM("BattleBGM");
+
+            switch (currentZone.id)
+            {
+                case 60000000:
+                    AnalyticsManager.SendFunnelStep("10");
+                    Debug.Log("SendFunnelStep(10)");
+                    break;
+                case 60000001:
+                    AnalyticsManager.SendFunnelStep("20");
+                    Debug.Log("SendFunnelStep(20)");
+                    break;
+                case 60000002:
+                    AnalyticsManager.SendFunnelStep("20");
+                    Debug.Log("SendFunnelStep(20)");
+                    break;
+                case 60000003:
+                    AnalyticsManager.SendFunnelStep("20");
+                    Debug.Log("SendFunnelStep(20)");
+                    break;
+                case 60000004:
+                    AnalyticsManager.SendFunnelStep("30");
+                    Debug.Log("SendFunnelStep(30)");
+                    break;
+                case 60000005:
+                    AnalyticsManager.SendFunnelStep("30");
+                    Debug.Log("SendFunnelStep(30)");
+                    break;
+                case 60000006:
+                    AnalyticsManager.SendFunnelStep("30");
+                    Debug.Log("SendFunnelStep(30)");
+                    break;
+                case 60000007:
+                    AnalyticsManager.SendFunnelStep("40");
+                    Debug.Log("SendFunnelStep(40)");
+                    break;
+                case 60000008:
+                    AnalyticsManager.SendFunnelStep("40");
+                    Debug.Log("SendFunnelStep(40)");
+                    break;
+                case 60000009:
+                    AnalyticsManager.SendFunnelStep("40");
+                    Debug.Log("SendFunnelStep(40)");
+                    break;
+                case 60000010:
+                    AnalyticsManager.SendFunnelStep("50");
+                    Debug.Log("SendFunnelStep(50)");
+                    break;
+            }
+
+        }
     }
 
 
@@ -166,16 +262,64 @@ public class BattleManager : Singleton<BattleManager>
         Debug.Log($"[Analytics] monster_death → {currentMonster.name}, time={elapsed:F2}s, zone={currentZone.stageName}");
 
         await TimeLineManager.Instance.PlayAndWait(currentZone.TimeLineED);
-        EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
-        if (currentZone.id == MapManager.Instance.bossZoneId)
-        {
-            MapManager.Instance.HandleLastStageClear();
-        }
 
-        await UniTask.NextFrame();
-        StopWarning();
-        AudioManager.Instance.PlayBGM("afterBattleBGM");
-    }
+                EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
+                if (currentZone.id == MapManager.Instance.bossZoneId)
+                {
+                    MapManager.Instance.HandleLastStageClear();
+                }
+
+                await UniTask.NextFrame();
+                StopWarning();
+                AudioManager.Instance.PlayBGM("afterBattleBGM");
+        switch (currentZone.id)
+        {
+            case 60000000:
+                AnalyticsManager.SendFunnelStep("17");
+                Debug.Log("SendFunnelStep(17)");
+                break;
+            case 60000001:
+                AnalyticsManager.SendFunnelStep("27");
+                Debug.Log("SendFunnelStep(27)");
+                break;
+            case 60000002:
+                AnalyticsManager.SendFunnelStep("27");
+                Debug.Log("SendFunnelStep(27)");
+                break;
+            case 60000003:
+                AnalyticsManager.SendFunnelStep("27");
+                Debug.Log("SendFunnelStep(27)");
+                break;
+            case 60000004:
+                AnalyticsManager.SendFunnelStep("37");
+                Debug.Log("SendFunnelStep(37)");
+                break;
+            case 60000005:
+                AnalyticsManager.SendFunnelStep("37");
+                Debug.Log("SendFunnelStep(37)");
+                break;
+            case 60000006:
+                AnalyticsManager.SendFunnelStep("37");
+                Debug.Log("SendFunnelStep(37)");
+                break;
+            case 60000007:
+                AnalyticsManager.SendFunnelStep("47");
+                Debug.Log("SendFunnelStep(47)");
+                break;
+            case 60000008:
+                AnalyticsManager.SendFunnelStep("47");
+                Debug.Log("SendFunnelStep(47)");
+                break;
+            case 60000009:
+                AnalyticsManager.SendFunnelStep("47");
+                Debug.Log("SendFunnelStep(47)");
+                break;
+            case 60000010:
+                AnalyticsManager.SendFunnelStep("57");
+                Debug.Log("SendFunnelStep(57)");
+                break;
+        }
+        }
 
 
 
