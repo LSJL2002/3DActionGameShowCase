@@ -56,7 +56,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         base.Awake(); // 반드시 호출
         path = Application.persistentDataPath + fileName;
-        Debug.Log("[SaveManager] Path initialized: " + path);
+        //Debug.Log("[SaveManager] Path initialized: " + path);
     }
 
     private void EnsurePath()
@@ -64,7 +64,7 @@ public class SaveManager : Singleton<SaveManager>
         if (string.IsNullOrEmpty(path))
         {
             path = Application.persistentDataPath + fileName;
-            Debug.LogWarning("[SaveManager] Path was null, reinitialized to: " + path);
+            //Debug.LogWarning("[SaveManager] Path was null, reinitialized to: " + path);
         }
     }
 
@@ -74,7 +74,7 @@ public class SaveManager : Singleton<SaveManager>
         GetItemDataInList();
         string data = JsonUtility.ToJson(playerData);
         File.WriteAllText(path, EncryptAndDecrypt(data));
-        Debug.Log($"{data}를 저장했습니다");
+        //Debug.Log($"{data}를 저장했습니다");
     }
 
     public bool LoadData()
@@ -84,7 +84,7 @@ public class SaveManager : Singleton<SaveManager>
 
         if (!File.Exists(path))
         {
-            Debug.LogWarning("Save file not found, creating new one...");
+            //Debug.LogWarning("Save file not found, creating new one...");
             playerData = new SaveData();
             SaveData();
             return false;
@@ -92,7 +92,7 @@ public class SaveManager : Singleton<SaveManager>
 
         string data = File.ReadAllText(path);
         playerData = JsonUtility.FromJson<SaveData>(EncryptAndDecrypt(data));
-        Debug.Log($"{EncryptAndDecrypt(data)}를 불러왔습니다");
+        //Debug.Log($"{EncryptAndDecrypt(data)}를 불러왔습니다");
         return true;
     }
 
@@ -147,7 +147,7 @@ public class SaveManager : Singleton<SaveManager>
         if (File.Exists(path))
         {
             File.Delete(path);
-            Debug.Log("[SaveManager] Save 파일 삭제 완료");
+            //Debug.Log("[SaveManager] Save 파일 삭제 완료");
         }
         //ResetData(); // 새 데이터로 다시 저장 (빈 파일 생성)
     }
