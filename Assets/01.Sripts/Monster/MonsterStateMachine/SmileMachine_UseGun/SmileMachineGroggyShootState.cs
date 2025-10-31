@@ -90,7 +90,7 @@ public class SmileMachineGroggyShoot : MonsterBaseState
         }
         if (stateMachine.Monster is SmileMachine_UseGun machine)
         {
-            machine.rifleParticleEffect.SetActive(false);
+            machine.groggyParticleEffect.SetActive(false);
         }
 
         stateMachine.isAttacking = false;
