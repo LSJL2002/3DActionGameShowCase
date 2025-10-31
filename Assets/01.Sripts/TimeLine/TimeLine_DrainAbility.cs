@@ -38,47 +38,36 @@ public class TimeLine_DrainAbility : TimeLineBase
         {
             case 60000000:
                 AnalyticsManager.SendFunnelStep("19");
-                Debug.Log("SendFunnelStep(19)");
                 break;
             case 60000001:
                 AnalyticsManager.SendFunnelStep("29");
-                Debug.Log("SendFunnelStep(29)");
                 break;
             case 60000002:
                 AnalyticsManager.SendFunnelStep("29");
-                Debug.Log("SendFunnelStep(29)");
                 break;
             case 60000003:
                 AnalyticsManager.SendFunnelStep("29");
-                Debug.Log("SendFunnelStep(29)");
                 break;
             case 60000004:
                 AnalyticsManager.SendFunnelStep("39");
-                Debug.Log("SendFunnelStep(39)");
                 break;
             case 60000005:
                 AnalyticsManager.SendFunnelStep("39");
-                Debug.Log("SendFunnelStep(39)");
                 break;
             case 60000006:
                 AnalyticsManager.SendFunnelStep("39");
-                Debug.Log("SendFunnelStep(39)");
                 break;
             case 60000007:
                 AnalyticsManager.SendFunnelStep("49");
-                Debug.Log("SendFunnelStep(49)");
                 break;
             case 60000008:
                 AnalyticsManager.SendFunnelStep("49");
-                Debug.Log("SendFunnelStep(49)");
                 break;
             case 60000009:
                 AnalyticsManager.SendFunnelStep("49");
-                Debug.Log("SendFunnelStep(49)");
                 break;
             case 60000010:
                 AnalyticsManager.SendFunnelStep("59");
-                Debug.Log("SendFunnelStep(59)");
                 break;
         }
     }

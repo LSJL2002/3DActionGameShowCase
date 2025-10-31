@@ -65,7 +65,7 @@ public class BattleManager : Singleton<BattleManager>
         if (!string.IsNullOrEmpty(zone.TimeLineOP))
         {
             CheckPlayOPCutScene();
-            Debug.Log($"Battle Start → Timeline 실행: {currentZone.TimeLineOP}");
+          
             await TimeLineManager.Instance.PlayAndWait(currentZone.TimeLineOP);
 
 
@@ -78,12 +78,9 @@ public class BattleManager : Singleton<BattleManager>
             if (currentMonster != null)
             {
                 currentMonster.transform.LookAt(PlayerManager.Instance.transform.position);
-                Debug.Log("Battle Start → 몬스터 소환 완료");
+               
             }
-            else
-            {
-                Debug.LogError("Battle Start → 몬스터 소환 실패");
-            }
+           
 
             // 4. 전투 시작 이벤트 브로드캐스트
             EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnBattleStart, zone);
@@ -206,7 +203,7 @@ public class BattleManager : Singleton<BattleManager>
         monsterStats = null;
         isBattle = false;
 
-        Debug.Log("BattleManager → 배틀 상태 리셋 완료");
+       
     }
 
     public string GetItemInfo(int index)
@@ -218,8 +215,8 @@ public class BattleManager : Singleton<BattleManager>
         }
         else
         {
-            // 3. 유효하지 않은 경우, 오류 로그를 출력하고 null을 반환합니다.
-            Debug.LogError($"Invalid index: {index}. The list has only {currentZone.getableItemTable.Count} items.");
+          
+          
             return null;
         }
     }
@@ -231,47 +228,36 @@ public class BattleManager : Singleton<BattleManager>
         {
             case 60000000:
                 AnalyticsManager.SendFunnelStep("10");
-                Debug.Log("SendFunnelStep(10)");
                 break;
             case 60000001:
                 AnalyticsManager.SendFunnelStep("20");
-                Debug.Log("SendFunnelStep(20)");
                 break;
             case 60000002:
                 AnalyticsManager.SendFunnelStep("20");
-                Debug.Log("SendFunnelStep(20)");
                 break;
             case 60000003:
                 AnalyticsManager.SendFunnelStep("20");
-                Debug.Log("SendFunnelStep(20)");
                 break;
             case 60000004:
                 AnalyticsManager.SendFunnelStep("30");
-                Debug.Log("SendFunnelStep(30)");
                 break;
             case 60000005:
                 AnalyticsManager.SendFunnelStep("30");
-                Debug.Log("SendFunnelStep(30)");
                 break;
             case 60000006:
                 AnalyticsManager.SendFunnelStep("30");
-                Debug.Log("SendFunnelStep(30)");
                 break;
             case 60000007:
                 AnalyticsManager.SendFunnelStep("40");
-                Debug.Log("SendFunnelStep(40)");
                 break;
             case 60000008:
                 AnalyticsManager.SendFunnelStep("40");
-                Debug.Log("SendFunnelStep(40)");
                 break;
             case 60000009:
                 AnalyticsManager.SendFunnelStep("40");
-                Debug.Log("SendFunnelStep(40)");
                 break;
             case 60000010:
                 AnalyticsManager.SendFunnelStep("50");
-                Debug.Log("SendFunnelStep(50)");
                 break;
         }
     }
@@ -282,47 +268,36 @@ public class BattleManager : Singleton<BattleManager>
         {
             case 60000000:
                 AnalyticsManager.SendFunnelStep("11");
-                Debug.Log("SendFunnelStep(11)");
                 break;
             case 60000001:
                 AnalyticsManager.SendFunnelStep("21");
-                Debug.Log("SendFunnelStep(21)");
                 break;
             case 60000002:
                 AnalyticsManager.SendFunnelStep("21");
-                Debug.Log("SendFunnelStep(21)");
                 break;
             case 60000003:
                 AnalyticsManager.SendFunnelStep("21");
-                Debug.Log("SendFunnelStep(21)");
                 break;
             case 60000004:
                 AnalyticsManager.SendFunnelStep("31");
-                Debug.Log("SendFunnelStep(31)");
                 break;
             case 60000005:
                 AnalyticsManager.SendFunnelStep("31");
-                Debug.Log("SendFunnelStep(31)");
                 break;
             case 60000006:
                 AnalyticsManager.SendFunnelStep("31");
-                Debug.Log("SendFunnelStep(31)");
                 break;
             case 60000007:
                 AnalyticsManager.SendFunnelStep("41");
-                Debug.Log("SendFunnelStep(41)");
                 break;
             case 60000008:
                 AnalyticsManager.SendFunnelStep("41");
-                Debug.Log("SendFunnelStep(41)");
                 break;
             case 60000009:
                 AnalyticsManager.SendFunnelStep("41");
-                Debug.Log("SendFunnelStep(41)");
                 break;
             case 60000010:
                 AnalyticsManager.SendFunnelStep("51");
-                Debug.Log("SendFunnelStep(51)");
                 break;
         }
     }
@@ -333,47 +308,36 @@ public class BattleManager : Singleton<BattleManager>
         {
             case 60000000:
                 AnalyticsManager.SendFunnelStep("17");
-                Debug.Log("SendFunnelStep(17)");
                 break;
             case 60000001:
                 AnalyticsManager.SendFunnelStep("27");
-                Debug.Log("SendFunnelStep(27)");
                 break;
             case 60000002:
                 AnalyticsManager.SendFunnelStep("27");
-                Debug.Log("SendFunnelStep(27)");
                 break;
             case 60000003:
                 AnalyticsManager.SendFunnelStep("27");
-                Debug.Log("SendFunnelStep(27)");
                 break;
             case 60000004:
                 AnalyticsManager.SendFunnelStep("37");
-                Debug.Log("SendFunnelStep(37)");
                 break;
             case 60000005:
                 AnalyticsManager.SendFunnelStep("37");
-                Debug.Log("SendFunnelStep(37)");
                 break;
             case 60000006:
                 AnalyticsManager.SendFunnelStep("37");
-                Debug.Log("SendFunnelStep(37)");
                 break;
             case 60000007:
                 AnalyticsManager.SendFunnelStep("47");
-                Debug.Log("SendFunnelStep(47)");
                 break;
             case 60000008:
                 AnalyticsManager.SendFunnelStep("47");
-                Debug.Log("SendFunnelStep(47)");
                 break;
             case 60000009:
                 AnalyticsManager.SendFunnelStep("47");
-                Debug.Log("SendFunnelStep(47)");
                 break;
             case 60000010:
                 AnalyticsManager.SendFunnelStep("57");
-                Debug.Log("SendFunnelStep(57)");
                 break;
         }
     }

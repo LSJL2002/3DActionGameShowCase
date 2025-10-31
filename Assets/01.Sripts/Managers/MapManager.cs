@@ -35,24 +35,10 @@ public class MapManager : Singleton<MapManager>
     public async Task LoadMap()
     {
         GameObject map = await LoadAscync("StatgeSceneMap");
-        if (map != null)
-        {
-            Debug.Log("Map 성공적으로 불러옴!");
-        }
-        else
-        {
-            Debug.Log("Map 로드실패");
-        }
+
 
         GameObject btZone = await LoadAscync("BattleZone");
-        if (btZone != null)
-        {
-            Debug.Log("BattleZone 성공적으로 불러옴!");
-        }
-        else
-        {
-            Debug.LogError("BattleZone 로드 실패");
-        }
+
         // NavMeshData만 로드 (맵 위치 기준으로 맞출 수 있음)
         await LoadNavMesh("NavMesh", Vector3.zero, Quaternion.identity);
 
@@ -124,9 +110,9 @@ public class MapManager : Singleton<MapManager>
 
 
             currentZone = null;
-            Debug.Log("맵 불러오기 완료");
+
         }
-       
+
     }
 
     private void ReturnToStartZone()
@@ -139,12 +125,9 @@ public class MapManager : Singleton<MapManager>
 
             startZone.gameObject.SetActive(true);
             currentZone = startZone;
-            Debug.Log("시작 스테이지로 복귀!");
+
         }
-        else
-        {
-            Debug.LogError("시작 스테이지를 찾을 수 없습니다!");
-        }
+
     }
 
     public void tutorialWallToggle()
@@ -183,10 +166,7 @@ public class MapManager : Singleton<MapManager>
             {
                 nextZone.gameObject.SetActive(true);
             }
-            else
-            {
-                Debug.Log("다음 스테이지 없음 → 마지막 스테이지거나 잘못된 ID");
-            }
+
         }
         zone.gameObject.SetActive(false);
         currentZone = null;
@@ -195,7 +175,7 @@ public class MapManager : Singleton<MapManager>
     public void HandleLastStageClear()
     {
         SaveManager.Instance.playerData.round++;
-        Debug.Log($"마지막 스테이지 클리어! 현재 회차: {round}");
+
 
         // 세이브
         SaveManager.Instance.playerData.LastClearStage = 0;
@@ -216,7 +196,7 @@ public class MapManager : Singleton<MapManager>
         }
         else
         {
-            Debug.LogError($"BattleZone 로드 실패: {op}");
+
             return null; // 실패 시 null 반환
         }
 
@@ -232,111 +212,16 @@ public class MapManager : Singleton<MapManager>
 
         if (navData == null)
         {
-            Debug.LogError($"NavMeshData 로드 실패: {navKey}");
             return;
         }
 
         // 2. NavMeshData 등록
         navMeshInstance = NavMesh.AddNavMeshData(navData, position, rotation);
 
-        Debug.Log($"NavMeshData 로드 완료: {navKey}");
     }
 
     public void UnloadNavMesh()
     {
         navMeshInstance.Remove();
-        Debug.Log("NavMeshData 제거 완료");
     }
 }
-
-//[Header("Stage Flow")]
-//public int startingStageID;
-
-//private Dictionary<int, BattleZone> stageDict = new();
-//private BattleZone currentZone;
-////private BattleZone lastClearedZone;
-
-//void OnEnable()
-//{
-//    BattleZone.OnBattle += HandleZoneEnter;
-//    BattleZone.OnBattleClear += HandleZoneClear;
-//}
-
-//void OnDisable()
-//{
-//    BattleZone.OnBattle -= HandleZoneEnter;
-//    BattleZone.OnBattleClear -= HandleZoneClear;
-//}
-
-//void Start()
-//{
-//    // 씬에 있는 모든 BattleZone 등록
-//foreach (var zone in FindObjectsOfType<BattleZone>(true))
-//{
-//    RegisterStage(zone);
-//    zone.Deactivate();
-//}
-
-//// 시작 스테이지만 켜기
-//if (stageDict.TryGetValue(startingStageID, out var startZone))
-//{
-//    startZone.Activate();
-//}
-//}
-
-//public void RegisterStage(BattleZone zone)
-//{
-//    if (!stageDict.ContainsKey(zone.stageID))
-//        stageDict.Add(zone.stageID, zone);
-//}
-
-//private void HandleZoneEnter(BattleZone zone)
-//{
-//    currentZone = zone;
-//    zone.StartBattle();
-
-//    foreach (var kvp in stageDict)
-//    {
-//        if (kvp.Value != currentZone)
-//        {
-//            kvp.Value.Deactivate();
-//            Debug.Log($"{kvp.Value.stageID} 번 Zone 비활성화");
-//        }
-//    }
-
-//}
-
-//private void HandleZoneClear(BattleZone zone)
-//{
-//    if (!stageDict.ContainsKey(zone.stageID)) return;
-//    zone._monster.SetActive(false);
-//    // 다음 스테이지 열기
-//    foreach (var id in zone.nextStages)
-//    {
-//        var next = GetStage(id);
-//        if (next != null) next.Activate();
-//    }
-
-//    if (zone.isEndingStage)
-//    {
-//        Debug.Log("모든 스테이지 클리어! 엔딩씬으로 이동!");
-//        //SceneLoadManager.Instance.LoadScene(04);
-//    }
-
-//    //lastClearedZone = zone;
-//    currentZone = null;
-//}
-
-//public BattleZone GetStage(int id)
-//{
-//    stageDict.TryGetValue(id, out var zone);
-//    return zone;
-//}
-
-
-// new Game  - Reset해주면됨 / 다지워짐
-// Load Game  - 로드해야됨 / 하려면 저장데이터가 필요함. 
-// 스테이지에서 필요한 저장데이터는 마지막으로 클리어한 스테이지 LastClearedStage(Zone)변수에 저장할건데 StageID를 저장할것임
-// 몇회차인지도 저장, 불러오기가필요함
-// 이 데이터는 뉴게임을 누르지않는이상 초기화 될필요가없음
-// 불러왔다면 해당 배틀존을 클리어한 시점이 되어야하며, 플레이어의 위치는 그 배틀존 혹은 zone.transform.position+(0,0,100)
