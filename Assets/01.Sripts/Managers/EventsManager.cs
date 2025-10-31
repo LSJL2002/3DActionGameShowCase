@@ -16,6 +16,7 @@ public enum GameEvent
     OnPlayerHeal,             // 발생 : 회복기믹, 구독 : GameUI
     OnHealthChanged,          // 발생 : MonsterStatHandler, 구독 : 몬스터체력바UI, 배틀매니저
     OnMenu,                   // 발생 : Menu, 구독 : GameUI/MinimapUI/AwakenUI/TutorialUI
+    OnESCButton,              // 발생 : PlayerCharacter, 구독 : InterfaceUI
 }
 
 // 매개변수 있는 타입의 이벤트들

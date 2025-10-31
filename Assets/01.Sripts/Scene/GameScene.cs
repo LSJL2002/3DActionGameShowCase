@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 public class GameScene : SceneBase
@@ -55,6 +56,9 @@ public class GameScene : SceneBase
         {
             await UIManager.Instance.Show<TutorialUI>();
         }
+
+        // n초 대기 후 실행
+        DOVirtual.DelayedCall(6f, () => { PlayerManager.Instance.ActiveCharacter.OnMenuToggle(); });
     }
 
     public void LoadInventoryFromSave()

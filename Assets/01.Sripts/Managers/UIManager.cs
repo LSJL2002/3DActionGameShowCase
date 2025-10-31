@@ -14,7 +14,7 @@ public enum DecisionState
     GameClear,
 }
 
-public interface IMenuOpen
+public interface IInterfaceOpen
 {
     void EventListen(); // 이벤트 구독/해제
 

@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 
 // GameUI의 Base
-public partial class GameUI : UIBase, IMenuOpen
+public partial class GameUI : UIBase, IInterfaceOpen
 {
     [SerializeField] CanvasGroup gameUICanvasGroup;
 
@@ -43,7 +43,9 @@ public partial class GameUI : UIBase, IMenuOpen
     public void EventListen()
     {
         EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
+        EventsManager.Instance.StopListening(GameEvent.OnESCButton, Interact);
         EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
+        EventsManager.Instance.StartListening(GameEvent.OnESCButton, Interact);
     }
 
     public void Interact()

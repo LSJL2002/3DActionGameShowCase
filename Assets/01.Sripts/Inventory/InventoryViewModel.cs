@@ -151,6 +151,10 @@ public class InventoryViewModel : ScriptableObject
             case 60000009:
                 AnalyticsManager.SendFunnelStep("48");
                 break;
+            case 60000010:
+                AnalyticsManager.SendFunnelStep("48");
+                break;
+
         }
     }
 }

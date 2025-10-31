@@ -19,7 +19,7 @@ public enum Speaker
     Player
 }
 
-public class TutorialUI : UIBase, IMenuOpen
+public class TutorialUI : UIBase, IInterfaceOpen
 {
     public TMP_Text talkText;
 
@@ -336,7 +336,9 @@ public class TutorialUI : UIBase, IMenuOpen
     public void EventListen()
     {
         EventsManager.Instance.StopListening(GameEvent.OnMenu, Interact);
+        EventsManager.Instance.StopListening(GameEvent.OnESCButton, Interact);
         EventsManager.Instance.StartListening(GameEvent.OnMenu, Interact);
+        EventsManager.Instance.StartListening(GameEvent.OnESCButton, Interact);
     }
 
     public void Interact()

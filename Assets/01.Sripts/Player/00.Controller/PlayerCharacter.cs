@@ -143,14 +143,19 @@ public class PlayerCharacter : MonoBehaviour
     }
 
     private bool isPaused = false;
-    private void OnMenuToggle()
+    public void OnMenuToggle()
     {
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0f : 1f;
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
 
         _camera.Volume_Blur.enabled = isPaused;
+
+        EventsManager.Instance.TriggerEvent(GameEvent.OnESCButton);
+        if (!isPaused) return;
+        UIManager.Instance.Show<InterfaceUI>();
     }
+
     private void OnInventoryToggle()
     {
         direction.LoadScene(this);
