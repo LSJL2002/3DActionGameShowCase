@@ -70,8 +70,7 @@ public class SmileMachine_Gernade : MonsterBaseState
         while (!telegraphFinished)
             yield return null;
 
-        Vector3 latestPos = stateMachine.Monster.PlayerTarget.position;
-        LaunchGrenade(latestPos, (int)(stateMachine.Monster.Stats.AttackPower));
+        LaunchGrenade(targetPos, (int)(stateMachine.Monster.Stats.AttackPower));
 
         yield return new WaitForSeconds(1f);
 
