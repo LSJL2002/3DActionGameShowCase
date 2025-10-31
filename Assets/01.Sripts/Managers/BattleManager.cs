@@ -49,6 +49,7 @@ public class BattleManager : Singleton<BattleManager>
     public async void StartBattle(BattleZone zone)
     {
         if (isBattle) return;
+        CheckInBattle();                           // 퍼널10번
         isBattle = true;
         AudioManager.Instance.StopBGM();
         battleStartTime = Time.time;
@@ -62,55 +63,10 @@ public class BattleManager : Singleton<BattleManager>
         // 2. 컷씬 실행 & 종료 대기 (스킵 포함)
         if (!string.IsNullOrEmpty(zone.TimeLineOP))
         {
+            CheckPlayOPCutScene();
             Debug.Log($"Battle Start → Timeline 실행: {currentZone.TimeLineOP}");
             await TimeLineManager.Instance.PlayAndWait(currentZone.TimeLineOP);
-            switch (currentZone.id)
-            {
-                case 60000000:
-                    AnalyticsManager.SendFunnelStep("11");
-                    Debug.Log("SendFunnelStep(11)");
-                    break;
-                case 60000001:
-                    AnalyticsManager.SendFunnelStep("21");
-                    Debug.Log("SendFunnelStep(21)");
-                    break;
-                case 60000002:
-                    AnalyticsManager.SendFunnelStep("21");
-                    Debug.Log("SendFunnelStep(21)");
-                    break;
-                case 60000003:
-                    AnalyticsManager.SendFunnelStep("21");
-                    Debug.Log("SendFunnelStep(21)");
-                    break;
-                case 60000004:
-                    AnalyticsManager.SendFunnelStep("31");
-                    Debug.Log("SendFunnelStep(31)");
-                    break;
-                case 60000005:
-                    AnalyticsManager.SendFunnelStep("31");
-                    Debug.Log("SendFunnelStep(31)");
-                    break;
-                case 60000006:
-                    AnalyticsManager.SendFunnelStep("31");
-                    Debug.Log("SendFunnelStep(31)");
-                    break;
-                case 60000007:
-                    AnalyticsManager.SendFunnelStep("41");
-                    Debug.Log("SendFunnelStep(41)");
-                    break;
-                case 60000008:
-                    AnalyticsManager.SendFunnelStep("41");
-                    Debug.Log("SendFunnelStep(41)");
-                    break;
-                case 60000009:
-                    AnalyticsManager.SendFunnelStep("41");
-                    Debug.Log("SendFunnelStep(41)");
-                    break;
-                case 60000010:
-                    AnalyticsManager.SendFunnelStep("51");
-                    Debug.Log("SendFunnelStep(51)");
-                    break;
-            }
+
 
             // 게임 종료 중이면 리턴
             if (!Application.isPlaying || this == null) return;
@@ -138,54 +94,6 @@ public class BattleManager : Singleton<BattleManager>
         };
             AnalyticsService.Instance.RecordEvent(evt);
             AudioManager.Instance.PlayBGM("BattleBGM");
-
-            switch (currentZone.id)
-            {
-                case 60000000:
-                    AnalyticsManager.SendFunnelStep("10");
-                    Debug.Log("SendFunnelStep(10)");
-                    break;
-                case 60000001:
-                    AnalyticsManager.SendFunnelStep("20");
-                    Debug.Log("SendFunnelStep(20)");
-                    break;
-                case 60000002:
-                    AnalyticsManager.SendFunnelStep("20");
-                    Debug.Log("SendFunnelStep(20)");
-                    break;
-                case 60000003:
-                    AnalyticsManager.SendFunnelStep("20");
-                    Debug.Log("SendFunnelStep(20)");
-                    break;
-                case 60000004:
-                    AnalyticsManager.SendFunnelStep("30");
-                    Debug.Log("SendFunnelStep(30)");
-                    break;
-                case 60000005:
-                    AnalyticsManager.SendFunnelStep("30");
-                    Debug.Log("SendFunnelStep(30)");
-                    break;
-                case 60000006:
-                    AnalyticsManager.SendFunnelStep("30");
-                    Debug.Log("SendFunnelStep(30)");
-                    break;
-                case 60000007:
-                    AnalyticsManager.SendFunnelStep("40");
-                    Debug.Log("SendFunnelStep(40)");
-                    break;
-                case 60000008:
-                    AnalyticsManager.SendFunnelStep("40");
-                    Debug.Log("SendFunnelStep(40)");
-                    break;
-                case 60000009:
-                    AnalyticsManager.SendFunnelStep("40");
-                    Debug.Log("SendFunnelStep(40)");
-                    break;
-                case 60000010:
-                    AnalyticsManager.SendFunnelStep("50");
-                    Debug.Log("SendFunnelStep(50)");
-                    break;
-            }
 
         }
     }
@@ -260,18 +168,166 @@ public class BattleManager : Singleton<BattleManager>
         AnalyticsService.Instance.RecordEvent(evt);
         AnalyticsService.Instance.Flush();
         Debug.Log($"[Analytics] monster_death → {currentMonster.name}, time={elapsed:F2}s, zone={currentZone.stageName}");
-
+        CheckPlayEDCutScene();
         await TimeLineManager.Instance.PlayAndWait(currentZone.TimeLineED);
 
-                EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
-                if (currentZone.id == MapManager.Instance.bossZoneId)
-                {
-                    MapManager.Instance.HandleLastStageClear();
-                }
+        EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
+        if (currentZone.id == MapManager.Instance.bossZoneId)
+        {
+            MapManager.Instance.HandleLastStageClear();
+        }
 
-                await UniTask.NextFrame();
-                StopWarning();
-                AudioManager.Instance.PlayBGM("afterBattleBGM");
+        await UniTask.NextFrame();
+        StopWarning();
+        AudioManager.Instance.PlayBGM("afterBattleBGM");
+
+    }
+
+
+
+    public void ClearBattle()
+    {
+        EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnBattleClear, currentZone);
+        SaveManager.Instance.SetStageData(currentZone.id);
+        SaveManager.Instance.SaveData();
+
+        Addressables.ReleaseInstance(currentMonster.gameObject);
+        currentZone = null;
+        currentMonster = null;
+        monsterStats = null;
+        isBattle = false;
+    }
+
+    public void ResetBattleState()
+    {
+        currentZone = null;
+        currentMonster = null;
+        monsterStats = null;
+        isBattle = false;
+
+        Debug.Log("BattleManager → 배틀 상태 리셋 완료");
+    }
+
+    public string GetItemInfo(int index)
+    {
+        if (index >= 0 && index < currentZone.getableItemTable.Count)
+        {
+            // 2. 유효한 경우, 해당 인덱스의 값을 반환합니다.
+            return currentZone.getableItemTable[index].ToString();
+        }
+        else
+        {
+            // 3. 유효하지 않은 경우, 오류 로그를 출력하고 null을 반환합니다.
+            Debug.LogError($"Invalid index: {index}. The list has only {currentZone.getableItemTable.Count} items.");
+            return null;
+        }
+    }
+
+
+    private void CheckInBattle()
+    {
+        switch (currentZone.id)
+        {
+            case 60000000:
+                AnalyticsManager.SendFunnelStep("10");
+                Debug.Log("SendFunnelStep(10)");
+                break;
+            case 60000001:
+                AnalyticsManager.SendFunnelStep("20");
+                Debug.Log("SendFunnelStep(20)");
+                break;
+            case 60000002:
+                AnalyticsManager.SendFunnelStep("20");
+                Debug.Log("SendFunnelStep(20)");
+                break;
+            case 60000003:
+                AnalyticsManager.SendFunnelStep("20");
+                Debug.Log("SendFunnelStep(20)");
+                break;
+            case 60000004:
+                AnalyticsManager.SendFunnelStep("30");
+                Debug.Log("SendFunnelStep(30)");
+                break;
+            case 60000005:
+                AnalyticsManager.SendFunnelStep("30");
+                Debug.Log("SendFunnelStep(30)");
+                break;
+            case 60000006:
+                AnalyticsManager.SendFunnelStep("30");
+                Debug.Log("SendFunnelStep(30)");
+                break;
+            case 60000007:
+                AnalyticsManager.SendFunnelStep("40");
+                Debug.Log("SendFunnelStep(40)");
+                break;
+            case 60000008:
+                AnalyticsManager.SendFunnelStep("40");
+                Debug.Log("SendFunnelStep(40)");
+                break;
+            case 60000009:
+                AnalyticsManager.SendFunnelStep("40");
+                Debug.Log("SendFunnelStep(40)");
+                break;
+            case 60000010:
+                AnalyticsManager.SendFunnelStep("50");
+                Debug.Log("SendFunnelStep(50)");
+                break;
+        }
+    }
+
+    private void CheckPlayOPCutScene()
+    {
+        switch (currentZone.id)
+        {
+            case 60000000:
+                AnalyticsManager.SendFunnelStep("11");
+                Debug.Log("SendFunnelStep(11)");
+                break;
+            case 60000001:
+                AnalyticsManager.SendFunnelStep("21");
+                Debug.Log("SendFunnelStep(21)");
+                break;
+            case 60000002:
+                AnalyticsManager.SendFunnelStep("21");
+                Debug.Log("SendFunnelStep(21)");
+                break;
+            case 60000003:
+                AnalyticsManager.SendFunnelStep("21");
+                Debug.Log("SendFunnelStep(21)");
+                break;
+            case 60000004:
+                AnalyticsManager.SendFunnelStep("31");
+                Debug.Log("SendFunnelStep(31)");
+                break;
+            case 60000005:
+                AnalyticsManager.SendFunnelStep("31");
+                Debug.Log("SendFunnelStep(31)");
+                break;
+            case 60000006:
+                AnalyticsManager.SendFunnelStep("31");
+                Debug.Log("SendFunnelStep(31)");
+                break;
+            case 60000007:
+                AnalyticsManager.SendFunnelStep("41");
+                Debug.Log("SendFunnelStep(41)");
+                break;
+            case 60000008:
+                AnalyticsManager.SendFunnelStep("41");
+                Debug.Log("SendFunnelStep(41)");
+                break;
+            case 60000009:
+                AnalyticsManager.SendFunnelStep("41");
+                Debug.Log("SendFunnelStep(41)");
+                break;
+            case 60000010:
+                AnalyticsManager.SendFunnelStep("51");
+                Debug.Log("SendFunnelStep(51)");
+                break;
+        }
+    }
+
+    private void CheckPlayEDCutScene()
+    {
         switch (currentZone.id)
         {
             case 60000000:
@@ -319,59 +375,6 @@ public class BattleManager : Singleton<BattleManager>
                 Debug.Log("SendFunnelStep(57)");
                 break;
         }
-        }
-
-
-
-    public void ClearBattle()
-    {
-        EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnBattleClear, currentZone);
-        SaveManager.Instance.SetStageData(currentZone.id);
-        SaveManager.Instance.SaveData();
-
-        Addressables.ReleaseInstance(currentMonster.gameObject);
-        currentZone = null;
-        currentMonster = null;
-        monsterStats = null;
-        isBattle = false;
     }
-
-    public void ResetBattleState()
-    {
-        currentZone = null;
-        currentMonster = null;
-        monsterStats = null;
-        isBattle = false;
-
-        Debug.Log("BattleManager → 배틀 상태 리셋 완료");
-    }
-
-    public string GetItemInfo(int index)
-    {
-        if (index >= 0 && index < currentZone.getableItemTable.Count)
-        {
-            // 2. 유효한 경우, 해당 인덱스의 값을 반환합니다.
-            return currentZone.getableItemTable[index].ToString();
-        }
-        else
-        {
-            // 3. 유효하지 않은 경우, 오류 로그를 출력하고 null을 반환합니다.
-            Debug.LogError($"Invalid index: {index}. The list has only {currentZone.getableItemTable.Count} items.");
-            return null;
-        }
-    }
-
 }
 
-
-
-
-
-//몬스터 체력별 대사
-//OnTakeDamage
-// UIManager.Instance.Show<TutorialUI>();
-//UIManager.Instance.Get<TutorialUI>().TryPlayBossThresholdDialogue(SceneType.Boss_1);
-
-//public void TryPlayBossThresholdDialogue(SceneType type)
-//{
-//    float hpPercent = BattleManager.Instance.monsterStats.CurrentHP / BattleManager.Instance.monsterStats.maxHp;

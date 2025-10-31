@@ -14,6 +14,26 @@ public class TimeLine_DrainAbility : TimeLineBase
 
         playableDirector.Play();
 
+
+    }
+
+    protected async override void OnDisable()
+    {
+        base.OnDisable();
+
+        playableDirector.stopped -= OnTimeLineStop;
+
+        if (UIManager.Instance == null) return;
+        await UIManager.Instance.Show<TutorialUI>();
+        UIManager.Instance.Get<TutorialUI>().PlayBossAfterSelection(SceneType.Boss_1);
+        AudioManager.Instance.StopBGM();
+        AudioManager.Instance.PlayBGM("InGameBGM");
+        CheckPlayDrainAbility();
+        BattleManager.Instance.ClearBattle();
+
+    }
+    private void CheckPlayDrainAbility()
+    {
         switch (BattleManager.Instance.currentZone.id)
         {
             case 60000000:
@@ -61,18 +81,5 @@ public class TimeLine_DrainAbility : TimeLineBase
                 Debug.Log("SendFunnelStep(59)");
                 break;
         }
-    }
-
-    protected async override void OnDisable()
-    {
-        base.OnDisable();
-
-        playableDirector.stopped -= OnTimeLineStop;
-
-        if (UIManager.Instance == null) return;
-        await UIManager.Instance.Show<TutorialUI>();
-        UIManager.Instance.Get<TutorialUI>().PlayBossAfterSelection(SceneType.Boss_1);
-        AudioManager.Instance.StopBGM();
-        AudioManager.Instance.PlayBGM("InGameBGM");
     }
 }
