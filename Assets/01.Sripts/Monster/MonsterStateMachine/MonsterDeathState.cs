@@ -33,18 +33,8 @@ public class MonsterDeathState : MonsterBaseState
 
         PlayTriggerAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Death));
         stateMachine.Monster.IsDead = true;
+    }
 
-        int defaultLayer = LayerMask.NameToLayer("Default");
-        SetLayerRecursively(stateMachine.Monster.gameObject, defaultLayer);
-    }
-    
-    private void SetLayerRecursively(GameObject obj, int layer)
-    {
-        if (obj == null) return;
-        obj.layer = layer;
-        foreach (Transform child in obj.transform)
-            SetLayerRecursively(child.gameObject, layer);
-    }
 
     public override void Exit()
     {
