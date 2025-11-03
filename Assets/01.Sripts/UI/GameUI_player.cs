@@ -23,6 +23,7 @@ public partial class GameUI : UIBase
     [Header("[Util]")]
     [SerializeField] private CanvasGroup playerInfoCanvasGroup;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private Image damageEffect;
 
     private Image activeHPImage_Back;
     private Image activeHPImage_Front;
@@ -125,6 +126,8 @@ public partial class GameUI : UIBase
         playerDamageSequence = DOTween.Sequence();
         playerDamageSequence.Append(activeHPText.DOColor(Color.red, duration));
         playerDamageSequence.Append(activeHPText.DOColor(Color.white, duration));
+        playerDamageSequence.Append(damageEffect.DOFade(50f/255f, duration));
+        playerDamageSequence.Append(damageEffect.DOFade(0f, duration));
         playerDamageSequence.Append(activeHPImage_Front.DOFillAmount(playerHPpercentage, 0f));
         playerDamageSequence.Append(activeHPImage_Back.DOFillAmount(playerHPpercentage, 2.0f).SetEase(Ease.OutQuad));
 

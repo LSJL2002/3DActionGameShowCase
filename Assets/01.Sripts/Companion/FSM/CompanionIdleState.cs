@@ -17,7 +17,7 @@ public class CompanionIdleState : ICompanionState
 
     public void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.G)) sm.ChangeState(new CompanionTalkState(sm));
+        //if (Input.GetKeyDown(KeyCode.G)) sm.ChangeState(new CompanionTalkState(sm));
 
         // 거리/플레이어 움직임 감지해 Follow로 전환 원하면 여기 조건 추가
         // if ( ... ) sm.ChangeState(new CompanionFollowState(sm));
