@@ -51,15 +51,6 @@ public class ObjectFollow : MonoBehaviour
         EventsManager.Instance.StartListening<BattleZone>(GameEventT.OnBattleClear, IdleMove); // 구독
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaa");
-            OnClickTarget();
-        }
-    }
-
     private void FixedUpdate()
     {
         if (isTalkMode || isAttack) return; // 조력자 이동을 못하게 막는 로직.
