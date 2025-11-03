@@ -154,6 +154,7 @@ public class BattleManager : Singleton<BattleManager>
             return;
 
         float elapsed = Time.time - battleStartTime; // 전투 시작 후 경과 시간
+        currentMonster.transform.position = currentZone.transform.position;
 
         // 아날리틱스 전송
         var evt = new CustomEvent("monster_death")
