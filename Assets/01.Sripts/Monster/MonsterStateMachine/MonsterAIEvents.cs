@@ -1,6 +1,11 @@
 using System;
 using UnityEngine;
-
+public enum AIMode
+{
+    CombatIdle,
+    Chase,
+    Attack
+}
 public class MonsterAIEvents : MonoBehaviour
 {
     public event Action OnPlayerDetected;
@@ -14,11 +19,10 @@ public class MonsterAIEvents : MonoBehaviour
     [Header("Attack Cooldown")]
     public float attackCooldown = 3f;
     public float lastAttackTime;
-
-    public enum AIMode { Chase, CombatIdle, Attack } // 기존 private에서 public으로 변경
     [SerializeField] private AIMode currentMode = AIMode.CombatIdle; // 인스펙터에서 수정 가능하도록 설정
     private bool processingEnabled = true;
     private bool combatIdleStarted = false;
+    public bool hasChosenPattern = false;
 
     //FailSafe
     private float idleTimer;
@@ -46,7 +50,6 @@ public class MonsterAIEvents : MonoBehaviour
 
     private void Update()
     {
-
         if (!processingEnabled || player == null || stateMachine == null)
             return;
 
@@ -54,6 +57,12 @@ public class MonsterAIEvents : MonoBehaviour
         {
             currentMode = AIMode.CombatIdle;
             return;
+        }
+
+        if (!hasChosenPattern)
+        {
+            stateMachine.Monster.PickPatternByCondition();
+            hasChosenPattern = true;
         }
 
         float distance = Vector3.Distance(transform.position, player.position);

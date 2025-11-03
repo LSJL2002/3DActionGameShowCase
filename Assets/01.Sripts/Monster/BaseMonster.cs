@@ -70,10 +70,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
     {
         stateMachine.HandleInput();
         stateMachine.LogicUpdate();
-        if (!isRunningPattern && !IsDead && stateMachine.CurrentState is MonsterIdleState)
-        {
-            PickPatternByCondition();
-        }
         ApplyGravity();
     }
     private void OnActiveCharacterChanged(PlayerCharacter newCharacter)
@@ -160,22 +156,31 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
             float skillRange = GetSkillRangeFromState(attackState);
 
-            // --- Wait until player is in range (unless ignoring distance) ---
+            // --- Wait until player is in range (skip if ignoring distance) ---
             if (!ignoreDistanceCheck)
             {
                 float waitTime = 0f;
-                float maxWait = 5f; // maximum wait time
-                while (!IsDead && PlayerTarget != null && waitTime < maxWait)
-                {
-                    if (Vector3.Distance(transform.position, PlayerTarget.position) <= skillRange)
-                        break; // player in range → attack
+                float maxWait = 5f; // maximum wait time before skipping
 
+                while (!IsDead && PlayerTarget != null &&
+                    Vector3.Distance(transform.position, PlayerTarget.position) > skillRange && !stateMachine.isAttacking)
+                {
                     waitTime += Time.deltaTime;
+
+                    if (waitTime >= maxWait)
+                    {
+                        // skip this attack and choose a new pattern
+                        currentPattern = null;
+                        currentPatternPriority = -1;
+                        isRunningPattern = false;
+                        stateMachine.Monster.aiEvents.hasChosenPattern = false;
+                        stateMachine.ChangeState(stateMachine.MonsterIdleState);
+                        yield break; // exit the coroutine early
+                    }
+
                     yield return null;
                 }
-                // after maxWait, attack anyway
             }
-
             // --- Perform attack ---
             stateMachine.isAttacking = true;
             stateMachine.ChangeState(attackState);
@@ -183,27 +188,27 @@ public class BaseMonster : MonoBehaviour, IDamageable
             if (!hasStartedCombat)
                 hasStartedCombat = true;
 
-            // Wait until attack finishes
+            // Wait for attack to fully finish
             yield return new WaitUntil(() => !stateMachine.isAttacking);
 
-            // --- Return to Idle for a moment before next attack ---
-            yield return new WaitForSeconds(0.3f); // short reset time (tweak as needed)
+            // --- Return to Idle for a short reset ---
+            yield return new WaitForSeconds(0.3f);
             stateMachine.ChangeState(stateMachine.MonsterIdleState);
 
             currentStepIndex++;
         }
 
-        // --- Pattern finished, cooldown before new one ---
+        // --- Pattern finished cooldown ---
         float cooldown = UnityEngine.Random.Range(1f, 3f);
         yield return new WaitForSeconds(cooldown);
-        
+
         currentPattern = null;
         currentPatternPriority = -1;
         isRunningPattern = false;
-
-        // Return to idle after finishing pattern
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
+        stateMachine.Monster.aiEvents.hasChosenPattern = false;
     }
+
 
     public float GetCurrentSkillRange()
     {

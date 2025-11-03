@@ -18,14 +18,8 @@ public class SmileToiletChargeState : MonsterBaseState
     public override void Enter()
     {
         StopMoving();
+        stateMachine.isAttacking = true;
 
-        if (skillData == null)
-        {
-            stateMachine.isAttacking = false;
-            return;
-        }
-
-        // Start charge animation immediately
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Charge));
 
         Vector3 spawnPos = stateMachine.Monster.AreaEffectPoint.transform.position;
@@ -86,6 +80,7 @@ public class SmileToiletChargeState : MonsterBaseState
     public override void OnAnimationComplete()
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
+        stateMachine.isAttacking = false;
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
@@ -108,7 +103,6 @@ public class SmileToiletChargeState : MonsterBaseState
         {
             mc.ResetRootMotionMultiplier(); // reset to normal
         }
-        stateMachine.isAttacking = false;
     }
     
     public override void OnAttackHit()

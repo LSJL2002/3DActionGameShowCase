@@ -74,6 +74,7 @@ public class SmileToiletSmashState : MonsterBaseState
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
+        stateMachine.isAttacking = false;
     }
 
     public override void Exit()
@@ -86,7 +87,6 @@ public class SmileToiletSmashState : MonsterBaseState
             stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
         }
-        stateMachine.isAttacking = false;
         hasHit = false;
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill1));
     }

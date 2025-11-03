@@ -195,10 +195,6 @@ public class MonsterStateMachine : StateMachine
         if (!isAttacking)
         {
             isAttacking = true;
-            if (Monster is BaseMonster monster)
-            {
-                monster.PickPatternByCondition();
-            }
         }
     }
     //Enable or Disable the AI events
