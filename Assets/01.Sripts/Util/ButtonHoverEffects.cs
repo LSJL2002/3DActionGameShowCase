@@ -45,15 +45,17 @@ public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerE
             
             case ButtonType.ItemSlotButton:
                 if (isPointerEntering) return;
-                isPointerEntering = true;
-
+                
                 if (itemSlotUI.itemData != null) // 아이템 정보가 있다면
                 {
+                    isPointerEntering = true;
+
                     AudioManager.Instance.PlaySFX("ButtonSoundEffect3");
                     this.transform.DOScale(1.1f, 0.2f);
 
                     // 아이템정보UI 켜기
                     await UIManager.Instance.Show<ItemInformationUI>();
+                    
 
                     // 아직 변수가 없다면 가져와서 할당
                     if (itemInformationUI == null)
@@ -68,7 +70,6 @@ public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerE
                     Vector3 offset = new Vector3(rectTransform.sizeDelta.x / 2f, rectTransform.sizeDelta.y / 2f, 0);
                     itemInformationUI.transform.position = (Vector3)eventData.position - offset;
                 }
-                isPointerEntering = false;
                 break;
         }
     }
@@ -87,6 +88,8 @@ public class ButtonHoverEffects : MonoBehaviour, IPointerEnterHandler, IPointerE
                 break;
                 
             case ButtonType.ItemSlotButton:
+                isPointerEntering = false;
+
                 // itemDescriptionUI 변수가 null이 아닐 때만 실행
                 if (itemInformationUI != null && itemInformationUI.isActiveAndEnabled)
                 {
