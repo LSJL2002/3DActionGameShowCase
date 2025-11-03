@@ -13,8 +13,6 @@ public class TimeLine_DrainAbility : TimeLineBase
         transform.position = playerPosition;
 
         playableDirector.Play();
-
-
     }
 
     protected async override void OnDisable()
@@ -30,7 +28,6 @@ public class TimeLine_DrainAbility : TimeLineBase
         AudioManager.Instance.PlayBGM("InGameBGM");
         CheckPlayDrainAbility();
         BattleManager.Instance.ClearBattle();
-
     }
     private void CheckPlayDrainAbility()
     {

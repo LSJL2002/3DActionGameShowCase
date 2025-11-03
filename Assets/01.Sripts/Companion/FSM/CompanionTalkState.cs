@@ -51,7 +51,7 @@ public class CompanionTalkState : ICompanionState
 
     private async UniTask OpenTalkUIAsync()
     {
-        Ctx.ui = await UIManager.Instance.Show<CompanionUI>();
+        //Ctx.ui = await UIManager.Instance.Show<CompanionUI>();
         if (exited || Ctx.ui == null) return;
 
         if (Ctx.chatUI) Ctx.chatUI.SetActive(true);
@@ -75,31 +75,31 @@ public class CompanionTalkState : ICompanionState
     public void Update()
     {
         // ★ 추가: UI가 뜨기 전에는 Follow처럼 이동 로직 수행
-        if (timer > 0f && !exited)
-        {
-            timer -= Time.deltaTime;
+        //if (timer > 0f && !exited)
+        //{
+        //    timer -= Time.deltaTime;
 
-            if (Ctx.targetObject != null && Ctx.rb != null)
-            {
-                // FollowState의 이동 로직을 그대로 가져옴
-                Vector3 nextMove = Vector3.MoveTowards(
-                    Ctx.rb.position,
-                    Ctx.targetObject.position,
-                    Ctx.moveSpeed * Time.deltaTime);
+        //    if (Ctx.targetObject != null && Ctx.rb != null)
+        //    {
+        //        // FollowState의 이동 로직을 그대로 가져옴
+        //        Vector3 nextMove = Vector3.MoveTowards(
+        //            Ctx.rb.position,
+        //            Ctx.targetObject.position,
+        //            Ctx.moveSpeed * Time.deltaTime);
 
-                Ctx.rb.MovePosition(nextMove);
+        //        Ctx.rb.MovePosition(nextMove);
 
-                Vector3 dir = (Ctx.lookObject.position - Ctx.rb.position).normalized;
-                dir = Vector3.ProjectOnPlane(dir, Vector3.up);
-                if (dir.sqrMagnitude > 0.0001f)
-                {
-                    Quaternion look = Quaternion.LookRotation(dir, Vector3.up);
-                    Quaternion nextRot = Quaternion.RotateTowards(
-                        Ctx.rb.rotation, look, Ctx.rotationSpeed * Time.deltaTime);
-                    Ctx.rb.MoveRotation(nextRot);
-                }
-            }
-        }
+        //        Vector3 dir = (Ctx.lookObject.position - Ctx.rb.position).normalized;
+        //        dir = Vector3.ProjectOnPlane(dir, Vector3.up);
+        //        if (dir.sqrMagnitude > 0.0001f)
+        //        {
+        //            Quaternion look = Quaternion.LookRotation(dir, Vector3.up);
+        //            Quaternion nextRot = Quaternion.RotateTowards(
+        //                Ctx.rb.rotation, look, Ctx.rotationSpeed * Time.deltaTime);
+        //            Ctx.rb.MoveRotation(nextRot);
+        //        }
+        //    }
+        //}
     }
 
     public void PhysicsUpdate() { }

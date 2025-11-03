@@ -118,7 +118,7 @@ public class ObjectFollow : MonoBehaviour
     }
     public async void OnUi()
     {
-        ui = await UIManager.Instance.Show<CompanionUI>();
+        //ui = await UIManager.Instance.Show<CompanionUI>();
     }
 
     public void ExitTalkMode()
