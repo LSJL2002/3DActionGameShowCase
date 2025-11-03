@@ -7,6 +7,7 @@ public class TimeLineBase : MonoBehaviour
     private CanvasGroup gameUICanvasGroup;
     private CanvasGroup miniMapUICanvasGroup;
     private CanvasGroup attackGaugeUICanvasGroup;
+    private bool aleadyClickSkipButton = false;
     [SerializeField] protected PlayableDirector playableDirector;
 
     protected virtual void OnTimeLineStop(PlayableDirector director)
@@ -64,6 +65,9 @@ public class TimeLineBase : MonoBehaviour
 
     public void OnSkipButton()
     {
+        if (aleadyClickSkipButton) return;
+        aleadyClickSkipButton = true;
+
         // 타임라인의 재생 시간을 '총 길이 - 아주 작은 값'으로 설정
         // playableDirector.duration : 타임라인의 총 재생 시간(초)
         // 1 / GetSpeed() : 1 프레임을 재생하는 데 걸리는 시간(프레임 간격)을 의미
