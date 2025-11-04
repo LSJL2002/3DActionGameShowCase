@@ -34,21 +34,45 @@ public class SpiderMachine_TurnLeft : MonsterBaseState
         direction.y = 0;
 
         Vector3 targetDirection = Quaternion.Euler(0, -90f, 0) * direction;
-
         Vector3 targetPos = playerPos + targetDirection.normalized * leftOffset;
+
+        float stuckTimer = 0f;
+        float maxStuckTime = 1.5f; 
+        float lastDistance = Vector3.Distance(monsterTransform.position, targetPos);
 
         while (Vector3.Distance(monsterTransform.position, targetPos) > 0.05f)
         {
-            monsterTransform.position = Vector3.MoveTowards(monsterTransform.position, targetPos, moveSpeed * Time.deltaTime);
-            monsterTransform.rotation = Quaternion.Lerp(monsterTransform.rotation,
+            monsterTransform.position = Vector3.MoveTowards(
+                monsterTransform.position, targetPos, moveSpeed * Time.deltaTime);
+
+            monsterTransform.rotation = Quaternion.Lerp(
+                monsterTransform.rotation,
                 Quaternion.LookRotation(playerPos - monsterTransform.position),
                 Time.deltaTime * 5f);
+
+            float currentDistance = Vector3.Distance(monsterTransform.position, targetPos);
+
+            if (Mathf.Abs(currentDistance - lastDistance) < 0.01f)
+            {
+                stuckTimer += Time.deltaTime;
+                if (stuckTimer > maxStuckTime)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                stuckTimer = 0f;
+            }
+
+            lastDistance = currentDistance;
             yield return null;
         }
 
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Run));
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
+
 
 
     public override void Exit()
