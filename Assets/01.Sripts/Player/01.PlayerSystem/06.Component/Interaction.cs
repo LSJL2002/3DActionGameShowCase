@@ -31,7 +31,7 @@ public class Interaction : MonoBehaviour //itemobject랑 상호작용만 하는 
     private void Update()
     {
         // F키 입력 시 상호작용
-        if (Input.GetKeyDown(KeyCode.F) && nearestItem != null)
+        if (Input.GetKeyDown(KeyCode.F) && nearestItem != null && Time.timeScale != 0f)
         {
             nearestItem.OnInteract();
         }

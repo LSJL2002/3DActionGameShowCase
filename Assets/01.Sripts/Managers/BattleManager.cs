@@ -101,6 +101,8 @@ public class BattleManager : Singleton<BattleManager>
 
     protected override void Update()
     {
+        if (Time.timeScale != 1f) return;
+
         if (Input.GetKeyDown(KeyCode.P))
         {
             if (currentZone != null)
