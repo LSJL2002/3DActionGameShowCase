@@ -15,6 +15,7 @@ public class SpiderMachine_TurnRight : MonsterBaseState
 
     public override void Enter()
     {
+        Debug.Log("Moving monster right");
         if (moveCoroutine != null)
             stateMachine.Monster.StopCoroutine(moveCoroutine);
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Run));
@@ -24,6 +25,7 @@ public class SpiderMachine_TurnRight : MonsterBaseState
 
     private IEnumerator MoveAroundPlayer90()
     {
+        Debug.Log("Moving monster right");
         Transform monsterTransform = stateMachine.Monster.transform;
         Vector3 playerPos = stateMachine.Monster.PlayerTarget.position;
 
@@ -42,6 +44,7 @@ public class SpiderMachine_TurnRight : MonsterBaseState
         }
 
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Run));
+        stateMachine.isAttacking = false;
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
