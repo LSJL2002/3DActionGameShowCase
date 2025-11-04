@@ -174,6 +174,7 @@ public class BattleManager : Singleton<BattleManager>
         AudioManager.Instance.StopBGM();
         if (monsterStats == null || currentZone == null || monsterStats.CurrentHP > 0)
             return;
+        currentMonster.GetComponent<BoxCollider>().enabled = false;
 
         float elapsed = Time.time - battleStartTime; // 전투 시작 후 경과 시간
         currentMonster.transform.position = currentZone.transform.position;
