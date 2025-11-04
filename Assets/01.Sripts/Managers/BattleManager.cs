@@ -142,7 +142,9 @@ public class BattleManager : Singleton<BattleManager>
                 PlayerManager.Instance.ActiveCharacter.transform.position = MapManager.Instance.currentZone.transform.position;
                 controller.enabled = true;
             }
-               
+            MapManager.Instance.startingZoneId = 60000000;
+
+
         }
         
     }
