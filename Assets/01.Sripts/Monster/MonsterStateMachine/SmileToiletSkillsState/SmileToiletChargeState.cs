@@ -18,12 +18,14 @@ public class SmileToiletChargeState : MonsterBaseState
     public override void Enter()
     {
         StopMoving();
+        Debug.Log("[Charge] Entering charge state");
         stateMachine.isAttacking = true;
 
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Charge));
 
         Vector3 spawnPos = stateMachine.Monster.AreaEffectPoint.transform.position;
         aoeInstance = Object.Instantiate(skillData.areaEffectPrefab, spawnPos, skillData.areaEffectPrefab.transform.rotation);
+        Debug.Log("[Charge] Spawned AOE instance: " + aoeInstance.name);
         stateMachine.Monster.RegisterAOE(aoeInstance);
         aoeController = aoeInstance.GetComponent<AreaEffectController>();
 
@@ -37,6 +39,7 @@ public class SmileToiletChargeState : MonsterBaseState
         aoeController.OnTelegraphFinished += OnTelegraphComplete;
 
         aoeController.DashInitialize(skillData.preCastTime, skillData.range, stateMachine.Monster.Stats.AttackPower, stateMachine.Monster.transform);
+        Debug.Log("[Charge] DashInitialize called successfully");
     }
 
     private void OnTelegraphStart()

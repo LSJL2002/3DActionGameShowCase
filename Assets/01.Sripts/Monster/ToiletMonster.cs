@@ -29,7 +29,7 @@ public class ToiletMonster : BaseMonster
         if (state is SmileToiletSmashState)
             return Stats.GetSkill("SmileMachine_Smash").range / 2f;
         if (state is SmileToiletChargeState)
-            return Stats.GetSkill("SmileMachine_Charge").range;
+            return Stats.GetSkill("SmileMachine_Charge").skillUseRange;
         return Stats.AttackRange;
     }
     public override void OnTakeDamage(int amount)
