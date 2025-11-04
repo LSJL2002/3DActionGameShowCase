@@ -62,8 +62,6 @@ public class SpiderMachine_TurnLeft : MonsterBaseState
         stateMachine.isAttacking = false;
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
-
-    // Unity calls this when CharacterController hits something
     public override void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.gameObject.layer == LayerMask.NameToLayer("Wall"))
