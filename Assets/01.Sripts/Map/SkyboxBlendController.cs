@@ -57,7 +57,7 @@ public class SkyboxBlendController : MonoBehaviour
     // ===============================================================
     public void HandleBattleClear()
     {
-        if(SaveManager.Instance.playerData.LastClearStage == MapManager.Instance.bossZoneId)
+        if(MapManager.Instance.currentZone.id == MapManager.Instance.bossZoneId)
         {
             HandleAllClear();
             return;
