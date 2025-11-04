@@ -48,6 +48,7 @@ public class MonsterStateMachine : StateMachine
 
     private MonsterAIEvents aiEvents;
     public bool isAttacking = false;
+    
 
     private Istate currentStateInternal;
     public Istate CurrentState => currentStateInternal;
