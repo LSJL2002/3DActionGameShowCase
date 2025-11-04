@@ -10,14 +10,14 @@ public class MapManager : Singleton<MapManager>
     private Dictionary<int, BattleZone> zoneDict = new Dictionary<int, BattleZone>();
     public BattleZone currentZone;
 
-    [SerializeField] private int startingZoneId; //처음 켜줄 Zone 아이디
+    [SerializeField] public int startingZoneId; //처음 켜줄 Zone 아이디
     [SerializeField] private int _bossZoneId = 60000010; //마지막 Zone 아이디
     public int bossZoneId => _bossZoneId;
 
     [SerializeField] private int round;  // 회차
 
     [SerializeField] private GameObject tutorialWall;
-    [SerializeField] private GameObject gameClearDoor;
+    [SerializeField] public GameObject gameClearDoor;
 
     NavMeshDataInstance navMeshInstance;
 
@@ -118,7 +118,7 @@ public class MapManager : Singleton<MapManager>
 
     }
 
-    private void ReturnToStartZone()
+    public void ReturnToStartZone()
     {
         if (zoneDict.TryGetValue(startingZoneId, out var startZone))
         {

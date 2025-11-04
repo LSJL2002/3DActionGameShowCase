@@ -110,6 +110,7 @@ public partial class GameUI : UIBase
 
         activeHPText.text = currentHealth.ToString("#,##0");
 
+        if(audioSource != null) 
         audioSource.Stop();
 
         return currentHealth / playerUIElements[playerIndex].playerMaxHP;

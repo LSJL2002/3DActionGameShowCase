@@ -123,6 +123,26 @@ public class BattleManager : Singleton<BattleManager>
                 PlayerManager.Instance.Attr.Resource.TakeDamage(5000);
             }
         }
+        if (Input.GetKeyDown(KeyCode.End))
+        {
+            MapManager.Instance.HandleLastStageClear();
+            MapManager.Instance.gameClearDoor.transform.position = PlayerManager.Instance.ActiveCharacter.transform.position;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            var controller = PlayerManager.Instance.ActiveCharacter.GetComponent<CharacterController>();
+            MapManager.Instance.startingZoneId = MapManager.Instance.bossZoneId;
+            MapManager.Instance.ReturnToStartZone();
+            if (PlayerManager.Instance != null)
+            {
+                controller.enabled = false;
+                PlayerManager.Instance.ActiveCharacter.transform.position = MapManager.Instance.currentZone.transform.position;
+                controller.enabled = true;
+            }
+               
+        }
+        
     }
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
