@@ -7,7 +7,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.SceneManagement;
@@ -21,6 +20,7 @@ public class DataUpdater : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject waitMessage;
     [SerializeField] private GameObject UpdateMessage;
+    [SerializeField] private GameObject QuitMessage;
     [SerializeField] private Slider downSliders;
     [SerializeField] private TextMeshProUGUI waitMessageText;
     [SerializeField] private TextMeshProUGUI sizeInfoText;
@@ -318,9 +318,11 @@ public class DataUpdater : MonoBehaviour
                 AnalyticsManager.SendFunnelStep("6");
 
                 SaveManager.Instance.SavePlayerPrefs(SaveManager.PlayerPrefsSaveType.BuildVersion, latestVersion); // 다운로드한 버전정보 저장
-                yield return new WaitForSeconds(3f); // 캐시 정리를 위한 일정시간 대기
+                QuitMessage.SetActive(true);
+                yield return new WaitForSeconds(5f); // 캐시 정리를 위한 일정시간 대기
+                Application.Quit();
+                //SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // 목표 씬으로 Single 전환
 
-                SceneLoadManager.Instance.ChangeScene(1, null, LoadSceneMode.Single); // 목표 씬으로 Single 전환
                 break;
             }
         }
