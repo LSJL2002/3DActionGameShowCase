@@ -68,20 +68,6 @@ public class MonsterStatHandler : MonoBehaviour
         return null;
     }
 
-    public void Heal(int amount)
-    {
-        CurrentHP = Mathf.Min(CurrentHP + amount, monsterData.maxHp);
-    }
-
-    public bool isAlive()
-    {
-        if (CurrentHP > 0)
-        {
-            return true;
-        }
-        return false;
-    }
-
     public void UpdateHealthUI()
     {
         EventsManager.Instance.TriggerEvent(GameEvent.OnHealthChanged);
