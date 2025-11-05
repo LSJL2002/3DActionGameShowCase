@@ -10,6 +10,16 @@ public class InterfaceUI : UIBase
         EventsManager.Instance.TriggerEvent(GameEvent.OnMenu);
     }
 
+    protected override void Update()
+    {
+        base.Update();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnClickButton("Quit");
+        }
+    }
+
     public void OnClickButton(string str)
     {
         switch (str)
