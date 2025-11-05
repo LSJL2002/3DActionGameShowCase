@@ -6,14 +6,23 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class InventoryManager : Singleton<InventoryManager>
 {
     private Inventory inventoryModel;
-    [SerializeField] private InventoryViewModel inventoryViewModel;
+    private InventoryViewModel inventoryViewModel;
 
-    protected override void Start()
+    protected override async void Start()
     {
         base.Start();
 
         inventoryModel = new Inventory();
-        inventoryViewModel.Init(inventoryModel);
+
+        AsyncOperationHandle<InventoryViewModel> loadHandle = Addressables.LoadAssetAsync<InventoryViewModel>("InventoryViewModel");
+
+        await loadHandle.Task;
+
+        if (loadHandle.Status == AsyncOperationStatus.Succeeded)
+        {
+            inventoryViewModel = loadHandle.Result; // 로드 성공 시 참조
+            inventoryViewModel.Init(inventoryModel); // 모델 초기화
+        }
     }
 
     // 아이템 추가 함수
@@ -87,5 +96,16 @@ public class InventoryManager : Singleton<InventoryManager>
         PlayerManager.Instance.ActiveCharacter.Attr.AddModifier(StatType.AttackSpeed, itemData.AttackSpeed);
 
         EventsManager.Instance.TriggerEvent(GameEvent.OnStatChanged);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        // 로드 핸들이 유효하면 해제
+        if (inventoryViewModel != null)
+        {
+            Addressables.Release(inventoryViewModel);
+        }
     }
 }
