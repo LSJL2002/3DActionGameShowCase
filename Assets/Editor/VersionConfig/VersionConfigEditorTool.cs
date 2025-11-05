@@ -14,7 +14,7 @@ public class VersionConfigEditorTool
         VersionConfigData config = new VersionConfigData
         {
             // Addressables 빌드가 완료된 후, 새 버전을 여기에 설정
-            LatestContentVersion = "1.0.0",
+            LatestContentVersion = "1.0.1",
             MinimumAppVersion = Application.version, // 현재 앱 버전 사용
             CDN_URL = "https://s3.ap-southeast-2.amazonaws.com/project8.addressable/StandaloneWindows64/"
         };
