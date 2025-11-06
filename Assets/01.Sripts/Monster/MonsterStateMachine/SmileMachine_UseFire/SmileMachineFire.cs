@@ -16,6 +16,7 @@ public class SmileMachineFire : MonsterBaseState
 
     public override void Enter()
     {
+        StopMoving();
         stateMachine.isAttacking = true;
 
         if (stateMachine.Monster is SmileMachine_UseFire monster)
