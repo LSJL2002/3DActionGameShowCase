@@ -10,8 +10,11 @@ public class TimeLineBase : MonoBehaviour
     private bool aleadyClickSkipButton = false;
     [SerializeField] protected PlayableDirector playableDirector;
 
-    protected virtual void OnTimeLineStop(PlayableDirector director)
+    protected async virtual void OnTimeLineStop(PlayableDirector director)
     {
+        await System.Threading.Tasks.Task.Yield(); // ← URP가 skybox 되돌리는 타이밍 지나가게 함.
+
+        MapManager.Instance.GetComponent<SkyboxBlendController>()?.ForceRestoreSkybox(); // ← 여기!
         TimeLineManager.Instance.Release(gameObject.name);
     }
 
@@ -57,8 +60,6 @@ public class TimeLineBase : MonoBehaviour
 
         if (PlayerManager.Instance != null)
         PlayerManager.Instance.EnableInput(true); // 입력제한 해제
-        if(MapManager.Instance != null)
-        MapManager.Instance.GetComponent<SkyboxBlendController>()?.ForceRestoreSkybox();
     }
 
     protected virtual void OnDestroy() { }
