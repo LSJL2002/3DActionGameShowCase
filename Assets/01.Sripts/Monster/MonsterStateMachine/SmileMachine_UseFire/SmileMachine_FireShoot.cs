@@ -19,6 +19,7 @@ public class SmileMachine_FireShoot : MonsterBaseState
 
     public override void Enter()
     {
+        StopMoving();
         StartAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Idle));
 
         if (stateMachine.Monster is SmileMachine_UseFire monster)

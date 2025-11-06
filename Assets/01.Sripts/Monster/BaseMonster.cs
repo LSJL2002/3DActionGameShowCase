@@ -167,7 +167,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
                         currentPatternPriority = -1;
                         isRunningPattern = false;
                         stateMachine.Monster.aiEvents.hasChosenPattern = false;
-                        stateMachine.ChangeState(stateMachine.MonsterIdleState);
                         yield break; // exit the coroutine early
                     }
 
@@ -186,7 +185,6 @@ public class BaseMonster : MonoBehaviour, IDamageable
 
             // --- Return to Idle for a short reset ---
             yield return new WaitForSeconds(0.3f);
-            stateMachine.ChangeState(stateMachine.MonsterIdleState);
 
             currentStepIndex++;
         }
