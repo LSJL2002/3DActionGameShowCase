@@ -4,11 +4,13 @@ using System.Collections.Generic;
 
 public class GroundFire : MonoBehaviour
 {
-    public float lifeTime = 5f;
+    public float lifeTime = 5f;          // how long the fire stays alive
+    public float damageInterval = 1f;    // how often to deal damage
+    public float damageAmount = 10f;     // damage dealt each tick
 
     private ParticleSystem ps;
     private bool isActive = true;
-    private HashSet<Collider> effected = new HashSet<Collider>();
+    private HashSet<Collider> activeTargets = new HashSet<Collider>();
 
     void Start()
     {
@@ -28,21 +30,34 @@ public class GroundFire : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (!isActive) return;
-        if (other.CompareTag("Player") && !effected.Contains(other))
+        if (other.CompareTag("Player") && !activeTargets.Contains(other))
         {
             IDamageable damageable = other.GetComponent<IDamageable>();
             if (damageable != null)
             {
-                Vector3 sourcePos = transform.position;
-                float knockbackDistance = 0f;
-                float duration = 5f;
-                damageable.ApplyEffect(MonsterEffectType.Burn, sourcePos, knockbackDistance, duration);
-
-                effected.Add(other);
+                activeTargets.Add(other);
+                StartCoroutine(DamageOverTime(other, damageable));
             }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (activeTargets.Contains(other))
+        {
+            activeTargets.Remove(other);
+        }
+    }
+
+    private IEnumerator DamageOverTime(Collider target, IDamageable damageable)
+    {
+        while (isActive && activeTargets.Contains(target))
+        {
+            damageable.OnTakeDamage((int)damageAmount); 
+            yield return new WaitForSeconds(damageInterval);
         }
     }
 }

@@ -116,6 +116,7 @@ public class SpiderMachine_Spin : MonsterBaseState
             stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
         }
+        stateMachine.isAttacking = false;
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
     }
 }
