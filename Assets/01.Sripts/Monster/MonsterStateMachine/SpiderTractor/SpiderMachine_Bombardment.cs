@@ -135,7 +135,6 @@ public class SpiderMachine_Bombardment : MonsterBaseState
     public override void Exit()
     {
         base.Exit();
-        stateMachine.isAttacking = false;
 
         if (aoeInstance != null)
         {

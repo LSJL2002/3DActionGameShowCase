@@ -77,6 +77,7 @@ public class SpiderMachine_Spin : MonsterBaseState
             spinCoroutine = null;
         }
         stateMachine.Monster.StartCoroutine(RotateBackToInitial());
+        stateMachine.isAttacking = false;
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
     private IEnumerator RotateBackToInitial()
@@ -115,7 +116,6 @@ public class SpiderMachine_Spin : MonsterBaseState
             stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
         }
-        stateMachine.isAttacking = false;
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
     }
 }
