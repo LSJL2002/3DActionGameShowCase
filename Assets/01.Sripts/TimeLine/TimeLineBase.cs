@@ -10,11 +10,9 @@ public class TimeLineBase : MonoBehaviour
     private bool aleadyClickSkipButton = false;
     [SerializeField] protected PlayableDirector playableDirector;
 
-    protected async virtual void OnTimeLineStop(PlayableDirector director)
+    protected virtual void OnTimeLineStop(PlayableDirector director)
     {
-        await System.Threading.Tasks.Task.Yield(); // ← URP가 skybox 되돌리는 타이밍 지나가게 함.
-
-        MapManager.Instance.GetComponent<SkyboxBlendController>()?.ForceRestoreSkybox(); // ← 여기!
+       
         TimeLineManager.Instance.Release(gameObject.name);
     }
 

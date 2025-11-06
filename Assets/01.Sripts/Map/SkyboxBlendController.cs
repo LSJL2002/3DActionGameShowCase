@@ -83,8 +83,8 @@ public class SkyboxBlendController : MonoBehaviour
     {
         blendSkybox
             .DOFloat(0f, "_Blend", transitionTime)
-            .SetEase(Ease.InOutSine)
-            .OnUpdate(() => RenderSettings.skybox = blendSkybox);
+            .SetEase(Ease.InOutSine);
+      
 
         if (mainLight != null)
         {
@@ -103,8 +103,7 @@ public class SkyboxBlendController : MonoBehaviour
     {
         blendSkybox
             .DOFloat(1f, "_Blend", transitionTime)
-            .SetEase(Ease.InOutSine)
-            .OnUpdate(() => RenderSettings.skybox = blendSkybox);
+            .SetEase(Ease.InOutSine);
 
         if (mainLight != null)
         {
@@ -123,8 +122,7 @@ public class SkyboxBlendController : MonoBehaviour
     {
         blendSkybox
             .DOFloat(0.5f, "_Blend", transitionTime)
-            .SetEase(Ease.InOutSine)
-            .OnUpdate(() => RenderSettings.skybox = blendSkybox);
+            .SetEase(Ease.InOutSine);
 
         if (mainLight != null)
         {
@@ -146,20 +144,6 @@ public class SkyboxBlendController : MonoBehaviour
 
         blendSkybox
             .DOFloat(targetRotation, "_Rotation", transitionTime)
-            .SetEase(Ease.InOutSine)
-            .OnUpdate(() =>
-            {
-                RenderSettings.skybox = blendSkybox;
-                DynamicGI.UpdateEnvironment();
-            });
-    }
-
-    public void ForceRestoreSkybox()
-    {
-        if (RenderSettings.skybox != blendSkybox)
-        {
-            RenderSettings.skybox = blendSkybox;
-            DynamicGI.UpdateEnvironment();
-        }
+            .SetEase(Ease.InOutSine);
     }
 }
