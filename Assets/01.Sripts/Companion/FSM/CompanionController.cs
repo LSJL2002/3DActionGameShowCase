@@ -85,8 +85,8 @@ public class CompanionController : MonoBehaviour
 
         // 활성 캐릭터 하위의 FollowObject 탐색
         var follow = newChar.transform.Find("FollowObject");
-        if (follow == null)
-            Debug.LogWarning($"[Companion] {newChar.name}에 FollowObject 없음!");
+        //if (follow == null)
+        //    Debug.LogWarning($"[Companion] {newChar.name}에 FollowObject 없음!");
 
         targetObject = follow != null ? follow : newChar.transform;
         lookObject = newChar.transform;
@@ -96,7 +96,7 @@ public class CompanionController : MonoBehaviour
 
         cachedAnchorLocalPos = targetObject.localPosition;
 
-        Debug.Log($"[Companion] Follow target → {targetObject.name}");
+        //Debug.Log($"[Companion] Follow target → {targetObject.name}");
     }
 
 

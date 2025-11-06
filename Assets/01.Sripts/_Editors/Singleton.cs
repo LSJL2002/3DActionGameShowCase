@@ -27,7 +27,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                     // ✅ 예외: PlayerManager는 자동 생성 금지
                     if (_instance == null && typeof(T).Name == "PlayerManager")
                     {
-                        Debug.LogWarning($"[Singleton<{typeof(T).Name}>] PlayerManager는 씬에 직접 배치해야 합니다. 자동 생성하지 않습니다.");
+                        //Debug.LogWarning($"[Singleton<{typeof(T).Name}>] PlayerManager는 씬에 직접 배치해야 합니다. 자동 생성하지 않습니다.");
                         return null;
                     }
 
@@ -38,7 +38,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                         _instance = singletonObj.AddComponent<T>();
                         singletonObj.hideFlags = HideFlags.DontSave;
                         DontDestroyOnLoad(singletonObj);
-                        Debug.Log($"[Singleton<{typeof(T).Name}>] 새 인스턴스 생성됨.");
+                        //Debug.Log($"[Singleton<{typeof(T).Name}>] 새 인스턴스 생성됨.");
                     }
                 }
 

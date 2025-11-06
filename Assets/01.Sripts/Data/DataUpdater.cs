@@ -85,7 +85,7 @@ public class DataUpdater : MonoBehaviour
 
                 return internalId;
             };
-            Debug.Log($"Addressables Remote Path Override set to: {remotePathOverride}");
+            //Debug.Log($"Addressables Remote Path Override set to: {remotePathOverride}");
         }
 
         // Addressables 초기화
@@ -112,7 +112,7 @@ public class DataUpdater : MonoBehaviour
         }
         else
         {
-            Debug.Log("No catalog updates.");
+            //Debug.Log("No catalog updates.");
         }
         Addressables.Release(check);
 
@@ -341,7 +341,7 @@ public class DataUpdater : MonoBehaviour
             try
             {
                 VersionConfig = JsonUtility.FromJson<VersionConfigData>(request.downloadHandler.text);
-                Debug.Log($"[Config] Loaded Version: {VersionConfig.LatestContentVersion}, CDN: {VersionConfig.CDN_URL}");
+                //Debug.Log($"[Config] Loaded Version: {VersionConfig.LatestContentVersion}, CDN: {VersionConfig.CDN_URL}");
                 return true;
             }
             catch (Exception e)

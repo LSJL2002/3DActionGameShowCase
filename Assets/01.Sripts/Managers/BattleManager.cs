@@ -100,68 +100,68 @@ public class BattleManager : Singleton<BattleManager>
 
 
 
-    protected override void Update()
-    {
-        if (Time.timeScale != 1f) return;
+    //protected override void Update()
+    //{
+    //    if (Time.timeScale != 1f) return;
 
-        if (Input.GetKeyDown(KeyCode.PageDown))
-        {
-            MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleAllClear();
-        }
-        if (Input.GetKeyDown(KeyCode.PageUp))
-        {
-            MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleBattleStart();
-        }
-        if (Input.GetKeyDown(KeyCode.Home))
-        {
-            MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleBattleClear();
-        }
+    //    if (Input.GetKeyDown(KeyCode.PageDown))
+    //    {
+    //        MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleAllClear();
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.PageUp))
+    //    {
+    //        MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleBattleStart();
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.Home))
+    //    {
+    //        MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleBattleClear();
+    //    }
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            if (currentZone != null)
-                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
-        }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            if (currentZone != null)
-                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(6000);
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            if (currentZone != null)
-                currentMonster.GetComponent<BaseMonster>().OnTakeDamage(12000);
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            if (currentZone != null)
-            {
-                PlayerManager.Instance.Attr.Resource.TakeDamage(5000);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.End))
-        {
-            MapManager.Instance.HandleLastStageClear();
-            MapManager.Instance.gameClearDoor.transform.position = PlayerManager.Instance.ActiveCharacter.transform.position;
-        }
+    //    if (Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        if (currentZone != null)
+    //            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(10000000);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.J))
+    //    {
+    //        if (currentZone != null)
+    //            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(6000);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.K))
+    //    {
+    //        if (currentZone != null)
+    //            currentMonster.GetComponent<BaseMonster>().OnTakeDamage(12000);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.L))
+    //    {
+    //        if (currentZone != null)
+    //        {
+    //            PlayerManager.Instance.Attr.Resource.TakeDamage(5000);
+    //        }
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.End))
+    //    {
+    //        MapManager.Instance.HandleLastStageClear();
+    //        MapManager.Instance.gameClearDoor.transform.position = PlayerManager.Instance.ActiveCharacter.transform.position;
+    //    }
 
-        if (Input.GetKeyDown(KeyCode.Delete))
-        {
-            var controller = PlayerManager.Instance.ActiveCharacter.GetComponent<CharacterController>();
-            MapManager.Instance.startingZoneId = MapManager.Instance.bossZoneId;
-            MapManager.Instance.ReturnToStartZone();
-            if (PlayerManager.Instance != null)
-            {
-                controller.enabled = false;
-                PlayerManager.Instance.ActiveCharacter.transform.position = MapManager.Instance.currentZone.transform.position;
-                controller.enabled = true;
-            }
-            MapManager.Instance.startingZoneId = 60000000;
+    //    if (Input.GetKeyDown(KeyCode.Delete))
+    //    {
+    //        var controller = PlayerManager.Instance.ActiveCharacter.GetComponent<CharacterController>();
+    //        MapManager.Instance.startingZoneId = MapManager.Instance.bossZoneId;
+    //        MapManager.Instance.ReturnToStartZone();
+    //        if (PlayerManager.Instance != null)
+    //        {
+    //            controller.enabled = false;
+    //            PlayerManager.Instance.ActiveCharacter.transform.position = MapManager.Instance.currentZone.transform.position;
+    //            controller.enabled = true;
+    //        }
+    //        MapManager.Instance.startingZoneId = 60000000;
 
 
-        }
+    //    }
         
-    }
+    //}
 
     public async Task<GameObject> SpawnMonster(int monsterId, Vector3 spawnPos)
     {
@@ -191,7 +191,7 @@ public class BattleManager : Singleton<BattleManager>
         if (monsterStats == null || currentZone == null || monsterStats.CurrentHP > 0)
             return;
         currentMonster.GetComponent<BoxCollider>().enabled = false;
-        MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleBattleClear();
+        
 
         float elapsed = Time.time - battleStartTime; // 전투 시작 후 경과 시간
         currentMonster.transform.position = currentZone.transform.position;
@@ -213,12 +213,12 @@ public class BattleManager : Singleton<BattleManager>
         EventsManager.Instance.TriggerEvent<BattleZone>(GameEventT.OnMonsterDie, currentZone);
         if (currentZone.id == MapManager.Instance.bossZoneId)
         {
-            MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleAllClear();
             MapManager.Instance.HandleLastStageClear();
         }
 
         await UniTask.NextFrame();
         StopWarning();
+        MapManager.Instance.GetComponent<SkyboxBlendController>()?.HandleBattleClear();
         AudioManager.Instance.PlayBGM("afterBattleBGM");
 
     }
