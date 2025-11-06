@@ -1,14 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.XR;
-using System;
-using Unity.VisualScripting;
-using Unity.Mathematics;
-using UnityEngine.TextCore.Text;
 
 public class BaseMonster : MonoBehaviour, IDamageable
 {

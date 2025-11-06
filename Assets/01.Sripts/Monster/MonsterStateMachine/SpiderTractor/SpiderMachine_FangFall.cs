@@ -96,6 +96,7 @@ public class SpiderMachine_FangFall : MonsterBaseState
         }
         OnAttackHit();
         yield return new WaitForSeconds(1f);
+        stateMachine.isAttacking = false;
         stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
@@ -126,7 +127,5 @@ public class SpiderMachine_FangFall : MonsterBaseState
             stateMachine.Monster.UnregisterAOE(aoeInstance);
             Object.Destroy(aoeInstance);
         }
-
-        stateMachine.isAttacking = false;
     }
 }

@@ -61,13 +61,12 @@ public class SpiderMachine_BackJump : MonsterBaseState
         monsterTransform.position = targetPos;
 
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill5));
-        stateMachine.ChangeState(stateMachine.MonsterIdleState);
         stateMachine.isAttacking = false;
+        stateMachine.ChangeState(stateMachine.MonsterIdleState);
     }
 
     public override void Exit()
     {
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill5));
-        stateMachine.isAttacking = false;
     }
 }
