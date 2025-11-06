@@ -126,6 +126,5 @@ public class SmileMachine_Missile : MonsterBaseState
             lineRenderer.enabled = false;
 
         StopAnimation(stateMachine.Monster.animationData.GetHash(MonsterAnimationData.MonsterAnimationType.Skill3));
-        stateMachine.isAttacking = false;
     }
 }

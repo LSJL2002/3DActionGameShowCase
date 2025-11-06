@@ -24,10 +24,6 @@ public class MonsterAIEvents : MonoBehaviour
     private bool combatIdleStarted = false;
     public bool hasChosenPattern = false;
 
-    //FailSafe
-    private float idleTimer;
-    private const float idleResetTime = 8f;
-
     private void Awake()
     {
         if (PlayerManager.Instance != null)
